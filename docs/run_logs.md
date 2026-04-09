@@ -1,5 +1,17 @@
 # Command run log
 
+
+## Template minimo run
+Copiare questo blocco per ogni nuova esecuzione e compilarlo in modo sintetico.
+
+```md
+## <nome run>
+- **Timestamp:** <YYYY-MM-DDTHH:MM:SSZ>
+- **Input:** <comando/i o sorgenti dati usate>
+- **Esito:** <ok|warning|fail + nota breve>
+- **Artifact aggiornati:** <lista file in reports/ e altri output>
+```
+
 ## CI preflight (schemi, report moduli, attestato coverage locale)
 - **Commands:**
   - `python tools/validate_schemas.py`
