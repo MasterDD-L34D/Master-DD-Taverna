@@ -1,0 +1,58 @@
+mode: full-pg
+level_checkpoints: [1, 5, 10]
+requests:
+  - id: barbarian_fetchling_invulnerable_rager
+    class: Barbarian
+    race: Fetchling
+    archetype: Invulnerable Rager
+    output_prefix: barbarian_fetchling_invulnerable_rager
+  - id: bard_kitsune_sound_striker_sandman
+    class: Bard
+    race: Kitsune
+    archetype: Sound Striker Sandman
+    output_prefix: bard_kitsune_sound_striker_sandman
+  - id: cleric_samsaran_cloistered_evangelist
+    class: Cleric
+    race: Samsaran
+    archetype: Cloistered Evangelist
+    output_prefix: cleric_samsaran_cloistered_evangelist
+  - id: druid_wayang_mooncaller_shapeshifter
+    class: Druid
+    race: Wayang
+    archetype: Mooncaller Shapeshifter
+    output_prefix: druid_wayang_mooncaller_shapeshifter
+  - id: fighter_dwarf_shielded
+    class: Fighter
+    race: Dwarf
+    archetype: Shielded
+    output_prefix: fighter_dwarf_shielded
+  - id: monk_vanara_qinggong_master_of_many_styles
+    class: Monk
+    race: Vanara
+    archetype: Qinggong Master Of Many Styles
+    output_prefix: monk_vanara_qinggong_master_of_many_styles
+  - id: paladin_aasimar_holy_tactician_sacred_servant
+    class: Paladin
+    race: Aasimar
+    archetype: Holy Tactician Sacred Servant
+    output_prefix: paladin_aasimar_holy_tactician_sacred_servant
+  - id: ranger_halfelf_skirmisher
+    class: Ranger
+    race: Halfelf
+    archetype: Skirmisher
+    output_prefix: ranger_halfelf_skirmisher
+  - id: rogue_halfling_cutpurse
+    class: Rogue
+    race: Halfling
+    archetype: Cutpurse
+    output_prefix: rogue_halfling_cutpurse
+  - id: sorcerer_human_arcane_bloodline
+    class: Sorcerer
+    race: Human
+    archetype: Arcane Bloodline
+    output_prefix: sorcerer_human_arcane_bloodline
+  - id: wizard_elf_universalist
+    class: Wizard
+    race: Elf
+    archetype: Universalist
+    output_prefix: wizard_elf_universalist

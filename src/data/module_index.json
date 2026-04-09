@@ -1,6 +1,6 @@
 {
-  "generated_at": "2025-12-19T18:29:27Z",
-  "api_url": "http://localhost:8000",
+  "generated_at": "2026-04-09T23:31:05Z",
+  "api_url": "http://127.0.0.1:8001",
   "entries": [
     {
       "module": "Encounter_Designer.txt",
@@ -533,11 +533,5 @@
   "catalog_version": [
     "2026.04.03"
   ],
-  "module_plan": [
-    "base_profile.txt",
-    "Taverna_NPC.txt",
-    "narrative_flow.txt",
-    "scheda_pg_markdown_template.md",
-    "adventurer_ledger.txt"
-  ]
+  "module_plan": []
 }

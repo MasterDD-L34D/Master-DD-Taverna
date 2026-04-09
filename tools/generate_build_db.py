@@ -32,7 +32,6 @@ from jinja2.nativetypes import NativeEnvironment
 import httpx
 from jsonschema import Draft202012Validator, RefResolver
 from jsonschema.exceptions import ValidationError
-from utils.aon_detector import is_aon_url
 
 # Alcuni ambienti (o versioni precedenti dello script) si aspettano un helper
 # is_aon_url in utils.aon_detector; gestiamo la mancanza con un fallback locale

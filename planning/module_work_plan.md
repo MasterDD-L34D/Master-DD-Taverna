@@ -8,6 +8,16 @@ Fonte sequenza: `planning/module_review_guide.md`
 - Attestato di copertura archiviato in `reports/coverage_attestato_2025-12-11.md`.
 
 ## Checklist seguita (dal documento di guida)
+
+## Core coverage sprint
+- **Owner:** Data/Validation (lead: Team Build DB)
+- **Classi assegnate:** Barbarian, Bard, Cleric, Druid, Fighter, Monk, Paladin, Ranger, Rogue, Sorcerer, Wizard (fonte: `reports/index_analysis.json` → `alerts.missing_core_classes`).
+- **Spec operativa:** `planning/core_coverage_sprint.yml` (checkpoint fissi lvl **1/5/10**, mode `full-pg`, output prefix per classe per minimizzare rumore e collisioni).
+- **Checkpoint di controllo:**
+  - **L1 (bootstrap):** presenza snapshot `_lvl01`/base per ogni classe core e validazione minima schema `build_core`.
+  - **L5 (mid progression):** presenza snapshot `_lvl05` con completezza scheda/ledger e nessun errore bloccante in `reports/build_review.json`.
+  - **L10 (advanced):** presenza snapshot `_lvl10` e validazione schema `build_full_pg`; aggiornamento `src/data/build_index.json` + `reports/index_analysis.json`.
+- **Done criteria sprint:** ciclo chiuso solo con `missing_core_classes == []` oppure gap motivato esplicitamente in roadmap (`planning/roadmap.md`).
 - Sequenza completa: Encounter_Designer → Taverna_NPC → adventurer_ledger → archivist → base_profile → explain_methods → knowledge_pack → meta_doc → minmax_builder → narrative_flow → ruling_expert → scheda_pg_markdown_template → sigilli_runner_module → tavern_hub → Cartelle di servizio.
 - Per ogni report: checklist Ambiente di test → Esiti API → Metadati → Comandi/Flow → QA → Errori → Miglioramenti → Fix necessari.
 - Task derivati da Errori/Fix/Miglioramenti con priorità P1 bug/ambiguità, P2 QA/completezza, P3 UX/copy; collegare a sezioni/linee citate nei report.
