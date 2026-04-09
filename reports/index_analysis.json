@@ -1,11 +1,11 @@
 {
-  "generated_at": "2025-12-19T18:03:51Z",
+  "generated_at": "2026-04-09T23:31:52Z",
   "build_index": "src/data/build_index.json",
   "module_index": "src/data/module_index.json",
   "builds": {
-    "total": 84,
-    "ok": 1,
-    "invalid": 83,
+    "total": 76,
+    "ok": 0,
+    "invalid": 76,
     "errors": 0,
     "invalid_entries": [
       {
@@ -96,7 +96,7 @@
         "expected_step_total": 16,
         "extended_steps_available": true,
         "step_total_ok": true,
-        "error": "Additional properties are not allowed ('catalog_version' was unexpected); Additional properties are not allowed ('catalog_version' was unexpected); None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
         "catalog_version": [
           "2026.04.03"
         ]
@@ -123,7 +123,7 @@
         "expected_step_total": 16,
         "extended_steps_available": true,
         "step_total_ok": true,
-        "error": "Additional properties are not allowed ('catalog_version' was unexpected); Additional properties are not allowed ('catalog_version' was unexpected); None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
         "catalog_version": [
           "2026.04.03"
         ]
@@ -150,7 +150,7 @@
         "expected_step_total": 16,
         "extended_steps_available": true,
         "step_total_ok": true,
-        "error": "Additional properties are not allowed ('catalog_version' was unexpected); Additional properties are not allowed ('catalog_version' was unexpected); None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
         "catalog_version": [
           "2026.04.03"
         ]
@@ -222,16 +222,16 @@
         ]
       },
       {
-        "file": "src/data/builds/bard_kitsune_sound_striker_sandman.json",
+        "file": "src/data/builds/bloodrager-shabti-steelblood-metamagic-rager.json",
         "status": "invalid",
-        "output_prefix": "bard_kitsune_sound_striker_sandman",
-        "class": "Bard",
-        "race": "Kitsune",
-        "archetype": "Sound Striker + Sandman",
+        "output_prefix": "bloodrager-shabti-steelblood-metamagic-rager",
+        "class": "Bloodrager",
+        "race": "Shabti",
+        "archetype": "Steelblood Metamagic Rager",
         "mode": "extended",
         "mode_normalized": "extended",
-        "spec_id": "bard_kitsune_sound_striker_sandman",
-        "background": null,
+        "spec_id": "bloodrager_shabti_steelblood_metamagic_rager",
+        "background": "Costrutto celestiale forgiato come guardia reale, ora incanala la furia metamagica protetto da piastre d'oricalco.",
         "model": null,
         "level_checkpoints": [
           1,
@@ -239,21 +239,26 @@
           10
         ],
         "level": 1,
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
         "catalog_version": [
           "2026.04.03"
         ]
       },
       {
-        "file": "src/data/builds/bard_kitsune_sound_striker_sandman_lvl05.json",
+        "file": "src/data/builds/bloodrager-shabti-steelblood-metamagic-rager_lvl05.json",
         "status": "invalid",
-        "output_prefix": "bard_kitsune_sound_striker_sandman",
-        "class": "Bard",
-        "race": "Kitsune",
-        "archetype": "Sound Striker + Sandman",
+        "output_prefix": "bloodrager-shabti-steelblood-metamagic-rager",
+        "class": "Bloodrager",
+        "race": "Shabti",
+        "archetype": "Steelblood Metamagic Rager",
         "mode": "extended",
         "mode_normalized": "extended",
-        "spec_id": "bard_kitsune_sound_striker_sandman",
-        "background": null,
+        "spec_id": "bloodrager_shabti_steelblood_metamagic_rager",
+        "background": "Costrutto celestiale forgiato come guardia reale, ora incanala la furia metamagica protetto da piastre d'oricalco.",
         "model": null,
         "level_checkpoints": [
           1,
@@ -261,21 +266,26 @@
           10
         ],
         "level": 5,
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
         "catalog_version": [
           "2026.04.03"
         ]
       },
       {
-        "file": "src/data/builds/bard_kitsune_sound_striker_sandman_lvl10.json",
+        "file": "src/data/builds/bloodrager-shabti-steelblood-metamagic-rager_lvl10.json",
         "status": "invalid",
-        "output_prefix": "bard_kitsune_sound_striker_sandman",
-        "class": "Bard",
-        "race": "Kitsune",
-        "archetype": "Sound Striker + Sandman",
+        "output_prefix": "bloodrager-shabti-steelblood-metamagic-rager",
+        "class": "Bloodrager",
+        "race": "Shabti",
+        "archetype": "Steelblood Metamagic Rager",
         "mode": "extended",
         "mode_normalized": "extended",
-        "spec_id": "bard_kitsune_sound_striker_sandman",
-        "background": null,
+        "spec_id": "bloodrager_shabti_steelblood_metamagic_rager",
+        "background": "Costrutto celestiale forgiato come guardia reale, ora incanala la furia metamagica protetto da piastre d'oricalco.",
         "model": null,
         "level_checkpoints": [
           1,
@@ -283,13 +293,11 @@
           10
         ],
         "level": 10,
-        "error": "Prerequisiti catalogo non soddisfatti: Greater Spell Penetration: Spell Penetration",
-        "completeness_errors": [
-          "Prerequisiti catalogo non soddisfatti: Greater Spell Penetration: Spell Penetration"
-        ],
-        "prerequisite_violations": [
-          "Greater Spell Penetration: Spell Penetration"
-        ],
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
         "catalog_version": [
           "2026.04.03"
         ]
@@ -427,16 +435,16 @@
         ]
       },
       {
-        "file": "src/data/builds/cleric_samsaran_cloistered_evangelist.json",
+        "file": "src/data/builds/druid_half_orc_feral.json",
         "status": "invalid",
-        "output_prefix": "cleric_samsaran_cloistered_evangelist",
-        "class": "Cleric",
-        "race": "Samsaran",
-        "archetype": "Cloistered Evangelist",
+        "output_prefix": "druid_half_orc_feral",
+        "class": "Druid",
+        "race": "Half Orc",
+        "archetype": "Feral",
         "mode": "extended",
         "mode_normalized": "extended",
-        "spec_id": "cleric_samsaran_cloistered_evangelist",
-        "background": "Mistico samsaran reincarnato che intreccia sermoni evangelist e preparazione da cloistered cleric per difendere il circolo.",
+        "spec_id": "druid_half_orc_feral",
+        "background": "Guardiano selvaggio delle foreste, incline a forme ferine aggressive.",
         "model": null,
         "level_checkpoints": [
           1,
@@ -448,22 +456,22 @@
         "expected_step_total": 16,
         "extended_steps_available": true,
         "step_total_ok": true,
-        "error": "Additional properties are not allowed ('catalog_version' was unexpected); Additional properties are not allowed ('catalog_version' was unexpected); None is not of type 'string'",
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
         "catalog_version": [
           "2026.04.03"
         ]
       },
       {
-        "file": "src/data/builds/cleric_samsaran_cloistered_evangelist_lvl05.json",
+        "file": "src/data/builds/druid_half_orc_feral_lvl05.json",
         "status": "invalid",
-        "output_prefix": "cleric_samsaran_cloistered_evangelist",
-        "class": "Cleric",
-        "race": "Samsaran",
-        "archetype": "Cloistered Evangelist",
+        "output_prefix": "druid_half_orc_feral",
+        "class": "Druid",
+        "race": "Half Orc",
+        "archetype": "Feral",
         "mode": "extended",
         "mode_normalized": "extended",
-        "spec_id": "cleric_samsaran_cloistered_evangelist",
-        "background": "Mistico samsaran reincarnato che intreccia sermoni evangelist e preparazione da cloistered cleric per difendere il circolo.",
+        "spec_id": "druid_half_orc_feral",
+        "background": "Guardiano selvaggio delle foreste, incline a forme ferine aggressive.",
         "model": null,
         "level_checkpoints": [
           1,
@@ -475,22 +483,22 @@
         "expected_step_total": 16,
         "extended_steps_available": true,
         "step_total_ok": true,
-        "error": "Additional properties are not allowed ('catalog_version' was unexpected); Additional properties are not allowed ('catalog_version' was unexpected); None is not of type 'string'",
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
         "catalog_version": [
           "2026.04.03"
         ]
       },
       {
-        "file": "src/data/builds/cleric_samsaran_cloistered_evangelist_lvl10.json",
+        "file": "src/data/builds/druid_half_orc_feral_lvl10.json",
         "status": "invalid",
-        "output_prefix": "cleric_samsaran_cloistered_evangelist",
-        "class": "Cleric",
-        "race": "Samsaran",
-        "archetype": "Cloistered Evangelist",
+        "output_prefix": "druid_half_orc_feral",
+        "class": "Druid",
+        "race": "Half Orc",
+        "archetype": "Feral",
         "mode": "extended",
         "mode_normalized": "extended",
-        "spec_id": "cleric_samsaran_cloistered_evangelist",
-        "background": "Mistico samsaran reincarnato che intreccia sermoni evangelist e preparazione da cloistered cleric per difendere il circolo.",
+        "spec_id": "druid_half_orc_feral",
+        "background": "Guardiano selvaggio delle foreste, incline a forme ferine aggressive.",
         "model": null,
         "level_checkpoints": [
           1,
@@ -502,22 +510,22 @@
         "expected_step_total": 16,
         "extended_steps_available": true,
         "step_total_ok": true,
-        "error": "Additional properties are not allowed ('catalog_version' was unexpected); Additional properties are not allowed ('catalog_version' was unexpected); None is not of type 'string'",
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
         "catalog_version": [
           "2026.04.03"
         ]
       },
       {
-        "file": "src/data/builds/fighter_dwarf_shielded.json",
+        "file": "src/data/builds/fighter_weapon_master_human.json",
         "status": "invalid",
-        "output_prefix": "fighter_dwarf_shielded",
+        "output_prefix": "fighter_weapon_master_human",
         "class": "Fighter",
-        "race": "Dwarf",
-        "archetype": "Shielded Fighter",
+        "race": "Human",
+        "archetype": "Weapon Master",
         "mode": "extended",
         "mode_normalized": "extended",
-        "spec_id": "fighter_dwarf_shielded_fighter",
-        "background": "Guardia cittadina temprata, specializzata in difesa di scudi pesanti.",
+        "spec_id": "fighter_human_weapon_master",
+        "background": "Veterano delle Crociate che testa nuove combinazioni di armi.",
         "model": null,
         "level_checkpoints": [
           1,
@@ -525,74 +533,11 @@
           10
         ],
         "level": 1,
-        "missing_catalog_entries": [
-          "items:Ascia da battaglia",
-          "items:Scudo pesante"
-        ],
-        "prerequisite_violations": [
-          "Ascia da battaglia: Martial weapon proficiency",
-          "Scudo pesante: Shield proficiency"
-        ],
-        "catalog_version": [
-          "2026.04.03"
-        ]
-      },
-      {
-        "file": "src/data/builds/fighter_dwarf_shielded_lvl05.json",
-        "status": "invalid",
-        "output_prefix": "fighter_dwarf_shielded",
-        "class": "Fighter",
-        "race": "Dwarf",
-        "archetype": "Shielded Fighter",
-        "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "fighter_dwarf_shielded_fighter",
-        "background": "Guardia cittadina temprata, specializzata in difesa di scudi pesanti.",
-        "model": null,
-        "level_checkpoints": [
-          1,
-          5,
-          10
-        ],
-        "level": 5,
-        "missing_catalog_entries": [
-          "items:Ascia da battaglia",
-          "items:Scudo pesante"
-        ],
-        "prerequisite_violations": [
-          "Ascia da battaglia: Martial weapon proficiency",
-          "Scudo pesante: Shield proficiency"
-        ],
-        "catalog_version": [
-          "2026.04.03"
-        ]
-      },
-      {
-        "file": "src/data/builds/fighter_dwarf_shielded_lvl10.json",
-        "status": "invalid",
-        "output_prefix": "fighter_dwarf_shielded",
-        "class": "Fighter",
-        "race": "Dwarf",
-        "archetype": "Shielded Fighter",
-        "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "fighter_dwarf_shielded_fighter",
-        "background": "Guardia cittadina temprata, specializzata in difesa di scudi pesanti.",
-        "model": null,
-        "level_checkpoints": [
-          1,
-          5,
-          10
-        ],
-        "level": 10,
-        "missing_catalog_entries": [
-          "items:Ascia da battaglia",
-          "items:Scudo pesante"
-        ],
-        "prerequisite_violations": [
-          "Ascia da battaglia: Martial weapon proficiency",
-          "Scudo pesante: Shield proficiency"
-        ],
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
         "catalog_version": [
           "2026.04.03"
         ]
@@ -615,12 +560,11 @@
           10
         ],
         "level": 5,
-        "missing_catalog_entries": [
-          "items:Pugnale di servizio"
-        ],
-        "prerequisite_violations": [
-          "Pugnale di servizio: Simple weapon proficiency"
-        ],
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
         "catalog_version": [
           "2026.04.03"
         ]
@@ -643,12 +587,11 @@
           10
         ],
         "level": 10,
-        "missing_catalog_entries": [
-          "items:Pugnale di servizio"
-        ],
-        "prerequisite_violations": [
-          "Pugnale di servizio: Simple weapon proficiency"
-        ],
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
         "catalog_version": [
           "2026.04.03"
         ]
@@ -1200,12 +1143,11 @@
           10
         ],
         "level": 1,
-        "missing_catalog_entries": [
-          "items:Pugnale di servizio"
-        ],
-        "prerequisite_violations": [
-          "Pugnale di servizio: Simple weapon proficiency"
-        ],
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
         "catalog_version": [
           "2026.04.03"
         ]
@@ -1228,12 +1170,11 @@
           10
         ],
         "level": 5,
-        "missing_catalog_entries": [
-          "items:Pugnale di servizio"
-        ],
-        "prerequisite_violations": [
-          "Pugnale di servizio: Simple weapon proficiency"
-        ],
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
         "catalog_version": [
           "2026.04.03"
         ]
@@ -1256,116 +1197,11 @@
           10
         ],
         "level": 10,
-        "missing_catalog_entries": [
-          "items:Pugnale di servizio"
-        ],
-        "prerequisite_violations": [
-          "Pugnale di servizio: Simple weapon proficiency"
-        ],
-        "catalog_version": [
-          "2026.04.03"
-        ]
-      },
-      {
-        "file": "src/data/builds/monk_vanara_qinggong_master_of_many_styles.json",
-        "status": "invalid",
-        "output_prefix": "monk_vanara_qinggong_master_of_many_styles",
-        "class": "Monk",
-        "race": "Vanara",
-        "archetype": "Qinggong + Master of Many Styles",
-        "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "monk_vanara_qinggong_master_of_many_styles",
-        "background": null,
-        "model": null,
-        "level_checkpoints": [
-          1,
-          5,
-          10
-        ],
-        "level": 1,
-        "error": "Prerequisiti catalogo non soddisfatti: Crane Style: Improved Unarmed Strike, Tiger Style: Improved Unarmed Strike",
-        "completeness_errors": [
-          "Prerequisiti catalogo non soddisfatti: Crane Style: Improved Unarmed Strike, Tiger Style: Improved Unarmed Strike"
-        ],
-        "prerequisite_violations": [
-          "Crane Style: Improved Unarmed Strike",
-          "Tiger Style: Improved Unarmed Strike"
-        ],
-        "catalog_version": [
-          "2026.04.03"
-        ]
-      },
-      {
-        "file": "src/data/builds/monk_vanara_qinggong_master_of_many_styles_lvl05.json",
-        "status": "invalid",
-        "output_prefix": "monk_vanara_qinggong_master_of_many_styles",
-        "class": "Monk",
-        "race": "Vanara",
-        "archetype": "Qinggong + Master of Many Styles",
-        "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "monk_vanara_qinggong_master_of_many_styles",
-        "background": null,
-        "model": null,
-        "level_checkpoints": [
-          1,
-          5,
-          10
-        ],
-        "level": 5,
-        "error": "Prerequisiti catalogo non soddisfatti: Amuleto dell'armatura naturale +1: Craft Wondrous Item, Amuleto dell'armatura naturale +1: barkskin, Crane Style: Improved Unarmed Strike, Crane Wing: Improved Unarmed Strike, Dragon Style: Improved Unarmed Strike, Tiger Claws: Improved Unarmed Strike, Tiger Style: Improved Unarmed Strike",
-        "completeness_errors": [
-          "Prerequisiti catalogo non soddisfatti: Amuleto dell'armatura naturale +1: Craft Wondrous Item, Amuleto dell'armatura naturale +1: barkskin, Crane Style: Improved Unarmed Strike, Crane Wing: Improved Unarmed Strike, Dragon Style: Improved Unarmed Strike, Tiger Claws: Improved Unarmed Strike, Tiger Style: Improved Unarmed Strike"
-        ],
-        "prerequisite_violations": [
-          "Amuleto dell'armatura naturale +1: Craft Wondrous Item",
-          "Amuleto dell'armatura naturale +1: barkskin",
-          "Crane Style: Improved Unarmed Strike",
-          "Crane Wing: Improved Unarmed Strike",
-          "Dragon Style: Improved Unarmed Strike",
-          "Tiger Claws: Improved Unarmed Strike",
-          "Tiger Style: Improved Unarmed Strike"
-        ],
-        "catalog_version": [
-          "2026.04.03"
-        ]
-      },
-      {
-        "file": "src/data/builds/monk_vanara_qinggong_master_of_many_styles_lvl10.json",
-        "status": "invalid",
-        "output_prefix": "monk_vanara_qinggong_master_of_many_styles",
-        "class": "Monk",
-        "race": "Vanara",
-        "archetype": "Qinggong + Master of Many Styles",
-        "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "monk_vanara_qinggong_master_of_many_styles",
-        "background": null,
-        "model": null,
-        "level_checkpoints": [
-          1,
-          5,
-          10
-        ],
-        "level": 10,
-        "error": "Prerequisiti catalogo non soddisfatti: Crane Riposte: Improved Unarmed Strike, Crane Style: Improved Unarmed Strike, Crane Wing: Improved Unarmed Strike, Dragon Ferocity: Improved Unarmed Strike, Dragon Style: Improved Unarmed Strike, Headband of Inspired Wisdom +2: Craft Wondrous Item, Headband of Inspired Wisdom +2: owl's wisdom, Medusa's Wrath: Improved Unarmed Strike, Medusa's Wrath: Stunning Fist, Tiger Claws: Improved Unarmed Strike, Tiger Style: Improved Unarmed Strike",
-        "completeness_errors": [
-          "Prerequisiti catalogo non soddisfatti: Crane Riposte: Improved Unarmed Strike, Crane Style: Improved Unarmed Strike, Crane Wing: Improved Unarmed Strike, Dragon Ferocity: Improved Unarmed Strike, Dragon Style: Improved Unarmed Strike, Headband of Inspired Wisdom +2: Craft Wondrous Item, Headband of Inspired Wisdom +2: owl's wisdom, Medusa's Wrath: Improved Unarmed Strike, Medusa's Wrath: Stunning Fist, Tiger Claws: Improved Unarmed Strike, Tiger Style: Improved Unarmed Strike"
-        ],
-        "prerequisite_violations": [
-          "Crane Riposte: Improved Unarmed Strike",
-          "Crane Style: Improved Unarmed Strike",
-          "Crane Wing: Improved Unarmed Strike",
-          "Dragon Ferocity: Improved Unarmed Strike",
-          "Dragon Style: Improved Unarmed Strike",
-          "Headband of Inspired Wisdom +2: Craft Wondrous Item",
-          "Headband of Inspired Wisdom +2: owl's wisdom",
-          "Medusa's Wrath: Improved Unarmed Strike",
-          "Medusa's Wrath: Stunning Fist",
-          "Tiger Claws: Improved Unarmed Strike",
-          "Tiger Style: Improved Unarmed Strike"
-        ],
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
         "catalog_version": [
           "2026.04.03"
         ]
@@ -1394,163 +1230,6 @@
         ],
         "prerequisite_violations": [
           "Coordinated Charge: Combat Reflexes"
-        ],
-        "catalog_version": [
-          "2026.04.03"
-        ]
-      },
-      {
-        "file": "src/data/builds/paladin_aasimar_holy_tactician_sacred_servant_lvl05.json",
-        "status": "invalid",
-        "output_prefix": "paladin_aasimar_holy_tactician_sacred_servant",
-        "class": "Paladin",
-        "race": "Aasimar",
-        "archetype": "Holy Tactician + Sacred Servant",
-        "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "paladin_aasimar_holy_tactician_sacred_servant",
-        "background": null,
-        "model": null,
-        "level_checkpoints": [
-          1,
-          5,
-          10
-        ],
-        "level": 5,
-        "error": "Prerequisiti catalogo non soddisfatti: Coordinated Charge: Combat Reflexes",
-        "completeness_errors": [
-          "Prerequisiti catalogo non soddisfatti: Coordinated Charge: Combat Reflexes"
-        ],
-        "prerequisite_violations": [
-          "Coordinated Charge: Combat Reflexes"
-        ],
-        "catalog_version": [
-          "2026.04.03"
-        ]
-      },
-      {
-        "file": "src/data/builds/paladin_aasimar_holy_tactician_sacred_servant_lvl10.json",
-        "status": "invalid",
-        "output_prefix": "paladin_aasimar_holy_tactician_sacred_servant",
-        "class": "Paladin",
-        "race": "Aasimar",
-        "archetype": "Holy Tactician + Sacred Servant",
-        "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "paladin_aasimar_holy_tactician_sacred_servant",
-        "background": null,
-        "model": null,
-        "level_checkpoints": [
-          1,
-          5,
-          10
-        ],
-        "level": 10,
-        "error": "Prerequisiti catalogo non soddisfatti: Coordinated Charge: Combat Reflexes",
-        "completeness_errors": [
-          "Prerequisiti catalogo non soddisfatti: Coordinated Charge: Combat Reflexes"
-        ],
-        "prerequisite_violations": [
-          "Coordinated Charge: Combat Reflexes"
-        ],
-        "catalog_version": [
-          "2026.04.03"
-        ]
-      },
-      {
-        "file": "src/data/builds/rogue_halfling_cutpurse.json",
-        "status": "invalid",
-        "output_prefix": "rogue_halfling_cutpurse",
-        "class": "Rogue",
-        "race": "Halfling",
-        "archetype": "Cutpurse",
-        "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "rogue_halfling_cutpurse",
-        "background": "Piccolo borseggiatore delle vie mercantili, maestro nel muoversi tra la folla.",
-        "model": null,
-        "level_checkpoints": [
-          1,
-          5,
-          10
-        ],
-        "level": 1,
-        "step_total": 16,
-        "expected_step_total": 16,
-        "extended_steps_available": true,
-        "step_total_ok": true,
-        "error": "Additional properties are not allowed ('catalog_version', 'prerequisite_violations' were unexpected); Additional properties are not allowed ('catalog_version', 'prerequisite_violations' were unexpected); None is not of type 'string'; Prerequisiti catalogo non soddisfatti: Armatura di cuoio borchiato: Light armor proficiency",
-        "completeness_errors": [
-          "Prerequisiti catalogo non soddisfatti: Armatura di cuoio borchiato: Light armor proficiency"
-        ],
-        "prerequisite_violations": [
-          "Armatura di cuoio borchiato: Light armor proficiency"
-        ],
-        "catalog_version": [
-          "2026.04.03"
-        ]
-      },
-      {
-        "file": "src/data/builds/rogue_halfling_cutpurse_lvl05.json",
-        "status": "invalid",
-        "output_prefix": "rogue_halfling_cutpurse",
-        "class": "Rogue",
-        "race": "Halfling",
-        "archetype": "Cutpurse",
-        "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "rogue_halfling_cutpurse",
-        "background": "Piccolo borseggiatore delle vie mercantili, maestro nel muoversi tra la folla.",
-        "model": null,
-        "level_checkpoints": [
-          1,
-          5,
-          10
-        ],
-        "level": 5,
-        "step_total": 16,
-        "expected_step_total": 16,
-        "extended_steps_available": true,
-        "step_total_ok": true,
-        "error": "Additional properties are not allowed ('catalog_version', 'prerequisite_violations' were unexpected); Additional properties are not allowed ('catalog_version', 'prerequisite_violations' were unexpected); None is not of type 'string'; Prerequisiti catalogo non soddisfatti: Armatura di cuoio borchiato: Light armor proficiency",
-        "completeness_errors": [
-          "Prerequisiti catalogo non soddisfatti: Armatura di cuoio borchiato: Light armor proficiency"
-        ],
-        "prerequisite_violations": [
-          "Armatura di cuoio borchiato: Light armor proficiency"
-        ],
-        "catalog_version": [
-          "2026.04.03"
-        ]
-      },
-      {
-        "file": "src/data/builds/rogue_halfling_cutpurse_lvl10.json",
-        "status": "invalid",
-        "output_prefix": "rogue_halfling_cutpurse",
-        "class": "Rogue",
-        "race": "Halfling",
-        "archetype": "Cutpurse",
-        "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "rogue_halfling_cutpurse",
-        "background": "Piccolo borseggiatore delle vie mercantili, maestro nel muoversi tra la folla.",
-        "model": null,
-        "level_checkpoints": [
-          1,
-          5,
-          10
-        ],
-        "level": 10,
-        "step_total": 16,
-        "expected_step_total": 16,
-        "extended_steps_available": true,
-        "step_total_ok": true,
-        "error": "Additional properties are not allowed ('catalog_version', 'prerequisite_violations' were unexpected); Additional properties are not allowed ('catalog_version', 'prerequisite_violations' were unexpected); None is not of type 'string'; Prerequisiti catalogo non soddisfatti: Armatura di cuoio borchiato: Light armor proficiency",
-        "completeness_errors": [
-          "Prerequisiti catalogo non soddisfatti: Armatura di cuoio borchiato: Light armor proficiency"
-        ],
-        "prerequisite_violations": [
-          "Armatura di cuoio borchiato: Light armor proficiency"
         ],
         "catalog_version": [
           "2026.04.03"
@@ -2038,15 +1717,195 @@
         "catalog_version": [
           "2026.04.03"
         ]
+      },
+      {
+        "file": "src/data/builds/wizard_human_evoker.json",
+        "status": "invalid",
+        "output_prefix": "wizard_human_evoker",
+        "class": "Wizard",
+        "race": "Human",
+        "archetype": "Evoker",
+        "mode": "extended",
+        "mode_normalized": "extended",
+        "spec_id": "wizard_human_evoker",
+        "background": "Piromane accademico in cerca di antiche pergamene elementali.",
+        "model": null,
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "level": 1,
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "None is not of type 'string'; 4 is not of type 'array'; Elementi non presenti nel catalogo: items:Abito da viaggiatore, items:Bastone ferrato, items:Spellbook",
+        "completeness_errors": [
+          "Elementi non presenti nel catalogo: items:Abito da viaggiatore, items:Bastone ferrato, items:Spellbook"
+        ],
+        "missing_catalog_entries": [
+          "items:Abito da viaggiatore",
+          "items:Bastone ferrato",
+          "items:Spellbook"
+        ],
+        "catalog_version": [
+          "2026.04.03"
+        ]
+      },
+      {
+        "file": "src/data/builds/wizard_human_evoker_lvl05.json",
+        "status": "invalid",
+        "output_prefix": "wizard_human_evoker",
+        "class": "Wizard",
+        "race": "Human",
+        "archetype": "Evoker",
+        "mode": "extended",
+        "mode_normalized": "extended",
+        "spec_id": "wizard_human_evoker",
+        "background": "Piromane accademico in cerca di antiche pergamene elementali.",
+        "model": null,
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "level": 5,
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "None is not of type 'string'; 7 is not of type 'array'; 6 is not of type 'array'; 5 is not of type 'array'; 3 is not of type 'array'; Elementi non presenti nel catalogo: feats:Incantesimi focalizzati (Invocazione), feats:Incantesimi massimizzati (metamagia), feats:Magia focalizzata superiore (Invocazione), feats:Metamagia (Incantesimi Estesi), items:Abito da viaggiatore, items:Bacchetta di dardo incantato (CL3), items:Bastone ferrato, items:Mantello resistente +1, items:Pagina di pergamena, items:Perla di potere I, items:Spellbook, items:Veste da mago rinforzata",
+        "completeness_errors": [
+          "Elementi non presenti nel catalogo: feats:Incantesimi focalizzati (Invocazione), feats:Incantesimi massimizzati (metamagia), feats:Magia focalizzata superiore (Invocazione), feats:Metamagia (Incantesimi Estesi), items:Abito da viaggiatore, items:Bacchetta di dardo incantato (CL3), items:Bastone ferrato, items:Mantello resistente +1, items:Pagina di pergamena, items:Perla di potere I, items:Spellbook, items:Veste da mago rinforzata"
+        ],
+        "missing_catalog_entries": [
+          "feats:Incantesimi focalizzati (Invocazione)",
+          "feats:Incantesimi massimizzati (metamagia)",
+          "feats:Magia focalizzata superiore (Invocazione)",
+          "feats:Metamagia (Incantesimi Estesi)",
+          "items:Abito da viaggiatore",
+          "items:Bacchetta di dardo incantato (CL3)",
+          "items:Bastone ferrato",
+          "items:Mantello resistente +1",
+          "items:Pagina di pergamena",
+          "items:Perla di potere I",
+          "items:Spellbook",
+          "items:Veste da mago rinforzata"
+        ],
+        "catalog_version": [
+          "2026.04.03"
+        ]
+      },
+      {
+        "file": "src/data/builds/wizard_human_evoker_lvl10.json",
+        "status": "invalid",
+        "output_prefix": "wizard_human_evoker",
+        "class": "Wizard",
+        "race": "Human",
+        "archetype": "Evoker",
+        "mode": "extended",
+        "mode_normalized": "extended",
+        "spec_id": "wizard_human_evoker",
+        "background": "Piromane accademico in cerca di antiche pergamene elementali.",
+        "model": null,
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "level": 10,
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "None is not of type 'string'; 8 is not of type 'array'; 7 is not of type 'array'; 7 is not of type 'array'; 7 is not of type 'array'; 6 is not of type 'array'; Elementi non presenti nel catalogo: feats:Incantesimi focalizzati (Invocazione), feats:Incantesimi focalizzati superiori (Invocazione), feats:Incantesimi massimizzati (metamagia), feats:Incantesimi potenziati (metamagia), feats:Incantesimi rapidi migliorati, feats:Magia focalizzata superiore (Invocazione), feats:Metamagia (Incantesimi Estesi), feats:Penetrare resistenza magica, feats:Penetrare resistenza magica migliorato, feats:Talento bonus (Difensivo), feats:Talento bonus (Mago) — Incantesimi rapidi, items:Abito da viaggiatore, items:Bacchetta di dardo incantato (CL3), items:Bacchetta di fulmine (CL9), items:Bacchetta di palla di fuoco (CL6), items:Bastone ferrato, items:Mantello resistente +1, items:Pagina di pergamena, items:Pergamena di muro di forza, items:Perla di potere I, items:Perla di potere IV, items:Spellbook, items:Testa di bacco runica, items:Veste da mago rinforzata",
+        "completeness_errors": [
+          "Elementi non presenti nel catalogo: feats:Incantesimi focalizzati (Invocazione), feats:Incantesimi focalizzati superiori (Invocazione), feats:Incantesimi massimizzati (metamagia), feats:Incantesimi potenziati (metamagia), feats:Incantesimi rapidi migliorati, feats:Magia focalizzata superiore (Invocazione), feats:Metamagia (Incantesimi Estesi), feats:Penetrare resistenza magica, feats:Penetrare resistenza magica migliorato, feats:Talento bonus (Difensivo), feats:Talento bonus (Mago) — Incantesimi rapidi, items:Abito da viaggiatore, items:Bacchetta di dardo incantato (CL3), items:Bacchetta di fulmine (CL9), items:Bacchetta di palla di fuoco (CL6), items:Bastone ferrato, items:Mantello resistente +1, items:Pagina di pergamena, items:Pergamena di muro di forza, items:Perla di potere I, items:Perla di potere IV, items:Spellbook, items:Testa di bacco runica, items:Veste da mago rinforzata"
+        ],
+        "missing_catalog_entries": [
+          "feats:Incantesimi focalizzati (Invocazione)",
+          "feats:Incantesimi focalizzati superiori (Invocazione)",
+          "feats:Incantesimi massimizzati (metamagia)",
+          "feats:Incantesimi potenziati (metamagia)",
+          "feats:Incantesimi rapidi migliorati",
+          "feats:Magia focalizzata superiore (Invocazione)",
+          "feats:Metamagia (Incantesimi Estesi)",
+          "feats:Penetrare resistenza magica",
+          "feats:Penetrare resistenza magica migliorato",
+          "feats:Talento bonus (Difensivo)",
+          "feats:Talento bonus (Mago) — Incantesimi rapidi",
+          "items:Abito da viaggiatore",
+          "items:Bacchetta di dardo incantato (CL3)",
+          "items:Bacchetta di fulmine (CL9)",
+          "items:Bacchetta di palla di fuoco (CL6)",
+          "items:Bastone ferrato",
+          "items:Mantello resistente +1",
+          "items:Pagina di pergamena",
+          "items:Pergamena di muro di forza",
+          "items:Perla di potere I",
+          "items:Perla di potere IV",
+          "items:Spellbook",
+          "items:Testa di bacco runica",
+          "items:Veste da mago rinforzata"
+        ],
+        "catalog_version": [
+          "2026.04.03"
+        ]
       }
     ]
   },
   "modules": {
     "total": 15,
-    "ok": 15,
-    "invalid": 0,
-    "errors": 0,
-    "invalid_entries": []
+    "ok": 13,
+    "invalid": 1,
+    "errors": 1,
+    "invalid_entries": [
+      {
+        "module": "adventurer_ledger.txt",
+        "file": null,
+        "status": "error",
+        "issues": [
+          "missing_audit",
+          "missing_record_status"
+        ],
+        "error": "Client error '403 Forbidden' for url 'http://localhost:8000/modules/adventurer_ledger.txt'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403"
+      },
+      {
+        "module": "scheda_pg_markdown_template.md",
+        "file": "src/data/modules/scheda_pg_markdown_template.md",
+        "status": "invalid",
+        "meta": {
+          "name": "scheda_pg_markdown_template.md",
+          "size_bytes": 29742,
+          "suffix": ".md",
+          "version": "1.1",
+          "compatibility": {
+            "core_min": "3.3",
+            "integrates_with": [
+              "MinMax Builder",
+              "Adventurer Ledger",
+              "Explain Methods",
+              "Ruling Expert",
+              "Hook VTT"
+            ]
+          },
+          "record_status": "draft",
+          "is_deleted": false,
+          "deleted_at": null,
+          "audit": [
+            {
+              "timestamp": "2025-12-19T18:29:42Z",
+              "actor": "generate_build_db",
+              "action": "module_indexed",
+              "status": "draft",
+              "note": "meta validation: {'core_min': '3.3', 'integrates_with': ['MinMax Builder', 'Adventurer Ledger', 'Explain Methods', 'Ruling Expert', 'Hook VTT']} is not valid under any of the given schemas"
+            }
+          ]
+        },
+        "error": "{'core_min': '3.3', 'integrates_with': ['MinMax Builder', 'Adventurer Ledger', 'Explain Methods', 'Ruling Expert', 'Hook VTT']} is not valid under any of the given schemas"
+      }
+    ]
   },
   "archived_files": [],
   "alerts": {
@@ -2055,6 +1914,7 @@
       "Bard",
       "Cleric",
       "Druid",
+      "Fighter",
       "Monk",
       "Paladin",
       "Ranger",

@@ -13,6 +13,8 @@
 
 ## Stato ultimo ciclo build
 - **Esecuzione:** preflight locale con `--export-lists` per rigenerare `reports/build_review.json` e `reports/index_analysis.json`; gli alert evidenziano che nessuna classe core ha build valide negli indici correnti.
+- **Core coverage sprint (2026-04-09):** eseguito run mirato con `planning/core_coverage_sprint.yml` (checkpoint lvl 1/5/10) su mock API locale per ridurre il rumore e riallineare l'indice alle classi segnalate da `alerts.missing_core_classes`.
+- **Motivazione gap residuo `missing_core_classes`:** le build core candidate continuano a risultare `invalid/error` perché i payload correnti non soddisfano `build_full_pg.schema.json` (campo richiesto `sheet_payload`) e, in più casi, hanno incoerenze sul formato `sheet_payload.spell_levels` (valori non array). Finché non vengono corretti payload o schema di compatibilità, il ciclo non può chiudersi con lista vuota.
 - **Follow-up rapido (handoff):**
   - **Tech Lead:** priorizzare un run mirato per coprire almeno le classi core e ridurre gli alert CI appena introdotti.
   - **Backend/API:** verificare le cause dei warning di validazione (es. versioni catalogo e campo `source` nei meta moduli) e proporre fix lato API/schema.
