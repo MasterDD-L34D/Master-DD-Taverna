@@ -1,16 +1,34 @@
 # Command run log
 
 
-## Template minimo run
-Copiare questo blocco per ogni nuova esecuzione e compilarlo in modo sintetico.
+## Template run (obbligatorio)
+Copiare questo blocco per ogni nuova esecuzione e compilarlo integralmente.
 
 ```md
 ## <nome run>
-- **Timestamp:** <YYYY-MM-DDTHH:MM:SSZ>
-- **Input:** <comando/i o sorgenti dati usate>
-- **Esito:** <ok|warning|fail + nota breve>
-- **Artifact aggiornati:** <lista file in reports/ e altri output>
+- **Timestamp (UTC):** <YYYY-MM-DDTHH:MM:SSZ>
+- **Tipo run:** <pre-release|release-candidate|post-release|ad-hoc>
+- **Input:**
+  - <comando 1>
+  - <comando 2>
+  - <sorgenti dati/report usati>
+- **Output:**
+  - **Esito:** <ok|warning|fail>
+  - **Sintesi:** <risultato sintetico + eventuali KPI>
+- **Artifact aggiornati:**
+  - <percorso file 1>
+  - <percorso file 2>
+- **Baseline report refresh (obbligatorio per RC):** <si/no>
+- **Generated_at report baseline:**
+  - `reports/build_review.json`: <timestamp>
+  - `reports/index_analysis.json`: <timestamp>
+  - `reports/data_quality_report.json`: <timestamp>
+  - `reports/checkpoint_coverage.json`: <timestamp>
 ```
+
+### Regola release candidate
+Prima di ogni RC è obbligatorio eseguire un refresh dei report baseline (`build_review`, `index_analysis`, `data_quality_report`, `checkpoint_coverage`) e registrare la run con `Baseline report refresh: si`.
+In assenza di questa evidenza la RC deve essere considerata **bloccata**.
 
 ## CI preflight (schemi, report moduli, attestato coverage locale)
 - **Commands:**
