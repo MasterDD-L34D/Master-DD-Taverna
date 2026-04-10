@@ -142,6 +142,17 @@ def short_backoff(monkeypatch):
 
 
 @pytest.fixture
+def backoff_tracker_limits():
+    original_ttl = settings.auth_backoff_state_ttl_seconds
+    original_max_clients = settings.auth_backoff_max_clients
+    settings.auth_backoff_state_ttl_seconds = 3600
+    settings.auth_backoff_max_clients = 10000
+    yield
+    settings.auth_backoff_state_ttl_seconds = original_ttl
+    settings.auth_backoff_max_clients = original_max_clients
+
+
+@pytest.fixture
 def auth_headers():
     return {"x-api-key": "test-api-key"}
 
@@ -625,6 +636,66 @@ def test_repeated_wrong_api_key_triggers_backoff(client, short_backoff):
 
     still_blocked = client.get("/modules", headers={"x-api-key": "wrong"})
     assert still_blocked.status_code == 429
+
+
+def test_failed_attempts_tracker_records_last_seen_timestamp(
+    client, monkeypatch, backoff_tracker_limits
+):
+    current = {"now": 10.0}
+
+    monkeypatch.setattr(app_module, "monotonic", lambda: current["now"])
+    response = client.get("/modules", headers={"x-api-key": "wrong"})
+
+    assert response.status_code == 401
+    state = app_module._failed_attempts["testclient"]
+    assert state["count"] == 1
+    assert state["last_seen"] == 10.0
+
+
+def test_failed_attempts_cleanup_respects_ttl(
+    client, monkeypatch, backoff_tracker_limits
+):
+    settings.auth_backoff_state_ttl_seconds = 5
+    current = {"now": 0.0}
+
+    def fake_monotonic():
+        return current["now"]
+
+    monkeypatch.setattr(app_module, "monotonic", fake_monotonic)
+    first = client.get("/modules", headers={"x-api-key": "wrong"})
+    assert first.status_code == 401
+    assert "testclient" in app_module._failed_attempts
+
+    current["now"] = 6.0
+    second = client.get("/modules", headers={"x-api-key": "wrong"})
+    assert second.status_code == 401
+
+    state = app_module._failed_attempts["testclient"]
+    assert state["count"] == 1
+    assert state["last_seen"] == 6.0
+
+
+def test_failed_attempts_eviction_when_max_clients_exceeded(
+    client, short_backoff, backoff_tracker_limits
+):
+    settings.auth_backoff_max_clients = 2
+    settings.trust_proxy_headers = True
+    settings.trusted_proxy_ips = ["198.51.100.1"]
+    client._transport.client = ("198.51.100.1", 50000)
+
+    first_client = {"x-api-key": "wrong", "x-forwarded-for": "203.0.113.10"}
+    second_client = {"x-api-key": "wrong", "x-forwarded-for": "203.0.113.11"}
+    third_client = {"x-api-key": "wrong", "x-forwarded-for": "203.0.113.12"}
+
+    assert client.get("/modules", headers=first_client).status_code == 401
+    assert client.get("/modules", headers=second_client).status_code == 401
+    assert set(app_module._failed_attempts) == {"203.0.113.10", "203.0.113.11"}
+
+    assert client.get("/modules", headers=third_client).status_code == 401
+    assert set(app_module._failed_attempts) == {"203.0.113.11", "203.0.113.12"}
+
+    response = client.get("/modules", headers=first_client)
+    assert response.status_code == 401
 
 
 def test_backoff_isolated_across_multiple_forwarded_ips(client, short_backoff):
