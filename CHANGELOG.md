@@ -2,6 +2,17 @@
 
 Questo file riassume le modifiche rilevanti introdotte dall’integrazione di **Source Governance v1**.
 
+## 2026-04-10 — Reference contract versioning hardening
+
+### Pipeline e controlli automatici
+- `tools/validate_schemas.py`: esteso con validazione del contratto versioni reference (manifest, dataset `data/reference/*.json`, controllo `entries`, verifica `reference_catalog_version` su payload build e `composite.build`) con exit code bloccante in caso di mismatch.
+
+### Regola operativa
+- Formalizzata la regola: ogni modifica ai dataset `data/reference/*.json` deve includere aggiornamento del manifest e nota in `CHANGELOG.md`.
+
+### Documentazione API
+- `docs/api_usage.md`: aggiornata sezione su catalog version e aggiunta sezione **Contract versioning** con comportamento atteso in caso di mismatch e indicazioni CI (`--build-dir`).
+
 ## 2025-12-17 — Source Governance v1
 
 ### Policy core
