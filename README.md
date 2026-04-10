@@ -78,6 +78,19 @@ header `x-api-key` tramite due variabili d'ambiente:
 - `AUTH_BACKOFF_SECONDS` (default: `60`): durata del blocco (`429 Too Many Requests` con
   header `Retry-After`) applicato all'IP che ha superato la soglia.
 
+#### Trust proxy headers (`TRUST_PROXY_*`)
+
+Per evitare spoofing degli header, l'API considera `x-forwarded-for` solo se la richiesta
+proviene da un proxy esplicitamente fidato:
+
+- `TRUST_PROXY_HEADERS` (default: `false`): se `true`, abilita la lettura degli header proxy.
+- `TRUSTED_PROXY_IPS` (default: stringa vuota): lista CSV di IP proxy fidati autorizzati
+  a fornire `x-forwarded-for`.
+
+Quando il trust è disabilitato (default), l'identificazione client usa sempre `request.client.host`.
+Se il trust è abilitato, il parser accetta solo IP validi IPv4/IPv6 in `x-forwarded-for` e ignora
+valori malformati.
+
 Consulta `docs/api_usage.md` per panoramica rapida di endpoint, parametri (`mode`, `stub`, header `x-api-key`) e messaggi d'errore standard.
 
 ### Analisi statica

@@ -13,8 +13,12 @@ Questa guida riassume come usare l'API FastAPI esposta dal progetto, con esempi 
 | `ALLOW_MODULE_DUMP` | `false` | `GET/POST /modules/{name}` | `false`: blocca dump non testuali (`403`) e serve testo parziale (`206`) con header `X-Content-*`; `true`: consente dump completo, salvo moduli protetti non in whitelist. |
 | `METRICS_API_KEY` | `None` | `GET /metrics` | Se impostata, abilita accesso a `/metrics` con `x-api-key`; `API_KEY` rimane accettata come fallback. |
 | `METRICS_IP_ALLOWLIST` | stringa vuota | `GET /metrics` | CSV IP consentiti (`client.host` o primo IP `x-forwarded-for`), alternativa alla key per esposizione Prometheus. |
+| `TRUST_PROXY_HEADERS` | `false` | Risoluzione IP client / parsing `x-forwarded-for` | Se `true`, abilita l'uso degli header proxy ma solo per richieste provenienti da proxy fidati (`TRUSTED_PROXY_IPS`). |
+| `TRUSTED_PROXY_IPS` | stringa vuota | Risoluzione IP client / parsing `x-forwarded-for` | CSV di IP proxy fidati autorizzati a fornire `x-forwarded-for`; valori non validi vengono ignorati. |
 
 - **Header standard**: `x-api-key: <API_KEY>` quando `ALLOW_ANONYMOUS` è disabilitato.
+- **Header proxy (`x-forwarded-for`)**: valutato solo se `TRUST_PROXY_HEADERS=true` e
+  `request.client.host` appartiene a `TRUSTED_PROXY_IPS`; il parser accetta solo hop IPv4/IPv6 validi e ignora input malformati.
 - **Metriche Prometheus**: se manca una chiave valida e l'IP non è in allowlist, `/metrics` risponde `403`.
 - **Output modulare con dump disabilitato**: per `.txt`/`.md` il payload è troncato a 4k con `X-Content-Partial: true`, `X-Content-Partial-Reason: ALLOW_MODULE_DUMP=false`, `X-Content-Served-Bytes`, `X-Content-Remaining-Bytes`, `X-Content-Truncated` e status `206 Partial Content`.
 
