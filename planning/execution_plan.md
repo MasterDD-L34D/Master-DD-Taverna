@@ -12,25 +12,40 @@ Concludere il ciclo di remediation per tutti i moduli contrassegnati "Pronto per
 
 
 ## Baseline corrente
-Fonte iniziale unica: `reports/build_review.json`, `reports/index_analysis.json`, `reports/data_quality_report.json`, `reports/checkpoint_coverage.json`.
+Fonte baseline obbligatoria: `reports/build_review.json`, `reports/index_analysis.json`, `reports/data_quality_report.json`, `reports/checkpoint_coverage.json`.
 
-- **Copertura classi core:** `index_analysis.json` segnala 10 classi core mancanti (`Barbarian`, `Bard`, `Cleric`, `Druid`, `Monk`, `Paladin`, `Ranger`, `Rogue`, `Sorcerer`, `Wizard`) su baseline attuale; nel contempo `build_review.json` riporta build fortemente non valide (1 valida su 84).
-- **Mismatch indice-file:** `data_quality_report.json` evidenzia 64 gap su `build_index`, composti da 49 `level_missing` (campo `level` assente/nullo nei file) e 15 `missing_levels` (checkpoint attesi 1/5/10 non completi per prefisso).
-- **Stato catalogo reference:** `build_review.json`/`data_quality_report.json` mostrano catalogo con copertura completa lato source AoN (`aon_ratio=1.0`, 4129/4129 URL AoN), ma qualità dati da stabilizzare per duplicati (`reference_catalog.duplicate_counts.name=6`) e campi opzionali quasi vuoti (`prerequisites` ~95.37% null).
+### KPI minimi (fotografia baseline)
+- **Copertura classi core (`index_analysis.json`):** 4/10 classi core presenti nelle build indicizzate (`Cleric`, `Druid`, `Paladin`, `Wizard`) e 6/10 mancanti (`Barbarian`, `Bard`, `Monk`, `Ranger`, `Rogue`, `Sorcerer`).
+- **Mismatch indice/filesystem (`data_quality_report.json` + `checkpoint_coverage.json`):** 64 gap su `build_index` (49 `level_missing`, 15 `missing_levels`) e 21 prefissi con checkpoint incompleti (attesi 1/5/10).
+- **Errori schema/stato build (`build_review.json` + `index_analysis.json`):** 0 build valide su 105 totali (`invalid=76`, `missing=29`); tutte le 76 voci presenti in `build_index` risultano `invalid`.
+
+### Soglia di accettazione minima per avanzamento
+- Nessuna release candidate può essere proposta se uno dei KPI sopra peggiora rispetto alla baseline corrente.
+- Ogni aggiornamento KPI deve citare esplicitamente il timestamp `generated_at` dei 4 report baseline.
 
 ## Cadenza refresh report (operativa)
 Per mantenere i report in `reports/` allineati con la baseline, eseguire la seguente routine:
 
 1. **Refresh modulo/QA (giornaliero, o a ogni merge su main):**
    - `python tools/refresh_module_reports.py`
-2. **Refresh indici/build list (giornaliero dopo refresh moduli, e sempre prima di release):**
+2. **Refresh indici/build list (giornaliero dopo refresh moduli, obbligatorio prima di ogni release candidate):**
    - `python tools/generate_build_db.py --export-lists --output-dir src/data/builds --modules-output-dir src/data/modules --index-path src/data/build_index.json --module-index-path src/data/module_index.json`
 3. **Output target da aggiornare in `reports/`:**
    - `reports/build_review.json`
    - `reports/index_analysis.json`
    - `reports/data_quality_report.json`
    - `reports/checkpoint_coverage.json`
-4. **Guardrail run:** dopo ogni refresh registrare una riga in `docs/run_logs.md` usando il template minimo (timestamp/input/esito/artifact aggiornati).
+4. **Guardrail run:** dopo ogni refresh registrare una riga in `docs/run_logs.md` usando il template run formalizzato (timestamp/input/output/artifact aggiornati).
+
+
+## Gate release candidate (obbligatorio)
+Prima di aprire o approvare una release candidate eseguire nell'ordine:
+1. `python tools/refresh_module_reports.py`
+2. `python tools/generate_build_db.py --export-lists --output-dir src/data/builds --modules-output-dir src/data/modules --index-path src/data/build_index.json --module-index-path src/data/module_index.json`
+3. Aggiornamento/verifica dei 4 report baseline in `reports/`
+4. Registrazione run in `docs/run_logs.md` con stato finale `ok` e artifact elencati
+
+Se il refresh non è stato completato nella stessa finestra temporale della RC, la RC è da considerare bloccata.
 
 ## Workstream 1 — Remediation per modulo
 1. **Derivare storie di fix**: per ogni modulo, partire dalle osservazioni/errori in `module_work_plan.md` e mantenere l'associazione story → riga sorgente citata.
