@@ -358,10 +358,17 @@ def test_ruling_expert_truncated_when_dump_enabled_without_whitelist(
     settings.module_dump_whitelist = set()
 
     try:
+        total_size = (MODULES_DIR / "ruling_expert.txt").stat().st_size
         response = client.get("/modules/ruling_expert.txt", headers=auth_headers)
         assert response.status_code == 206
         assert response.headers["X-Content-Partial"] == "true"
+        assert response.headers["X-Content-Partial-Reason"] == "ALLOW_MODULE_DUMP=false"
+        served_bytes = int(response.headers["X-Content-Served-Bytes"])
+        remaining_bytes = int(response.headers["X-Content-Remaining-Bytes"])
+        assert served_bytes <= total_size
+        assert served_bytes + remaining_bytes == total_size
         assert response.headers["X-Content-Truncated"] == "true"
+        assert response.headers["X-Truncation-Limit-Chars"] == "4000"
         assert "[contenuto troncato" in response.text
     finally:
         settings.allow_module_dump = original_allow
@@ -574,6 +581,20 @@ def test_repeated_wrong_api_key_triggers_backoff(client, short_backoff):
     assert still_blocked.status_code == 429
 
 
+def test_backoff_isolated_across_multiple_forwarded_ips(client, short_backoff):
+    blocked_ip_headers = {"x-api-key": "wrong", "x-forwarded-for": "203.0.113.10"}
+    allowed_ip_headers = {"x-api-key": "wrong", "x-forwarded-for": "203.0.113.11"}
+
+    first_attempt = client.get("/modules", headers=blocked_ip_headers)
+    assert first_attempt.status_code == 401
+
+    blocked_attempt = client.get("/modules", headers=blocked_ip_headers)
+    assert blocked_attempt.status_code == 429
+
+    independent_attempt = client.get("/modules", headers=allowed_ip_headers)
+    assert independent_attempt.status_code == 401
+
+
 def test_correct_api_key_allows_access(client, auth_headers):
     response = client.get("/modules", headers=auth_headers)
     assert response.status_code == 200
@@ -727,6 +748,27 @@ def test_metrics_allowlisted_forwarded_for(client, metrics_security_settings):
     blocked_response = client.get("/metrics")
     assert blocked_response.status_code == 403
     assert blocked_response.json()["detail"] == "Accesso alle metriche non autorizzato"
+
+
+def test_metrics_allowlist_uses_first_forwarded_for_hop(
+    client, metrics_security_settings, monkeypatch
+):
+    monkeypatch.setattr(settings, "metrics_api_key", None)
+    monkeypatch.setattr(settings, "metrics_ip_allowlist", ["203.0.113.5"])
+    monkeypatch.setattr(client._transport, "client", ("198.51.100.8", 50000))
+
+    allowed = client.get(
+        "/metrics",
+        headers={"x-forwarded-for": "203.0.113.5, 198.51.100.77, 198.51.100.8"},
+    )
+    assert allowed.status_code == 200
+
+    blocked = client.get(
+        "/metrics",
+        headers={"x-forwarded-for": "198.51.100.77, 203.0.113.5, 198.51.100.8"},
+    )
+    assert blocked.status_code == 403
+    assert blocked.json()["detail"] == "Accesso alle metriche non autorizzato"
 
 
 def test_modules_directory_missing_returns_error(

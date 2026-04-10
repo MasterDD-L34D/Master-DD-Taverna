@@ -45,3 +45,42 @@ class Settings:
 
 
 settings = Settings()
+
+
+ACCESS_POLICY_MATRIX = {
+    "API_KEY": {
+        "default": None,
+        "scope": "Tutti gli endpoint applicativi protetti da require_api_key.",
+        "effect": "Se ALLOW_ANONYMOUS=false, x-api-key deve combaciare con API_KEY.",
+    },
+    "ALLOW_ANONYMOUS": {
+        "default": "false",
+        "scope": "Autenticazione endpoint applicativi (escluso /metrics).",
+        "effect": "Se true, bypassa API_KEY e resetta il tracker backoff per client.",
+    },
+    "ALLOW_MODULE_DUMP": {
+        "default": "false",
+        "scope": "GET/POST /modules/{name}",
+        "effect": (
+            "false: blocca dump non testuali e tronca i moduli testuali con header "
+            "di contenuto parziale; true: abilita dump completo salvo moduli protetti "
+            "non in whitelist."
+        ),
+    },
+    "METRICS_API_KEY": {
+        "default": None,
+        "scope": "GET /metrics",
+        "effect": (
+            "Se valorizzata, autorizza /metrics con x-api-key; anche API_KEY resta "
+            "accettata come fallback."
+        ),
+    },
+    "METRICS_IP_ALLOWLIST": {
+        "default": "",
+        "scope": "GET /metrics",
+        "effect": (
+            "CSV di IP consentiti su client host o primo hop x-forwarded-for; "
+            "usata come alternativa alla chiave."
+        ),
+    },
+}

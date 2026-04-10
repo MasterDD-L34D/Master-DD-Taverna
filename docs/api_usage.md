@@ -4,15 +4,19 @@ Questa guida riassume come usare l'API FastAPI esposta dal progetto, con esempi 
 
 ## Autenticazione e flag runtime
 
-- **Header obbligatorio**: `x-api-key: <API_KEY>` a meno che non sia impostato `ALLOW_ANONYMOUS=true`.
-- **Troncamento contenuti** (`ALLOW_MODULE_DUMP`):
-  - `false` (default): i file non testuali generano `403 Module download not allowed`; i `.txt`/`.md` sono limitati ai primi 4000 caratteri con suffisso `[contenuto troncato]`, header `X-Content-Partial: true`, `X-Content-Partial-Reason: ALLOW_MODULE_DUMP=false`, `X-Content-Served-Bytes`/`X-Content-Remaining-Bytes` e status `206 Partial Content`.
-  - `true`: i file vengono restituiti per intero, inclusi PDF/asset non testuali (abilitare solo per QA/export controllati).
-- **Metriche Prometheus** (`METRICS_API_KEY` o `METRICS_IP_ALLOWLIST`):
-  - `/metrics` è protetto da API key dedicata (`METRICS_API_KEY`) o dalla stessa `API_KEY`.
-  - In alternativa è possibile autorizzare un allowlist IP con `METRICS_IP_ALLOWLIST="1.2.3.4,10.0.0.0"` (liste separate da virgole).
-  - Se nessuna chiave è configurata, solo gli IP nella allowlist possono leggere le metriche.
-  - Le metriche includono conteggio richieste per endpoint/metodo/status, errori 4xx/5xx, trigger di backoff, stato delle directory.
+### Matrice policy accesso (env)
+
+| Variabile | Default | Scope | Effetto operativo |
+| --- | --- | --- | --- |
+| `API_KEY` | `None` | Endpoint protetti da `require_api_key` | Quando `ALLOW_ANONYMOUS=false`, il client deve inviare `x-api-key` uguale a `API_KEY`. |
+| `ALLOW_ANONYMOUS` | `false` | Endpoint applicativi (escluso `/metrics`) | Se `true`, disattiva il controllo `API_KEY` e azzera eventuali fail/backoff per il client corrente. |
+| `ALLOW_MODULE_DUMP` | `false` | `GET/POST /modules/{name}` | `false`: blocca dump non testuali (`403`) e serve testo parziale (`206`) con header `X-Content-*`; `true`: consente dump completo, salvo moduli protetti non in whitelist. |
+| `METRICS_API_KEY` | `None` | `GET /metrics` | Se impostata, abilita accesso a `/metrics` con `x-api-key`; `API_KEY` rimane accettata come fallback. |
+| `METRICS_IP_ALLOWLIST` | stringa vuota | `GET /metrics` | CSV IP consentiti (`client.host` o primo IP `x-forwarded-for`), alternativa alla key per esposizione Prometheus. |
+
+- **Header standard**: `x-api-key: <API_KEY>` quando `ALLOW_ANONYMOUS` è disabilitato.
+- **Metriche Prometheus**: se manca una chiave valida e l'IP non è in allowlist, `/metrics` risponde `403`.
+- **Output modulare con dump disabilitato**: per `.txt`/`.md` il payload è troncato a 4k con `X-Content-Partial: true`, `X-Content-Partial-Reason: ALLOW_MODULE_DUMP=false`, `X-Content-Served-Bytes`, `X-Content-Remaining-Bytes`, `X-Content-Truncated` e status `206 Partial Content`.
 
 ## Endpoint principali
 
