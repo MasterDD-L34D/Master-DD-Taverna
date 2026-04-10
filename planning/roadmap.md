@@ -27,3 +27,15 @@
 - **Backend/API**: implementazione script `generate_build_db`, autenticazione (`AUTH_BACKOFF_*`), metriche/health.
 - **Data/Validation**: schemi in `schemas/`, flag `--strict`/`--keep-invalid`, indici `build_index.json` e `module_index.json`.
 - **Docs & Prompt**: allineamento README, `docs/api_usage.md`, `gpt/system_prompt_core.md` e comunicazione cambiamenti.
+
+## Checklist pre-merge unificata (obbligatoria)
+
+Checklist unica condivisa con `docs/release_process_rationale.md`, da completare prima del merge:
+
+- [ ] **Gate indice↔filesystem bloccante in CI**: pass obbligatorio di `pytest tests/test_module_index.py -q`.
+- [ ] **Aggiornamento artifact dati obbligatorio**: se la PR modifica `src/data/`, aggiornare anche:
+  - `reports/build_review.json`
+  - `reports/index_analysis.json`
+  - `src/data/module_index.json`
+- [ ] **Delta release in QA log**: aggiungere/aggiornare in `reports/qa_log.md` la sezione “Delta release” con file cambiati e impatto su moduli/build/schema.
+- [ ] **Ready-to-release evidence**: note release + stato RC + timeline coerenti con il merge candidato.

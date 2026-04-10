@@ -21,6 +21,13 @@ jobs:
               repo: context.repo.repo,
               pull_number: prNumber,
             }).then((res) => res.data.body || '').catch(() => context.payload.pull_request?.body || '') || '';
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber,
+              per_page: 100,
+            });
+            const changedFiles = files.map((file) => file.filename);
 
             const startMarker = '<!-- AUTO-QA-START -->';
             const endMarker = '<!-- AUTO-QA-END -->';
@@ -83,6 +90,21 @@ jobs:
               core.setFailed(`Aggiungi una riga di evidenza per ogni controllo: manca ${missingEvidence.join(', ')}.`);
             }
 
+            const touchedData = changedFiles.some((path) => path.startsWith('src/data/'));
+            if (touchedData) {
+              const requiredArtifacts = [
+                'reports/build_review.json',
+                'reports/index_analysis.json',
+                'src/data/module_index.json',
+              ];
+              const missingArtifacts = requiredArtifacts.filter((artifact) => !changedFiles.includes(artifact));
+              if (missingArtifacts.length) {
+                core.setFailed(
+                  `La PR modifica src/data/: aggiorna anche gli artifact obbligatori ${missingArtifacts.join(', ')}.`,
+                );
+              }
+            }
+
   qa-autofill:
     runs-on: ubuntu-latest
     if: ${{ github.event.pull_request.number }}
@@ -120,6 +142,11 @@ jobs:
         run: pytest tests/test_generate_build_db.py -k reference
         continue-on-error: true
 
+      - name: Run module index filesystem gate
+        id: module_index_tests
+        run: pytest tests/test_module_index.py -q
+        continue-on-error: true
+
       - name: Aggiorna corpo PR con esiti QA
         if: ${{ github.event.pull_request.number }}
         env:
@@ -129,6 +156,7 @@ jobs:
           APP_TEST_CONCLUSION: ${{ steps.app_tests.conclusion }}
           STATIC_CONCLUSION: ${{ steps.static_check.conclusion }}
           REFERENCE_CONCLUSION: ${{ steps.reference_tests.conclusion }}
+          MODULE_INDEX_CONCLUSION: ${{ steps.module_index_tests.conclusion }}
         run: |
           python - <<'PY'
           import json
@@ -170,6 +198,11 @@ jobs:
             {
               "label": "CTA QA presenti",
               "conclusion": os.environ.get("REFERENCE_CONCLUSION", ""),
+              "type": "integration",
+            },
+            {
+              "label": "Gate indice↔filesystem",
+              "conclusion": os.environ.get("MODULE_INDEX_CONCLUSION", ""),
               "type": "integration",
             },
           ]
@@ -231,6 +264,7 @@ jobs:
           STATIC_CONCLUSION: ${{ steps.static_check.conclusion }}
           APP_TEST_CONCLUSION: ${{ steps.app_tests.conclusion }}
           REFERENCE_CONCLUSION: ${{ steps.reference_tests.conclusion }}
+          MODULE_INDEX_CONCLUSION: ${{ steps.module_index_tests.conclusion }}
         run: |
           failures=()
 
@@ -248,6 +282,7 @@ jobs:
           check_outcome "Test con dump disabilitato (marker/header)" "$APP_TEST_CONCLUSION"
           check_outcome "CTA QA presenti" "$REFERENCE_CONCLUSION"
           check_outcome "401/403 per endpoint protetti" "$APP_TEST_CONCLUSION"
+          check_outcome "Gate indice↔filesystem" "$MODULE_INDEX_CONCLUSION"
 
           body=$(gh api "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" --jq .body)
           if [[ "$body" != *"<!-- AUTO-QA-START -->"* || "$body" != *"<!-- AUTO-QA-END -->"* ]]; then

@@ -13,6 +13,18 @@ Riassunto operativo:
 2. Creare il tag/branch `rc/<data>` dopo attestato verde, come riferimento immutabile.
 3. Aggiornare la timeline del tracker con data di pubblicazione e link al messaggio per preservare la storia del rilascio.
 
+## Checklist pre-merge unificata (obbligatoria)
+
+Usare questa checklist unica prima di ogni merge (allineata con `planning/roadmap.md`):
+
+- [ ] **Gate indice↔filesystem bloccante in CI**: `pytest tests/test_module_index.py -q` deve risultare verde.
+- [ ] **Aggiornamento artifact dati obbligatorio**: se la PR tocca file in `src/data/`, devono essere aggiornati nello stesso branch anche:
+  - `reports/build_review.json`
+  - `reports/index_analysis.json`
+  - `src/data/module_index.json`
+- [ ] **Evidenza QA delta release**: aggiornare `reports/qa_log.md` con sezione **Delta release** (file cambiati + impatto su moduli/build/schema).
+- [ ] **Razionale release allineato**: mantenere coerenti note di rilascio, timeline e stato RC (`rc/<data>`).
+
 ### Automazione minima per questi tre passi
 Usa `tools/release_helper.py` per generare in locale il messaggio e aggiornare la timeline (resta solo da postare manualmente nel canale):
 
