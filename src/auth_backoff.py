@@ -175,6 +175,9 @@ async def require_api_key(request: Request, x_api_key: str | None = Header(defau
         if updated_count >= settings.auth_backoff_threshold:
             blocked_until = now + settings.auth_backoff_seconds
             logging.warning("Authentication backoff triggered", extra={"event": "auth_backoff_triggered", "client_ip": client_id, "fail_count": updated_count, "retry_after": settings.auth_backoff_seconds})
+            from .app import AUTH_BACKOFF_TRIGGER
+
+            AUTH_BACKOFF_TRIGGER.inc()
             _record_failed_attempt(client_id, count=updated_count, blocked_until=blocked_until, now=now)
             raise HTTPException(
                 status_code=429,

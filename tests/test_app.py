@@ -1145,12 +1145,40 @@ def test_metrics_accepts_primary_api_key_when_metrics_key_missing(client, metric
     assert response.headers["content-type"] == CONTENT_TYPE_LATEST
 
 
+def test_auth_backoff_counter_increments_when_threshold_is_hit(client, short_backoff, auth_headers):
+    baseline_response = client.get("/metrics", headers=auth_headers)
+    baseline_metric = next(
+        line for line in baseline_response.text.splitlines() if line.startswith("auth_backoff_trigger_total ")
+    )
+    baseline_value = float(baseline_metric.rsplit(" ", 1)[1])
+
+    assert client.get("/modules", headers={"x-api-key": "wrong"}).status_code == 401
+    blocked_response = client.get("/modules", headers={"x-api-key": "wrong"})
+
+    assert blocked_response.status_code == 429
+
+    metrics_response = client.get("/metrics", headers=auth_headers)
+    metric_line = next(
+        line for line in metrics_response.text.splitlines() if line.startswith("auth_backoff_trigger_total ")
+    )
+    assert float(metric_line.rsplit(" ", 1)[1]) == baseline_value + 1
+
+
 def test_truncation_headers_include_remaining_bytes(client, auth_headers):
     response = client.get("/modules/base_profile.txt", headers=auth_headers)
 
     assert response.status_code == 206
     assert int(response.headers["X-Content-Remaining-Bytes"]) >= 0
     assert response.headers["X-Content-Partial"] == "true"
+
+
+def test_storage_meta_preserves_remediation_contract(client, auth_headers):
+    response = client.get("/storage_meta", headers=auth_headers)
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["remediation"]["echo_gate"].startswith("Echo gate <8.5")
+    assert "/self_check" in payload["remediation"]["qa_check"]
 
 
 def test_storage_meta_returns_503_when_taverna_dir_missing(client, auth_headers, monkeypatch, tmp_path):
