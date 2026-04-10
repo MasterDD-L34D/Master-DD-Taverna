@@ -15,6 +15,7 @@ import sys
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 
 import src.app as app_module
+import src.auth_backoff as auth_backoff_module
 from src.app import app
 from src.config import MODULES_DIR, DATA_DIR, settings
 from tools.generate_build_db import schema_for_mode, validate_with_schema
@@ -643,7 +644,7 @@ def test_failed_attempts_tracker_records_last_seen_timestamp(
 ):
     current = {"now": 10.0}
 
-    monkeypatch.setattr(app_module, "monotonic", lambda: current["now"])
+    monkeypatch.setattr(auth_backoff_module, "monotonic", lambda: current["now"])
     response = client.get("/modules", headers={"x-api-key": "wrong"})
 
     assert response.status_code == 401
@@ -661,7 +662,7 @@ def test_failed_attempts_cleanup_respects_ttl(
     def fake_monotonic():
         return current["now"]
 
-    monkeypatch.setattr(app_module, "monotonic", fake_monotonic)
+    monkeypatch.setattr(auth_backoff_module, "monotonic", fake_monotonic)
     first = client.get("/modules", headers={"x-api-key": "wrong"})
     assert first.status_code == 401
     assert "testclient" in app_module._failed_attempts
@@ -1123,3 +1124,40 @@ def test_health_with_temp_directories_sets_directory_metrics(
     assert metrics_response.status_code == 200
     assert 'app_directory_status{directory="modules"} 1.0' in metrics_response.text
     assert 'app_directory_status{directory="data"} 1.0' in metrics_response.text
+
+
+def test_backoff_reset_after_successful_auth(client, short_backoff, auth_headers):
+    first_response = client.get("/modules", headers={"x-api-key": "wrong"})
+    assert first_response.status_code == 401
+    assert app_module._failed_attempts
+
+    success_response = client.get("/modules", headers=auth_headers)
+    assert success_response.status_code == 200
+    assert app_module._failed_attempts == {}
+
+
+def test_metrics_accepts_primary_api_key_when_metrics_key_missing(client, metrics_security_settings):
+    settings.metrics_api_key = None
+
+    response = client.get("/metrics", headers={"x-api-key": "test-api-key"})
+
+    assert response.status_code == 200
+    assert response.headers["content-type"] == CONTENT_TYPE_LATEST
+
+
+def test_truncation_headers_include_remaining_bytes(client, auth_headers):
+    response = client.get("/modules/base_profile.txt", headers=auth_headers)
+
+    assert response.status_code == 206
+    assert int(response.headers["X-Content-Remaining-Bytes"]) >= 0
+    assert response.headers["X-Content-Partial"] == "true"
+
+
+def test_storage_meta_returns_503_when_taverna_dir_missing(client, auth_headers, monkeypatch, tmp_path):
+    missing = tmp_path / "missing_taverna"
+    monkeypatch.setattr(app_module, "TAVERNA_SAVES_DIR", missing)
+
+    response = client.get("/storage_meta", headers=auth_headers)
+
+    assert response.status_code == 503
+    assert "Directory taverna_saves non trovata" in response.json()["detail"]

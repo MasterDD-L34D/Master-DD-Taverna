@@ -11,6 +11,10 @@ Questa guida riassume come usare l'API FastAPI esposta dal progetto, con esempi 
 | `API_KEY` | `None` | Endpoint protetti da `require_api_key` | Quando `ALLOW_ANONYMOUS=false`, il client deve inviare `x-api-key` uguale a `API_KEY`. |
 | `ALLOW_ANONYMOUS` | `false` | Endpoint applicativi (escluso `/metrics`) | Se `true`, disattiva il controllo `API_KEY` e azzera eventuali fail/backoff per il client corrente. |
 | `ALLOW_MODULE_DUMP` | `false` | `GET/POST /modules/{name}` | `false`: blocca dump non testuali (`403`) e serve testo parziale (`206`) con header `X-Content-*`; `true`: consente dump completo, salvo moduli protetti non in whitelist. |
+| `AUTH_BACKOFF_THRESHOLD` | `5` | `require_api_key` su endpoint applicativi | Numero di tentativi auth invalidi consecutivi che attivano `429` con `Retry-After`. |
+| `AUTH_BACKOFF_SECONDS` | `60` | `require_api_key` su endpoint applicativi | Durata (secondi) del blocco temporaneo quando il client supera la soglia di tentativi invalidi. |
+| `AUTH_BACKOFF_STATE_TTL_SECONDS` | `3600` | Tracker in-memory backoff | TTL delle entry client nel tracker tentativi; oltre la finestra, lo stato viene ripulito. |
+| `AUTH_BACKOFF_MAX_CLIENTS` | `10000` | Tracker in-memory backoff | Limite massimo di client tracciati; oltre il limite avviene eviction oldest-first. |
 | `METRICS_API_KEY` | `None` | `GET /metrics` | Se impostata, abilita accesso a `/metrics` con `x-api-key`; `API_KEY` rimane accettata come fallback. |
 | `METRICS_IP_ALLOWLIST` | stringa vuota | `GET /metrics` | CSV IP consentiti (`client.host` o primo IP `x-forwarded-for`), alternativa alla key per esposizione Prometheus. |
 | `TRUST_PROXY_HEADERS` | `false` | Risoluzione IP client / parsing `x-forwarded-for` | Se `true`, abilita l'uso degli header proxy ma solo per richieste provenienti da proxy fidati (`TRUSTED_PROXY_IPS`). |
@@ -170,6 +174,17 @@ Elenca i file in `src/data` (PDF, markdown di supporto). Non restituisce il cont
 
 ### `GET /knowledge/{name}/meta`
 Metadati per un singolo asset in `src/data`.
+
+## Matrice status endpoint sensibili (coerenza policy)
+
+| Endpoint | 401 | 403 | 429 | 503 |
+| --- | --- | --- | --- | --- |
+| `GET /modules` | API key mancante/errata o `API_KEY` non configurata (con `ALLOW_ANONYMOUS=false`) | n/a | backoff auth attivo/soglia raggiunta | directory `modules` assente/non accessibile |
+| `GET /modules/{name}` | come sopra (`require_api_key`) | dump non consentito con `ALLOW_MODULE_DUMP=false` su file non testuali/protetti | backoff auth | n/a (file-level usa 404/400) |
+| `GET /modules/{name}/meta` | come sopra | n/a | backoff auth | n/a |
+| `GET /storage_meta` / `GET /modules/taverna_saves/*` | come sopra | n/a | backoff auth | directory `taverna_saves` assente/non accessibile |
+| `GET /knowledge` e `GET /knowledge/{name}/meta` | come sopra | n/a | backoff auth | directory `data` assente/non accessibile (listing) |
+| `GET /metrics` | n/a (usa `require_metrics_access`) | key/IP non autorizzati | n/a | n/a |
 
 ## Errori standard
 - `401 Unauthorized`: chiave mancante/non valida quando `ALLOW_ANONYMOUS` è disabilitato o `API_KEY` non è configurata.
