@@ -87,3 +87,20 @@ snapshot processato:
 
 Usa i filtri e il batching per riprendere rapidamente la QA su subset di classi
 senza rifare l'intero export.
+
+## SLO minimi raccomandati
+
+Per promuovere una build in ambienti condivisi (stage/prod), la pipeline QA deve
+rispettare almeno questi SLO:
+
+- **Zero 5xx sui percorsi nominali**: su run nominali (`/health`, `/modules`,
+  `/modules/{name}`, `/metrics` con credenziali valide) il tasso di risposta 5xx
+  deve restare `0.00%` nella finestra di validazione.
+- **Coerenza header di truncation**: quando `ALLOW_MODULE_DUMP=false`, ogni
+  risposta testuale parziale (`206`) deve includere in modo consistente:
+  `X-Content-Partial=true`, `X-Content-Partial-Reason=ALLOW_MODULE_DUMP=false`,
+  `X-Content-Served-Bytes`, `X-Content-Remaining-Bytes`, `X-Content-Truncated`
+  e `X-Truncation-Limit-Chars`.
+- **Nessuna regressione su controllo accessi**: i test auth/metrics devono
+  confermare backoff per client/IP indipendenti e corretta valutazione del primo
+  hop `x-forwarded-for` rispetto alla allowlist configurata.

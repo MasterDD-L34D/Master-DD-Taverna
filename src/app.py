@@ -105,12 +105,73 @@ def _reference_catalog_version() -> str | None:
 
 
 def _client_identifier(request: Request) -> str:
-    forwarded_for = request.headers.get("x-forwarded-for")
+    forwarded_for = _forwarded_for_client_ip(request)
     if forwarded_for:
-        return forwarded_for.split(",", 1)[0].strip()
+        return forwarded_for
     if request.client and request.client.host:
         return request.client.host
     return "unknown"
+
+
+def _forwarded_for_client_ip(request: Request) -> str | None:
+    forwarded_for = request.headers.get("x-forwarded-for")
+    if not forwarded_for:
+        return None
+    first_ip = forwarded_for.split(",", 1)[0].strip()
+    return first_ip or None
+
+
+def _retry_after_for_active_backoff(client_id: str, now: float) -> int | None:
+    attempt_state = _failed_attempts.get(client_id, {"count": 0, "blocked_until": 0.0})
+    blocked_until = float(attempt_state.get("blocked_until", 0.0))
+    if now >= blocked_until:
+        return None
+    return max(int(blocked_until - now), 0)
+
+
+def _raise_backoff_active(client_id: str, retry_after: int) -> None:
+    logging.warning(
+        "Authentication backoff active",
+        extra={
+            "event": "auth_backoff_active",
+            "client_ip": client_id,
+            "retry_after": retry_after,
+        },
+    )
+    raise HTTPException(
+        status_code=429,
+        detail="Troppi tentativi non autorizzati, riprova più tardi",
+        headers={"Retry-After": str(retry_after)},
+    )
+
+
+def _raise_auth_backoff_triggered(
+    client_id: str, now: float, updated_count: int
+) -> None:
+    blocked_until = now + settings.auth_backoff_seconds
+    logging.warning(
+        "Authentication backoff triggered",
+        extra={
+            "event": "auth_backoff_triggered",
+            "client_ip": client_id,
+            "fail_count": updated_count,
+            "retry_after": settings.auth_backoff_seconds,
+        },
+    )
+    AUTH_BACKOFF_TRIGGER.inc()
+    _failed_attempts[client_id] = {
+        "count": updated_count,
+        "blocked_until": blocked_until,
+    }
+    raise HTTPException(
+        status_code=429,
+        detail="Troppi tentativi non autorizzati, riprova più tardi",
+        headers={"Retry-After": str(settings.auth_backoff_seconds)},
+    )
+
+
+def _accepted_metrics_keys() -> set[str]:
+    return {k for k in (settings.metrics_api_key, settings.api_key) if k}
 
 
 async def require_api_key(
@@ -121,22 +182,9 @@ async def require_api_key(
     client_id = _client_identifier(request)
     now = monotonic()
     attempt_state = _failed_attempts.get(client_id, {"count": 0, "blocked_until": 0.0})
-
-    if now < attempt_state.get("blocked_until", 0.0):
-        retry_after = int(attempt_state["blocked_until"] - now)
-        logging.warning(
-            "Authentication backoff active",
-            extra={
-                "event": "auth_backoff_active",
-                "client_ip": client_id,
-                "retry_after": retry_after,
-            },
-        )
-        raise HTTPException(
-            status_code=429,
-            detail="Troppi tentativi non autorizzati, riprova più tardi",
-            headers={"Retry-After": str(max(retry_after, 0))},
-        )
+    retry_after = _retry_after_for_active_backoff(client_id, now)
+    if retry_after is not None:
+        _raise_backoff_active(client_id, retry_after)
 
     if settings.allow_anonymous:
         _failed_attempts.pop(client_id, None)
@@ -163,26 +211,7 @@ async def require_api_key(
         )
         blocked_until = attempt_state.get("blocked_until", 0.0)
         if updated_count >= settings.auth_backoff_threshold:
-            blocked_until = now + settings.auth_backoff_seconds
-            logging.warning(
-                "Authentication backoff triggered",
-                extra={
-                    "event": "auth_backoff_triggered",
-                    "client_ip": client_id,
-                    "fail_count": updated_count,
-                    "retry_after": settings.auth_backoff_seconds,
-                },
-            )
-            AUTH_BACKOFF_TRIGGER.inc()
-            _failed_attempts[client_id] = {
-                "count": updated_count,
-                "blocked_until": blocked_until,
-            }
-            raise HTTPException(
-                status_code=429,
-                detail="Troppi tentativi non autorizzati, riprova più tardi",
-                headers={"Retry-After": str(settings.auth_backoff_seconds)},
-            )
+            _raise_auth_backoff_triggered(client_id, now, updated_count)
 
         _failed_attempts[client_id] = {
             "count": updated_count,
@@ -198,11 +227,8 @@ def _is_metrics_ip_allowed(request: Request) -> bool:
         return False
     if request.client and request.client.host in settings.metrics_ip_allowlist:
         return True
-    forwarded_for = request.headers.get("x-forwarded-for")
-    if (
-        forwarded_for
-        and forwarded_for.split(",", 1)[0].strip() in settings.metrics_ip_allowlist
-    ):
+    forwarded_for = _forwarded_for_client_ip(request)
+    if forwarded_for and forwarded_for in settings.metrics_ip_allowlist:
         return True
     return False
 
@@ -213,7 +239,7 @@ async def require_metrics_access(
     """Restrict access to the metrics endpoint via API key or IP allowlist."""
 
     provided_key = x_api_key or ""
-    accepted_keys = {k for k in (settings.metrics_api_key, settings.api_key) if k}
+    accepted_keys = _accepted_metrics_keys()
     if accepted_keys and provided_key in accepted_keys:
         return
     if _is_metrics_ip_allowed(request):
