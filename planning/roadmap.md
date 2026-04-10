@@ -6,6 +6,11 @@
 - Hardening di healthcheck/metriche e autenticazione per ridurre falsi positivi/negativi nei probe e nei rate-limit.
 
 ## Milestone
+- **Target numerici copertura classi/livelli (checkpoint 1/5/10)**:
+  - **Checkpoint 1 (baseline operativo):** almeno **11/11 classi core** con almeno **1 build per livello** sui checkpoint **1/5/10** (totale minimo **33 build core** tracciate in `build_index.json`), con tasso di validità schema ≥ **85%** sul perimetro core.
+  - **Checkpoint 5 (espansione controllata):** almeno **20 classi totali** (core + non-core) coperte su **1/5/10** (totale minimo **60 build**) con riduzione errori di completezza ≥ **40%** rispetto alla baseline del checkpoint 1.
+  - **Checkpoint 10 (copertura estesa):** almeno **30 classi totali** coperte su **1/5/10** (totale minimo **90 build**) con validità schema ≥ **95%** per modalità `extended` e backlog `full-pg` ridotto a soli casi noti/documentati.
+  - **KPI di controllo ciclo:** ogni run deve aggiornare nello stesso ciclo `src/data/build_index.json` + `src/data/module_index.json` e registrare il riepilogo `checkpoints` per livello (`1`, `5`, `10`) con conteggi `total/invalid/schema_errors/completeness_errors`.
 - **Generazione DB esteso**: usare `tools/generate_build_db.py` in modalità `extended` per coprire classi e varianti chiave, salvando build e moduli in `src/data/`. Collegamento al flusso descritto in README per l'orchestrazione completa (health check, parametri `mode`, dump moduli).
 - **Discovery e filtri moduli**: abilitare `--discover-modules` per unire moduli pinnati e quelli esposti da `/modules`, applicando filtri glob (`--include/--exclude`) per controllare ciò che finisce nel dump, come previsto dal flusso di selezione moduli nel README.
 - **Validazione progressiva**: adottare i flag `--strict` e `--keep-invalid` per gestire errori di schema durante la generazione DB, preservando payload non conformi per analisi successive come indicato nella sezione troubleshooting.

@@ -199,7 +199,6 @@
           "totale": 4
         }
       },
-      "pf_per_livello": "n/d (PF per livello non fornito)",
       "AC_arm": 0,
       "AC_scudo": 0,
       "AC_des": 0,
@@ -211,12 +210,7 @@
       "AC_tot": 18,
       "CA_touch": 10,
       "CA_ff": 10,
-      "BAB": "n/d (BAB non fornito)",
       "init": 2,
-      "CMB": "n/d (CMB non fornito)",
-      "cmb_disarm": "n/d (cmb disarm non fornito)",
-      "cmb_trip": "n/d (cmb trip non fornito)",
-      "cmb_grapple": "n/d (cmb grapple non fornito)",
       "speed": 9,
       "currency": {
         "gp": 100,
@@ -240,13 +234,7 @@
         "1": 4,
         "2": 3
       },
-      "modules": {
-        "scheda_pg_markdown_template.md": "\n\n[contenuto troncato — restano circa 29742 byte su 29742; x-truncated=true; original-length=29742]"
-      },
-      "sheet_markdown": "Build Sheet\nPercezione Arma preferita Equipaggiamento iniziale",
-      "fonti": [
-        "http://localhost:8000/modules/minmax_builder.txt?mode=extended&class=Barbarian&stub=true&level=1&race=Fetchling&archetype=Invulnerable+Rager"
-      ],
+      "sheet_markdown": "# \n\nTiri Salvezza:** Temp 4 / Riflessi 3 / Volontà 4\n\n**BAB:** 0 | **Iniziativa:** 2 | **Velocità:** 9\n\nStatistiche:\n**For** 16 (mod 3)\n**Des** 14 (mod 2)\n**Cos** 14 (mod 2)\n**Int** 10 (mod 0)\n**Sag** 12 (mod 1)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Percezione\n\nEquipaggiamento:\n- Arma preferita\n\nLedger:\n- Equipaggiamento iniziale\n- Ricompensa missione",
       "print_mode": false,
       "show_minmax": true,
       "show_vtt": true,
@@ -260,13 +248,26 @@
           "valore": 0
         }
       ],
+      "background": "Guardiano delle ombre che sfrutta la resistenza del rager invulnerable per proteggere il clan.",
+      "modules": {
+        "scheda_pg_markdown_template.md": "# {{ nome }}\n\nTiri Salvezza:** Temp {{ salvezze.Tempra }} / Riflessi {{ salvezze.Riflessi }} / Volontà {{ salvezze['Volontà'] }}\n\n**BAB:** {{ BAB }} | **Iniziativa:** {{ iniziativa }} | **Velocità:** {{ velocita }}\n\nStatistiche:\n{% for label, key in [\n    (\"For\", \"FOR\"),\n    (\"Des\", \"DES\"),\n    (\"Cos\", \"COS\"),\n    (\"Int\", \"INT\"),\n    (\"Sag\", \"SAG\"),\n    (\"Car\", \"CAR\"),\n] %}\n**{{ label }}** {{ statistiche[key] }} (mod {{ (statistiche[key] - 10) // 2 }})\n{% endfor %}\n\n{% if skills %}\nCompetenze:\n{% for skill in skills %}- {{ skill.get('nome') or skill.get('name') }}\n{% endfor %}\n{% endif %}\n\n{% if equipaggiamento %}\nEquipaggiamento:\n{% for item in equipaggiamento %}- {{ item }}\n{% endfor %}\n{% endif %}\n\n{% set ledger_entries = ledger_movimenti or (ledger.movimenti if ledger else []) %}\n{% if ledger_entries %}\nLedger:\n{% for mov in ledger_entries %}- {{ mov.get('voce') or mov.get('oggetto') or mov.get('label') or mov.get('categoria') }}\n{% endfor %}\n{% endif %}\n"
+      },
+      "pf_per_livello": "n/d (PF per livello non fornito)",
+      "BAB": "n/d (BAB non fornito)",
+      "CMB": "n/d (CMB non fornito)",
+      "cmb_disarm": "n/d (cmb disarm non fornito)",
+      "cmb_trip": "n/d (cmb trip non fornito)",
+      "cmb_grapple": "n/d (cmb grapple non fornito)",
+      "fonti": [
+        "http://127.0.0.1:8000/modules/minmax_builder.txt?mode=full-pg&class=Barbarian&stub=true&level=1&race=Fetchling&archetype=Invulnerable+Rager"
+      ],
       "lingue": [],
       "sensi": [],
       "condizioni": []
     }
   },
   "narrative": "Fetchling Invulnerable Rager pronta/o per il campo, specializzata/o in tattiche da Barbarian.",
-  "sheet": "[contenuto troncato — restano circa 29742 byte su 29742; x-truncated=true; original-length=29742]",
+  "sheet": "# \n\nTiri Salvezza:** Temp 4 / Riflessi 3 / Volontà 4\n\n**BAB:** 0 | **Iniziativa:** 2 | **Velocità:** 9\n\nStatistiche:\n**For** 16 (mod 3)\n**Des** 14 (mod 2)\n**Cos** 14 (mod 2)\n**Int** 10 (mod 0)\n**Sag** 12 (mod 1)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Percezione\n\nEquipaggiamento:\n- Arma preferita\n\nLedger:\n- Equipaggiamento iniziale\n- Ricompensa missione",
   "ledger": {
     "movimenti": [
       {
@@ -285,7 +286,7 @@
     }
   },
   "class": "Barbarian",
-  "mode": "extended",
+  "mode": "full-pg",
   "composite": {
     "build": {
       "build_id": "build-6e324f5c85f59bd73d562321",
@@ -489,7 +490,6 @@
               "totale": 4
             }
           },
-          "pf_per_livello": "n/d (PF per livello non fornito)",
           "AC_arm": 0,
           "AC_scudo": 0,
           "AC_des": 0,
@@ -501,12 +501,7 @@
           "AC_tot": 18,
           "CA_touch": 10,
           "CA_ff": 10,
-          "BAB": "n/d (BAB non fornito)",
           "init": 2,
-          "CMB": "n/d (CMB non fornito)",
-          "cmb_disarm": "n/d (cmb disarm non fornito)",
-          "cmb_trip": "n/d (cmb trip non fornito)",
-          "cmb_grapple": "n/d (cmb grapple non fornito)",
           "speed": 9,
           "currency": {
             "gp": 100,
@@ -530,13 +525,7 @@
             "1": 4,
             "2": 3
           },
-          "modules": {
-            "scheda_pg_markdown_template.md": "\n\n[contenuto troncato — restano circa 29742 byte su 29742; x-truncated=true; original-length=29742]"
-          },
-          "sheet_markdown": "[contenuto troncato — restano circa 29742 byte su 29742; x-truncated=true; original-length=29742]",
-          "fonti": [
-            "http://localhost:8000/modules/minmax_builder.txt?mode=extended&class=Barbarian&stub=true&level=1&race=Fetchling&archetype=Invulnerable+Rager"
-          ],
+          "sheet_markdown": "# \n\nTiri Salvezza:** Temp 4 / Riflessi 3 / Volontà 4\n\n**BAB:** 0 | **Iniziativa:** 2 | **Velocità:** 9\n\nStatistiche:\n**For** 16 (mod 3)\n**Des** 14 (mod 2)\n**Cos** 14 (mod 2)\n**Int** 10 (mod 0)\n**Sag** 12 (mod 1)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Percezione\n\nEquipaggiamento:\n- Arma preferita\n\nLedger:\n- Equipaggiamento iniziale\n- Ricompensa missione",
           "print_mode": false,
           "show_minmax": true,
           "show_vtt": true,
@@ -544,7 +533,25 @@
           "show_explain": true,
           "show_ledger": true,
           "decimal_comma": true,
-          "skills": [],
+          "skills": [
+            {
+              "nome": "Percezione",
+              "valore": 0
+            }
+          ],
+          "background": "Guardiano delle ombre che sfrutta la resistenza del rager invulnerable per proteggere il clan.",
+          "modules": {
+            "scheda_pg_markdown_template.md": "# {{ nome }}\n\nTiri Salvezza:** Temp {{ salvezze.Tempra }} / Riflessi {{ salvezze.Riflessi }} / Volontà {{ salvezze['Volontà'] }}\n\n**BAB:** {{ BAB }} | **Iniziativa:** {{ iniziativa }} | **Velocità:** {{ velocita }}\n\nStatistiche:\n{% for label, key in [\n    (\"For\", \"FOR\"),\n    (\"Des\", \"DES\"),\n    (\"Cos\", \"COS\"),\n    (\"Int\", \"INT\"),\n    (\"Sag\", \"SAG\"),\n    (\"Car\", \"CAR\"),\n] %}\n**{{ label }}** {{ statistiche[key] }} (mod {{ (statistiche[key] - 10) // 2 }})\n{% endfor %}\n\n{% if skills %}\nCompetenze:\n{% for skill in skills %}- {{ skill.get('nome') or skill.get('name') }}\n{% endfor %}\n{% endif %}\n\n{% if equipaggiamento %}\nEquipaggiamento:\n{% for item in equipaggiamento %}- {{ item }}\n{% endfor %}\n{% endif %}\n\n{% set ledger_entries = ledger_movimenti or (ledger.movimenti if ledger else []) %}\n{% if ledger_entries %}\nLedger:\n{% for mov in ledger_entries %}- {{ mov.get('voce') or mov.get('oggetto') or mov.get('label') or mov.get('categoria') }}\n{% endfor %}\n{% endif %}\n"
+          },
+          "pf_per_livello": "n/d (PF per livello non fornito)",
+          "BAB": "n/d (BAB non fornito)",
+          "CMB": "n/d (CMB non fornito)",
+          "cmb_disarm": "n/d (cmb disarm non fornito)",
+          "cmb_trip": "n/d (cmb trip non fornito)",
+          "cmb_grapple": "n/d (cmb grapple non fornito)",
+          "fonti": [
+            "http://127.0.0.1:8000/modules/minmax_builder.txt?mode=full-pg&class=Barbarian&stub=true&level=1&race=Fetchling&archetype=Invulnerable+Rager"
+          ],
           "lingue": [],
           "sensi": [],
           "condizioni": []
@@ -558,7 +565,7 @@
         "step_total_ok": true,
         "step_labels_count": 16,
         "has_extended_steps": true,
-        "request_timestamp": "2025-12-19T18:29:42Z",
+        "request_timestamp": "2026-04-10T01:56:34Z",
         "client_fingerprint_hash": "stub-fingerprint-00000000000000000000000000000000",
         "outcome": "accepted",
         "attempt_count": 1,
@@ -706,7 +713,6 @@
             "totale": 4
           }
         },
-        "pf_per_livello": "n/d (PF per livello non fornito)",
         "AC_arm": 0,
         "AC_scudo": 0,
         "AC_des": 0,
@@ -718,12 +724,7 @@
         "AC_tot": 18,
         "CA_touch": 10,
         "CA_ff": 10,
-        "BAB": "n/d (BAB non fornito)",
         "init": 2,
-        "CMB": "n/d (CMB non fornito)",
-        "cmb_disarm": "n/d (cmb disarm non fornito)",
-        "cmb_trip": "n/d (cmb trip non fornito)",
-        "cmb_grapple": "n/d (cmb grapple non fornito)",
         "speed": 9,
         "currency": {
           "gp": 100,
@@ -747,13 +748,7 @@
           "1": 4,
           "2": 3
         },
-        "modules": {
-          "scheda_pg_markdown_template.md": "\n\n[contenuto troncato — restano circa 29742 byte su 29742; x-truncated=true; original-length=29742]"
-        },
-        "sheet_markdown": "[contenuto troncato — restano circa 29742 byte su 29742; x-truncated=true; original-length=29742]",
-        "fonti": [
-          "http://localhost:8000/modules/minmax_builder.txt?mode=extended&class=Barbarian&stub=true&level=1&race=Fetchling&archetype=Invulnerable+Rager"
-        ],
+        "sheet_markdown": "# \n\nTiri Salvezza:** Temp 4 / Riflessi 3 / Volontà 4\n\n**BAB:** 0 | **Iniziativa:** 2 | **Velocità:** 9\n\nStatistiche:\n**For** 16 (mod 3)\n**Des** 14 (mod 2)\n**Cos** 14 (mod 2)\n**Int** 10 (mod 0)\n**Sag** 12 (mod 1)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Percezione\n\nEquipaggiamento:\n- Arma preferita\n\nLedger:\n- Equipaggiamento iniziale\n- Ricompensa missione",
         "print_mode": false,
         "show_minmax": true,
         "show_vtt": true,
@@ -761,14 +756,32 @@
         "show_explain": true,
         "show_ledger": true,
         "decimal_comma": true,
-        "skills": [],
+        "skills": [
+          {
+            "nome": "Percezione",
+            "valore": 0
+          }
+        ],
+        "background": "Guardiano delle ombre che sfrutta la resistenza del rager invulnerable per proteggere il clan.",
+        "modules": {
+          "scheda_pg_markdown_template.md": "# {{ nome }}\n\nTiri Salvezza:** Temp {{ salvezze.Tempra }} / Riflessi {{ salvezze.Riflessi }} / Volontà {{ salvezze['Volontà'] }}\n\n**BAB:** {{ BAB }} | **Iniziativa:** {{ iniziativa }} | **Velocità:** {{ velocita }}\n\nStatistiche:\n{% for label, key in [\n    (\"For\", \"FOR\"),\n    (\"Des\", \"DES\"),\n    (\"Cos\", \"COS\"),\n    (\"Int\", \"INT\"),\n    (\"Sag\", \"SAG\"),\n    (\"Car\", \"CAR\"),\n] %}\n**{{ label }}** {{ statistiche[key] }} (mod {{ (statistiche[key] - 10) // 2 }})\n{% endfor %}\n\n{% if skills %}\nCompetenze:\n{% for skill in skills %}- {{ skill.get('nome') or skill.get('name') }}\n{% endfor %}\n{% endif %}\n\n{% if equipaggiamento %}\nEquipaggiamento:\n{% for item in equipaggiamento %}- {{ item }}\n{% endfor %}\n{% endif %}\n\n{% set ledger_entries = ledger_movimenti or (ledger.movimenti if ledger else []) %}\n{% if ledger_entries %}\nLedger:\n{% for mov in ledger_entries %}- {{ mov.get('voce') or mov.get('oggetto') or mov.get('label') or mov.get('categoria') }}\n{% endfor %}\n{% endif %}\n"
+        },
+        "pf_per_livello": "n/d (PF per livello non fornito)",
+        "BAB": "n/d (BAB non fornito)",
+        "CMB": "n/d (CMB non fornito)",
+        "cmb_disarm": "n/d (cmb disarm non fornito)",
+        "cmb_trip": "n/d (cmb trip non fornito)",
+        "cmb_grapple": "n/d (cmb grapple non fornito)",
+        "fonti": [
+          "http://127.0.0.1:8000/modules/minmax_builder.txt?mode=full-pg&class=Barbarian&stub=true&level=1&race=Fetchling&archetype=Invulnerable+Rager"
+        ],
         "lingue": [],
         "sensi": [],
         "condizioni": []
       }
     },
     "narrative": "Fetchling Invulnerable Rager pronta/o per il campo, specializzata/o in tattiche da Barbarian.",
-    "sheet": "[contenuto troncato — restano circa 29742 byte su 29742; x-truncated=true; original-length=29742]",
+    "sheet": "# \n\nTiri Salvezza:** Temp 4 / Riflessi 3 / Volontà 4\n\n**BAB:** 0 | **Iniziativa:** 2 | **Velocità:** 9\n\nStatistiche:\n**For** 16 (mod 3)\n**Des** 14 (mod 2)\n**Cos** 14 (mod 2)\n**Int** 10 (mod 0)\n**Sag** 12 (mod 1)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Percezione\n\nEquipaggiamento:\n- Arma preferita\n\nLedger:\n- Equipaggiamento iniziale\n- Ricompensa missione",
     "ledger": {
       "movimenti": [
         {
@@ -792,18 +805,18 @@
       "2026.04.03"
     ]
   },
-  "source_url": "http://localhost:8000/modules/minmax_builder.txt?mode=extended&class=Barbarian&stub=true&level=1&race=Fetchling&archetype=Invulnerable+Rager",
+  "source_url": "http://127.0.0.1:8000/modules/minmax_builder.txt?mode=full-pg&class=Barbarian&stub=true&level=1&race=Fetchling&archetype=Invulnerable+Rager",
   "reference_catalog_version": "2026.04.03",
-  "fetched_at": "2025-12-19T18:29:42Z",
+  "fetched_at": "2026-04-10T01:56:34Z",
   "request": {
     "class": "Barbarian",
     "race": "Fetchling",
     "archetype": "Invulnerable Rager",
-    "mode": "extended",
+    "mode": "full-pg",
     "mode_normalized": "extended",
     "spec_id": "barbarian_fetchling_invulnerable_rager",
     "model": null,
-    "background": "Guardiano delle ombre che sfrutta la resistenza del rager invulnerable per proteggere il clan.",
+    "background": null,
     "level": 1,
     "level_checkpoints": [
       1,
@@ -812,7 +825,7 @@
     ]
   },
   "query_params": {
-    "mode": "extended",
+    "mode": "full-pg",
     "class": "Barbarian",
     "stub": true,
     "level": 1,
@@ -828,7 +841,7 @@
     "step_total_ok": true,
     "step_labels_count": 16,
     "has_extended_steps": true,
-    "request_timestamp": "2025-12-19T18:29:42Z",
+    "request_timestamp": "2026-04-10T01:56:34Z",
     "client_fingerprint_hash": "stub-fingerprint-00000000000000000000000000000000",
     "outcome": "accepted",
     "attempt_count": 1,
@@ -907,6 +920,24 @@
       "action": "harvest",
       "status": "draft",
       "note": "4 is not of type 'array'; 3 is not of type 'array'",
+      "checkpoint": 1,
+      "source": "barbarian_fetchling_invulnerable_rager"
+    },
+    {
+      "timestamp": "2026-04-10T01:56:18Z",
+      "actor": "generate_build_db",
+      "action": "harvest",
+      "status": "draft",
+      "note": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
+      "checkpoint": 1,
+      "source": "barbarian_fetchling_invulnerable_rager"
+    },
+    {
+      "timestamp": "2026-04-10T01:56:34Z",
+      "actor": "generate_build_db",
+      "action": "harvest",
+      "status": "draft",
+      "note": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
       "checkpoint": 1,
       "source": "barbarian_fetchling_invulnerable_rager"
     }

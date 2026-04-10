@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-04-09T23:31:05Z",
-  "api_url": "http://127.0.0.1:8001",
+  "generated_at": "2026-04-10T01:57:20Z",
+  "api_url": "http://127.0.0.1:8000",
   "entries": [
     {
       "module": "Encounter_Designer.txt",
@@ -20,6 +20,36 @@
             "action": "module_index_backfill",
             "status": "validated",
             "source": "src/data/modules/Encounter_Designer.txt"
+          },
+          {
+            "timestamp": "2026-04-10T01:56:18Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:56:46Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:02Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:19Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:35Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
           }
         ],
         "hash_sha256": "b8fed138262d592ba748dcd0ce371d83b1a7919d1dd48d126861fffeb72c2a86",
@@ -29,19 +59,7 @@
           "module"
         ],
         "reference_urls": []
-      },
-      "record_status": "validated",
-      "is_deleted": false,
-      "deleted_at": null,
-      "audit": [
-        {
-          "timestamp": "2025-12-17T12:23:23Z",
-          "actor": "generate_build_db",
-          "action": "module_index_backfill",
-          "status": "validated",
-          "source": "src/data/modules/Encounter_Designer.txt"
-        }
-      ]
+      }
     },
     {
       "module": "Taverna_NPC.txt",
@@ -61,19 +79,84 @@
             "actor": "generate_build_db",
             "action": "module_indexed",
             "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:56:18Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:56:46Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:02Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:19Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:35Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
           }
         ]
       }
     },
     {
       "module": "adventurer_ledger.txt",
-      "file": null,
-      "status": "error",
-      "issues": [
-        "missing_audit",
-        "missing_record_status"
-      ],
-      "error": "Client error '403 Forbidden' for url 'http://localhost:8000/modules/adventurer_ledger.txt'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403"
+      "file": "src/data/modules/adventurer_ledger.txt",
+      "status": "ok",
+      "meta": {
+        "name": "adventurer_ledger.txt",
+        "size_bytes": 78508,
+        "suffix": ".txt",
+        "record_status": "validated",
+        "is_deleted": false,
+        "deleted_at": null,
+        "audit": [
+          {
+            "timestamp": "2026-04-10T01:56:18Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:56:46Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:02Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:19Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:35Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          }
+        ]
+      }
     },
     {
       "module": "archivist.txt",
@@ -93,6 +176,36 @@
             "action": "module_index_backfill",
             "status": "validated",
             "source": "src/data/modules/archivist.txt"
+          },
+          {
+            "timestamp": "2026-04-10T01:56:18Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:56:46Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:02Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:19Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:35Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
           }
         ],
         "hash_sha256": "30277997e6a17d6e887bab76d8f300ac1672d453f60e3d81381290a0203f21ac",
@@ -100,19 +213,7 @@
           "lore+qa+vtt"
         ],
         "reference_urls": []
-      },
-      "record_status": "validated",
-      "is_deleted": false,
-      "deleted_at": null,
-      "audit": [
-        {
-          "timestamp": "2025-12-17T12:23:23Z",
-          "actor": "generate_build_db",
-          "action": "module_index_backfill",
-          "status": "validated",
-          "source": "src/data/modules/archivist.txt"
-        }
-      ]
+      }
     },
     {
       "module": "base_profile.txt",
@@ -129,6 +230,36 @@
         "audit": [
           {
             "timestamp": "2025-12-19T18:29:42Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:56:18Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:56:46Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:02Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:19Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:35Z",
             "actor": "generate_build_db",
             "action": "module_indexed",
             "status": "validated"
@@ -154,6 +285,36 @@
             "action": "module_index_backfill",
             "status": "validated",
             "source": "src/data/modules/explain_methods.txt"
+          },
+          {
+            "timestamp": "2026-04-10T01:56:18Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:56:46Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:02Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:19Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:35Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
           }
         ],
         "hash_sha256": "be243e0faa3e5a415330c691b803b0835db8e15b9e48235169c9625ef13aa7d1",
@@ -161,19 +322,7 @@
           "explain"
         ],
         "reference_urls": []
-      },
-      "record_status": "validated",
-      "is_deleted": false,
-      "deleted_at": null,
-      "audit": [
-        {
-          "timestamp": "2025-12-17T12:23:23Z",
-          "actor": "generate_build_db",
-          "action": "module_index_backfill",
-          "status": "validated",
-          "source": "src/data/modules/explain_methods.txt"
-        }
-      ]
+      }
     },
     {
       "module": "knowledge_pack.md",
@@ -193,6 +342,36 @@
             "action": "module_index_backfill",
             "status": "validated",
             "source": "src/data/modules/knowledge_pack.md"
+          },
+          {
+            "timestamp": "2026-04-10T01:56:18Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:56:46Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:02Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:19Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:35Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
           }
         ],
         "hash_sha256": "f040223632b1da5f4e5a4b62659179e4c86cc723adeab5c48e64a1e68b5856dd",
@@ -203,19 +382,7 @@
           "https://www.d20pfsrd.com",
           "https://www.facebook.com/groups/pathfindergdritalia"
         ]
-      },
-      "record_status": "validated",
-      "is_deleted": false,
-      "deleted_at": null,
-      "audit": [
-        {
-          "timestamp": "2025-12-17T12:23:23Z",
-          "actor": "generate_build_db",
-          "action": "module_index_backfill",
-          "status": "validated",
-          "source": "src/data/modules/knowledge_pack.md"
-        }
-      ]
+      }
     },
     {
       "module": "meta_doc.txt",
@@ -235,6 +402,36 @@
             "action": "module_index_backfill",
             "status": "validated",
             "source": "src/data/modules/meta_doc.txt"
+          },
+          {
+            "timestamp": "2026-04-10T01:56:18Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:56:46Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:02Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:19Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:35Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
           }
         ],
         "hash_sha256": "e77955a3da64021b9926f3136d53a92122962c3ca649156a2b8654d3471e7bff",
@@ -248,60 +445,17 @@
           "https://i.imgur.com/AXmp4cl.jpeg){style:wrapLeft,max-width:35%",
           "https://i.imgur.com/GZfjDWV.png"
         ]
-      },
-      "record_status": "validated",
-      "is_deleted": false,
-      "deleted_at": null,
-      "audit": [
-        {
-          "timestamp": "2025-12-17T12:23:23Z",
-          "actor": "generate_build_db",
-          "action": "module_index_backfill",
-          "status": "validated",
-          "source": "src/data/modules/meta_doc.txt"
-        }
-      ]
+      }
     },
     {
       "module": "minmax_builder.txt",
-      "file": "src/data/modules/minmax_builder.txt",
-      "status": "ok",
-      "meta": {
-        "name": "minmax_builder.txt",
-        "suffix": ".txt",
-        "size_bytes": 88649,
-        "record_status": "validated",
-        "is_deleted": false,
-        "deleted_at": null,
-        "audit": [
-          {
-            "timestamp": "2025-12-17T12:23:23Z",
-            "actor": "generate_build_db",
-            "action": "module_index_backfill",
-            "status": "validated",
-            "source": "src/data/modules/minmax_builder.txt"
-          }
-        ],
-        "hash_sha256": "3a890a0959675977f72b5e5ad497466349c225ed9b3c87c4165c61b519c775d4",
-        "tags": [
-          "Builder",
-          "MinMax",
-          "minmax"
-        ],
-        "reference_urls": []
-      },
-      "record_status": "validated",
-      "is_deleted": false,
-      "deleted_at": null,
-      "audit": [
-        {
-          "timestamp": "2025-12-17T12:23:23Z",
-          "actor": "generate_build_db",
-          "action": "module_index_backfill",
-          "status": "validated",
-          "source": "src/data/modules/minmax_builder.txt"
-        }
-      ]
+      "file": null,
+      "status": "error",
+      "issues": [
+        "missing_audit",
+        "missing_record_status"
+      ],
+      "error": "Client error '400 Bad Request' for url 'http://127.0.0.1:8000/modules/minmax_builder.txt'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
     },
     {
       "module": "narrative_flow.txt",
@@ -319,6 +473,36 @@
         "audit": [
           {
             "timestamp": "2025-12-19T18:29:42Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:56:18Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:56:46Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:02Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:19Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:35Z",
             "actor": "generate_build_db",
             "action": "module_indexed",
             "status": "validated"
@@ -344,24 +528,42 @@
             "action": "module_index_backfill",
             "status": "validated",
             "source": "src/data/modules/preload_all_modules.txt"
+          },
+          {
+            "timestamp": "2026-04-10T01:56:18Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:56:46Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:02Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:19Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:35Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
           }
         ],
         "hash_sha256": "4ed5e5cfacd8ee940e225651336c5b1f55a52e5f3ea95658643be6f48adf13ef",
         "tags": [],
         "reference_urls": []
-      },
-      "record_status": "validated",
-      "is_deleted": false,
-      "deleted_at": null,
-      "audit": [
-        {
-          "timestamp": "2025-12-17T12:23:23Z",
-          "actor": "generate_build_db",
-          "action": "module_index_backfill",
-          "status": "validated",
-          "source": "src/data/modules/preload_all_modules.txt"
-        }
-      ]
+      }
     },
     {
       "module": "ruling_expert.txt",
@@ -381,6 +583,36 @@
             "action": "module_index_backfill",
             "status": "validated",
             "source": "src/data/modules/ruling_expert.txt"
+          },
+          {
+            "timestamp": "2026-04-10T01:56:18Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:56:46Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:02Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:19Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:35Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
           }
         ],
         "hash_sha256": "f5a7c91e5d8b812de3db09e56cf64246b57cf1c49bc1b33df7c3f2e4f39a318c",
@@ -401,19 +633,7 @@
           "https://aonprd.com/SkillDisplay.aspx?ItemName={n",
           "https://aonprd.com/SpellDisplay.aspx?ItemName={n"
         ]
-      },
-      "record_status": "validated",
-      "is_deleted": false,
-      "deleted_at": null,
-      "audit": [
-        {
-          "timestamp": "2025-12-17T12:23:23Z",
-          "actor": "generate_build_db",
-          "action": "module_index_backfill",
-          "status": "validated",
-          "source": "src/data/modules/ruling_expert.txt"
-        }
-      ]
+      }
     },
     {
       "module": "scheda_pg_markdown_template.md",
@@ -444,6 +664,41 @@
             "action": "module_indexed",
             "status": "draft",
             "note": "meta validation: {'core_min': '3.3', 'integrates_with': ['MinMax Builder', 'Adventurer Ledger', 'Explain Methods', 'Ruling Expert', 'Hook VTT']} is not valid under any of the given schemas"
+          },
+          {
+            "timestamp": "2026-04-10T01:56:18Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "draft",
+            "note": "meta validation: {'core_min': '3.3', 'integrates_with': ['MinMax Builder', 'Adventurer Ledger', 'Explain Methods', 'Ruling Expert', 'Hook VTT']} is not valid under any of the given schemas"
+          },
+          {
+            "timestamp": "2026-04-10T01:56:46Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "draft",
+            "note": "meta validation: {'core_min': '3.3', 'integrates_with': ['MinMax Builder', 'Adventurer Ledger', 'Explain Methods', 'Ruling Expert', 'Hook VTT']} is not valid under any of the given schemas"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:02Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "draft",
+            "note": "meta validation: {'core_min': '3.3', 'integrates_with': ['MinMax Builder', 'Adventurer Ledger', 'Explain Methods', 'Ruling Expert', 'Hook VTT']} is not valid under any of the given schemas"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:19Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "draft",
+            "note": "meta validation: {'core_min': '3.3', 'integrates_with': ['MinMax Builder', 'Adventurer Ledger', 'Explain Methods', 'Ruling Expert', 'Hook VTT']} is not valid under any of the given schemas"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:35Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "draft",
+            "note": "meta validation: {'core_min': '3.3', 'integrates_with': ['MinMax Builder', 'Adventurer Ledger', 'Explain Methods', 'Ruling Expert', 'Hook VTT']} is not valid under any of the given schemas"
           }
         ]
       },
@@ -467,6 +722,36 @@
             "action": "module_index_backfill",
             "status": "validated",
             "source": "src/data/modules/sigilli_runner_module.txt"
+          },
+          {
+            "timestamp": "2026-04-10T01:56:18Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:56:46Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:02Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:19Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:35Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
           }
         ],
         "hash_sha256": "2bd2401eca72eaed5e47e2da9348c0258515b47ce604b93b65d8986d0a56d609",
@@ -478,19 +763,7 @@
         "reference_urls": [
           "https://github.com/DelzE/Master-DD-Pathfinder-GPT"
         ]
-      },
-      "record_status": "validated",
-      "is_deleted": false,
-      "deleted_at": null,
-      "audit": [
-        {
-          "timestamp": "2025-12-17T12:23:23Z",
-          "actor": "generate_build_db",
-          "action": "module_index_backfill",
-          "status": "validated",
-          "source": "src/data/modules/sigilli_runner_module.txt"
-        }
-      ]
+      }
     },
     {
       "module": "tavern_hub.json",
@@ -510,28 +783,102 @@
             "action": "module_index_backfill",
             "status": "validated",
             "source": "src/data/modules/tavern_hub.json"
+          },
+          {
+            "timestamp": "2026-04-10T01:56:18Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:56:46Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:02Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:19Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
+          },
+          {
+            "timestamp": "2026-04-10T01:57:35Z",
+            "actor": "generate_build_db",
+            "action": "module_indexed",
+            "status": "validated"
           }
         ],
         "hash_sha256": "3882a80751a077198bf18b227d75a88671eef28c6ee5573611a73d0a851ffc38",
         "tags": [],
         "reference_urls": []
-      },
-      "record_status": "validated",
-      "is_deleted": false,
-      "deleted_at": null,
-      "audit": [
-        {
-          "timestamp": "2025-12-17T12:23:23Z",
-          "actor": "generate_build_db",
-          "action": "module_index_backfill",
-          "status": "validated",
-          "source": "src/data/modules/tavern_hub.json"
-        }
-      ]
+      }
     }
   ],
   "catalog_version": [
     "2026.04.03"
   ],
-  "module_plan": []
+  "module_plan": [
+    "base_profile.txt",
+    "Taverna_NPC.txt",
+    "narrative_flow.txt",
+    "scheda_pg_markdown_template.md",
+    "adventurer_ledger.txt",
+    "Encounter_Designer.txt",
+    "archivist.txt",
+    "explain_methods.txt",
+    "knowledge_pack.md",
+    "meta_doc.txt",
+    "minmax_builder.txt",
+    "preload_all_modules.txt",
+    "ruling_expert.txt",
+    "sigilli_runner_module.txt",
+    "tavern_hub.json"
+  ],
+  "discovery": {
+    "performed_at": "2026-04-10T01:57:35Z",
+    "include_filters": [],
+    "exclude_filters": [],
+    "raw": [
+      "Encounter_Designer.txt",
+      "Taverna_NPC.txt",
+      "adventurer_ledger.txt",
+      "archivist.txt",
+      "base_profile.txt",
+      "explain_methods.txt",
+      "knowledge_pack.md",
+      "meta_doc.txt",
+      "minmax_builder.txt",
+      "narrative_flow.txt",
+      "preload_all_modules.txt",
+      "ruling_expert.txt",
+      "scheda_pg_markdown_template.md",
+      "sigilli_runner_module.txt",
+      "tavern_hub.json"
+    ],
+    "raw_count": 15,
+    "selected": [
+      "Encounter_Designer.txt",
+      "Taverna_NPC.txt",
+      "adventurer_ledger.txt",
+      "archivist.txt",
+      "base_profile.txt",
+      "explain_methods.txt",
+      "knowledge_pack.md",
+      "meta_doc.txt",
+      "minmax_builder.txt",
+      "narrative_flow.txt",
+      "preload_all_modules.txt",
+      "ruling_expert.txt",
+      "scheda_pg_markdown_template.md",
+      "sigilli_runner_module.txt",
+      "tavern_hub.json"
+    ]
+  }
 }

@@ -58,7 +58,24 @@
       "tempra": 6,
       "riflessi": 8,
       "volonta": 7
-    }
+    },
+    "missing_catalog_entries": [
+      "feats:Dodge + Mobility",
+      "feats:Power Attack + Tiger Claws",
+      "feats:Tiger Style + Crane Style"
+    ],
+    "prerequisite_violations": [
+      "Amuleto dell'armatura naturale +1: Craft Wondrous Item",
+      "Amuleto dell'armatura naturale +1: barkskin",
+      "Crane Style: Improved Unarmed Strike",
+      "Crane Wing: Improved Unarmed Strike",
+      "Dragon Style: Improved Unarmed Strike",
+      "Tiger Claws: Improved Unarmed Strike",
+      "Tiger Style: Improved Unarmed Strike"
+    ],
+    "catalog_version": [
+      "2026.04.03"
+    ]
   },
   "export": {
     "sheet_payload": {
@@ -81,12 +98,16 @@
         "CAR": 8,
         "attacco": "+11",
         "danni": "2d6+8",
-        "ca": 22
+        "ca": 22,
+        "tempra": 6,
+        "riflessi": 8,
+        "volonta": 7
       },
       "statistiche_chiave": {
         "attacco": "+11",
         "danni": "2d6+8",
-        "ca": 22
+        "ca": 22,
+        "CA": 22
       },
       "pf_totali": 45,
       "hp": {
@@ -147,6 +168,14 @@
         {
           "voce": "Dimostrazione marziale",
           "importo": 180
+        },
+        {
+          "voce": "Acquisto handwraps +1",
+          "importo": -2000
+        },
+        {
+          "voce": "Taglia su cultisti",
+          "importo": 2400
         }
       ],
       "ledger": {
@@ -166,7 +195,7 @@
           "rame": 6
         }
       },
-      "sheet_markdown": "Acrobazia\nAmuleto dell'armatura naturale +1\nOfferte ai maestri del monastero",
+      "sheet_markdown": "# \n\nTiri Salvezza:** Temp 6 / Riflessi 8 / Volontà 7\n\n**BAB:** 0 | **Iniziativa:** 6 | **Velocità:** 12\n\nStatistiche:\n**For** 16 (mod 3)\n**Des** 18 (mod 4)\n**Cos** 12 (mod 1)\n**Int** 10 (mod 0)\n**Sag** 16 (mod 3)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Acrobazia\n- Furtività\n\nEquipaggiamento:\n- Amuleto dell'armatura naturale +1\n- Stivali del salto del vento\n- Handwraps +1 con Furious Focus\n\nLedger:\n- Offerte ai maestri del monastero\n- Dimostrazione marziale\n- Acquisto handwraps +1\n- Taglia su cultisti",
       "talenti": [
         "Tiger Style",
         "Crane Style",
@@ -175,13 +204,18 @@
         "Power Attack",
         "Tiger Claws",
         "Dragon Style",
-        "Crane Wing"
+        "Crane Wing",
+        "Tiger Style + Crane Style",
+        "Dodge + Mobility",
+        "Power Attack + Tiger Claws"
       ],
       "capacita_classe": [
         "High Jump",
         "Style Strike (Flying Kick)",
         "Ki power: Barkskin",
-        "Evasion"
+        "Evasion",
+        "Flurry of Blows",
+        "Ki Pool"
       ],
       "progressione": [
         {
@@ -231,7 +265,73 @@
           "barkskin",
           "feather step"
         ]
-      }
+      },
+      "razza": "Vanara",
+      "salvezze_breakdown": {
+        "Tempra": {
+          "base": 5,
+          "modificatore": 1,
+          "misc": 0,
+          "totale": 6
+        },
+        "Riflessi": {
+          "base": 4,
+          "modificatore": 4,
+          "misc": 0,
+          "totale": 8
+        },
+        "Volontà": {
+          "base": 4,
+          "modificatore": 3,
+          "misc": 0,
+          "totale": 7
+        }
+      },
+      "pf_per_livello": "n/d (PF per livello non fornito)",
+      "AC_arm": 0,
+      "AC_scudo": 0,
+      "AC_des": 0,
+      "AC_defl": 0,
+      "AC_nat": 0,
+      "AC_dodge": 0,
+      "AC_misc": 0,
+      "AC_base": 10,
+      "AC_tot": 22,
+      "CA_touch": 10,
+      "CA_ff": 10,
+      "BAB": "n/d (BAB non fornito)",
+      "init": 6,
+      "CMB": "n/d (CMB non fornito)",
+      "cmb_disarm": "n/d (cmb disarm non fornito)",
+      "cmb_trip": "n/d (cmb trip non fornito)",
+      "cmb_grapple": "n/d (cmb grapple non fornito)",
+      "speed": 12,
+      "currency": {
+        "gp": 600,
+        "sp": 40,
+        "cp": 0
+      },
+      "gp": 600,
+      "sp": 40,
+      "cp": 0,
+      "modules": {
+        "scheda_pg_markdown_template.md": "# {{ nome }}\n\nTiri Salvezza:** Temp {{ salvezze.Tempra }} / Riflessi {{ salvezze.Riflessi }} / Volontà {{ salvezze['Volontà'] }}\n\n**BAB:** {{ BAB }} | **Iniziativa:** {{ iniziativa }} | **Velocità:** {{ velocita }}\n\nStatistiche:\n{% for label, key in [\n    (\"For\", \"FOR\"),\n    (\"Des\", \"DES\"),\n    (\"Cos\", \"COS\"),\n    (\"Int\", \"INT\"),\n    (\"Sag\", \"SAG\"),\n    (\"Car\", \"CAR\"),\n] %}\n**{{ label }}** {{ statistiche[key] }} (mod {{ (statistiche[key] - 10) // 2 }})\n{% endfor %}\n\n{% if skills %}\nCompetenze:\n{% for skill in skills %}- {{ skill.get('nome') or skill.get('name') }}\n{% endfor %}\n{% endif %}\n\n{% if equipaggiamento %}\nEquipaggiamento:\n{% for item in equipaggiamento %}- {{ item }}\n{% endfor %}\n{% endif %}\n\n{% set ledger_entries = ledger_movimenti or (ledger.movimenti if ledger else []) %}\n{% if ledger_entries %}\nLedger:\n{% for mov in ledger_entries %}- {{ mov.get('voce') or mov.get('oggetto') or mov.get('label') or mov.get('categoria') }}\n{% endfor %}\n{% endif %}\n"
+      },
+      "fonti": [
+        "http://127.0.0.1:8000/modules/minmax_builder.txt?mode=full-pg&class=Monk&stub=true&level=5&race=Vanara&archetype=Qinggong+Master+Of+Many+Styles"
+      ],
+      "print_mode": false,
+      "show_minmax": true,
+      "show_vtt": true,
+      "show_qa": true,
+      "show_explain": true,
+      "show_ledger": true,
+      "decimal_comma": true,
+      "spell_levels": [],
+      "lingue": [],
+      "sensi": [],
+      "condizioni": [],
+      "inventario": []
     }
   },
   "narrative": "Checkpoint 5: il vanara alterna Tiger/Dragon per il burst, Crane per difesa e usa Flying Kick per entrare/uscire dalle minacce. Ki Barkskin e stivali del vento gli danno CA 22 e mobilità verticale, mantenendo i debuff ai bersagli con Stun Fist.",
@@ -253,9 +353,9 @@
     },
     "saldo": 600
   },
-  "sheet": "### 🧙 Scheda Personaggio in Markdown\n\n---\n\n# Monk — Liv. 5 (Vanara · Qinggong + Master of Many Styles)\n\n**Checkpoint 5:** Flying Kick + Tiger Claws per entrare in mischia, attiva Barkskin (Qinggong) e passa a Crane Wing quando il boss reagisce. Usa debuff mirati con Stunning Fist e dirty trick da Panther Style se serve controllo.\n\n**Linee iterate:**\n- Combo Stance: Tiger/Dragon con Furious Focus per DPR alto.\n- Difese/Mobilità: Crane Wing + Mobility e Feather Step per negare AoO.\n- Debuff: Stunning Fist mirato alle gambe, Dirty Trick (prone) post-Flying Kick.\n\n**Benchmark DPR/CA:** 3 attacchi 2d6+8, CA 22; DPR medio/picco 27/42 nel run con badge convalidato.\n",
+  "sheet": "# \n\nTiri Salvezza:** Temp 6 / Riflessi 8 / Volontà 7\n\n**BAB:** 0 | **Iniziativa:** 6 | **Velocità:** 12\n\nStatistiche:\n**For** 16 (mod 3)\n**Des** 18 (mod 4)\n**Cos** 12 (mod 1)\n**Int** 10 (mod 0)\n**Sag** 16 (mod 3)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Acrobazia\n- Furtività\n\nEquipaggiamento:\n- Amuleto dell'armatura naturale +1\n- Stivali del salto del vento\n- Handwraps +1 con Furious Focus\n\nLedger:\n- Offerte ai maestri del monastero\n- Dimostrazione marziale\n- Acquisto handwraps +1\n- Taglia su cultisti",
   "class": "Monk",
-  "mode": "extended",
+  "mode": "full-pg",
   "output_prefix": "monk_vanara_qinggong_master_of_many_styles",
   "ruling_log": [
     "Ruling Expert: confermata compatibilità tra Style Strike e swap di stili gratuiti del Master of Many Styles.",
@@ -264,11 +364,13 @@
   ],
   "request": {
     "class": "Monk",
-    "mode": "extended",
     "race": "Vanara",
-    "archetype": "Qinggong + Master of Many Styles",
+    "archetype": "Qinggong Master Of Many Styles",
+    "mode": "full-pg",
+    "mode_normalized": "extended",
     "spec_id": "monk_vanara_qinggong_master_of_many_styles",
-    "model": "gpt-5.1-codex-max",
+    "model": null,
+    "background": null,
     "level": 5,
     "level_checkpoints": [
       1,
@@ -277,6 +379,7 @@
     ]
   },
   "completeness": {
+    "errors": [],
     "require_complete": true
   },
   "reference_catalog_version": "2026.04.03",
@@ -298,21 +401,27 @@
       "missing": [],
       "status": "complete",
       "checklist": {}
+    },
+    "catalog": {
+      "warnings": [
+        "Elementi non presenti nel catalogo: feats:Dodge + Mobility, feats:Power Attack + Tiger Claws, feats:Tiger Style + Crane Style",
+        "Prerequisiti catalogo non soddisfatti: Amuleto dell'armatura naturale +1: Craft Wondrous Item, Amuleto dell'armatura naturale +1: barkskin, Crane Style: Improved Unarmed Strike, Crane Wing: Improved Unarmed Strike, Dragon Style: Improved Unarmed Strike, Tiger Claws: Improved Unarmed Strike, Tiger Style: Improved Unarmed Strike"
+      ]
     }
   },
   "build_id": "build-573b52ee40d501522b61c193",
   "step_audit": {
-    "request_timestamp": "2025-12-18T18:46:09Z",
-    "client_fingerprint_hash": "stub-fingerprint-00000000000000000000000000000000",
-    "outcome": "accepted",
-    "attempt_count": 1,
-    "backoff_reason": null,
     "normalized_mode": "extended",
     "expected_step_total": 16,
     "observed_step_total": 16,
     "step_total_ok": true,
     "step_labels_count": 16,
-    "has_extended_steps": true
+    "has_extended_steps": true,
+    "request_timestamp": "2026-04-10T01:56:34Z",
+    "client_fingerprint_hash": "stub-fingerprint-00000000000000000000000000000000",
+    "outcome": "accepted",
+    "attempt_count": 1,
+    "backoff_reason": null
   },
   "composite": {
     "build": {
@@ -376,7 +485,24 @@
           "tempra": 6,
           "riflessi": 8,
           "volonta": 7
-        }
+        },
+        "missing_catalog_entries": [
+          "feats:Dodge + Mobility",
+          "feats:Power Attack + Tiger Claws",
+          "feats:Tiger Style + Crane Style"
+        ],
+        "prerequisite_violations": [
+          "Amuleto dell'armatura naturale +1: Craft Wondrous Item",
+          "Amuleto dell'armatura naturale +1: barkskin",
+          "Crane Style: Improved Unarmed Strike",
+          "Crane Wing: Improved Unarmed Strike",
+          "Dragon Style: Improved Unarmed Strike",
+          "Tiger Claws: Improved Unarmed Strike",
+          "Tiger Style: Improved Unarmed Strike"
+        ],
+        "catalog_version": [
+          "2026.04.03"
+        ]
       },
       "export": {
         "sheet_payload": {
@@ -399,12 +525,16 @@
             "CAR": 8,
             "attacco": "+11",
             "danni": "2d6+8",
-            "ca": 22
+            "ca": 22,
+            "tempra": 6,
+            "riflessi": 8,
+            "volonta": 7
           },
           "statistiche_chiave": {
             "attacco": "+11",
             "danni": "2d6+8",
-            "ca": 22
+            "ca": 22,
+            "CA": 22
           },
           "pf_totali": 45,
           "hp": {
@@ -465,6 +595,14 @@
             {
               "voce": "Dimostrazione marziale",
               "importo": 180
+            },
+            {
+              "voce": "Acquisto handwraps +1",
+              "importo": -2000
+            },
+            {
+              "voce": "Taglia su cultisti",
+              "importo": 2400
             }
           ],
           "ledger": {
@@ -484,7 +622,7 @@
               "rame": 6
             }
           },
-          "sheet_markdown": "Acrobazia\nAmuleto dell'armatura naturale +1\nOfferte ai maestri del monastero",
+          "sheet_markdown": "# \n\nTiri Salvezza:** Temp 6 / Riflessi 8 / Volontà 7\n\n**BAB:** 0 | **Iniziativa:** 6 | **Velocità:** 12\n\nStatistiche:\n**For** 16 (mod 3)\n**Des** 18 (mod 4)\n**Cos** 12 (mod 1)\n**Int** 10 (mod 0)\n**Sag** 16 (mod 3)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Acrobazia\n- Furtività\n\nEquipaggiamento:\n- Amuleto dell'armatura naturale +1\n- Stivali del salto del vento\n- Handwraps +1 con Furious Focus\n\nLedger:\n- Offerte ai maestri del monastero\n- Dimostrazione marziale\n- Acquisto handwraps +1\n- Taglia su cultisti",
           "talenti": [
             "Tiger Style",
             "Crane Style",
@@ -493,13 +631,18 @@
             "Power Attack",
             "Tiger Claws",
             "Dragon Style",
-            "Crane Wing"
+            "Crane Wing",
+            "Tiger Style + Crane Style",
+            "Dodge + Mobility",
+            "Power Attack + Tiger Claws"
           ],
           "capacita_classe": [
             "High Jump",
             "Style Strike (Flying Kick)",
             "Ki power: Barkskin",
-            "Evasion"
+            "Evasion",
+            "Flurry of Blows",
+            "Ki Pool"
           ],
           "progressione": [
             {
@@ -549,22 +692,88 @@
               "barkskin",
               "feather step"
             ]
-          }
+          },
+          "razza": "Vanara",
+          "salvezze_breakdown": {
+            "Tempra": {
+              "base": 5,
+              "modificatore": 1,
+              "misc": 0,
+              "totale": 6
+            },
+            "Riflessi": {
+              "base": 4,
+              "modificatore": 4,
+              "misc": 0,
+              "totale": 8
+            },
+            "Volontà": {
+              "base": 4,
+              "modificatore": 3,
+              "misc": 0,
+              "totale": 7
+            }
+          },
+          "pf_per_livello": "n/d (PF per livello non fornito)",
+          "AC_arm": 0,
+          "AC_scudo": 0,
+          "AC_des": 0,
+          "AC_defl": 0,
+          "AC_nat": 0,
+          "AC_dodge": 0,
+          "AC_misc": 0,
+          "AC_base": 10,
+          "AC_tot": 22,
+          "CA_touch": 10,
+          "CA_ff": 10,
+          "BAB": "n/d (BAB non fornito)",
+          "init": 6,
+          "CMB": "n/d (CMB non fornito)",
+          "cmb_disarm": "n/d (cmb disarm non fornito)",
+          "cmb_trip": "n/d (cmb trip non fornito)",
+          "cmb_grapple": "n/d (cmb grapple non fornito)",
+          "speed": 12,
+          "currency": {
+            "gp": 600,
+            "sp": 40,
+            "cp": 0
+          },
+          "gp": 600,
+          "sp": 40,
+          "cp": 0,
+          "modules": {
+            "scheda_pg_markdown_template.md": "# {{ nome }}\n\nTiri Salvezza:** Temp {{ salvezze.Tempra }} / Riflessi {{ salvezze.Riflessi }} / Volontà {{ salvezze['Volontà'] }}\n\n**BAB:** {{ BAB }} | **Iniziativa:** {{ iniziativa }} | **Velocità:** {{ velocita }}\n\nStatistiche:\n{% for label, key in [\n    (\"For\", \"FOR\"),\n    (\"Des\", \"DES\"),\n    (\"Cos\", \"COS\"),\n    (\"Int\", \"INT\"),\n    (\"Sag\", \"SAG\"),\n    (\"Car\", \"CAR\"),\n] %}\n**{{ label }}** {{ statistiche[key] }} (mod {{ (statistiche[key] - 10) // 2 }})\n{% endfor %}\n\n{% if skills %}\nCompetenze:\n{% for skill in skills %}- {{ skill.get('nome') or skill.get('name') }}\n{% endfor %}\n{% endif %}\n\n{% if equipaggiamento %}\nEquipaggiamento:\n{% for item in equipaggiamento %}- {{ item }}\n{% endfor %}\n{% endif %}\n\n{% set ledger_entries = ledger_movimenti or (ledger.movimenti if ledger else []) %}\n{% if ledger_entries %}\nLedger:\n{% for mov in ledger_entries %}- {{ mov.get('voce') or mov.get('oggetto') or mov.get('label') or mov.get('categoria') }}\n{% endfor %}\n{% endif %}\n"
+          },
+          "fonti": [
+            "http://127.0.0.1:8000/modules/minmax_builder.txt?mode=full-pg&class=Monk&stub=true&level=5&race=Vanara&archetype=Qinggong+Master+Of+Many+Styles"
+          ],
+          "print_mode": false,
+          "show_minmax": true,
+          "show_vtt": true,
+          "show_qa": true,
+          "show_explain": true,
+          "show_ledger": true,
+          "decimal_comma": true,
+          "spell_levels": [],
+          "lingue": [],
+          "sensi": [],
+          "condizioni": [],
+          "inventario": []
         }
       },
       "reference_catalog_version": "2026.04.03",
       "step_audit": {
-        "request_timestamp": "2025-12-18T18:46:09Z",
-        "client_fingerprint_hash": "stub-fingerprint-00000000000000000000000000000000",
-        "outcome": "accepted",
-        "attempt_count": 1,
-        "backoff_reason": null,
         "normalized_mode": "extended",
         "expected_step_total": 16,
         "observed_step_total": 16,
         "step_total_ok": true,
         "step_labels_count": 16,
-        "has_extended_steps": true
+        "has_extended_steps": true,
+        "request_timestamp": "2026-04-10T01:56:34Z",
+        "client_fingerprint_hash": "stub-fingerprint-00000000000000000000000000000000",
+        "outcome": "accepted",
+        "attempt_count": 1,
+        "backoff_reason": null
       },
       "sheet_payload": {
         "classi": [
@@ -586,12 +795,16 @@
           "CAR": 8,
           "attacco": "+11",
           "danni": "2d6+8",
-          "ca": 22
+          "ca": 22,
+          "tempra": 6,
+          "riflessi": 8,
+          "volonta": 7
         },
         "statistiche_chiave": {
           "attacco": "+11",
           "danni": "2d6+8",
-          "ca": 22
+          "ca": 22,
+          "CA": 22
         },
         "pf_totali": 45,
         "hp": {
@@ -652,6 +865,14 @@
           {
             "voce": "Dimostrazione marziale",
             "importo": 180
+          },
+          {
+            "voce": "Acquisto handwraps +1",
+            "importo": -2000
+          },
+          {
+            "voce": "Taglia su cultisti",
+            "importo": 2400
           }
         ],
         "ledger": {
@@ -671,7 +892,7 @@
             "rame": 6
           }
         },
-        "sheet_markdown": "Acrobazia\nAmuleto dell'armatura naturale +1\nOfferte ai maestri del monastero",
+        "sheet_markdown": "# \n\nTiri Salvezza:** Temp 6 / Riflessi 8 / Volontà 7\n\n**BAB:** 0 | **Iniziativa:** 6 | **Velocità:** 12\n\nStatistiche:\n**For** 16 (mod 3)\n**Des** 18 (mod 4)\n**Cos** 12 (mod 1)\n**Int** 10 (mod 0)\n**Sag** 16 (mod 3)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Acrobazia\n- Furtività\n\nEquipaggiamento:\n- Amuleto dell'armatura naturale +1\n- Stivali del salto del vento\n- Handwraps +1 con Furious Focus\n\nLedger:\n- Offerte ai maestri del monastero\n- Dimostrazione marziale\n- Acquisto handwraps +1\n- Taglia su cultisti",
         "talenti": [
           "Tiger Style",
           "Crane Style",
@@ -680,13 +901,18 @@
           "Power Attack",
           "Tiger Claws",
           "Dragon Style",
-          "Crane Wing"
+          "Crane Wing",
+          "Tiger Style + Crane Style",
+          "Dodge + Mobility",
+          "Power Attack + Tiger Claws"
         ],
         "capacita_classe": [
           "High Jump",
           "Style Strike (Flying Kick)",
           "Ki power: Barkskin",
-          "Evasion"
+          "Evasion",
+          "Flurry of Blows",
+          "Ki Pool"
         ],
         "progressione": [
           {
@@ -736,11 +962,77 @@
             "barkskin",
             "feather step"
           ]
-        }
+        },
+        "razza": "Vanara",
+        "salvezze_breakdown": {
+          "Tempra": {
+            "base": 5,
+            "modificatore": 1,
+            "misc": 0,
+            "totale": 6
+          },
+          "Riflessi": {
+            "base": 4,
+            "modificatore": 4,
+            "misc": 0,
+            "totale": 8
+          },
+          "Volontà": {
+            "base": 4,
+            "modificatore": 3,
+            "misc": 0,
+            "totale": 7
+          }
+        },
+        "pf_per_livello": "n/d (PF per livello non fornito)",
+        "AC_arm": 0,
+        "AC_scudo": 0,
+        "AC_des": 0,
+        "AC_defl": 0,
+        "AC_nat": 0,
+        "AC_dodge": 0,
+        "AC_misc": 0,
+        "AC_base": 10,
+        "AC_tot": 22,
+        "CA_touch": 10,
+        "CA_ff": 10,
+        "BAB": "n/d (BAB non fornito)",
+        "init": 6,
+        "CMB": "n/d (CMB non fornito)",
+        "cmb_disarm": "n/d (cmb disarm non fornito)",
+        "cmb_trip": "n/d (cmb trip non fornito)",
+        "cmb_grapple": "n/d (cmb grapple non fornito)",
+        "speed": 12,
+        "currency": {
+          "gp": 600,
+          "sp": 40,
+          "cp": 0
+        },
+        "gp": 600,
+        "sp": 40,
+        "cp": 0,
+        "modules": {
+          "scheda_pg_markdown_template.md": "# {{ nome }}\n\nTiri Salvezza:** Temp {{ salvezze.Tempra }} / Riflessi {{ salvezze.Riflessi }} / Volontà {{ salvezze['Volontà'] }}\n\n**BAB:** {{ BAB }} | **Iniziativa:** {{ iniziativa }} | **Velocità:** {{ velocita }}\n\nStatistiche:\n{% for label, key in [\n    (\"For\", \"FOR\"),\n    (\"Des\", \"DES\"),\n    (\"Cos\", \"COS\"),\n    (\"Int\", \"INT\"),\n    (\"Sag\", \"SAG\"),\n    (\"Car\", \"CAR\"),\n] %}\n**{{ label }}** {{ statistiche[key] }} (mod {{ (statistiche[key] - 10) // 2 }})\n{% endfor %}\n\n{% if skills %}\nCompetenze:\n{% for skill in skills %}- {{ skill.get('nome') or skill.get('name') }}\n{% endfor %}\n{% endif %}\n\n{% if equipaggiamento %}\nEquipaggiamento:\n{% for item in equipaggiamento %}- {{ item }}\n{% endfor %}\n{% endif %}\n\n{% set ledger_entries = ledger_movimenti or (ledger.movimenti if ledger else []) %}\n{% if ledger_entries %}\nLedger:\n{% for mov in ledger_entries %}- {{ mov.get('voce') or mov.get('oggetto') or mov.get('label') or mov.get('categoria') }}\n{% endfor %}\n{% endif %}\n"
+        },
+        "fonti": [
+          "http://127.0.0.1:8000/modules/minmax_builder.txt?mode=full-pg&class=Monk&stub=true&level=5&race=Vanara&archetype=Qinggong+Master+Of+Many+Styles"
+        ],
+        "print_mode": false,
+        "show_minmax": true,
+        "show_vtt": true,
+        "show_qa": true,
+        "show_explain": true,
+        "show_ledger": true,
+        "decimal_comma": true,
+        "spell_levels": [],
+        "lingue": [],
+        "sensi": [],
+        "condizioni": [],
+        "inventario": []
       }
     },
     "narrative": "Checkpoint 5: il vanara alterna Tiger/Dragon per il burst, Crane per difesa e usa Flying Kick per entrare/uscire dalle minacce. Ki Barkskin e stivali del vento gli danno CA 22 e mobilità verticale, mantenendo i debuff ai bersagli con Stun Fist.",
-    "sheet": "### 🧙 Scheda Personaggio in Markdown\n\n---\n\n# Monk — Liv. 5 (Vanara · Qinggong + Master of Many Styles)\n\n**Checkpoint 5:** Flying Kick + Tiger Claws per entrare in mischia, attiva Barkskin (Qinggong) e passa a Crane Wing quando il boss reagisce. Usa debuff mirati con Stunning Fist e dirty trick da Panther Style se serve controllo.\n\n**Linee iterate:**\n- Combo Stance: Tiger/Dragon con Furious Focus per DPR alto.\n- Difese/Mobilità: Crane Wing + Mobility e Feather Step per negare AoO.\n- Debuff: Stunning Fist mirato alle gambe, Dirty Trick (prone) post-Flying Kick.\n\n**Benchmark DPR/CA:** 3 attacchi 2d6+8, CA 22; DPR medio/picco 27/42 nel run con badge convalidato.\n",
+    "sheet": "# \n\nTiri Salvezza:** Temp 6 / Riflessi 8 / Volontà 7\n\n**BAB:** 0 | **Iniziativa:** 6 | **Velocità:** 12\n\nStatistiche:\n**For** 16 (mod 3)\n**Des** 18 (mod 4)\n**Cos** 12 (mod 1)\n**Int** 10 (mod 0)\n**Sag** 16 (mod 3)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Acrobazia\n- Furtività\n\nEquipaggiamento:\n- Amuleto dell'armatura naturale +1\n- Stivali del salto del vento\n- Handwraps +1 con Furious Focus\n\nLedger:\n- Offerte ai maestri del monastero\n- Dimostrazione marziale\n- Acquisto handwraps +1\n- Taglia su cultisti",
     "ledger": {
       "movimenti": [
         {
@@ -799,5 +1091,67 @@
   "citation": {
     "sources": [],
     "reference_urls": []
-  }
+  },
+  "catalog_validation": {
+    "missing_catalog_entries": [
+      "feats:Dodge + Mobility",
+      "feats:Power Attack + Tiger Claws",
+      "feats:Tiger Style + Crane Style"
+    ],
+    "prerequisite_violations": [
+      "Amuleto dell'armatura naturale +1: Craft Wondrous Item",
+      "Amuleto dell'armatura naturale +1: barkskin",
+      "Crane Style: Improved Unarmed Strike",
+      "Crane Wing: Improved Unarmed Strike",
+      "Dragon Style: Improved Unarmed Strike",
+      "Tiger Claws: Improved Unarmed Strike",
+      "Tiger Style: Improved Unarmed Strike"
+    ],
+    "catalog_version": [
+      "2026.04.03"
+    ]
+  },
+  "source_url": "http://127.0.0.1:8000/modules/minmax_builder.txt?mode=full-pg&class=Monk&stub=true&level=5&race=Vanara&archetype=Qinggong+Master+Of+Many+Styles",
+  "fetched_at": "2026-04-10T01:56:34Z",
+  "query_params": {
+    "mode": "full-pg",
+    "class": "Monk",
+    "stub": true,
+    "level": 5,
+    "race": "Vanara",
+    "archetype": "Qinggong Master Of Many Styles"
+  },
+  "body_params": {},
+  "catalog_manifest": {
+    "version": "2026.04.03",
+    "source": "Pathfinder 1E RAW/SRD snapshot curato offline",
+    "files": {
+      "spells": {
+        "path": "data/reference/spells.json",
+        "entries": 1035
+      },
+      "feats": {
+        "path": "data/reference/feats.json",
+        "entries": 2839
+      },
+      "items": {
+        "path": "data/reference/items.json",
+        "entries": 257
+      }
+    }
+  },
+  "record_status": "draft",
+  "is_deleted": false,
+  "deleted_at": null,
+  "audit": [
+    {
+      "timestamp": "2026-04-10T01:56:34Z",
+      "actor": "generate_build_db",
+      "action": "harvest",
+      "status": "draft",
+      "note": "'sheet_payload' is a required property",
+      "checkpoint": 5,
+      "source": "monk_vanara_qinggong_master_of_many_styles"
+    }
+  ]
 }
