@@ -42,6 +42,14 @@ class Settings:
             for ip in os.getenv("METRICS_IP_ALLOWLIST", "").split(",")
             if ip.strip()
         ]
+        self.trust_proxy_headers: bool = os.getenv(
+            "TRUST_PROXY_HEADERS", "false"
+        ).lower() in ("1", "true", "yes", "y")
+        self.trusted_proxy_ips: list[str] = [
+            ip.strip()
+            for ip in os.getenv("TRUSTED_PROXY_IPS", "").split(",")
+            if ip.strip()
+        ]
 
 
 settings = Settings()
@@ -79,8 +87,24 @@ ACCESS_POLICY_MATRIX = {
         "default": "",
         "scope": "GET /metrics",
         "effect": (
-            "CSV di IP consentiti su client host o primo hop x-forwarded-for; "
-            "usata come alternativa alla chiave."
+            "CSV di IP consentiti su client host; include x-forwarded-for solo "
+            "se TRUST_PROXY_HEADERS=true e proxy sorgente fidato."
+        ),
+    },
+    "TRUST_PROXY_HEADERS": {
+        "default": "false",
+        "scope": "Risoluzione client IP e policy x-forwarded-for",
+        "effect": (
+            "Se true, accetta x-forwarded-for solo da proxy in TRUSTED_PROXY_IPS; "
+            "se false usa sempre request.client.host."
+        ),
+    },
+    "TRUSTED_PROXY_IPS": {
+        "default": "",
+        "scope": "Risoluzione client IP e policy x-forwarded-for",
+        "effect": (
+            "CSV di IP proxy fidati autorizzati a fornire x-forwarded-for; "
+            "valori non validi o assenti vengono ignorati."
         ),
     },
 }

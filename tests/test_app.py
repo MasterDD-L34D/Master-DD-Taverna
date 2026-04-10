@@ -117,11 +117,17 @@ def reset_backoff_state():
 def setup_api_key():
     original = settings.api_key
     original_allow_anonymous = settings.allow_anonymous
+    original_trust_proxy_headers = settings.trust_proxy_headers
+    original_trusted_proxy_ips = list(settings.trusted_proxy_ips)
     settings.api_key = "test-api-key"
     settings.allow_anonymous = False
+    settings.trust_proxy_headers = False
+    settings.trusted_proxy_ips = []
     yield
     settings.api_key = original
     settings.allow_anonymous = original_allow_anonymous
+    settings.trust_proxy_headers = original_trust_proxy_headers
+    settings.trusted_proxy_ips = original_trusted_proxy_ips
 
 
 @pytest.fixture
@@ -569,6 +575,9 @@ def test_wrong_api_key_returns_unauthorized(client, auth_headers):
 
 def test_auth_failed_log_redacts_sensitive_headers(client, caplog):
     leaked_secret = "live-secret-value"
+    settings.trust_proxy_headers = True
+    settings.trusted_proxy_ips = ["198.51.100.1"]
+    client._transport.client = ("198.51.100.1", 50000)
     with caplog.at_level(logging.WARNING):
         response = client.get(
             "/modules",
@@ -619,6 +628,10 @@ def test_repeated_wrong_api_key_triggers_backoff(client, short_backoff):
 
 
 def test_backoff_isolated_across_multiple_forwarded_ips(client, short_backoff):
+    settings.trust_proxy_headers = True
+    settings.trusted_proxy_ips = ["198.51.100.1"]
+    client._transport.client = ("198.51.100.1", 50000)
+
     blocked_ip_headers = {"x-api-key": "wrong", "x-forwarded-for": "203.0.113.10"}
     allowed_ip_headers = {"x-api-key": "wrong", "x-forwarded-for": "203.0.113.11"}
 
@@ -777,6 +790,9 @@ async def test_metrics_allowlisted_client_host(
 def test_metrics_allowlisted_forwarded_for(client, metrics_security_settings):
     settings.metrics_api_key = None
     settings.metrics_ip_allowlist = ["203.0.113.5"]
+    settings.trust_proxy_headers = True
+    settings.trusted_proxy_ips = ["198.51.100.8"]
+    client._transport.client = ("198.51.100.8", 50000)
 
     response = client.get("/metrics", headers={"x-forwarded-for": "203.0.113.5"})
     assert response.status_code == 200
@@ -792,6 +808,8 @@ def test_metrics_allowlist_uses_first_forwarded_for_hop(
 ):
     monkeypatch.setattr(settings, "metrics_api_key", None)
     monkeypatch.setattr(settings, "metrics_ip_allowlist", ["203.0.113.5"])
+    monkeypatch.setattr(settings, "trust_proxy_headers", True)
+    monkeypatch.setattr(settings, "trusted_proxy_ips", ["198.51.100.8"])
     monkeypatch.setattr(client._transport, "client", ("198.51.100.8", 50000))
 
     allowed = client.get(
@@ -806,6 +824,47 @@ def test_metrics_allowlist_uses_first_forwarded_for_hop(
     )
     assert blocked.status_code == 403
     assert blocked.json()["detail"] == "Accesso alle metriche non autorizzato"
+
+
+def test_client_identifier_ignores_forwarded_for_when_proxy_not_trusted(
+    client, short_backoff
+):
+    settings.trust_proxy_headers = True
+    settings.trusted_proxy_ips = ["198.51.100.1"]
+    client._transport.client = ("198.51.100.99", 50000)
+
+    first_response = client.get(
+        "/modules",
+        headers={"x-api-key": "wrong", "x-forwarded-for": "203.0.113.10"},
+    )
+    assert first_response.status_code == 401
+
+    second_response = client.get(
+        "/modules",
+        headers={"x-api-key": "wrong", "x-forwarded-for": "203.0.113.11"},
+    )
+    assert second_response.status_code == 429
+
+
+def test_client_identifier_skips_spoofed_forwarded_for_values(client, short_backoff):
+    settings.trust_proxy_headers = True
+    settings.trusted_proxy_ips = ["198.51.100.1"]
+    client._transport.client = ("198.51.100.1", 50000)
+
+    first_response = client.get(
+        "/modules",
+        headers={
+            "x-api-key": "wrong",
+            "x-forwarded-for": "spoofed-value,not-an-ip,2001:db8::25",
+        },
+    )
+    assert first_response.status_code == 401
+
+    second_response = client.get(
+        "/modules",
+        headers={"x-api-key": "wrong", "x-forwarded-for": "2001:db8::25"},
+    )
+    assert second_response.status_code == 429
 
 
 def test_modules_directory_missing_returns_error(

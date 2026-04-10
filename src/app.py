@@ -2,6 +2,7 @@ import json
 import logging
 import re
 import shutil
+from ipaddress import ip_address
 from contextlib import asynccontextmanager
 from datetime import datetime
 from pathlib import Path
@@ -105,20 +106,38 @@ def _reference_catalog_version() -> str | None:
 
 
 def _client_identifier(request: Request) -> str:
-    forwarded_for = _forwarded_for_client_ip(request)
-    if forwarded_for:
-        return forwarded_for
     if request.client and request.client.host:
-        return request.client.host
+        return _forwarded_for_client_ip(request) or request.client.host
     return "unknown"
 
 
+def _is_trusted_proxy(request: Request) -> bool:
+    if not settings.trust_proxy_headers:
+        return False
+    if not request.client or not request.client.host:
+        return False
+    return request.client.host in settings.trusted_proxy_ips
+
+
+def _extract_first_valid_ip(value: str) -> str | None:
+    for candidate in value.split(","):
+        ip_candidate = candidate.strip()
+        if not ip_candidate:
+            continue
+        try:
+            return str(ip_address(ip_candidate))
+        except ValueError:
+            continue
+    return None
+
+
 def _forwarded_for_client_ip(request: Request) -> str | None:
+    if not _is_trusted_proxy(request):
+        return None
     forwarded_for = request.headers.get("x-forwarded-for")
     if not forwarded_for:
         return None
-    first_ip = forwarded_for.split(",", 1)[0].strip()
-    return first_ip or None
+    return _extract_first_valid_ip(forwarded_for)
 
 
 def _retry_after_for_active_backoff(client_id: str, now: float) -> int | None:
