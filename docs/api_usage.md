@@ -127,7 +127,7 @@ Risposta JSON semplificata:
 
 #### Versione del catalogo di riferimento
 
-- Il manifest RAW/SRD `data/reference/manifest.json` espone il campo `version` (attualmente `2026.03.22`).
+- Il manifest RAW/SRD `data/reference/manifest.json` espone il campo `version` (attualmente `2026.04.03`).
 - Tutti i payload di build devono includere `reference_catalog_version` con quel valore; lo stub `/modules/minmax_builder.txt` lo compila automaticamente insieme a `catalog_manifest`.
 - Per richieste personalizzate è possibile passare il campo nel body (o farlo inserire dal proprio orchestratore) come nell'esempio:
   ```http
@@ -137,11 +137,20 @@ Risposta JSON semplificata:
 
   {
     "mode": "extended",
-    "reference_catalog_version": "2026.03.22",
+    "reference_catalog_version": "2026.04.03",
     "hooks": ["serve l'Ordine"]
   }
   ```
 - Se il campo manca o non coincide con il manifest corrente, la validazione JSON Schema fallisce: lo stub restituisce `500 Stub payload non valido...`, mentre i job di review (`tools/generate_build_db.py`) marcano la build come `invalid` con errore `reference_catalog_version`.
+
+#### Contract versioning
+
+- Il contratto è **bloccante**: `reference_catalog_version` deve combaciare con `data/reference/manifest.json -> version` su tutti i payload build (root e `composite.build`).
+- In pipeline, `tools/validate_schemas.py` verifica coerenza tra manifesto, dataset `data/reference/*.json` (path + conteggio `entries`) e versioni dichiarate nei payload build presenti nelle directory candidate (`builds/`, `data/builds/`, `reports/builds/`).
+- In caso di mismatch, la pipeline deve terminare con exit code `1` per impedire la promozione di snapshot incoerenti.
+- Regola operativa dataset reference: ogni modifica a `data/reference/*.json` richiede nello stesso change set (1) update di `data/reference/manifest.json` e (2) nota esplicita in `CHANGELOG.md`.
+- Se non sono presenti payload build nelle directory candidate, il controllo emette warning ma continua a validare manifest + dataset; in CI è consigliato passare `--build-dir <path>` verso gli artifact di build reali.
+
 
 ### `GET /knowledge`
 Elenca i file in `src/data` (PDF, markdown di supporto). Non restituisce il contenuto dei manuali Paizo protetti.
