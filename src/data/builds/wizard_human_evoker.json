@@ -202,7 +202,6 @@
           "totale": 4
         }
       },
-      "pf_per_livello": "n/d (PF per livello non fornito)",
       "AC_arm": 0,
       "AC_scudo": 0,
       "AC_des": 0,
@@ -214,12 +213,7 @@
       "AC_tot": 15,
       "CA_touch": 10,
       "CA_ff": 10,
-      "BAB": "n/d (BAB non fornito)",
       "init": 2,
-      "CMB": "n/d (CMB non fornito)",
-      "cmb_disarm": "n/d (cmb disarm non fornito)",
-      "cmb_trip": "n/d (cmb trip non fornito)",
-      "cmb_grapple": "n/d (cmb grapple non fornito)",
       "speed": 9,
       "currency": {
         "gp": 100,
@@ -242,13 +236,7 @@
       "magia": {
         "1": 4
       },
-      "modules": {
-        "scheda_pg_markdown_template.md": "\n\n[contenuto troncato — restano circa 29742 byte su 29742; x-truncated=true; original-length=29742]"
-      },
-      "sheet_markdown": "Build Sheet\nPercezione Abito da viaggiatore Equipaggiamento iniziale",
-      "fonti": [
-        "http://localhost:8000/modules/minmax_builder.txt?mode=extended&class=Wizard&stub=true&level=1&race=Human&archetype=Evoker"
-      ],
+      "sheet_markdown": "# \n\nTiri Salvezza:** Temp 2 / Riflessi 3 / Volontà 4\n\n**BAB:** 0 | **Iniziativa:** 2 | **Velocità:** 9\n\nStatistiche:\n**For** 16 (mod 3)\n**Des** 14 (mod 2)\n**Cos** 14 (mod 2)\n**Int** 10 (mod 0)\n**Sag** 12 (mod 1)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Percezione\n\nEquipaggiamento:\n- Abito da viaggiatore\n\nLedger:\n- Equipaggiamento iniziale\n- Ricompensa missione",
       "print_mode": false,
       "show_minmax": true,
       "show_vtt": true,
@@ -262,13 +250,26 @@
           "valore": 0
         }
       ],
+      "background": "Piromane accademico in cerca di antiche pergamene elementali.",
+      "pf_per_livello": "n/d (PF per livello non fornito)",
+      "BAB": "n/d (BAB non fornito)",
+      "CMB": "n/d (CMB non fornito)",
+      "cmb_disarm": "n/d (cmb disarm non fornito)",
+      "cmb_trip": "n/d (cmb trip non fornito)",
+      "cmb_grapple": "n/d (cmb grapple non fornito)",
+      "modules": {
+        "scheda_pg_markdown_template.md": "# {{ nome }}\n\nTiri Salvezza:** Temp {{ salvezze.Tempra }} / Riflessi {{ salvezze.Riflessi }} / Volontà {{ salvezze['Volontà'] }}\n\n**BAB:** {{ BAB }} | **Iniziativa:** {{ iniziativa }} | **Velocità:** {{ velocita }}\n\nStatistiche:\n{% for label, key in [\n    (\"For\", \"FOR\"),\n    (\"Des\", \"DES\"),\n    (\"Cos\", \"COS\"),\n    (\"Int\", \"INT\"),\n    (\"Sag\", \"SAG\"),\n    (\"Car\", \"CAR\"),\n] %}\n**{{ label }}** {{ statistiche[key] }} (mod {{ (statistiche[key] - 10) // 2 }})\n{% endfor %}\n\n{% if skills %}\nCompetenze:\n{% for skill in skills %}- {{ skill.get('nome') or skill.get('name') }}\n{% endfor %}\n{% endif %}\n\n{% if equipaggiamento %}\nEquipaggiamento:\n{% for item in equipaggiamento %}- {{ item }}\n{% endfor %}\n{% endif %}\n\n{% set ledger_entries = ledger_movimenti or (ledger.movimenti if ledger else []) %}\n{% if ledger_entries %}\nLedger:\n{% for mov in ledger_entries %}- {{ mov.get('voce') or mov.get('oggetto') or mov.get('label') or mov.get('categoria') }}\n{% endfor %}\n{% endif %}\n"
+      },
+      "fonti": [
+        "http://127.0.0.1:8000/modules/minmax_builder.txt?mode=extended&class=Wizard&stub=true&level=1&race=Human&archetype=Evoker"
+      ],
       "lingue": [],
       "sensi": [],
       "condizioni": []
     }
   },
   "narrative": "Human Evoker pronta/o per il campo, specializzata/o in tattiche da Wizard.",
-  "sheet": "[contenuto troncato — restano circa 29742 byte su 29742; x-truncated=true; original-length=29742]",
+  "sheet": "# \n\nTiri Salvezza:** Temp 2 / Riflessi 3 / Volontà 4\n\n**BAB:** 0 | **Iniziativa:** 2 | **Velocità:** 9\n\nStatistiche:\n**For** 16 (mod 3)\n**Des** 14 (mod 2)\n**Cos** 14 (mod 2)\n**Int** 10 (mod 0)\n**Sag** 12 (mod 1)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Percezione\n\nEquipaggiamento:\n- Abito da viaggiatore\n\nLedger:\n- Equipaggiamento iniziale\n- Ricompensa missione",
   "ledger": {
     "movimenti": [
       {
@@ -494,7 +495,6 @@
               "totale": 4
             }
           },
-          "pf_per_livello": "n/d (PF per livello non fornito)",
           "AC_arm": 0,
           "AC_scudo": 0,
           "AC_des": 0,
@@ -506,12 +506,7 @@
           "AC_tot": 15,
           "CA_touch": 10,
           "CA_ff": 10,
-          "BAB": "n/d (BAB non fornito)",
           "init": 2,
-          "CMB": "n/d (CMB non fornito)",
-          "cmb_disarm": "n/d (cmb disarm non fornito)",
-          "cmb_trip": "n/d (cmb trip non fornito)",
-          "cmb_grapple": "n/d (cmb grapple non fornito)",
           "speed": 9,
           "currency": {
             "gp": 100,
@@ -534,13 +529,7 @@
           "magia": {
             "1": 4
           },
-          "modules": {
-            "scheda_pg_markdown_template.md": "\n\n[contenuto troncato — restano circa 29742 byte su 29742; x-truncated=true; original-length=29742]"
-          },
-          "sheet_markdown": "[contenuto troncato — restano circa 29742 byte su 29742; x-truncated=true; original-length=29742]",
-          "fonti": [
-            "http://localhost:8000/modules/minmax_builder.txt?mode=extended&class=Wizard&stub=true&level=1&race=Human&archetype=Evoker"
-          ],
+          "sheet_markdown": "# \n\nTiri Salvezza:** Temp 2 / Riflessi 3 / Volontà 4\n\n**BAB:** 0 | **Iniziativa:** 2 | **Velocità:** 9\n\nStatistiche:\n**For** 16 (mod 3)\n**Des** 14 (mod 2)\n**Cos** 14 (mod 2)\n**Int** 10 (mod 0)\n**Sag** 12 (mod 1)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Percezione\n\nEquipaggiamento:\n- Abito da viaggiatore\n\nLedger:\n- Equipaggiamento iniziale\n- Ricompensa missione",
           "print_mode": false,
           "show_minmax": true,
           "show_vtt": true,
@@ -548,7 +537,25 @@
           "show_explain": true,
           "show_ledger": true,
           "decimal_comma": true,
-          "skills": [],
+          "skills": [
+            {
+              "nome": "Percezione",
+              "valore": 0
+            }
+          ],
+          "background": "Piromane accademico in cerca di antiche pergamene elementali.",
+          "pf_per_livello": "n/d (PF per livello non fornito)",
+          "BAB": "n/d (BAB non fornito)",
+          "CMB": "n/d (CMB non fornito)",
+          "cmb_disarm": "n/d (cmb disarm non fornito)",
+          "cmb_trip": "n/d (cmb trip non fornito)",
+          "cmb_grapple": "n/d (cmb grapple non fornito)",
+          "modules": {
+            "scheda_pg_markdown_template.md": "# {{ nome }}\n\nTiri Salvezza:** Temp {{ salvezze.Tempra }} / Riflessi {{ salvezze.Riflessi }} / Volontà {{ salvezze['Volontà'] }}\n\n**BAB:** {{ BAB }} | **Iniziativa:** {{ iniziativa }} | **Velocità:** {{ velocita }}\n\nStatistiche:\n{% for label, key in [\n    (\"For\", \"FOR\"),\n    (\"Des\", \"DES\"),\n    (\"Cos\", \"COS\"),\n    (\"Int\", \"INT\"),\n    (\"Sag\", \"SAG\"),\n    (\"Car\", \"CAR\"),\n] %}\n**{{ label }}** {{ statistiche[key] }} (mod {{ (statistiche[key] - 10) // 2 }})\n{% endfor %}\n\n{% if skills %}\nCompetenze:\n{% for skill in skills %}- {{ skill.get('nome') or skill.get('name') }}\n{% endfor %}\n{% endif %}\n\n{% if equipaggiamento %}\nEquipaggiamento:\n{% for item in equipaggiamento %}- {{ item }}\n{% endfor %}\n{% endif %}\n\n{% set ledger_entries = ledger_movimenti or (ledger.movimenti if ledger else []) %}\n{% if ledger_entries %}\nLedger:\n{% for mov in ledger_entries %}- {{ mov.get('voce') or mov.get('oggetto') or mov.get('label') or mov.get('categoria') }}\n{% endfor %}\n{% endif %}\n"
+          },
+          "fonti": [
+            "http://127.0.0.1:8000/modules/minmax_builder.txt?mode=extended&class=Wizard&stub=true&level=1&race=Human&archetype=Evoker"
+          ],
           "lingue": [],
           "sensi": [],
           "condizioni": []
@@ -562,7 +569,7 @@
         "step_total_ok": true,
         "step_labels_count": 16,
         "has_extended_steps": true,
-        "request_timestamp": "2025-12-19T18:29:42Z",
+        "request_timestamp": "2026-04-10T01:56:18Z",
         "client_fingerprint_hash": "stub-fingerprint-00000000000000000000000000000000",
         "outcome": "accepted",
         "attempt_count": 1,
@@ -708,7 +715,6 @@
             "totale": 4
           }
         },
-        "pf_per_livello": "n/d (PF per livello non fornito)",
         "AC_arm": 0,
         "AC_scudo": 0,
         "AC_des": 0,
@@ -720,12 +726,7 @@
         "AC_tot": 15,
         "CA_touch": 10,
         "CA_ff": 10,
-        "BAB": "n/d (BAB non fornito)",
         "init": 2,
-        "CMB": "n/d (CMB non fornito)",
-        "cmb_disarm": "n/d (cmb disarm non fornito)",
-        "cmb_trip": "n/d (cmb trip non fornito)",
-        "cmb_grapple": "n/d (cmb grapple non fornito)",
         "speed": 9,
         "currency": {
           "gp": 100,
@@ -748,13 +749,7 @@
         "magia": {
           "1": 4
         },
-        "modules": {
-          "scheda_pg_markdown_template.md": "\n\n[contenuto troncato — restano circa 29742 byte su 29742; x-truncated=true; original-length=29742]"
-        },
-        "sheet_markdown": "[contenuto troncato — restano circa 29742 byte su 29742; x-truncated=true; original-length=29742]",
-        "fonti": [
-          "http://localhost:8000/modules/minmax_builder.txt?mode=extended&class=Wizard&stub=true&level=1&race=Human&archetype=Evoker"
-        ],
+        "sheet_markdown": "# \n\nTiri Salvezza:** Temp 2 / Riflessi 3 / Volontà 4\n\n**BAB:** 0 | **Iniziativa:** 2 | **Velocità:** 9\n\nStatistiche:\n**For** 16 (mod 3)\n**Des** 14 (mod 2)\n**Cos** 14 (mod 2)\n**Int** 10 (mod 0)\n**Sag** 12 (mod 1)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Percezione\n\nEquipaggiamento:\n- Abito da viaggiatore\n\nLedger:\n- Equipaggiamento iniziale\n- Ricompensa missione",
         "print_mode": false,
         "show_minmax": true,
         "show_vtt": true,
@@ -762,14 +757,32 @@
         "show_explain": true,
         "show_ledger": true,
         "decimal_comma": true,
-        "skills": [],
+        "skills": [
+          {
+            "nome": "Percezione",
+            "valore": 0
+          }
+        ],
+        "background": "Piromane accademico in cerca di antiche pergamene elementali.",
+        "pf_per_livello": "n/d (PF per livello non fornito)",
+        "BAB": "n/d (BAB non fornito)",
+        "CMB": "n/d (CMB non fornito)",
+        "cmb_disarm": "n/d (cmb disarm non fornito)",
+        "cmb_trip": "n/d (cmb trip non fornito)",
+        "cmb_grapple": "n/d (cmb grapple non fornito)",
+        "modules": {
+          "scheda_pg_markdown_template.md": "# {{ nome }}\n\nTiri Salvezza:** Temp {{ salvezze.Tempra }} / Riflessi {{ salvezze.Riflessi }} / Volontà {{ salvezze['Volontà'] }}\n\n**BAB:** {{ BAB }} | **Iniziativa:** {{ iniziativa }} | **Velocità:** {{ velocita }}\n\nStatistiche:\n{% for label, key in [\n    (\"For\", \"FOR\"),\n    (\"Des\", \"DES\"),\n    (\"Cos\", \"COS\"),\n    (\"Int\", \"INT\"),\n    (\"Sag\", \"SAG\"),\n    (\"Car\", \"CAR\"),\n] %}\n**{{ label }}** {{ statistiche[key] }} (mod {{ (statistiche[key] - 10) // 2 }})\n{% endfor %}\n\n{% if skills %}\nCompetenze:\n{% for skill in skills %}- {{ skill.get('nome') or skill.get('name') }}\n{% endfor %}\n{% endif %}\n\n{% if equipaggiamento %}\nEquipaggiamento:\n{% for item in equipaggiamento %}- {{ item }}\n{% endfor %}\n{% endif %}\n\n{% set ledger_entries = ledger_movimenti or (ledger.movimenti if ledger else []) %}\n{% if ledger_entries %}\nLedger:\n{% for mov in ledger_entries %}- {{ mov.get('voce') or mov.get('oggetto') or mov.get('label') or mov.get('categoria') }}\n{% endfor %}\n{% endif %}\n"
+        },
+        "fonti": [
+          "http://127.0.0.1:8000/modules/minmax_builder.txt?mode=extended&class=Wizard&stub=true&level=1&race=Human&archetype=Evoker"
+        ],
         "lingue": [],
         "sensi": [],
         "condizioni": []
       }
     },
     "narrative": "Human Evoker pronta/o per il campo, specializzata/o in tattiche da Wizard.",
-    "sheet": "[contenuto troncato — restano circa 29742 byte su 29742; x-truncated=true; original-length=29742]",
+    "sheet": "# \n\nTiri Salvezza:** Temp 2 / Riflessi 3 / Volontà 4\n\n**BAB:** 0 | **Iniziativa:** 2 | **Velocità:** 9\n\nStatistiche:\n**For** 16 (mod 3)\n**Des** 14 (mod 2)\n**Cos** 14 (mod 2)\n**Int** 10 (mod 0)\n**Sag** 12 (mod 1)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Percezione\n\nEquipaggiamento:\n- Abito da viaggiatore\n\nLedger:\n- Equipaggiamento iniziale\n- Ricompensa missione",
     "ledger": {
       "movimenti": [
         {
@@ -838,9 +851,9 @@
       "2026.04.03"
     ]
   },
-  "source_url": "http://localhost:8000/modules/minmax_builder.txt?mode=extended&class=Wizard&stub=true&level=1&race=Human&archetype=Evoker",
+  "source_url": "http://127.0.0.1:8000/modules/minmax_builder.txt?mode=extended&class=Wizard&stub=true&level=1&race=Human&archetype=Evoker",
   "reference_catalog_version": "2026.04.03",
-  "fetched_at": "2025-12-19T18:29:42Z",
+  "fetched_at": "2026-04-10T01:56:18Z",
   "request": {
     "class": "Wizard",
     "race": "Human",
@@ -874,7 +887,7 @@
     "step_total_ok": true,
     "step_labels_count": 16,
     "has_extended_steps": true,
-    "request_timestamp": "2025-12-19T18:29:42Z",
+    "request_timestamp": "2026-04-10T01:56:18Z",
     "client_fingerprint_hash": "stub-fingerprint-00000000000000000000000000000000",
     "outcome": "accepted",
     "attempt_count": 1,
@@ -917,6 +930,15 @@
       "action": "harvest",
       "status": "draft",
       "note": "4 is not of type 'array'",
+      "checkpoint": 1,
+      "source": "wizard_human_evoker"
+    },
+    {
+      "timestamp": "2026-04-10T01:56:18Z",
+      "actor": "generate_build_db",
+      "action": "harvest",
+      "status": "draft",
+      "note": "None is not of type 'string'; 4 is not of type 'array'",
       "checkpoint": 1,
       "source": "wizard_human_evoker"
     }

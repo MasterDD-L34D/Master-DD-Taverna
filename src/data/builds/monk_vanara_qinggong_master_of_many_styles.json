@@ -58,7 +58,17 @@
       "tempra": 4,
       "riflessi": 5,
       "volonta": 5
-    }
+    },
+    "missing_catalog_entries": [
+      "feats:Tiger Style + Crane Style"
+    ],
+    "prerequisite_violations": [
+      "Crane Style: Improved Unarmed Strike",
+      "Tiger Style: Improved Unarmed Strike"
+    ],
+    "catalog_version": [
+      "2026.04.03"
+    ]
   },
   "export": {
     "sheet_payload": {
@@ -81,12 +91,16 @@
         "CAR": 8,
         "attacco": "+5",
         "danni": "1d8+3",
-        "ca": 18
+        "ca": 18,
+        "tempra": 4,
+        "riflessi": 5,
+        "volonta": 5
       },
       "statistiche_chiave": {
         "attacco": "+5",
         "danni": "1d8+3",
-        "ca": 18
+        "ca": 18,
+        "CA": 18
       },
       "pf_totali": 11,
       "hp": {
@@ -128,9 +142,7 @@
         }
       ],
       "equipaggiamento": [
-        "Kama bilanciati",
-        "Corazza di seta",
-        "Cintura dell'agilità"
+        "Kama bilanciati"
       ],
       "ledger_movimenti": [
         {
@@ -140,6 +152,14 @@
         {
           "voce": "Ricompensa duello rituale",
           "importo": 120
+        },
+        {
+          "voce": "Equipaggiamento iniziale",
+          "importo": -150
+        },
+        {
+          "voce": "Ricompensa per scouting su canopia",
+          "importo": 220
         }
       ],
       "ledger": {
@@ -159,16 +179,18 @@
           "rame": 4
         }
       },
-      "sheet_markdown": "Acrobazia\nKama bilanciati\nDonazione al monastero",
+      "sheet_markdown": "# \n\nTiri Salvezza:** Temp 4 / Riflessi 5 / Volontà 5\n\n**BAB:** 0 | **Iniziativa:** 4 | **Velocità:** 9\n\nStatistiche:\n**For** 14 (mod 2)\n**Des** 16 (mod 3)\n**Cos** 12 (mod 1)\n**Int** 10 (mod 0)\n**Sag** 16 (mod 3)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Acrobazia\n- Furtività\n\nEquipaggiamento:\n- Kama bilanciati\n- Corazza di seta\n- Cintura dell'agilità\n\nLedger:\n- Donazione al monastero\n- Ricompensa duello rituale\n- Equipaggiamento iniziale\n- Ricompensa per scouting su canopia",
       "talenti": [
         "Tiger Style",
         "Crane Style",
-        "Dodge"
+        "Dodge",
+        "Tiger Style + Crane Style"
       ],
       "capacita_classe": [
         "Flurry of Blows",
         "Vanara Climb",
-        "Qinggong ki powers (feather step)"
+        "Qinggong ki powers (feather step)",
+        "Ki Pool"
       ],
       "progressione": [
         {
@@ -192,7 +214,73 @@
         "ki_powers": [
           "feather step"
         ]
-      }
+      },
+      "razza": "Vanara",
+      "salvezze_breakdown": {
+        "Tempra": {
+          "base": 3,
+          "modificatore": 1,
+          "misc": 0,
+          "totale": 4
+        },
+        "Riflessi": {
+          "base": 2,
+          "modificatore": 3,
+          "misc": 0,
+          "totale": 5
+        },
+        "Volontà": {
+          "base": 2,
+          "modificatore": 3,
+          "misc": 0,
+          "totale": 5
+        }
+      },
+      "pf_per_livello": "n/d (PF per livello non fornito)",
+      "AC_arm": 0,
+      "AC_scudo": 0,
+      "AC_des": 0,
+      "AC_defl": 0,
+      "AC_nat": 0,
+      "AC_dodge": 0,
+      "AC_misc": 0,
+      "AC_base": 10,
+      "AC_tot": 18,
+      "CA_touch": 10,
+      "CA_ff": 10,
+      "BAB": "n/d (BAB non fornito)",
+      "init": 4,
+      "CMB": "n/d (CMB non fornito)",
+      "cmb_disarm": "n/d (cmb disarm non fornito)",
+      "cmb_trip": "n/d (cmb trip non fornito)",
+      "cmb_grapple": "n/d (cmb grapple non fornito)",
+      "speed": 9,
+      "currency": {
+        "gp": 70,
+        "sp": 15,
+        "cp": 0
+      },
+      "gp": 70,
+      "sp": 15,
+      "cp": 0,
+      "modules": {
+        "scheda_pg_markdown_template.md": "# {{ nome }}\n\nTiri Salvezza:** Temp {{ salvezze.Tempra }} / Riflessi {{ salvezze.Riflessi }} / Volontà {{ salvezze['Volontà'] }}\n\n**BAB:** {{ BAB }} | **Iniziativa:** {{ iniziativa }} | **Velocità:** {{ velocita }}\n\nStatistiche:\n{% for label, key in [\n    (\"For\", \"FOR\"),\n    (\"Des\", \"DES\"),\n    (\"Cos\", \"COS\"),\n    (\"Int\", \"INT\"),\n    (\"Sag\", \"SAG\"),\n    (\"Car\", \"CAR\"),\n] %}\n**{{ label }}** {{ statistiche[key] }} (mod {{ (statistiche[key] - 10) // 2 }})\n{% endfor %}\n\n{% if skills %}\nCompetenze:\n{% for skill in skills %}- {{ skill.get('nome') or skill.get('name') }}\n{% endfor %}\n{% endif %}\n\n{% if equipaggiamento %}\nEquipaggiamento:\n{% for item in equipaggiamento %}- {{ item }}\n{% endfor %}\n{% endif %}\n\n{% set ledger_entries = ledger_movimenti or (ledger.movimenti if ledger else []) %}\n{% if ledger_entries %}\nLedger:\n{% for mov in ledger_entries %}- {{ mov.get('voce') or mov.get('oggetto') or mov.get('label') or mov.get('categoria') }}\n{% endfor %}\n{% endif %}\n"
+      },
+      "fonti": [
+        "http://127.0.0.1:8000/modules/minmax_builder.txt?mode=full-pg&class=Monk&stub=true&level=1&race=Vanara&archetype=Qinggong+Master+Of+Many+Styles"
+      ],
+      "print_mode": false,
+      "show_minmax": true,
+      "show_vtt": true,
+      "show_qa": true,
+      "show_explain": true,
+      "show_ledger": true,
+      "decimal_comma": true,
+      "spell_levels": [],
+      "lingue": [],
+      "sensi": [],
+      "condizioni": [],
+      "inventario": []
     }
   },
   "narrative": "Vanara acrobata addestrato nei monasteri delle Scimmie Nascoste; combina le sostituzioni Qinggong con gli stili multipli del Master of Many Styles per alternare Tiger/Crane, controllare il terreno con passi di ki e colpire in salto i bersagli chiave.",
@@ -214,9 +302,9 @@
     },
     "saldo": 70
   },
-  "sheet": "### 🧙 Scheda Personaggio in Markdown\n\n---\n\n# Monk — Liv. 1 (Vanara · Qinggong + Master of Many Styles)\n\n**Background rapido:** funambolo vanara cresciuto nei templi della giungla; ha sostituito le tecniche base con il ki modulare del Qinggong e imparato molteplici stili animali.\n\n**Stile di gioco:** apre in Tiger Style per i colpi mirati a For, passa a Crane per difese e parry, usa il ki per feather step e movimenti verticali da vanara.\n\n**Linee di progressione testate:**\n- Combo Stance: Tiger -> Panther pounce per DPR esplosivo.\n- Difese/Mobilità: Crane + ki feather step per negare AoO e mantenere CA alta.\n- Debuff mirati: Vicious Stomp + colpi alle gambe per far cadere i caster.\n\n**Benchmark DPR/CA:** 2 colpi a 1d8+3 con CA 18; DPR medio/picco 11/16 dopo ruling RAW/RAI/PFS.\n",
+  "sheet": "# \n\nTiri Salvezza:** Temp 4 / Riflessi 5 / Volontà 5\n\n**BAB:** 0 | **Iniziativa:** 4 | **Velocità:** 9\n\nStatistiche:\n**For** 14 (mod 2)\n**Des** 16 (mod 3)\n**Cos** 12 (mod 1)\n**Int** 10 (mod 0)\n**Sag** 16 (mod 3)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Acrobazia\n- Furtività\n\nEquipaggiamento:\n- Kama bilanciati\n- Corazza di seta\n- Cintura dell'agilità\n\nLedger:\n- Donazione al monastero\n- Ricompensa duello rituale\n- Equipaggiamento iniziale\n- Ricompensa per scouting su canopia",
   "class": "Monk",
-  "mode": "extended",
+  "mode": "full-pg",
   "output_prefix": "monk_vanara_qinggong_master_of_many_styles",
   "ruling_log": [
     "Ruling Expert: Qinggong e Master of Many Styles sono compatibili (archetipi sostitutivi differenti, nessuna sovrapposizione RAW).",
@@ -225,11 +313,13 @@
   ],
   "request": {
     "class": "Monk",
-    "mode": "extended",
     "race": "Vanara",
-    "archetype": "Qinggong + Master of Many Styles",
+    "archetype": "Qinggong Master Of Many Styles",
+    "mode": "full-pg",
+    "mode_normalized": "extended",
     "spec_id": "monk_vanara_qinggong_master_of_many_styles",
-    "model": "gpt-5.1-codex-max",
+    "model": null,
+    "background": null,
     "level": 1,
     "level_checkpoints": [
       1,
@@ -238,6 +328,7 @@
     ]
   },
   "completeness": {
+    "errors": [],
     "require_complete": true
   },
   "reference_catalog_version": "2026.04.03",
@@ -259,21 +350,27 @@
       "missing": [],
       "status": "complete",
       "checklist": {}
+    },
+    "catalog": {
+      "warnings": [
+        "Elementi non presenti nel catalogo: feats:Tiger Style + Crane Style",
+        "Prerequisiti catalogo non soddisfatti: Crane Style: Improved Unarmed Strike, Tiger Style: Improved Unarmed Strike"
+      ]
     }
   },
   "build_id": "build-d2cddec228be5afe3080d407",
   "step_audit": {
-    "request_timestamp": "2025-12-18T18:46:09Z",
-    "client_fingerprint_hash": "stub-fingerprint-00000000000000000000000000000000",
-    "outcome": "accepted",
-    "attempt_count": 1,
-    "backoff_reason": null,
     "normalized_mode": "extended",
     "expected_step_total": 16,
     "observed_step_total": 16,
     "step_total_ok": true,
     "step_labels_count": 16,
-    "has_extended_steps": true
+    "has_extended_steps": true,
+    "request_timestamp": "2026-04-10T01:56:34Z",
+    "client_fingerprint_hash": "stub-fingerprint-00000000000000000000000000000000",
+    "outcome": "accepted",
+    "attempt_count": 1,
+    "backoff_reason": null
   },
   "composite": {
     "build": {
@@ -337,7 +434,17 @@
           "tempra": 4,
           "riflessi": 5,
           "volonta": 5
-        }
+        },
+        "missing_catalog_entries": [
+          "feats:Tiger Style + Crane Style"
+        ],
+        "prerequisite_violations": [
+          "Crane Style: Improved Unarmed Strike",
+          "Tiger Style: Improved Unarmed Strike"
+        ],
+        "catalog_version": [
+          "2026.04.03"
+        ]
       },
       "export": {
         "sheet_payload": {
@@ -360,12 +467,16 @@
             "CAR": 8,
             "attacco": "+5",
             "danni": "1d8+3",
-            "ca": 18
+            "ca": 18,
+            "tempra": 4,
+            "riflessi": 5,
+            "volonta": 5
           },
           "statistiche_chiave": {
             "attacco": "+5",
             "danni": "1d8+3",
-            "ca": 18
+            "ca": 18,
+            "CA": 18
           },
           "pf_totali": 11,
           "hp": {
@@ -407,9 +518,7 @@
             }
           ],
           "equipaggiamento": [
-            "Kama bilanciati",
-            "Corazza di seta",
-            "Cintura dell'agilità"
+            "Kama bilanciati"
           ],
           "ledger_movimenti": [
             {
@@ -419,6 +528,14 @@
             {
               "voce": "Ricompensa duello rituale",
               "importo": 120
+            },
+            {
+              "voce": "Equipaggiamento iniziale",
+              "importo": -150
+            },
+            {
+              "voce": "Ricompensa per scouting su canopia",
+              "importo": 220
             }
           ],
           "ledger": {
@@ -438,16 +555,18 @@
               "rame": 4
             }
           },
-          "sheet_markdown": "Acrobazia\nKama bilanciati\nDonazione al monastero",
+          "sheet_markdown": "# \n\nTiri Salvezza:** Temp 4 / Riflessi 5 / Volontà 5\n\n**BAB:** 0 | **Iniziativa:** 4 | **Velocità:** 9\n\nStatistiche:\n**For** 14 (mod 2)\n**Des** 16 (mod 3)\n**Cos** 12 (mod 1)\n**Int** 10 (mod 0)\n**Sag** 16 (mod 3)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Acrobazia\n- Furtività\n\nEquipaggiamento:\n- Kama bilanciati\n- Corazza di seta\n- Cintura dell'agilità\n\nLedger:\n- Donazione al monastero\n- Ricompensa duello rituale\n- Equipaggiamento iniziale\n- Ricompensa per scouting su canopia",
           "talenti": [
             "Tiger Style",
             "Crane Style",
-            "Dodge"
+            "Dodge",
+            "Tiger Style + Crane Style"
           ],
           "capacita_classe": [
             "Flurry of Blows",
             "Vanara Climb",
-            "Qinggong ki powers (feather step)"
+            "Qinggong ki powers (feather step)",
+            "Ki Pool"
           ],
           "progressione": [
             {
@@ -471,22 +590,88 @@
             "ki_powers": [
               "feather step"
             ]
-          }
+          },
+          "razza": "Vanara",
+          "salvezze_breakdown": {
+            "Tempra": {
+              "base": 3,
+              "modificatore": 1,
+              "misc": 0,
+              "totale": 4
+            },
+            "Riflessi": {
+              "base": 2,
+              "modificatore": 3,
+              "misc": 0,
+              "totale": 5
+            },
+            "Volontà": {
+              "base": 2,
+              "modificatore": 3,
+              "misc": 0,
+              "totale": 5
+            }
+          },
+          "pf_per_livello": "n/d (PF per livello non fornito)",
+          "AC_arm": 0,
+          "AC_scudo": 0,
+          "AC_des": 0,
+          "AC_defl": 0,
+          "AC_nat": 0,
+          "AC_dodge": 0,
+          "AC_misc": 0,
+          "AC_base": 10,
+          "AC_tot": 18,
+          "CA_touch": 10,
+          "CA_ff": 10,
+          "BAB": "n/d (BAB non fornito)",
+          "init": 4,
+          "CMB": "n/d (CMB non fornito)",
+          "cmb_disarm": "n/d (cmb disarm non fornito)",
+          "cmb_trip": "n/d (cmb trip non fornito)",
+          "cmb_grapple": "n/d (cmb grapple non fornito)",
+          "speed": 9,
+          "currency": {
+            "gp": 70,
+            "sp": 15,
+            "cp": 0
+          },
+          "gp": 70,
+          "sp": 15,
+          "cp": 0,
+          "modules": {
+            "scheda_pg_markdown_template.md": "# {{ nome }}\n\nTiri Salvezza:** Temp {{ salvezze.Tempra }} / Riflessi {{ salvezze.Riflessi }} / Volontà {{ salvezze['Volontà'] }}\n\n**BAB:** {{ BAB }} | **Iniziativa:** {{ iniziativa }} | **Velocità:** {{ velocita }}\n\nStatistiche:\n{% for label, key in [\n    (\"For\", \"FOR\"),\n    (\"Des\", \"DES\"),\n    (\"Cos\", \"COS\"),\n    (\"Int\", \"INT\"),\n    (\"Sag\", \"SAG\"),\n    (\"Car\", \"CAR\"),\n] %}\n**{{ label }}** {{ statistiche[key] }} (mod {{ (statistiche[key] - 10) // 2 }})\n{% endfor %}\n\n{% if skills %}\nCompetenze:\n{% for skill in skills %}- {{ skill.get('nome') or skill.get('name') }}\n{% endfor %}\n{% endif %}\n\n{% if equipaggiamento %}\nEquipaggiamento:\n{% for item in equipaggiamento %}- {{ item }}\n{% endfor %}\n{% endif %}\n\n{% set ledger_entries = ledger_movimenti or (ledger.movimenti if ledger else []) %}\n{% if ledger_entries %}\nLedger:\n{% for mov in ledger_entries %}- {{ mov.get('voce') or mov.get('oggetto') or mov.get('label') or mov.get('categoria') }}\n{% endfor %}\n{% endif %}\n"
+          },
+          "fonti": [
+            "http://127.0.0.1:8000/modules/minmax_builder.txt?mode=full-pg&class=Monk&stub=true&level=1&race=Vanara&archetype=Qinggong+Master+Of+Many+Styles"
+          ],
+          "print_mode": false,
+          "show_minmax": true,
+          "show_vtt": true,
+          "show_qa": true,
+          "show_explain": true,
+          "show_ledger": true,
+          "decimal_comma": true,
+          "spell_levels": [],
+          "lingue": [],
+          "sensi": [],
+          "condizioni": [],
+          "inventario": []
         }
       },
       "reference_catalog_version": "2026.04.03",
       "step_audit": {
-        "request_timestamp": "2025-12-18T18:46:09Z",
-        "client_fingerprint_hash": "stub-fingerprint-00000000000000000000000000000000",
-        "outcome": "accepted",
-        "attempt_count": 1,
-        "backoff_reason": null,
         "normalized_mode": "extended",
         "expected_step_total": 16,
         "observed_step_total": 16,
         "step_total_ok": true,
         "step_labels_count": 16,
-        "has_extended_steps": true
+        "has_extended_steps": true,
+        "request_timestamp": "2026-04-10T01:56:34Z",
+        "client_fingerprint_hash": "stub-fingerprint-00000000000000000000000000000000",
+        "outcome": "accepted",
+        "attempt_count": 1,
+        "backoff_reason": null
       },
       "sheet_payload": {
         "classi": [
@@ -508,12 +693,16 @@
           "CAR": 8,
           "attacco": "+5",
           "danni": "1d8+3",
-          "ca": 18
+          "ca": 18,
+          "tempra": 4,
+          "riflessi": 5,
+          "volonta": 5
         },
         "statistiche_chiave": {
           "attacco": "+5",
           "danni": "1d8+3",
-          "ca": 18
+          "ca": 18,
+          "CA": 18
         },
         "pf_totali": 11,
         "hp": {
@@ -555,9 +744,7 @@
           }
         ],
         "equipaggiamento": [
-          "Kama bilanciati",
-          "Corazza di seta",
-          "Cintura dell'agilità"
+          "Kama bilanciati"
         ],
         "ledger_movimenti": [
           {
@@ -567,6 +754,14 @@
           {
             "voce": "Ricompensa duello rituale",
             "importo": 120
+          },
+          {
+            "voce": "Equipaggiamento iniziale",
+            "importo": -150
+          },
+          {
+            "voce": "Ricompensa per scouting su canopia",
+            "importo": 220
           }
         ],
         "ledger": {
@@ -586,16 +781,18 @@
             "rame": 4
           }
         },
-        "sheet_markdown": "Acrobazia\nKama bilanciati\nDonazione al monastero",
+        "sheet_markdown": "# \n\nTiri Salvezza:** Temp 4 / Riflessi 5 / Volontà 5\n\n**BAB:** 0 | **Iniziativa:** 4 | **Velocità:** 9\n\nStatistiche:\n**For** 14 (mod 2)\n**Des** 16 (mod 3)\n**Cos** 12 (mod 1)\n**Int** 10 (mod 0)\n**Sag** 16 (mod 3)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Acrobazia\n- Furtività\n\nEquipaggiamento:\n- Kama bilanciati\n- Corazza di seta\n- Cintura dell'agilità\n\nLedger:\n- Donazione al monastero\n- Ricompensa duello rituale\n- Equipaggiamento iniziale\n- Ricompensa per scouting su canopia",
         "talenti": [
           "Tiger Style",
           "Crane Style",
-          "Dodge"
+          "Dodge",
+          "Tiger Style + Crane Style"
         ],
         "capacita_classe": [
           "Flurry of Blows",
           "Vanara Climb",
-          "Qinggong ki powers (feather step)"
+          "Qinggong ki powers (feather step)",
+          "Ki Pool"
         ],
         "progressione": [
           {
@@ -619,11 +816,77 @@
           "ki_powers": [
             "feather step"
           ]
-        }
+        },
+        "razza": "Vanara",
+        "salvezze_breakdown": {
+          "Tempra": {
+            "base": 3,
+            "modificatore": 1,
+            "misc": 0,
+            "totale": 4
+          },
+          "Riflessi": {
+            "base": 2,
+            "modificatore": 3,
+            "misc": 0,
+            "totale": 5
+          },
+          "Volontà": {
+            "base": 2,
+            "modificatore": 3,
+            "misc": 0,
+            "totale": 5
+          }
+        },
+        "pf_per_livello": "n/d (PF per livello non fornito)",
+        "AC_arm": 0,
+        "AC_scudo": 0,
+        "AC_des": 0,
+        "AC_defl": 0,
+        "AC_nat": 0,
+        "AC_dodge": 0,
+        "AC_misc": 0,
+        "AC_base": 10,
+        "AC_tot": 18,
+        "CA_touch": 10,
+        "CA_ff": 10,
+        "BAB": "n/d (BAB non fornito)",
+        "init": 4,
+        "CMB": "n/d (CMB non fornito)",
+        "cmb_disarm": "n/d (cmb disarm non fornito)",
+        "cmb_trip": "n/d (cmb trip non fornito)",
+        "cmb_grapple": "n/d (cmb grapple non fornito)",
+        "speed": 9,
+        "currency": {
+          "gp": 70,
+          "sp": 15,
+          "cp": 0
+        },
+        "gp": 70,
+        "sp": 15,
+        "cp": 0,
+        "modules": {
+          "scheda_pg_markdown_template.md": "# {{ nome }}\n\nTiri Salvezza:** Temp {{ salvezze.Tempra }} / Riflessi {{ salvezze.Riflessi }} / Volontà {{ salvezze['Volontà'] }}\n\n**BAB:** {{ BAB }} | **Iniziativa:** {{ iniziativa }} | **Velocità:** {{ velocita }}\n\nStatistiche:\n{% for label, key in [\n    (\"For\", \"FOR\"),\n    (\"Des\", \"DES\"),\n    (\"Cos\", \"COS\"),\n    (\"Int\", \"INT\"),\n    (\"Sag\", \"SAG\"),\n    (\"Car\", \"CAR\"),\n] %}\n**{{ label }}** {{ statistiche[key] }} (mod {{ (statistiche[key] - 10) // 2 }})\n{% endfor %}\n\n{% if skills %}\nCompetenze:\n{% for skill in skills %}- {{ skill.get('nome') or skill.get('name') }}\n{% endfor %}\n{% endif %}\n\n{% if equipaggiamento %}\nEquipaggiamento:\n{% for item in equipaggiamento %}- {{ item }}\n{% endfor %}\n{% endif %}\n\n{% set ledger_entries = ledger_movimenti or (ledger.movimenti if ledger else []) %}\n{% if ledger_entries %}\nLedger:\n{% for mov in ledger_entries %}- {{ mov.get('voce') or mov.get('oggetto') or mov.get('label') or mov.get('categoria') }}\n{% endfor %}\n{% endif %}\n"
+        },
+        "fonti": [
+          "http://127.0.0.1:8000/modules/minmax_builder.txt?mode=full-pg&class=Monk&stub=true&level=1&race=Vanara&archetype=Qinggong+Master+Of+Many+Styles"
+        ],
+        "print_mode": false,
+        "show_minmax": true,
+        "show_vtt": true,
+        "show_qa": true,
+        "show_explain": true,
+        "show_ledger": true,
+        "decimal_comma": true,
+        "spell_levels": [],
+        "lingue": [],
+        "sensi": [],
+        "condizioni": [],
+        "inventario": []
       }
     },
     "narrative": "Vanara acrobata addestrato nei monasteri delle Scimmie Nascoste; combina le sostituzioni Qinggong con gli stili multipli del Master of Many Styles per alternare Tiger/Crane, controllare il terreno con passi di ki e colpire in salto i bersagli chiave.",
-    "sheet": "### 🧙 Scheda Personaggio in Markdown\n\n---\n\n# Monk — Liv. 1 (Vanara · Qinggong + Master of Many Styles)\n\n**Background rapido:** funambolo vanara cresciuto nei templi della giungla; ha sostituito le tecniche base con il ki modulare del Qinggong e imparato molteplici stili animali.\n\n**Stile di gioco:** apre in Tiger Style per i colpi mirati a For, passa a Crane per difese e parry, usa il ki per feather step e movimenti verticali da vanara.\n\n**Linee di progressione testate:**\n- Combo Stance: Tiger -> Panther pounce per DPR esplosivo.\n- Difese/Mobilità: Crane + ki feather step per negare AoO e mantenere CA alta.\n- Debuff mirati: Vicious Stomp + colpi alle gambe per far cadere i caster.\n\n**Benchmark DPR/CA:** 2 colpi a 1d8+3 con CA 18; DPR medio/picco 11/16 dopo ruling RAW/RAI/PFS.\n",
+    "sheet": "# \n\nTiri Salvezza:** Temp 4 / Riflessi 5 / Volontà 5\n\n**BAB:** 0 | **Iniziativa:** 4 | **Velocità:** 9\n\nStatistiche:\n**For** 14 (mod 2)\n**Des** 16 (mod 3)\n**Cos** 12 (mod 1)\n**Int** 10 (mod 0)\n**Sag** 16 (mod 3)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Acrobazia\n- Furtività\n\nEquipaggiamento:\n- Kama bilanciati\n- Corazza di seta\n- Cintura dell'agilità\n\nLedger:\n- Donazione al monastero\n- Ricompensa duello rituale\n- Equipaggiamento iniziale\n- Ricompensa per scouting su canopia",
     "ledger": {
       "movimenti": [
         {
@@ -675,5 +938,60 @@
   "citation": {
     "sources": [],
     "reference_urls": []
-  }
+  },
+  "catalog_validation": {
+    "missing_catalog_entries": [
+      "feats:Tiger Style + Crane Style"
+    ],
+    "prerequisite_violations": [
+      "Crane Style: Improved Unarmed Strike",
+      "Tiger Style: Improved Unarmed Strike"
+    ],
+    "catalog_version": [
+      "2026.04.03"
+    ]
+  },
+  "source_url": "http://127.0.0.1:8000/modules/minmax_builder.txt?mode=full-pg&class=Monk&stub=true&level=1&race=Vanara&archetype=Qinggong+Master+Of+Many+Styles",
+  "fetched_at": "2026-04-10T01:56:34Z",
+  "query_params": {
+    "mode": "full-pg",
+    "class": "Monk",
+    "stub": true,
+    "level": 1,
+    "race": "Vanara",
+    "archetype": "Qinggong Master Of Many Styles"
+  },
+  "body_params": {},
+  "catalog_manifest": {
+    "version": "2026.04.03",
+    "source": "Pathfinder 1E RAW/SRD snapshot curato offline",
+    "files": {
+      "spells": {
+        "path": "data/reference/spells.json",
+        "entries": 1035
+      },
+      "feats": {
+        "path": "data/reference/feats.json",
+        "entries": 2839
+      },
+      "items": {
+        "path": "data/reference/items.json",
+        "entries": 257
+      }
+    }
+  },
+  "record_status": "draft",
+  "is_deleted": false,
+  "deleted_at": null,
+  "audit": [
+    {
+      "timestamp": "2026-04-10T01:56:34Z",
+      "actor": "generate_build_db",
+      "action": "harvest",
+      "status": "draft",
+      "note": "'sheet_payload' is a required property",
+      "checkpoint": 1,
+      "source": "monk_vanara_qinggong_master_of_many_styles"
+    }
+  ]
 }

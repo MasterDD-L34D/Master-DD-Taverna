@@ -58,7 +58,28 @@
       "tempra": 9,
       "riflessi": 11,
       "volonta": 10
-    }
+    },
+    "missing_catalog_entries": [
+      "feats:Dodge + Mobility",
+      "feats:Power Attack + Tiger Claws",
+      "feats:Tiger Style + Crane Style"
+    ],
+    "prerequisite_violations": [
+      "Crane Riposte: Improved Unarmed Strike",
+      "Crane Style: Improved Unarmed Strike",
+      "Crane Wing: Improved Unarmed Strike",
+      "Dragon Ferocity: Improved Unarmed Strike",
+      "Dragon Style: Improved Unarmed Strike",
+      "Headband of Inspired Wisdom +2: Craft Wondrous Item",
+      "Headband of Inspired Wisdom +2: owl's wisdom",
+      "Medusa's Wrath: Improved Unarmed Strike",
+      "Medusa's Wrath: Stunning Fist",
+      "Tiger Claws: Improved Unarmed Strike",
+      "Tiger Style: Improved Unarmed Strike"
+    ],
+    "catalog_version": [
+      "2026.04.03"
+    ]
   },
   "export": {
     "sheet_payload": {
@@ -81,12 +102,16 @@
         "CAR": 8,
         "attacco": "+18",
         "danni": "2d8+12",
-        "ca": 26
+        "ca": 26,
+        "tempra": 9,
+        "riflessi": 11,
+        "volonta": 10
       },
       "statistiche_chiave": {
         "attacco": "+18",
         "danni": "2d8+12",
-        "ca": 26
+        "ca": 26,
+        "CA": 26
       },
       "pf_totali": 95,
       "hp": {
@@ -153,6 +178,14 @@
         {
           "voce": "Cache premio tornei",
           "importo": 480
+        },
+        {
+          "voce": "Aggiornamento handwraps +3",
+          "importo": -18000
+        },
+        {
+          "voce": "Premio torneo monastico",
+          "importo": 22000
         }
       ],
       "ledger": {
@@ -172,7 +205,7 @@
           "rame": 15
         }
       },
-      "sheet_markdown": "Acrobazia\nHandwraps +3 furious\nManutenzione handwraps",
+      "sheet_markdown": "# \n\nTiri Salvezza:** Temp 9 / Riflessi 11 / Volontà 10\n\n**BAB:** 0 | **Iniziativa:** 8 | **Velocità:** 12\n\nStatistiche:\n**For** 18 (mod 4)\n**Des** 20 (mod 5)\n**Cos** 14 (mod 2)\n**Int** 10 (mod 0)\n**Sag** 18 (mod 4)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Acrobazia\n- Furtività\n\nEquipaggiamento:\n- Handwraps +3 furious\n- Sandals of the Light Step\n- Cintura del gigante +2\n- Headband of Inspired Wisdom +2\n\nLedger:\n- Manutenzione handwraps\n- Cache premio tornei\n- Aggiornamento handwraps +3\n- Premio torneo monastico",
       "talenti": [
         "Tiger Style",
         "Crane Style",
@@ -186,13 +219,23 @@
         "Medusa's Wrath",
         "Crane Riposte",
         "Spring Attack",
-        "Improved Initiative"
+        "Improved Initiative",
+        "Tiger Style + Crane Style",
+        "Dodge + Mobility",
+        "Power Attack + Tiger Claws"
       ],
       "capacita_classe": [
         "Abundant Step",
         "Ki power: Restoration",
         "Improved Evasion",
-        "Quivering Palm"
+        "Quivering Palm",
+        "Flurry of Blows",
+        "Ki Pool",
+        "Evasion",
+        "High Jump",
+        "Style Strike (Flying Kick)",
+        "Ki power: Barkskin",
+        "Style Mastery"
       ],
       "progressione": [
         {
@@ -273,7 +316,73 @@
           "restoration",
           "abundant step"
         ]
-      }
+      },
+      "razza": "Vanara",
+      "salvezze_breakdown": {
+        "Tempra": {
+          "base": 7,
+          "modificatore": 2,
+          "misc": 0,
+          "totale": 9
+        },
+        "Riflessi": {
+          "base": 6,
+          "modificatore": 5,
+          "misc": 0,
+          "totale": 11
+        },
+        "Volontà": {
+          "base": 6,
+          "modificatore": 4,
+          "misc": 0,
+          "totale": 10
+        }
+      },
+      "pf_per_livello": "n/d (PF per livello non fornito)",
+      "AC_arm": 0,
+      "AC_scudo": 0,
+      "AC_des": 0,
+      "AC_defl": 0,
+      "AC_nat": 0,
+      "AC_dodge": 0,
+      "AC_misc": 0,
+      "AC_base": 10,
+      "AC_tot": 26,
+      "CA_touch": 10,
+      "CA_ff": 10,
+      "BAB": "n/d (BAB non fornito)",
+      "init": 8,
+      "CMB": "n/d (CMB non fornito)",
+      "cmb_disarm": "n/d (cmb disarm non fornito)",
+      "cmb_trip": "n/d (cmb trip non fornito)",
+      "cmb_grapple": "n/d (cmb grapple non fornito)",
+      "speed": 12,
+      "currency": {
+        "gp": 2000,
+        "sp": 0,
+        "cp": 0
+      },
+      "gp": 2000,
+      "sp": 0,
+      "cp": 0,
+      "modules": {
+        "scheda_pg_markdown_template.md": "# {{ nome }}\n\nTiri Salvezza:** Temp {{ salvezze.Tempra }} / Riflessi {{ salvezze.Riflessi }} / Volontà {{ salvezze['Volontà'] }}\n\n**BAB:** {{ BAB }} | **Iniziativa:** {{ iniziativa }} | **Velocità:** {{ velocita }}\n\nStatistiche:\n{% for label, key in [\n    (\"For\", \"FOR\"),\n    (\"Des\", \"DES\"),\n    (\"Cos\", \"COS\"),\n    (\"Int\", \"INT\"),\n    (\"Sag\", \"SAG\"),\n    (\"Car\", \"CAR\"),\n] %}\n**{{ label }}** {{ statistiche[key] }} (mod {{ (statistiche[key] - 10) // 2 }})\n{% endfor %}\n\n{% if skills %}\nCompetenze:\n{% for skill in skills %}- {{ skill.get('nome') or skill.get('name') }}\n{% endfor %}\n{% endif %}\n\n{% if equipaggiamento %}\nEquipaggiamento:\n{% for item in equipaggiamento %}- {{ item }}\n{% endfor %}\n{% endif %}\n\n{% set ledger_entries = ledger_movimenti or (ledger.movimenti if ledger else []) %}\n{% if ledger_entries %}\nLedger:\n{% for mov in ledger_entries %}- {{ mov.get('voce') or mov.get('oggetto') or mov.get('label') or mov.get('categoria') }}\n{% endfor %}\n{% endif %}\n"
+      },
+      "fonti": [
+        "http://127.0.0.1:8000/modules/minmax_builder.txt?mode=full-pg&class=Monk&stub=true&level=10&race=Vanara&archetype=Qinggong+Master+Of+Many+Styles"
+      ],
+      "print_mode": false,
+      "show_minmax": true,
+      "show_vtt": true,
+      "show_qa": true,
+      "show_explain": true,
+      "show_ledger": true,
+      "decimal_comma": true,
+      "spell_levels": [],
+      "lingue": [],
+      "sensi": [],
+      "condizioni": [],
+      "inventario": []
     }
   },
   "narrative": "Checkpoint 10: lo stile selezionato combina Dragon Ferocity con Medusa's Wrath per punire i bersagli storditi, mentre Crane Riposte e Improved Evasion mantengono la CA 26 e riducono i danni. Abundant Step consente ingressi/uscite dal fronte con debuff mirati alle ginocchia e stun chain.",
@@ -295,9 +404,9 @@
     },
     "saldo": 2000
   },
-  "sheet": "### 🧙 Scheda Personaggio in Markdown\n\n---\n\n# Monk — Liv. 10 (Vanara · Qinggong + Master of Many Styles)\n\n**Checkpoint 10:** Medusa's Wrath + Dragon Ferocity per concatenare stordimenti e bleed, Crane Riposte per protezione e contrattacchi. Abundant Step e Sandals of the Light Step mantengono la mobilità, mentre i debuff mirati (stun/prone) restano la chiave contro boss e caster.\n\n**Linee iterate:**\n- Combo Stance: Tiger/Dragon aperto, poi Crane Riposte dopo il primo flurry.\n- Difese/Mobilità: Improved Evasion + Abundant Step per evitare AoE e reindirizzare la linea di fuoco.\n- Debuff: Medusa's Wrath + Stunning Fist per bloccare bersagli a CA alta.\n\n**Benchmark DPR/CA:** 4 attacchi 2d8+12, CA 26; DPR medio/picco 54/82 con badge RAW/RAI/PFS confermato.\n",
+  "sheet": "# \n\nTiri Salvezza:** Temp 9 / Riflessi 11 / Volontà 10\n\n**BAB:** 0 | **Iniziativa:** 8 | **Velocità:** 12\n\nStatistiche:\n**For** 18 (mod 4)\n**Des** 20 (mod 5)\n**Cos** 14 (mod 2)\n**Int** 10 (mod 0)\n**Sag** 18 (mod 4)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Acrobazia\n- Furtività\n\nEquipaggiamento:\n- Handwraps +3 furious\n- Sandals of the Light Step\n- Cintura del gigante +2\n- Headband of Inspired Wisdom +2\n\nLedger:\n- Manutenzione handwraps\n- Cache premio tornei\n- Aggiornamento handwraps +3\n- Premio torneo monastico",
   "class": "Monk",
-  "mode": "extended",
+  "mode": "full-pg",
   "output_prefix": "monk_vanara_qinggong_master_of_many_styles",
   "ruling_log": [
     "Ruling Expert: confermata la legittimità di Medusa's Wrath con Stunning Fist ripetuto grazie al Master of Many Styles (stance swap gratuito).",
@@ -306,11 +415,13 @@
   ],
   "request": {
     "class": "Monk",
-    "mode": "extended",
     "race": "Vanara",
-    "archetype": "Qinggong + Master of Many Styles",
+    "archetype": "Qinggong Master Of Many Styles",
+    "mode": "full-pg",
+    "mode_normalized": "extended",
     "spec_id": "monk_vanara_qinggong_master_of_many_styles",
-    "model": "gpt-5.1-codex-max",
+    "model": null,
+    "background": null,
     "level": 10,
     "level_checkpoints": [
       1,
@@ -319,6 +430,7 @@
     ]
   },
   "completeness": {
+    "errors": [],
     "require_complete": true
   },
   "reference_catalog_version": "2026.04.03",
@@ -340,21 +452,27 @@
       "missing": [],
       "status": "complete",
       "checklist": {}
+    },
+    "catalog": {
+      "warnings": [
+        "Elementi non presenti nel catalogo: feats:Dodge + Mobility, feats:Power Attack + Tiger Claws, feats:Tiger Style + Crane Style",
+        "Prerequisiti catalogo non soddisfatti: Crane Riposte: Improved Unarmed Strike, Crane Style: Improved Unarmed Strike, Crane Wing: Improved Unarmed Strike, Dragon Ferocity: Improved Unarmed Strike, Dragon Style: Improved Unarmed Strike, Headband of Inspired Wisdom +2: Craft Wondrous Item, Headband of Inspired Wisdom +2: owl's wisdom, Medusa's Wrath: Improved Unarmed Strike, Medusa's Wrath: Stunning Fist, Tiger Claws: Improved Unarmed Strike, Tiger Style: Improved Unarmed Strike"
+      ]
     }
   },
   "build_id": "build-d628538ad0f943e0d815762f",
   "step_audit": {
-    "request_timestamp": "2025-12-18T18:46:09Z",
-    "client_fingerprint_hash": "stub-fingerprint-00000000000000000000000000000000",
-    "outcome": "accepted",
-    "attempt_count": 1,
-    "backoff_reason": null,
     "normalized_mode": "extended",
     "expected_step_total": 16,
     "observed_step_total": 16,
     "step_total_ok": true,
     "step_labels_count": 16,
-    "has_extended_steps": true
+    "has_extended_steps": true,
+    "request_timestamp": "2026-04-10T01:56:34Z",
+    "client_fingerprint_hash": "stub-fingerprint-00000000000000000000000000000000",
+    "outcome": "accepted",
+    "attempt_count": 1,
+    "backoff_reason": null
   },
   "composite": {
     "build": {
@@ -418,7 +536,28 @@
           "tempra": 9,
           "riflessi": 11,
           "volonta": 10
-        }
+        },
+        "missing_catalog_entries": [
+          "feats:Dodge + Mobility",
+          "feats:Power Attack + Tiger Claws",
+          "feats:Tiger Style + Crane Style"
+        ],
+        "prerequisite_violations": [
+          "Crane Riposte: Improved Unarmed Strike",
+          "Crane Style: Improved Unarmed Strike",
+          "Crane Wing: Improved Unarmed Strike",
+          "Dragon Ferocity: Improved Unarmed Strike",
+          "Dragon Style: Improved Unarmed Strike",
+          "Headband of Inspired Wisdom +2: Craft Wondrous Item",
+          "Headband of Inspired Wisdom +2: owl's wisdom",
+          "Medusa's Wrath: Improved Unarmed Strike",
+          "Medusa's Wrath: Stunning Fist",
+          "Tiger Claws: Improved Unarmed Strike",
+          "Tiger Style: Improved Unarmed Strike"
+        ],
+        "catalog_version": [
+          "2026.04.03"
+        ]
       },
       "export": {
         "sheet_payload": {
@@ -441,12 +580,16 @@
             "CAR": 8,
             "attacco": "+18",
             "danni": "2d8+12",
-            "ca": 26
+            "ca": 26,
+            "tempra": 9,
+            "riflessi": 11,
+            "volonta": 10
           },
           "statistiche_chiave": {
             "attacco": "+18",
             "danni": "2d8+12",
-            "ca": 26
+            "ca": 26,
+            "CA": 26
           },
           "pf_totali": 95,
           "hp": {
@@ -513,6 +656,14 @@
             {
               "voce": "Cache premio tornei",
               "importo": 480
+            },
+            {
+              "voce": "Aggiornamento handwraps +3",
+              "importo": -18000
+            },
+            {
+              "voce": "Premio torneo monastico",
+              "importo": 22000
             }
           ],
           "ledger": {
@@ -532,7 +683,7 @@
               "rame": 15
             }
           },
-          "sheet_markdown": "Acrobazia\nHandwraps +3 furious\nManutenzione handwraps",
+          "sheet_markdown": "# \n\nTiri Salvezza:** Temp 9 / Riflessi 11 / Volontà 10\n\n**BAB:** 0 | **Iniziativa:** 8 | **Velocità:** 12\n\nStatistiche:\n**For** 18 (mod 4)\n**Des** 20 (mod 5)\n**Cos** 14 (mod 2)\n**Int** 10 (mod 0)\n**Sag** 18 (mod 4)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Acrobazia\n- Furtività\n\nEquipaggiamento:\n- Handwraps +3 furious\n- Sandals of the Light Step\n- Cintura del gigante +2\n- Headband of Inspired Wisdom +2\n\nLedger:\n- Manutenzione handwraps\n- Cache premio tornei\n- Aggiornamento handwraps +3\n- Premio torneo monastico",
           "talenti": [
             "Tiger Style",
             "Crane Style",
@@ -546,13 +697,23 @@
             "Medusa's Wrath",
             "Crane Riposte",
             "Spring Attack",
-            "Improved Initiative"
+            "Improved Initiative",
+            "Tiger Style + Crane Style",
+            "Dodge + Mobility",
+            "Power Attack + Tiger Claws"
           ],
           "capacita_classe": [
             "Abundant Step",
             "Ki power: Restoration",
             "Improved Evasion",
-            "Quivering Palm"
+            "Quivering Palm",
+            "Flurry of Blows",
+            "Ki Pool",
+            "Evasion",
+            "High Jump",
+            "Style Strike (Flying Kick)",
+            "Ki power: Barkskin",
+            "Style Mastery"
           ],
           "progressione": [
             {
@@ -633,22 +794,88 @@
               "restoration",
               "abundant step"
             ]
-          }
+          },
+          "razza": "Vanara",
+          "salvezze_breakdown": {
+            "Tempra": {
+              "base": 7,
+              "modificatore": 2,
+              "misc": 0,
+              "totale": 9
+            },
+            "Riflessi": {
+              "base": 6,
+              "modificatore": 5,
+              "misc": 0,
+              "totale": 11
+            },
+            "Volontà": {
+              "base": 6,
+              "modificatore": 4,
+              "misc": 0,
+              "totale": 10
+            }
+          },
+          "pf_per_livello": "n/d (PF per livello non fornito)",
+          "AC_arm": 0,
+          "AC_scudo": 0,
+          "AC_des": 0,
+          "AC_defl": 0,
+          "AC_nat": 0,
+          "AC_dodge": 0,
+          "AC_misc": 0,
+          "AC_base": 10,
+          "AC_tot": 26,
+          "CA_touch": 10,
+          "CA_ff": 10,
+          "BAB": "n/d (BAB non fornito)",
+          "init": 8,
+          "CMB": "n/d (CMB non fornito)",
+          "cmb_disarm": "n/d (cmb disarm non fornito)",
+          "cmb_trip": "n/d (cmb trip non fornito)",
+          "cmb_grapple": "n/d (cmb grapple non fornito)",
+          "speed": 12,
+          "currency": {
+            "gp": 2000,
+            "sp": 0,
+            "cp": 0
+          },
+          "gp": 2000,
+          "sp": 0,
+          "cp": 0,
+          "modules": {
+            "scheda_pg_markdown_template.md": "# {{ nome }}\n\nTiri Salvezza:** Temp {{ salvezze.Tempra }} / Riflessi {{ salvezze.Riflessi }} / Volontà {{ salvezze['Volontà'] }}\n\n**BAB:** {{ BAB }} | **Iniziativa:** {{ iniziativa }} | **Velocità:** {{ velocita }}\n\nStatistiche:\n{% for label, key in [\n    (\"For\", \"FOR\"),\n    (\"Des\", \"DES\"),\n    (\"Cos\", \"COS\"),\n    (\"Int\", \"INT\"),\n    (\"Sag\", \"SAG\"),\n    (\"Car\", \"CAR\"),\n] %}\n**{{ label }}** {{ statistiche[key] }} (mod {{ (statistiche[key] - 10) // 2 }})\n{% endfor %}\n\n{% if skills %}\nCompetenze:\n{% for skill in skills %}- {{ skill.get('nome') or skill.get('name') }}\n{% endfor %}\n{% endif %}\n\n{% if equipaggiamento %}\nEquipaggiamento:\n{% for item in equipaggiamento %}- {{ item }}\n{% endfor %}\n{% endif %}\n\n{% set ledger_entries = ledger_movimenti or (ledger.movimenti if ledger else []) %}\n{% if ledger_entries %}\nLedger:\n{% for mov in ledger_entries %}- {{ mov.get('voce') or mov.get('oggetto') or mov.get('label') or mov.get('categoria') }}\n{% endfor %}\n{% endif %}\n"
+          },
+          "fonti": [
+            "http://127.0.0.1:8000/modules/minmax_builder.txt?mode=full-pg&class=Monk&stub=true&level=10&race=Vanara&archetype=Qinggong+Master+Of+Many+Styles"
+          ],
+          "print_mode": false,
+          "show_minmax": true,
+          "show_vtt": true,
+          "show_qa": true,
+          "show_explain": true,
+          "show_ledger": true,
+          "decimal_comma": true,
+          "spell_levels": [],
+          "lingue": [],
+          "sensi": [],
+          "condizioni": [],
+          "inventario": []
         }
       },
       "reference_catalog_version": "2026.04.03",
       "step_audit": {
-        "request_timestamp": "2025-12-18T18:46:09Z",
-        "client_fingerprint_hash": "stub-fingerprint-00000000000000000000000000000000",
-        "outcome": "accepted",
-        "attempt_count": 1,
-        "backoff_reason": null,
         "normalized_mode": "extended",
         "expected_step_total": 16,
         "observed_step_total": 16,
         "step_total_ok": true,
         "step_labels_count": 16,
-        "has_extended_steps": true
+        "has_extended_steps": true,
+        "request_timestamp": "2026-04-10T01:56:34Z",
+        "client_fingerprint_hash": "stub-fingerprint-00000000000000000000000000000000",
+        "outcome": "accepted",
+        "attempt_count": 1,
+        "backoff_reason": null
       },
       "sheet_payload": {
         "classi": [
@@ -670,12 +897,16 @@
           "CAR": 8,
           "attacco": "+18",
           "danni": "2d8+12",
-          "ca": 26
+          "ca": 26,
+          "tempra": 9,
+          "riflessi": 11,
+          "volonta": 10
         },
         "statistiche_chiave": {
           "attacco": "+18",
           "danni": "2d8+12",
-          "ca": 26
+          "ca": 26,
+          "CA": 26
         },
         "pf_totali": 95,
         "hp": {
@@ -742,6 +973,14 @@
           {
             "voce": "Cache premio tornei",
             "importo": 480
+          },
+          {
+            "voce": "Aggiornamento handwraps +3",
+            "importo": -18000
+          },
+          {
+            "voce": "Premio torneo monastico",
+            "importo": 22000
           }
         ],
         "ledger": {
@@ -761,7 +1000,7 @@
             "rame": 15
           }
         },
-        "sheet_markdown": "Acrobazia\nHandwraps +3 furious\nManutenzione handwraps",
+        "sheet_markdown": "# \n\nTiri Salvezza:** Temp 9 / Riflessi 11 / Volontà 10\n\n**BAB:** 0 | **Iniziativa:** 8 | **Velocità:** 12\n\nStatistiche:\n**For** 18 (mod 4)\n**Des** 20 (mod 5)\n**Cos** 14 (mod 2)\n**Int** 10 (mod 0)\n**Sag** 18 (mod 4)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Acrobazia\n- Furtività\n\nEquipaggiamento:\n- Handwraps +3 furious\n- Sandals of the Light Step\n- Cintura del gigante +2\n- Headband of Inspired Wisdom +2\n\nLedger:\n- Manutenzione handwraps\n- Cache premio tornei\n- Aggiornamento handwraps +3\n- Premio torneo monastico",
         "talenti": [
           "Tiger Style",
           "Crane Style",
@@ -775,13 +1014,23 @@
           "Medusa's Wrath",
           "Crane Riposte",
           "Spring Attack",
-          "Improved Initiative"
+          "Improved Initiative",
+          "Tiger Style + Crane Style",
+          "Dodge + Mobility",
+          "Power Attack + Tiger Claws"
         ],
         "capacita_classe": [
           "Abundant Step",
           "Ki power: Restoration",
           "Improved Evasion",
-          "Quivering Palm"
+          "Quivering Palm",
+          "Flurry of Blows",
+          "Ki Pool",
+          "Evasion",
+          "High Jump",
+          "Style Strike (Flying Kick)",
+          "Ki power: Barkskin",
+          "Style Mastery"
         ],
         "progressione": [
           {
@@ -862,11 +1111,77 @@
             "restoration",
             "abundant step"
           ]
-        }
+        },
+        "razza": "Vanara",
+        "salvezze_breakdown": {
+          "Tempra": {
+            "base": 7,
+            "modificatore": 2,
+            "misc": 0,
+            "totale": 9
+          },
+          "Riflessi": {
+            "base": 6,
+            "modificatore": 5,
+            "misc": 0,
+            "totale": 11
+          },
+          "Volontà": {
+            "base": 6,
+            "modificatore": 4,
+            "misc": 0,
+            "totale": 10
+          }
+        },
+        "pf_per_livello": "n/d (PF per livello non fornito)",
+        "AC_arm": 0,
+        "AC_scudo": 0,
+        "AC_des": 0,
+        "AC_defl": 0,
+        "AC_nat": 0,
+        "AC_dodge": 0,
+        "AC_misc": 0,
+        "AC_base": 10,
+        "AC_tot": 26,
+        "CA_touch": 10,
+        "CA_ff": 10,
+        "BAB": "n/d (BAB non fornito)",
+        "init": 8,
+        "CMB": "n/d (CMB non fornito)",
+        "cmb_disarm": "n/d (cmb disarm non fornito)",
+        "cmb_trip": "n/d (cmb trip non fornito)",
+        "cmb_grapple": "n/d (cmb grapple non fornito)",
+        "speed": 12,
+        "currency": {
+          "gp": 2000,
+          "sp": 0,
+          "cp": 0
+        },
+        "gp": 2000,
+        "sp": 0,
+        "cp": 0,
+        "modules": {
+          "scheda_pg_markdown_template.md": "# {{ nome }}\n\nTiri Salvezza:** Temp {{ salvezze.Tempra }} / Riflessi {{ salvezze.Riflessi }} / Volontà {{ salvezze['Volontà'] }}\n\n**BAB:** {{ BAB }} | **Iniziativa:** {{ iniziativa }} | **Velocità:** {{ velocita }}\n\nStatistiche:\n{% for label, key in [\n    (\"For\", \"FOR\"),\n    (\"Des\", \"DES\"),\n    (\"Cos\", \"COS\"),\n    (\"Int\", \"INT\"),\n    (\"Sag\", \"SAG\"),\n    (\"Car\", \"CAR\"),\n] %}\n**{{ label }}** {{ statistiche[key] }} (mod {{ (statistiche[key] - 10) // 2 }})\n{% endfor %}\n\n{% if skills %}\nCompetenze:\n{% for skill in skills %}- {{ skill.get('nome') or skill.get('name') }}\n{% endfor %}\n{% endif %}\n\n{% if equipaggiamento %}\nEquipaggiamento:\n{% for item in equipaggiamento %}- {{ item }}\n{% endfor %}\n{% endif %}\n\n{% set ledger_entries = ledger_movimenti or (ledger.movimenti if ledger else []) %}\n{% if ledger_entries %}\nLedger:\n{% for mov in ledger_entries %}- {{ mov.get('voce') or mov.get('oggetto') or mov.get('label') or mov.get('categoria') }}\n{% endfor %}\n{% endif %}\n"
+        },
+        "fonti": [
+          "http://127.0.0.1:8000/modules/minmax_builder.txt?mode=full-pg&class=Monk&stub=true&level=10&race=Vanara&archetype=Qinggong+Master+Of+Many+Styles"
+        ],
+        "print_mode": false,
+        "show_minmax": true,
+        "show_vtt": true,
+        "show_qa": true,
+        "show_explain": true,
+        "show_ledger": true,
+        "decimal_comma": true,
+        "spell_levels": [],
+        "lingue": [],
+        "sensi": [],
+        "condizioni": [],
+        "inventario": []
       }
     },
     "narrative": "Checkpoint 10: lo stile selezionato combina Dragon Ferocity con Medusa's Wrath per punire i bersagli storditi, mentre Crane Riposte e Improved Evasion mantengono la CA 26 e riducono i danni. Abundant Step consente ingressi/uscite dal fronte con debuff mirati alle ginocchia e stun chain.",
-    "sheet": "### 🧙 Scheda Personaggio in Markdown\n\n---\n\n# Monk — Liv. 10 (Vanara · Qinggong + Master of Many Styles)\n\n**Checkpoint 10:** Medusa's Wrath + Dragon Ferocity per concatenare stordimenti e bleed, Crane Riposte per protezione e contrattacchi. Abundant Step e Sandals of the Light Step mantengono la mobilità, mentre i debuff mirati (stun/prone) restano la chiave contro boss e caster.\n\n**Linee iterate:**\n- Combo Stance: Tiger/Dragon aperto, poi Crane Riposte dopo il primo flurry.\n- Difese/Mobilità: Improved Evasion + Abundant Step per evitare AoE e reindirizzare la linea di fuoco.\n- Debuff: Medusa's Wrath + Stunning Fist per bloccare bersagli a CA alta.\n\n**Benchmark DPR/CA:** 4 attacchi 2d8+12, CA 26; DPR medio/picco 54/82 con badge RAW/RAI/PFS confermato.\n",
+    "sheet": "# \n\nTiri Salvezza:** Temp 9 / Riflessi 11 / Volontà 10\n\n**BAB:** 0 | **Iniziativa:** 8 | **Velocità:** 12\n\nStatistiche:\n**For** 18 (mod 4)\n**Des** 20 (mod 5)\n**Cos** 14 (mod 2)\n**Int** 10 (mod 0)\n**Sag** 18 (mod 4)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Acrobazia\n- Furtività\n\nEquipaggiamento:\n- Handwraps +3 furious\n- Sandals of the Light Step\n- Cintura del gigante +2\n- Headband of Inspired Wisdom +2\n\nLedger:\n- Manutenzione handwraps\n- Cache premio tornei\n- Aggiornamento handwraps +3\n- Premio torneo monastico",
     "ledger": {
       "movimenti": [
         {
@@ -930,5 +1245,71 @@
   "citation": {
     "sources": [],
     "reference_urls": []
-  }
+  },
+  "catalog_validation": {
+    "missing_catalog_entries": [
+      "feats:Dodge + Mobility",
+      "feats:Power Attack + Tiger Claws",
+      "feats:Tiger Style + Crane Style"
+    ],
+    "prerequisite_violations": [
+      "Crane Riposte: Improved Unarmed Strike",
+      "Crane Style: Improved Unarmed Strike",
+      "Crane Wing: Improved Unarmed Strike",
+      "Dragon Ferocity: Improved Unarmed Strike",
+      "Dragon Style: Improved Unarmed Strike",
+      "Headband of Inspired Wisdom +2: Craft Wondrous Item",
+      "Headband of Inspired Wisdom +2: owl's wisdom",
+      "Medusa's Wrath: Improved Unarmed Strike",
+      "Medusa's Wrath: Stunning Fist",
+      "Tiger Claws: Improved Unarmed Strike",
+      "Tiger Style: Improved Unarmed Strike"
+    ],
+    "catalog_version": [
+      "2026.04.03"
+    ]
+  },
+  "source_url": "http://127.0.0.1:8000/modules/minmax_builder.txt?mode=full-pg&class=Monk&stub=true&level=10&race=Vanara&archetype=Qinggong+Master+Of+Many+Styles",
+  "fetched_at": "2026-04-10T01:56:34Z",
+  "query_params": {
+    "mode": "full-pg",
+    "class": "Monk",
+    "stub": true,
+    "level": 10,
+    "race": "Vanara",
+    "archetype": "Qinggong Master Of Many Styles"
+  },
+  "body_params": {},
+  "catalog_manifest": {
+    "version": "2026.04.03",
+    "source": "Pathfinder 1E RAW/SRD snapshot curato offline",
+    "files": {
+      "spells": {
+        "path": "data/reference/spells.json",
+        "entries": 1035
+      },
+      "feats": {
+        "path": "data/reference/feats.json",
+        "entries": 2839
+      },
+      "items": {
+        "path": "data/reference/items.json",
+        "entries": 257
+      }
+    }
+  },
+  "record_status": "draft",
+  "is_deleted": false,
+  "deleted_at": null,
+  "audit": [
+    {
+      "timestamp": "2026-04-10T01:56:34Z",
+      "actor": "generate_build_db",
+      "action": "harvest",
+      "status": "draft",
+      "note": "'sheet_payload' is a required property",
+      "checkpoint": 10,
+      "source": "monk_vanara_qinggong_master_of_many_styles"
+    }
+  ]
 }

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-09T23:31:52Z",
+  "generated_at": "2026-04-10T01:58:34Z",
   "api_url": null,
   "mode": "extended",
   "spec_file": "docs/examples/pg_variants.yml",
@@ -218,6 +218,87 @@
       ]
     },
     {
+      "file": "src/data/builds/barbarian_fetchling_invulnerable_rager.json",
+      "status": "invalid",
+      "output_prefix": "barbarian_fetchling_invulnerable_rager",
+      "class": "Barbarian",
+      "race": "Fetchling",
+      "archetype": "Invulnerable Rager",
+      "mode": "full-pg",
+      "mode_normalized": "extended",
+      "spec_id": "barbarian_fetchling_invulnerable_rager",
+      "background": null,
+      "model": null,
+      "level_checkpoints": [
+        1,
+        5,
+        10
+      ],
+      "level": 1,
+      "step_total": 16,
+      "expected_step_total": 16,
+      "extended_steps_available": true,
+      "step_total_ok": true,
+      "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+      "catalog_version": [
+        "2026.04.03"
+      ]
+    },
+    {
+      "file": "src/data/builds/barbarian_fetchling_invulnerable_rager_lvl05.json",
+      "status": "invalid",
+      "output_prefix": "barbarian_fetchling_invulnerable_rager",
+      "class": "Barbarian",
+      "race": "Fetchling",
+      "archetype": "Invulnerable Rager",
+      "mode": "full-pg",
+      "mode_normalized": "extended",
+      "spec_id": "barbarian_fetchling_invulnerable_rager",
+      "background": null,
+      "model": null,
+      "level_checkpoints": [
+        1,
+        5,
+        10
+      ],
+      "level": 5,
+      "step_total": 16,
+      "expected_step_total": 16,
+      "extended_steps_available": true,
+      "step_total_ok": true,
+      "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+      "catalog_version": [
+        "2026.04.03"
+      ]
+    },
+    {
+      "file": "src/data/builds/barbarian_fetchling_invulnerable_rager_lvl10.json",
+      "status": "invalid",
+      "output_prefix": "barbarian_fetchling_invulnerable_rager",
+      "class": "Barbarian",
+      "race": "Fetchling",
+      "archetype": "Invulnerable Rager",
+      "mode": "full-pg",
+      "mode_normalized": "extended",
+      "spec_id": "barbarian_fetchling_invulnerable_rager",
+      "background": null,
+      "model": null,
+      "level_checkpoints": [
+        1,
+        5,
+        10
+      ],
+      "level": 10,
+      "step_total": 16,
+      "expected_step_total": 16,
+      "extended_steps_available": true,
+      "step_total_ok": true,
+      "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+      "catalog_version": [
+        "2026.04.03"
+      ]
+    },
+    {
       "file": "src/data/builds/bloodrager-shabti-steelblood-metamagic-rager.json",
       "status": "invalid",
       "output_prefix": "bloodrager-shabti-steelblood-metamagic-rager",
@@ -431,6 +512,87 @@
       ]
     },
     {
+      "file": "src/data/builds/cleric_samsaran_cloistered_evangelist.json",
+      "status": "invalid",
+      "output_prefix": "cleric_samsaran_cloistered_evangelist",
+      "class": "Cleric",
+      "race": "Samsaran",
+      "archetype": "Cloistered Evangelist",
+      "mode": "full-pg",
+      "mode_normalized": "extended",
+      "spec_id": "cleric_samsaran_cloistered_evangelist",
+      "background": null,
+      "model": null,
+      "level_checkpoints": [
+        1,
+        5,
+        10
+      ],
+      "level": 1,
+      "step_total": 16,
+      "expected_step_total": 16,
+      "extended_steps_available": true,
+      "step_total_ok": true,
+      "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+      "catalog_version": [
+        "2026.04.03"
+      ]
+    },
+    {
+      "file": "src/data/builds/cleric_samsaran_cloistered_evangelist_lvl05.json",
+      "status": "invalid",
+      "output_prefix": "cleric_samsaran_cloistered_evangelist",
+      "class": "Cleric",
+      "race": "Samsaran",
+      "archetype": "Cloistered Evangelist",
+      "mode": "full-pg",
+      "mode_normalized": "extended",
+      "spec_id": "cleric_samsaran_cloistered_evangelist",
+      "background": null,
+      "model": null,
+      "level_checkpoints": [
+        1,
+        5,
+        10
+      ],
+      "level": 5,
+      "step_total": 16,
+      "expected_step_total": 16,
+      "extended_steps_available": true,
+      "step_total_ok": true,
+      "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+      "catalog_version": [
+        "2026.04.03"
+      ]
+    },
+    {
+      "file": "src/data/builds/cleric_samsaran_cloistered_evangelist_lvl10.json",
+      "status": "invalid",
+      "output_prefix": "cleric_samsaran_cloistered_evangelist",
+      "class": "Cleric",
+      "race": "Samsaran",
+      "archetype": "Cloistered Evangelist",
+      "mode": "full-pg",
+      "mode_normalized": "extended",
+      "spec_id": "cleric_samsaran_cloistered_evangelist",
+      "background": null,
+      "model": null,
+      "level_checkpoints": [
+        1,
+        5,
+        10
+      ],
+      "level": 10,
+      "step_total": 16,
+      "expected_step_total": 16,
+      "extended_steps_available": true,
+      "step_total_ok": true,
+      "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+      "catalog_version": [
+        "2026.04.03"
+      ]
+    },
+    {
       "file": "src/data/builds/druid_half_orc_feral.json",
       "status": "invalid",
       "output_prefix": "druid_half_orc_feral",
@@ -507,6 +669,168 @@
       "extended_steps_available": true,
       "step_total_ok": true,
       "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
+      "catalog_version": [
+        "2026.04.03"
+      ]
+    },
+    {
+      "file": "src/data/builds/druid_wayang_mooncaller_shapeshifter.json",
+      "status": "invalid",
+      "output_prefix": "druid_wayang_mooncaller_shapeshifter",
+      "class": "Druid",
+      "race": "Wayang",
+      "archetype": "Mooncaller Shapeshifter",
+      "mode": "full-pg",
+      "mode_normalized": "extended",
+      "spec_id": "druid_wayang_mooncaller_shapeshifter",
+      "background": null,
+      "model": null,
+      "level_checkpoints": [
+        1,
+        5,
+        10
+      ],
+      "level": 1,
+      "step_total": 16,
+      "expected_step_total": 16,
+      "extended_steps_available": true,
+      "step_total_ok": true,
+      "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+      "catalog_version": [
+        "2026.04.03"
+      ]
+    },
+    {
+      "file": "src/data/builds/druid_wayang_mooncaller_shapeshifter_lvl05.json",
+      "status": "invalid",
+      "output_prefix": "druid_wayang_mooncaller_shapeshifter",
+      "class": "Druid",
+      "race": "Wayang",
+      "archetype": "Mooncaller Shapeshifter",
+      "mode": "full-pg",
+      "mode_normalized": "extended",
+      "spec_id": "druid_wayang_mooncaller_shapeshifter",
+      "background": null,
+      "model": null,
+      "level_checkpoints": [
+        1,
+        5,
+        10
+      ],
+      "level": 5,
+      "step_total": 16,
+      "expected_step_total": 16,
+      "extended_steps_available": true,
+      "step_total_ok": true,
+      "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+      "catalog_version": [
+        "2026.04.03"
+      ]
+    },
+    {
+      "file": "src/data/builds/druid_wayang_mooncaller_shapeshifter_lvl10.json",
+      "status": "invalid",
+      "output_prefix": "druid_wayang_mooncaller_shapeshifter",
+      "class": "Druid",
+      "race": "Wayang",
+      "archetype": "Mooncaller Shapeshifter",
+      "mode": "full-pg",
+      "mode_normalized": "extended",
+      "spec_id": "druid_wayang_mooncaller_shapeshifter",
+      "background": null,
+      "model": null,
+      "level_checkpoints": [
+        1,
+        5,
+        10
+      ],
+      "level": 10,
+      "step_total": 16,
+      "expected_step_total": 16,
+      "extended_steps_available": true,
+      "step_total_ok": true,
+      "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+      "catalog_version": [
+        "2026.04.03"
+      ]
+    },
+    {
+      "file": "src/data/builds/fighter_dwarf_shielded.json",
+      "status": "invalid",
+      "output_prefix": "fighter_dwarf_shielded",
+      "class": "Fighter",
+      "race": "Dwarf",
+      "archetype": "Shielded Fighter",
+      "mode": "full-pg",
+      "mode_normalized": "extended",
+      "spec_id": "fighter_dwarf_shielded_fighter",
+      "background": null,
+      "model": null,
+      "level_checkpoints": [
+        1,
+        5,
+        10
+      ],
+      "level": 1,
+      "step_total": 16,
+      "expected_step_total": 16,
+      "extended_steps_available": true,
+      "step_total_ok": true,
+      "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+      "catalog_version": [
+        "2026.04.03"
+      ]
+    },
+    {
+      "file": "src/data/builds/fighter_dwarf_shielded_lvl05.json",
+      "status": "invalid",
+      "output_prefix": "fighter_dwarf_shielded",
+      "class": "Fighter",
+      "race": "Dwarf",
+      "archetype": "Shielded Fighter",
+      "mode": "full-pg",
+      "mode_normalized": "extended",
+      "spec_id": "fighter_dwarf_shielded_fighter",
+      "background": null,
+      "model": null,
+      "level_checkpoints": [
+        1,
+        5,
+        10
+      ],
+      "level": 5,
+      "step_total": 16,
+      "expected_step_total": 16,
+      "extended_steps_available": true,
+      "step_total_ok": true,
+      "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+      "catalog_version": [
+        "2026.04.03"
+      ]
+    },
+    {
+      "file": "src/data/builds/fighter_dwarf_shielded_lvl10.json",
+      "status": "invalid",
+      "output_prefix": "fighter_dwarf_shielded",
+      "class": "Fighter",
+      "race": "Dwarf",
+      "archetype": "Shielded Fighter",
+      "mode": "full-pg",
+      "mode_normalized": "extended",
+      "spec_id": "fighter_dwarf_shielded_fighter",
+      "background": null,
+      "model": null,
+      "level_checkpoints": [
+        1,
+        5,
+        10
+      ],
+      "level": 10,
+      "step_total": 16,
+      "expected_step_total": 16,
+      "extended_steps_available": true,
+      "step_total_ok": true,
+      "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
       "catalog_version": [
         "2026.04.03"
       ]
@@ -1203,6 +1527,138 @@
       ]
     },
     {
+      "file": "src/data/builds/monk_vanara_qinggong_master_of_many_styles.json",
+      "status": "invalid",
+      "output_prefix": "monk_vanara_qinggong_master_of_many_styles",
+      "class": "Monk",
+      "race": "Vanara",
+      "archetype": "Qinggong + Master of Many Styles",
+      "mode": "full-pg",
+      "mode_normalized": "extended",
+      "spec_id": "monk_vanara_qinggong_master_of_many_styles",
+      "background": null,
+      "model": null,
+      "level_checkpoints": [
+        1,
+        5,
+        10
+      ],
+      "level": 1,
+      "step_total": 16,
+      "expected_step_total": 16,
+      "extended_steps_available": true,
+      "step_total_ok": true,
+      "error": "'sheet_payload' is a required property; Elementi non presenti nel catalogo: feats:Tiger Style + Crane Style; Prerequisiti catalogo non soddisfatti: Crane Style: Improved Unarmed Strike, Tiger Style: Improved Unarmed Strike",
+      "completeness_errors": [
+        "Elementi non presenti nel catalogo: feats:Tiger Style + Crane Style",
+        "Prerequisiti catalogo non soddisfatti: Crane Style: Improved Unarmed Strike, Tiger Style: Improved Unarmed Strike"
+      ],
+      "missing_catalog_entries": [
+        "feats:Tiger Style + Crane Style"
+      ],
+      "prerequisite_violations": [
+        "Crane Style: Improved Unarmed Strike",
+        "Tiger Style: Improved Unarmed Strike"
+      ],
+      "catalog_version": [
+        "2026.04.03"
+      ]
+    },
+    {
+      "file": "src/data/builds/monk_vanara_qinggong_master_of_many_styles_lvl05.json",
+      "status": "invalid",
+      "output_prefix": "monk_vanara_qinggong_master_of_many_styles",
+      "class": "Monk",
+      "race": "Vanara",
+      "archetype": "Qinggong + Master of Many Styles",
+      "mode": "full-pg",
+      "mode_normalized": "extended",
+      "spec_id": "monk_vanara_qinggong_master_of_many_styles",
+      "background": null,
+      "model": null,
+      "level_checkpoints": [
+        1,
+        5,
+        10
+      ],
+      "level": 5,
+      "step_total": 16,
+      "expected_step_total": 16,
+      "extended_steps_available": true,
+      "step_total_ok": true,
+      "error": "'sheet_payload' is a required property; Elementi non presenti nel catalogo: feats:Dodge + Mobility, feats:Power Attack + Tiger Claws, feats:Tiger Style + Crane Style; Prerequisiti catalogo non soddisfatti: Amuleto dell'armatura naturale +1: Craft Wondrous Item, Amuleto dell'armatura naturale +1: barkskin, Crane Style: Improved Unarmed Strike, Crane Wing: Improved Unarmed Strike, Dragon Style: Improved Unarmed Strike, Tiger Claws: Improved Unarmed Strike, Tiger Style: Improved Unarmed Strike",
+      "completeness_errors": [
+        "Elementi non presenti nel catalogo: feats:Dodge + Mobility, feats:Power Attack + Tiger Claws, feats:Tiger Style + Crane Style",
+        "Prerequisiti catalogo non soddisfatti: Amuleto dell'armatura naturale +1: Craft Wondrous Item, Amuleto dell'armatura naturale +1: barkskin, Crane Style: Improved Unarmed Strike, Crane Wing: Improved Unarmed Strike, Dragon Style: Improved Unarmed Strike, Tiger Claws: Improved Unarmed Strike, Tiger Style: Improved Unarmed Strike"
+      ],
+      "missing_catalog_entries": [
+        "feats:Dodge + Mobility",
+        "feats:Power Attack + Tiger Claws",
+        "feats:Tiger Style + Crane Style"
+      ],
+      "prerequisite_violations": [
+        "Amuleto dell'armatura naturale +1: Craft Wondrous Item",
+        "Amuleto dell'armatura naturale +1: barkskin",
+        "Crane Style: Improved Unarmed Strike",
+        "Crane Wing: Improved Unarmed Strike",
+        "Dragon Style: Improved Unarmed Strike",
+        "Tiger Claws: Improved Unarmed Strike",
+        "Tiger Style: Improved Unarmed Strike"
+      ],
+      "catalog_version": [
+        "2026.04.03"
+      ]
+    },
+    {
+      "file": "src/data/builds/monk_vanara_qinggong_master_of_many_styles_lvl10.json",
+      "status": "invalid",
+      "output_prefix": "monk_vanara_qinggong_master_of_many_styles",
+      "class": "Monk",
+      "race": "Vanara",
+      "archetype": "Qinggong + Master of Many Styles",
+      "mode": "full-pg",
+      "mode_normalized": "extended",
+      "spec_id": "monk_vanara_qinggong_master_of_many_styles",
+      "background": null,
+      "model": null,
+      "level_checkpoints": [
+        1,
+        5,
+        10
+      ],
+      "level": 10,
+      "step_total": 16,
+      "expected_step_total": 16,
+      "extended_steps_available": true,
+      "step_total_ok": true,
+      "error": "'sheet_payload' is a required property; Elementi non presenti nel catalogo: feats:Dodge + Mobility, feats:Power Attack + Tiger Claws, feats:Tiger Style + Crane Style; Prerequisiti catalogo non soddisfatti: Crane Riposte: Improved Unarmed Strike, Crane Style: Improved Unarmed Strike, Crane Wing: Improved Unarmed Strike, Dragon Ferocity: Improved Unarmed Strike, Dragon Style: Improved Unarmed Strike, Headband of Inspired Wisdom +2: Craft Wondrous Item, Headband of Inspired Wisdom +2: owl's wisdom, Medusa's Wrath: Improved Unarmed Strike, Medusa's Wrath: Stunning Fist, Tiger Claws: Improved Unarmed Strike, Tiger Style: Improved Unarmed Strike",
+      "completeness_errors": [
+        "Elementi non presenti nel catalogo: feats:Dodge + Mobility, feats:Power Attack + Tiger Claws, feats:Tiger Style + Crane Style",
+        "Prerequisiti catalogo non soddisfatti: Crane Riposte: Improved Unarmed Strike, Crane Style: Improved Unarmed Strike, Crane Wing: Improved Unarmed Strike, Dragon Ferocity: Improved Unarmed Strike, Dragon Style: Improved Unarmed Strike, Headband of Inspired Wisdom +2: Craft Wondrous Item, Headband of Inspired Wisdom +2: owl's wisdom, Medusa's Wrath: Improved Unarmed Strike, Medusa's Wrath: Stunning Fist, Tiger Claws: Improved Unarmed Strike, Tiger Style: Improved Unarmed Strike"
+      ],
+      "missing_catalog_entries": [
+        "feats:Dodge + Mobility",
+        "feats:Power Attack + Tiger Claws",
+        "feats:Tiger Style + Crane Style"
+      ],
+      "prerequisite_violations": [
+        "Crane Riposte: Improved Unarmed Strike",
+        "Crane Style: Improved Unarmed Strike",
+        "Crane Wing: Improved Unarmed Strike",
+        "Dragon Ferocity: Improved Unarmed Strike",
+        "Dragon Style: Improved Unarmed Strike",
+        "Headband of Inspired Wisdom +2: Craft Wondrous Item",
+        "Headband of Inspired Wisdom +2: owl's wisdom",
+        "Medusa's Wrath: Improved Unarmed Strike",
+        "Medusa's Wrath: Stunning Fist",
+        "Tiger Claws: Improved Unarmed Strike",
+        "Tiger Style: Improved Unarmed Strike"
+      ],
+      "catalog_version": [
+        "2026.04.03"
+      ]
+    },
+    {
       "file": "src/data/builds/paladin_aasimar_holy_tactician_sacred_servant_lvl01.json",
       "status": "invalid",
       "output_prefix": "paladin_aasimar_holy_tactician_sacred_servant",
@@ -1226,6 +1682,196 @@
       ],
       "prerequisite_violations": [
         "Coordinated Charge: Combat Reflexes"
+      ],
+      "catalog_version": [
+        "2026.04.03"
+      ]
+    },
+    {
+      "file": "src/data/builds/ranger_halfelf_skirmisher.json",
+      "status": "invalid",
+      "output_prefix": "ranger_halfelf_skirmisher",
+      "class": "Ranger",
+      "race": "Half-Elf",
+      "archetype": "Skirmisher",
+      "mode": "full-pg",
+      "mode_normalized": "extended",
+      "spec_id": "ranger_half-elf_skirmisher",
+      "background": null,
+      "model": null,
+      "level_checkpoints": [
+        1,
+        5,
+        10
+      ],
+      "level": 1,
+      "step_total": 16,
+      "expected_step_total": 16,
+      "extended_steps_available": true,
+      "step_total_ok": true,
+      "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+      "catalog_version": [
+        "2026.04.03"
+      ]
+    },
+    {
+      "file": "src/data/builds/ranger_halfelf_skirmisher_lvl05.json",
+      "status": "invalid",
+      "output_prefix": "ranger_halfelf_skirmisher",
+      "class": "Ranger",
+      "race": "Half-Elf",
+      "archetype": "Skirmisher",
+      "mode": "full-pg",
+      "mode_normalized": "extended",
+      "spec_id": "ranger_half-elf_skirmisher",
+      "background": null,
+      "model": null,
+      "level_checkpoints": [
+        1,
+        5,
+        10
+      ],
+      "level": 5,
+      "step_total": 16,
+      "expected_step_total": 16,
+      "extended_steps_available": true,
+      "step_total_ok": true,
+      "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+      "catalog_version": [
+        "2026.04.03"
+      ]
+    },
+    {
+      "file": "src/data/builds/ranger_halfelf_skirmisher_lvl10.json",
+      "status": "invalid",
+      "output_prefix": "ranger_halfelf_skirmisher",
+      "class": "Ranger",
+      "race": "Half-Elf",
+      "archetype": "Skirmisher",
+      "mode": "full-pg",
+      "mode_normalized": "extended",
+      "spec_id": "ranger_half-elf_skirmisher",
+      "background": null,
+      "model": null,
+      "level_checkpoints": [
+        1,
+        5,
+        10
+      ],
+      "level": 10,
+      "step_total": 16,
+      "expected_step_total": 16,
+      "extended_steps_available": true,
+      "step_total_ok": true,
+      "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+      "catalog_version": [
+        "2026.04.03"
+      ]
+    },
+    {
+      "file": "src/data/builds/rogue_halfling_cutpurse.json",
+      "status": "invalid",
+      "output_prefix": "rogue_halfling_cutpurse",
+      "class": "Rogue",
+      "race": "Halfling",
+      "archetype": "Cutpurse",
+      "mode": "full-pg",
+      "mode_normalized": "extended",
+      "spec_id": "rogue_halfling_cutpurse",
+      "background": null,
+      "model": null,
+      "level_checkpoints": [
+        1,
+        5,
+        10
+      ],
+      "level": 1,
+      "step_total": 16,
+      "expected_step_total": 16,
+      "extended_steps_available": true,
+      "step_total_ok": true,
+      "error": "'sheet_payload' is a required property; Prerequisiti catalogo non soddisfatti: Armatura di cuoio borchiato: Light armor proficiency",
+      "completeness_errors": [
+        "Prerequisiti catalogo non soddisfatti: Armatura di cuoio borchiato: Light armor proficiency"
+      ],
+      "prerequisite_violations": [
+        "Armatura di cuoio borchiato: Light armor proficiency"
+      ],
+      "catalog_version": [
+        "2026.04.03"
+      ]
+    },
+    {
+      "file": "src/data/builds/rogue_halfling_cutpurse_lvl05.json",
+      "status": "invalid",
+      "output_prefix": "rogue_halfling_cutpurse",
+      "class": "Rogue",
+      "race": "Halfling",
+      "archetype": "Cutpurse",
+      "mode": "full-pg",
+      "mode_normalized": "extended",
+      "spec_id": "rogue_halfling_cutpurse",
+      "background": null,
+      "model": null,
+      "level_checkpoints": [
+        1,
+        5,
+        10
+      ],
+      "level": 5,
+      "step_total": 16,
+      "expected_step_total": 16,
+      "extended_steps_available": true,
+      "step_total_ok": true,
+      "error": "'sheet_payload' is a required property; Elementi non presenti nel catalogo: feats:Schivare prodigioso; Prerequisiti catalogo non soddisfatti: Armatura di cuoio borchiato: Light armor proficiency",
+      "completeness_errors": [
+        "Elementi non presenti nel catalogo: feats:Schivare prodigioso",
+        "Prerequisiti catalogo non soddisfatti: Armatura di cuoio borchiato: Light armor proficiency"
+      ],
+      "missing_catalog_entries": [
+        "feats:Schivare prodigioso"
+      ],
+      "prerequisite_violations": [
+        "Armatura di cuoio borchiato: Light armor proficiency"
+      ],
+      "catalog_version": [
+        "2026.04.03"
+      ]
+    },
+    {
+      "file": "src/data/builds/rogue_halfling_cutpurse_lvl10.json",
+      "status": "invalid",
+      "output_prefix": "rogue_halfling_cutpurse",
+      "class": "Rogue",
+      "race": "Halfling",
+      "archetype": "Cutpurse",
+      "mode": "full-pg",
+      "mode_normalized": "extended",
+      "spec_id": "rogue_halfling_cutpurse",
+      "background": null,
+      "model": null,
+      "level_checkpoints": [
+        1,
+        5,
+        10
+      ],
+      "level": 10,
+      "step_total": 16,
+      "expected_step_total": 16,
+      "extended_steps_available": true,
+      "step_total_ok": true,
+      "error": "'sheet_payload' is a required property; Elementi non presenti nel catalogo: feats:Arma accurata superiore, feats:Schivare prodigioso, feats:Talento ladresco: Opportunista; Prerequisiti catalogo non soddisfatti: Armatura di cuoio borchiato: Light armor proficiency",
+      "completeness_errors": [
+        "Elementi non presenti nel catalogo: feats:Arma accurata superiore, feats:Schivare prodigioso, feats:Talento ladresco: Opportunista",
+        "Prerequisiti catalogo non soddisfatti: Armatura di cuoio borchiato: Light armor proficiency"
+      ],
+      "missing_catalog_entries": [
+        "feats:Arma accurata superiore",
+        "feats:Schivare prodigioso",
+        "feats:Talento ladresco: Opportunista"
+      ],
+      "prerequisite_violations": [
+        "Armatura di cuoio borchiato: Light armor proficiency"
       ],
       "catalog_version": [
         "2026.04.03"
@@ -1715,6 +2361,87 @@
       ]
     },
     {
+      "file": "src/data/builds/wizard_elf_universalist.json",
+      "status": "invalid",
+      "output_prefix": "wizard_elf_universalist",
+      "class": "Wizard",
+      "race": "Elf",
+      "archetype": "Universalist",
+      "mode": "full-pg",
+      "mode_normalized": "extended",
+      "spec_id": "wizard_elf_universalist",
+      "background": null,
+      "model": null,
+      "level_checkpoints": [
+        1,
+        5,
+        10
+      ],
+      "level": 1,
+      "step_total": 16,
+      "expected_step_total": 16,
+      "extended_steps_available": true,
+      "step_total_ok": true,
+      "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+      "catalog_version": [
+        "2026.04.03"
+      ]
+    },
+    {
+      "file": "src/data/builds/wizard_elf_universalist_lvl05.json",
+      "status": "invalid",
+      "output_prefix": "wizard_elf_universalist",
+      "class": "Wizard",
+      "race": "Elf",
+      "archetype": "Universalist",
+      "mode": "full-pg",
+      "mode_normalized": "extended",
+      "spec_id": "wizard_elf_universalist",
+      "background": null,
+      "model": null,
+      "level_checkpoints": [
+        1,
+        5,
+        10
+      ],
+      "level": 5,
+      "step_total": 16,
+      "expected_step_total": 16,
+      "extended_steps_available": true,
+      "step_total_ok": true,
+      "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+      "catalog_version": [
+        "2026.04.03"
+      ]
+    },
+    {
+      "file": "src/data/builds/wizard_elf_universalist_lvl10.json",
+      "status": "invalid",
+      "output_prefix": "wizard_elf_universalist",
+      "class": "Wizard",
+      "race": "Elf",
+      "archetype": "Universalist",
+      "mode": "full-pg",
+      "mode_normalized": "extended",
+      "spec_id": "wizard_elf_universalist",
+      "background": null,
+      "model": null,
+      "level_checkpoints": [
+        1,
+        5,
+        10
+      ],
+      "level": 10,
+      "step_total": 16,
+      "expected_step_total": 16,
+      "extended_steps_available": true,
+      "step_total_ok": true,
+      "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+      "catalog_version": [
+        "2026.04.03"
+      ]
+    },
+    {
       "file": "src/data/builds/wizard_human_evoker.json",
       "status": "invalid",
       "output_prefix": "wizard_human_evoker",
@@ -1852,22 +2579,22 @@
   ],
   "checkpoints": {
     "1": {
-      "total": 24,
-      "invalid": 24,
-      "schema_errors": 5,
-      "completeness_errors": 4
+      "total": 32,
+      "invalid": 32,
+      "schema_errors": 11,
+      "completeness_errors": 6
     },
     "5": {
-      "total": 23,
-      "invalid": 23,
-      "schema_errors": 5,
-      "completeness_errors": 2
+      "total": 31,
+      "invalid": 31,
+      "schema_errors": 11,
+      "completeness_errors": 4
     },
     "10": {
-      "total": 23,
-      "invalid": 23,
-      "schema_errors": 5,
-      "completeness_errors": 2
+      "total": 31,
+      "invalid": 31,
+      "schema_errors": 11,
+      "completeness_errors": 4
     }
   }
 }
