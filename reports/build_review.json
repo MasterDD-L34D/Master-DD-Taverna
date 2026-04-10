@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-04-09T23:31:52Z",
+  "generated_at": "2026-04-10T00:05:51Z",
   "builds": {
     "total": 105,
-    "valid": 0,
-    "invalid": 76,
+    "valid": 2,
+    "invalid": 103,
     "errors": 0,
-    "missing": 29,
+    "missing": 0,
     "entries": [
       {
         "file": "src/data/builds/alchemist-goblin-vivisectionist.json",
@@ -222,159 +222,121 @@
       },
       {
         "file": "src/data/builds/barbarian_fetchling_invulnerable_rager.json",
-        "output_prefix": "barbarian_fetchling_invulnerable_rager",
         "class": "Barbarian",
-        "race": "Fetchling",
-        "archetype": "Invulnerable Rager",
         "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "barbarian_fetchling_invulnerable_rager",
-        "background": "Guardiano delle ombre che sfrutta la resistenza del rager invulnerable per proteggere il clan.",
-        "model": null,
+        "catalog_version": [
+          "2026.04.03"
+        ],
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "status": "invalid",
+        "level": 1,
+        "output_prefix": "barbarian_fetchling_invulnerable_rager",
         "level_checkpoints": [
           1,
           5,
           10
         ],
-        "level": 1,
-        "step_total": 16,
-        "expected_step_total": 16,
-        "extended_steps_available": true,
-        "step_total_ok": true,
-        "error": "File mancante",
-        "catalog_version": [
-          "2026.04.03"
-        ],
-        "status": "missing"
+        "spec_id": "barbarian_fetchling_invulnerable_rager",
+        "mode_normalized": "extended"
       },
       {
         "file": "src/data/builds/barbarian_fetchling_invulnerable_rager_lvl05.json",
-        "output_prefix": "barbarian_fetchling_invulnerable_rager",
         "class": "Barbarian",
-        "race": "Fetchling",
-        "archetype": "Invulnerable Rager",
         "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "barbarian_fetchling_invulnerable_rager",
-        "background": "Guardiano delle ombre che sfrutta la resistenza del rager invulnerable per proteggere il clan.",
-        "model": null,
+        "catalog_version": [
+          "2026.04.03"
+        ],
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "status": "invalid",
+        "level": 5,
+        "output_prefix": "barbarian_fetchling_invulnerable_rager",
         "level_checkpoints": [
           1,
           5,
           10
         ],
-        "level": 5,
-        "step_total": 16,
-        "expected_step_total": 16,
-        "extended_steps_available": true,
-        "step_total_ok": true,
-        "error": "File mancante",
-        "catalog_version": [
-          "2026.04.03"
-        ],
-        "status": "missing"
+        "spec_id": "barbarian_fetchling_invulnerable_rager",
+        "mode_normalized": "extended"
       },
       {
         "file": "src/data/builds/barbarian_fetchling_invulnerable_rager_lvl10.json",
-        "output_prefix": "barbarian_fetchling_invulnerable_rager",
         "class": "Barbarian",
-        "race": "Fetchling",
-        "archetype": "Invulnerable Rager",
         "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "barbarian_fetchling_invulnerable_rager",
-        "background": "Guardiano delle ombre che sfrutta la resistenza del rager invulnerable per proteggere il clan.",
-        "model": null,
+        "catalog_version": [
+          "2026.04.03"
+        ],
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "status": "invalid",
+        "level": 10,
+        "output_prefix": "barbarian_fetchling_invulnerable_rager",
         "level_checkpoints": [
           1,
           5,
           10
         ],
-        "level": 10,
-        "step_total": 16,
-        "expected_step_total": 16,
-        "extended_steps_available": true,
-        "step_total_ok": true,
-        "error": "File mancante",
-        "catalog_version": [
-          "2026.04.03"
-        ],
-        "status": "missing"
+        "spec_id": "barbarian_fetchling_invulnerable_rager",
+        "mode_normalized": "extended"
       },
       {
         "file": "src/data/builds/bard_kitsune_sound_striker_sandman.json",
-        "output_prefix": "bard_kitsune_sound_striker_sandman",
         "class": "Bard",
-        "race": "Kitsune",
-        "archetype": "Sound Striker + Sandman",
         "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "bard_kitsune_sound_striker_sandman",
-        "background": null,
-        "model": null,
+        "catalog_version": [
+          "2026.04.03"
+        ],
+        "status": "ok",
+        "level": 1,
+        "output_prefix": "bard_kitsune_sound_striker_sandman",
         "level_checkpoints": [
           1,
           5,
           10
         ],
-        "level": 1,
-        "catalog_version": [
-          "2026.04.03"
-        ],
-        "status": "missing",
-        "error": "File mancante"
+        "spec_id": "bard_kitsune_sound_striker_sandman",
+        "mode_normalized": "extended"
       },
       {
         "file": "src/data/builds/bard_kitsune_sound_striker_sandman_lvl05.json",
-        "output_prefix": "bard_kitsune_sound_striker_sandman",
         "class": "Bard",
-        "race": "Kitsune",
-        "archetype": "Sound Striker + Sandman",
         "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "bard_kitsune_sound_striker_sandman",
-        "background": null,
-        "model": null,
-        "level_checkpoints": [
-          1,
-          5,
-          10
-        ],
-        "level": 5,
         "catalog_version": [
           "2026.04.03"
         ],
-        "status": "missing",
-        "error": "File mancante"
-      },
-      {
-        "file": "src/data/builds/bard_kitsune_sound_striker_sandman_lvl10.json",
+        "status": "ok",
+        "level": 5,
         "output_prefix": "bard_kitsune_sound_striker_sandman",
-        "class": "Bard",
-        "race": "Kitsune",
-        "archetype": "Sound Striker + Sandman",
-        "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "bard_kitsune_sound_striker_sandman",
-        "background": null,
-        "model": null,
         "level_checkpoints": [
           1,
           5,
           10
         ],
-        "level": 10,
-        "error": "File mancante",
-        "completeness_errors": [
-          "Prerequisiti catalogo non soddisfatti: Greater Spell Penetration: Spell Penetration"
-        ],
+        "spec_id": "bard_kitsune_sound_striker_sandman",
+        "mode_normalized": "extended"
+      },
+      {
+        "file": "src/data/builds/bard_kitsune_sound_striker_sandman_lvl10.json",
+        "class": "Bard",
+        "mode": "extended",
         "prerequisite_violations": [
           "Greater Spell Penetration: Spell Penetration"
         ],
         "catalog_version": [
           "2026.04.03"
         ],
-        "status": "missing"
+        "completeness_errors": [
+          "Prerequisiti catalogo non soddisfatti: Greater Spell Penetration: Spell Penetration"
+        ],
+        "error": "Prerequisiti catalogo non soddisfatti: Greater Spell Penetration: Spell Penetration",
+        "status": "invalid",
+        "level": 10,
+        "output_prefix": "bard_kitsune_sound_striker_sandman",
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "spec_id": "bard_kitsune_sound_striker_sandman",
+        "mode_normalized": "extended"
       },
       {
         "file": "src/data/builds/bloodrager-shabti-steelblood-metamagic-rager.json",
@@ -591,84 +553,60 @@
       },
       {
         "file": "src/data/builds/cleric_samsaran_cloistered_evangelist.json",
-        "output_prefix": "cleric_samsaran_cloistered_evangelist",
         "class": "Cleric",
-        "race": "Samsaran",
-        "archetype": "Cloistered Evangelist",
         "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "cleric_samsaran_cloistered_evangelist",
-        "background": "Mistico samsaran reincarnato che intreccia sermoni evangelist e preparazione da cloistered cleric per difendere il circolo.",
-        "model": null,
+        "catalog_version": [
+          "2026.04.03"
+        ],
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "status": "invalid",
+        "level": 1,
+        "output_prefix": "cleric_samsaran_cloistered_evangelist",
         "level_checkpoints": [
           1,
           5,
           10
         ],
-        "level": 1,
-        "step_total": 16,
-        "expected_step_total": 16,
-        "extended_steps_available": true,
-        "step_total_ok": true,
-        "error": "File mancante",
-        "catalog_version": [
-          "2026.04.03"
-        ],
-        "status": "missing"
+        "spec_id": "cleric_samsaran_cloistered_evangelist",
+        "mode_normalized": "extended"
       },
       {
         "file": "src/data/builds/cleric_samsaran_cloistered_evangelist_lvl05.json",
-        "output_prefix": "cleric_samsaran_cloistered_evangelist",
         "class": "Cleric",
-        "race": "Samsaran",
-        "archetype": "Cloistered Evangelist",
         "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "cleric_samsaran_cloistered_evangelist",
-        "background": "Mistico samsaran reincarnato che intreccia sermoni evangelist e preparazione da cloistered cleric per difendere il circolo.",
-        "model": null,
+        "catalog_version": [
+          "2026.04.03"
+        ],
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "status": "invalid",
+        "level": 5,
+        "output_prefix": "cleric_samsaran_cloistered_evangelist",
         "level_checkpoints": [
           1,
           5,
           10
         ],
-        "level": 5,
-        "step_total": 16,
-        "expected_step_total": 16,
-        "extended_steps_available": true,
-        "step_total_ok": true,
-        "error": "File mancante",
-        "catalog_version": [
-          "2026.04.03"
-        ],
-        "status": "missing"
+        "spec_id": "cleric_samsaran_cloistered_evangelist",
+        "mode_normalized": "extended"
       },
       {
         "file": "src/data/builds/cleric_samsaran_cloistered_evangelist_lvl10.json",
-        "output_prefix": "cleric_samsaran_cloistered_evangelist",
         "class": "Cleric",
-        "race": "Samsaran",
-        "archetype": "Cloistered Evangelist",
         "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "cleric_samsaran_cloistered_evangelist",
-        "background": "Mistico samsaran reincarnato che intreccia sermoni evangelist e preparazione da cloistered cleric per difendere il circolo.",
-        "model": null,
+        "catalog_version": [
+          "2026.04.03"
+        ],
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "status": "invalid",
+        "level": 10,
+        "output_prefix": "cleric_samsaran_cloistered_evangelist",
         "level_checkpoints": [
           1,
           5,
           10
         ],
-        "level": 10,
-        "step_total": 16,
-        "expected_step_total": 16,
-        "extended_steps_available": true,
-        "step_total_ok": true,
-        "error": "File mancante",
-        "catalog_version": [
-          "2026.04.03"
-        ],
-        "status": "missing"
+        "spec_id": "cleric_samsaran_cloistered_evangelist",
+        "mode_normalized": "extended"
       },
       {
         "file": "src/data/builds/druid_half_orc_feral.json",
@@ -753,165 +691,117 @@
       },
       {
         "file": "src/data/builds/druid_wayang_mooncaller_shapeshifter.json",
-        "output_prefix": "druid_wayang_mooncaller_shapeshifter",
         "class": "Druid",
-        "race": "Wayang",
-        "archetype": "Mooncaller Shapeshifter",
         "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "druid_wayang_mooncaller_shapeshifter",
-        "background": "Custode delle ombre lunari wayang che sfrutta ululati e forme ferali per schermare il party in oscurità.",
-        "model": null,
+        "catalog_version": [
+          "2026.04.03"
+        ],
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "status": "invalid",
+        "level": 1,
+        "output_prefix": "druid_wayang_mooncaller_shapeshifter",
         "level_checkpoints": [
           1,
           5,
           10
         ],
-        "level": 1,
-        "step_total": 16,
-        "expected_step_total": 16,
-        "extended_steps_available": true,
-        "step_total_ok": true,
-        "error": "File mancante",
-        "catalog_version": [
-          "2026.04.03"
-        ],
-        "status": "missing"
+        "spec_id": "druid_wayang_mooncaller_shapeshifter",
+        "mode_normalized": "extended"
       },
       {
         "file": "src/data/builds/druid_wayang_mooncaller_shapeshifter_lvl05.json",
-        "output_prefix": "druid_wayang_mooncaller_shapeshifter",
         "class": "Druid",
-        "race": "Wayang",
-        "archetype": "Mooncaller Shapeshifter",
         "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "druid_wayang_mooncaller_shapeshifter",
-        "background": "Custode delle ombre lunari wayang che sfrutta ululati e forme ferali per schermare il party in oscurità.",
-        "model": null,
+        "catalog_version": [
+          "2026.04.03"
+        ],
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "status": "invalid",
+        "level": 5,
+        "output_prefix": "druid_wayang_mooncaller_shapeshifter",
         "level_checkpoints": [
           1,
           5,
           10
         ],
-        "level": 5,
-        "step_total": 16,
-        "expected_step_total": 16,
-        "extended_steps_available": true,
-        "step_total_ok": true,
-        "error": "File mancante",
-        "catalog_version": [
-          "2026.04.03"
-        ],
-        "status": "missing"
+        "spec_id": "druid_wayang_mooncaller_shapeshifter",
+        "mode_normalized": "extended"
       },
       {
         "file": "src/data/builds/druid_wayang_mooncaller_shapeshifter_lvl10.json",
-        "output_prefix": "druid_wayang_mooncaller_shapeshifter",
         "class": "Druid",
-        "race": "Wayang",
-        "archetype": "Mooncaller Shapeshifter",
         "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "druid_wayang_mooncaller_shapeshifter",
-        "background": "Custode delle ombre lunari wayang che sfrutta ululati e forme ferali per schermare il party in oscurità.",
-        "model": null,
+        "catalog_version": [
+          "2026.04.03"
+        ],
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "status": "invalid",
+        "level": 10,
+        "output_prefix": "druid_wayang_mooncaller_shapeshifter",
         "level_checkpoints": [
           1,
           5,
           10
         ],
-        "level": 10,
-        "step_total": 16,
-        "expected_step_total": 16,
-        "extended_steps_available": true,
-        "step_total_ok": true,
-        "error": "File mancante",
-        "catalog_version": [
-          "2026.04.03"
-        ],
-        "status": "missing"
+        "spec_id": "druid_wayang_mooncaller_shapeshifter",
+        "mode_normalized": "extended"
       },
       {
         "file": "src/data/builds/fighter_dwarf_shielded.json",
-        "output_prefix": "fighter_dwarf_shielded",
         "class": "Fighter",
-        "race": "Dwarf",
-        "archetype": "Shielded Fighter",
         "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "fighter_dwarf_shielded_fighter",
-        "background": "Guardia cittadina temprata, specializzata in difesa di scudi pesanti.",
-        "model": null,
+        "catalog_version": [
+          "2026.04.03"
+        ],
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "status": "invalid",
+        "level": 1,
+        "output_prefix": "fighter_dwarf_shielded_fighter",
         "level_checkpoints": [
           1,
           5,
           10
         ],
-        "level": 1,
-        "step_total": 16,
-        "expected_step_total": 16,
-        "extended_steps_available": true,
-        "step_total_ok": true,
-        "error": "File mancante",
-        "catalog_version": [
-          "2026.04.03"
-        ],
-        "status": "missing"
+        "spec_id": "fighter_dwarf_shielded_fighter",
+        "mode_normalized": "extended"
       },
       {
         "file": "src/data/builds/fighter_dwarf_shielded_lvl05.json",
-        "output_prefix": "fighter_dwarf_shielded",
         "class": "Fighter",
-        "race": "Dwarf",
-        "archetype": "Shielded Fighter",
         "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "fighter_dwarf_shielded_fighter",
-        "background": "Guardia cittadina temprata, specializzata in difesa di scudi pesanti.",
-        "model": null,
+        "catalog_version": [
+          "2026.04.03"
+        ],
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "status": "invalid",
+        "level": 5,
+        "output_prefix": "fighter_dwarf_shielded_fighter",
         "level_checkpoints": [
           1,
           5,
           10
         ],
-        "level": 5,
-        "step_total": 16,
-        "expected_step_total": 16,
-        "extended_steps_available": true,
-        "step_total_ok": true,
-        "error": "File mancante",
-        "catalog_version": [
-          "2026.04.03"
-        ],
-        "status": "missing"
+        "spec_id": "fighter_dwarf_shielded_fighter",
+        "mode_normalized": "extended"
       },
       {
         "file": "src/data/builds/fighter_dwarf_shielded_lvl10.json",
-        "output_prefix": "fighter_dwarf_shielded",
         "class": "Fighter",
-        "race": "Dwarf",
-        "archetype": "Shielded Fighter",
         "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "fighter_dwarf_shielded_fighter",
-        "background": "Guardia cittadina temprata, specializzata in difesa di scudi pesanti.",
-        "model": null,
+        "catalog_version": [
+          "2026.04.03"
+        ],
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "status": "invalid",
+        "level": 10,
+        "output_prefix": "fighter_dwarf_shielded_fighter",
         "level_checkpoints": [
           1,
           5,
           10
         ],
-        "level": 10,
-        "step_total": 16,
-        "expected_step_total": 16,
-        "extended_steps_available": true,
-        "step_total_ok": true,
-        "error": "File mancante",
-        "catalog_version": [
-          "2026.04.03"
-        ],
-        "status": "missing"
+        "spec_id": "fighter_dwarf_shielded_fighter",
+        "mode_normalized": "extended"
       },
       {
         "file": "src/data/builds/fighter_weapon_master_human.json",
@@ -1606,25 +1496,8 @@
       },
       {
         "file": "src/data/builds/monk_vanara_qinggong_master_of_many_styles.json",
-        "output_prefix": "monk_vanara_qinggong_master_of_many_styles",
         "class": "Monk",
-        "race": "Vanara",
-        "archetype": "Qinggong + Master of Many Styles",
         "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "monk_vanara_qinggong_master_of_many_styles",
-        "background": null,
-        "model": null,
-        "level_checkpoints": [
-          1,
-          5,
-          10
-        ],
-        "level": 1,
-        "error": "File mancante",
-        "completeness_errors": [
-          "Prerequisiti catalogo non soddisfatti: Crane Style: Improved Unarmed Strike, Tiger Style: Improved Unarmed Strike"
-        ],
         "prerequisite_violations": [
           "Crane Style: Improved Unarmed Strike",
           "Tiger Style: Improved Unarmed Strike"
@@ -1632,29 +1505,25 @@
         "catalog_version": [
           "2026.04.03"
         ],
-        "status": "missing"
-      },
-      {
-        "file": "src/data/builds/monk_vanara_qinggong_master_of_many_styles_lvl05.json",
+        "completeness_errors": [
+          "Prerequisiti catalogo non soddisfatti: Crane Style: Improved Unarmed Strike, Tiger Style: Improved Unarmed Strike"
+        ],
+        "error": "Prerequisiti catalogo non soddisfatti: Crane Style: Improved Unarmed Strike, Tiger Style: Improved Unarmed Strike",
+        "status": "invalid",
+        "level": 1,
         "output_prefix": "monk_vanara_qinggong_master_of_many_styles",
-        "class": "Monk",
-        "race": "Vanara",
-        "archetype": "Qinggong + Master of Many Styles",
-        "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "monk_vanara_qinggong_master_of_many_styles",
-        "background": null,
-        "model": null,
         "level_checkpoints": [
           1,
           5,
           10
         ],
-        "level": 5,
-        "error": "File mancante",
-        "completeness_errors": [
-          "Prerequisiti catalogo non soddisfatti: Amuleto dell'armatura naturale +1: Craft Wondrous Item, Amuleto dell'armatura naturale +1: barkskin, Crane Style: Improved Unarmed Strike, Crane Wing: Improved Unarmed Strike, Dragon Style: Improved Unarmed Strike, Tiger Claws: Improved Unarmed Strike, Tiger Style: Improved Unarmed Strike"
-        ],
+        "spec_id": "monk_vanara_qinggong_master_of_many_styles",
+        "mode_normalized": "extended"
+      },
+      {
+        "file": "src/data/builds/monk_vanara_qinggong_master_of_many_styles_lvl05.json",
+        "class": "Monk",
+        "mode": "extended",
         "prerequisite_violations": [
           "Amuleto dell'armatura naturale +1: Craft Wondrous Item",
           "Amuleto dell'armatura naturale +1: barkskin",
@@ -1667,29 +1536,25 @@
         "catalog_version": [
           "2026.04.03"
         ],
-        "status": "missing"
-      },
-      {
-        "file": "src/data/builds/monk_vanara_qinggong_master_of_many_styles_lvl10.json",
+        "completeness_errors": [
+          "Prerequisiti catalogo non soddisfatti: Amuleto dell'armatura naturale +1: Craft Wondrous Item, Amuleto dell'armatura naturale +1: barkskin, Crane Style: Improved Unarmed Strike, Crane Wing: Improved Unarmed Strike, Dragon Style: Improved Unarmed Strike, Tiger Claws: Improved Unarmed Strike, Tiger Style: Improved Unarmed Strike"
+        ],
+        "error": "Prerequisiti catalogo non soddisfatti: Amuleto dell'armatura naturale +1: Craft Wondrous Item, Amuleto dell'armatura naturale +1: barkskin, Crane Style: Improved Unarmed Strike, Crane Wing: Improved Unarmed Strike, Dragon Style: Improved Unarmed Strike, Tiger Claws: Improved Unarmed Strike, Tiger Style: Improved Unarmed Strike",
+        "status": "invalid",
+        "level": 5,
         "output_prefix": "monk_vanara_qinggong_master_of_many_styles",
-        "class": "Monk",
-        "race": "Vanara",
-        "archetype": "Qinggong + Master of Many Styles",
-        "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "monk_vanara_qinggong_master_of_many_styles",
-        "background": null,
-        "model": null,
         "level_checkpoints": [
           1,
           5,
           10
         ],
-        "level": 10,
-        "error": "File mancante",
-        "completeness_errors": [
-          "Prerequisiti catalogo non soddisfatti: Crane Riposte: Improved Unarmed Strike, Crane Style: Improved Unarmed Strike, Crane Wing: Improved Unarmed Strike, Dragon Ferocity: Improved Unarmed Strike, Dragon Style: Improved Unarmed Strike, Headband of Inspired Wisdom +2: Craft Wondrous Item, Headband of Inspired Wisdom +2: owl's wisdom, Medusa's Wrath: Improved Unarmed Strike, Medusa's Wrath: Stunning Fist, Tiger Claws: Improved Unarmed Strike, Tiger Style: Improved Unarmed Strike"
-        ],
+        "spec_id": "monk_vanara_qinggong_master_of_many_styles",
+        "mode_normalized": "extended"
+      },
+      {
+        "file": "src/data/builds/monk_vanara_qinggong_master_of_many_styles_lvl10.json",
+        "class": "Monk",
+        "mode": "extended",
         "prerequisite_violations": [
           "Crane Riposte: Improved Unarmed Strike",
           "Crane Style: Improved Unarmed Strike",
@@ -1706,7 +1571,20 @@
         "catalog_version": [
           "2026.04.03"
         ],
-        "status": "missing"
+        "completeness_errors": [
+          "Prerequisiti catalogo non soddisfatti: Crane Riposte: Improved Unarmed Strike, Crane Style: Improved Unarmed Strike, Crane Wing: Improved Unarmed Strike, Dragon Ferocity: Improved Unarmed Strike, Dragon Style: Improved Unarmed Strike, Headband of Inspired Wisdom +2: Craft Wondrous Item, Headband of Inspired Wisdom +2: owl's wisdom, Medusa's Wrath: Improved Unarmed Strike, Medusa's Wrath: Stunning Fist, Tiger Claws: Improved Unarmed Strike, Tiger Style: Improved Unarmed Strike"
+        ],
+        "error": "Prerequisiti catalogo non soddisfatti: Crane Riposte: Improved Unarmed Strike, Crane Style: Improved Unarmed Strike, Crane Wing: Improved Unarmed Strike, Dragon Ferocity: Improved Unarmed Strike, Dragon Style: Improved Unarmed Strike, Headband of Inspired Wisdom +2: Craft Wondrous Item, Headband of Inspired Wisdom +2: owl's wisdom, Medusa's Wrath: Improved Unarmed Strike, Medusa's Wrath: Stunning Fist, Tiger Claws: Improved Unarmed Strike, Tiger Style: Improved Unarmed Strike",
+        "status": "invalid",
+        "level": 10,
+        "output_prefix": "monk_vanara_qinggong_master_of_many_styles",
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "spec_id": "monk_vanara_qinggong_master_of_many_styles",
+        "mode_normalized": "extended"
       },
       {
         "file": "src/data/builds/paladin_aasimar_holy_tactician_sacred_servant_lvl01.json",
@@ -1739,202 +1617,140 @@
       },
       {
         "file": "src/data/builds/paladin_aasimar_holy_tactician_sacred_servant_lvl05.json",
-        "output_prefix": "paladin_aasimar_holy_tactician_sacred_servant",
         "class": "Paladin",
-        "race": "Aasimar",
-        "archetype": "Holy Tactician + Sacred Servant",
         "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "paladin_aasimar_holy_tactician_sacred_servant",
-        "background": null,
-        "model": null,
-        "level_checkpoints": [
-          1,
-          5,
-          10
-        ],
-        "level": 5,
-        "error": "File mancante",
-        "completeness_errors": [
-          "Prerequisiti catalogo non soddisfatti: Coordinated Charge: Combat Reflexes"
-        ],
         "prerequisite_violations": [
           "Coordinated Charge: Combat Reflexes"
         ],
         "catalog_version": [
           "2026.04.03"
         ],
-        "status": "missing"
+        "completeness_errors": [
+          "Prerequisiti catalogo non soddisfatti: Coordinated Charge: Combat Reflexes"
+        ],
+        "error": "Prerequisiti catalogo non soddisfatti: Coordinated Charge: Combat Reflexes",
+        "status": "invalid",
+        "level": 5,
+        "output_prefix": "paladin_aasimar_holy_tactician_sacred_servant",
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "spec_id": "paladin_aasimar_holy_tactician_sacred_servant",
+        "mode_normalized": "extended"
       },
       {
         "file": "src/data/builds/paladin_aasimar_holy_tactician_sacred_servant_lvl10.json",
-        "output_prefix": "paladin_aasimar_holy_tactician_sacred_servant",
         "class": "Paladin",
-        "race": "Aasimar",
-        "archetype": "Holy Tactician + Sacred Servant",
         "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "paladin_aasimar_holy_tactician_sacred_servant",
-        "background": null,
-        "model": null,
-        "level_checkpoints": [
-          1,
-          5,
-          10
-        ],
-        "level": 10,
-        "error": "File mancante",
-        "completeness_errors": [
-          "Prerequisiti catalogo non soddisfatti: Coordinated Charge: Combat Reflexes"
-        ],
         "prerequisite_violations": [
           "Coordinated Charge: Combat Reflexes"
         ],
         "catalog_version": [
           "2026.04.03"
         ],
-        "status": "missing"
+        "completeness_errors": [
+          "Prerequisiti catalogo non soddisfatti: Coordinated Charge: Combat Reflexes"
+        ],
+        "error": "Prerequisiti catalogo non soddisfatti: Coordinated Charge: Combat Reflexes",
+        "status": "invalid",
+        "level": 10,
+        "output_prefix": "paladin_aasimar_holy_tactician_sacred_servant",
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "spec_id": "paladin_aasimar_holy_tactician_sacred_servant",
+        "mode_normalized": "extended"
       },
       {
         "file": "src/data/builds/ranger_halfelf_skirmisher.json",
-        "output_prefix": "ranger_halfelf_skirmisher",
         "class": "Ranger",
-        "race": "Half-Elf",
-        "archetype": "Skirmisher",
         "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "ranger_half-elf_skirmisher",
-        "background": "Esploratore delle Terre Tenebrose con tattiche di guerriglia leggera.",
-        "model": null,
+        "catalog_version": [
+          "2026.04.03"
+        ],
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "status": "invalid",
+        "level": 1,
+        "output_prefix": "ranger_half-elf_skirmisher",
         "level_checkpoints": [
           1,
           5,
           10
         ],
-        "level": 1,
-        "step_total": 16,
-        "expected_step_total": 16,
-        "extended_steps_available": true,
-        "step_total_ok": true,
-        "error": "File mancante",
-        "catalog_version": [
-          "2026.04.03"
-        ],
-        "status": "missing"
+        "spec_id": "ranger_half-elf_skirmisher",
+        "mode_normalized": "extended"
       },
       {
         "file": "src/data/builds/ranger_halfelf_skirmisher_lvl05.json",
-        "output_prefix": "ranger_halfelf_skirmisher",
         "class": "Ranger",
-        "race": "Half-Elf",
-        "archetype": "Skirmisher",
         "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "ranger_half-elf_skirmisher",
-        "background": "Esploratore delle Terre Tenebrose con tattiche di guerriglia leggera.",
-        "model": null,
+        "catalog_version": [
+          "2026.04.03"
+        ],
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "status": "invalid",
+        "level": 5,
+        "output_prefix": "ranger_half-elf_skirmisher",
         "level_checkpoints": [
           1,
           5,
           10
         ],
-        "level": 5,
-        "step_total": 16,
-        "expected_step_total": 16,
-        "extended_steps_available": true,
-        "step_total_ok": true,
-        "error": "File mancante",
-        "catalog_version": [
-          "2026.04.03"
-        ],
-        "status": "missing"
+        "spec_id": "ranger_half-elf_skirmisher",
+        "mode_normalized": "extended"
       },
       {
         "file": "src/data/builds/ranger_halfelf_skirmisher_lvl10.json",
-        "output_prefix": "ranger_halfelf_skirmisher",
         "class": "Ranger",
-        "race": "Half-Elf",
-        "archetype": "Skirmisher",
         "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "ranger_half-elf_skirmisher",
-        "background": "Esploratore delle Terre Tenebrose con tattiche di guerriglia leggera.",
-        "model": null,
-        "level_checkpoints": [
-          1,
-          5,
-          10
-        ],
-        "level": 10,
-        "step_total": 16,
-        "expected_step_total": 16,
-        "extended_steps_available": true,
-        "step_total_ok": true,
-        "error": "File mancante",
         "catalog_version": [
           "2026.04.03"
         ],
-        "status": "missing"
-      },
-      {
-        "file": "src/data/builds/rogue_halfling_cutpurse.json",
-        "output_prefix": "rogue_halfling_cutpurse",
-        "class": "Rogue",
-        "race": "Halfling",
-        "archetype": "Cutpurse",
-        "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "rogue_halfling_cutpurse",
-        "background": "Piccolo borseggiatore delle vie mercantili, maestro nel muoversi tra la folla.",
-        "model": null,
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "status": "invalid",
+        "level": 10,
+        "output_prefix": "ranger_half-elf_skirmisher",
         "level_checkpoints": [
           1,
           5,
           10
         ],
-        "level": 1,
-        "step_total": 16,
-        "expected_step_total": 16,
-        "extended_steps_available": true,
-        "step_total_ok": true,
-        "error": "File mancante",
-        "completeness_errors": [
-          "Prerequisiti catalogo non soddisfatti: Armatura di cuoio borchiato: Light armor proficiency"
-        ],
+        "spec_id": "ranger_half-elf_skirmisher",
+        "mode_normalized": "extended"
+      },
+      {
+        "file": "src/data/builds/rogue_halfling_cutpurse.json",
+        "class": "Rogue",
+        "mode": "extended",
         "prerequisite_violations": [
           "Armatura di cuoio borchiato: Light armor proficiency"
         ],
         "catalog_version": [
           "2026.04.03"
         ],
-        "status": "missing"
-      },
-      {
-        "file": "src/data/builds/rogue_halfling_cutpurse_lvl05.json",
+        "completeness_errors": [
+          "Prerequisiti catalogo non soddisfatti: Armatura di cuoio borchiato: Light armor proficiency"
+        ],
+        "error": "None is not of type 'string'; Prerequisiti catalogo non soddisfatti: Armatura di cuoio borchiato: Light armor proficiency",
+        "status": "invalid",
+        "level": 1,
         "output_prefix": "rogue_halfling_cutpurse",
-        "class": "Rogue",
-        "race": "Halfling",
-        "archetype": "Cutpurse",
-        "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "rogue_halfling_cutpurse",
-        "background": "Piccolo borseggiatore delle vie mercantili, maestro nel muoversi tra la folla.",
-        "model": null,
         "level_checkpoints": [
           1,
           5,
           10
         ],
-        "level": 5,
-        "step_total": 16,
-        "expected_step_total": 16,
-        "extended_steps_available": true,
-        "step_total_ok": true,
-        "error": "File mancante",
-        "completeness_errors": [
-          "Elementi non presenti nel catalogo: feats:Schivare prodigioso",
-          "Prerequisiti catalogo non soddisfatti: Armatura di cuoio borchiato: Light armor proficiency"
-        ],
+        "spec_id": "rogue_halfling_cutpurse",
+        "mode_normalized": "extended"
+      },
+      {
+        "file": "src/data/builds/rogue_halfling_cutpurse_lvl05.json",
+        "class": "Rogue",
+        "mode": "extended",
         "missing_catalog_entries": [
           "feats:Schivare prodigioso"
         ],
@@ -1944,34 +1760,26 @@
         "catalog_version": [
           "2026.04.03"
         ],
-        "status": "missing"
-      },
-      {
-        "file": "src/data/builds/rogue_halfling_cutpurse_lvl10.json",
+        "completeness_errors": [
+          "Elementi non presenti nel catalogo: feats:Schivare prodigioso",
+          "Prerequisiti catalogo non soddisfatti: Armatura di cuoio borchiato: Light armor proficiency"
+        ],
+        "error": "None is not of type 'string'; Elementi non presenti nel catalogo: feats:Schivare prodigioso; Prerequisiti catalogo non soddisfatti: Armatura di cuoio borchiato: Light armor proficiency",
+        "status": "invalid",
+        "level": 5,
         "output_prefix": "rogue_halfling_cutpurse",
-        "class": "Rogue",
-        "race": "Halfling",
-        "archetype": "Cutpurse",
-        "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "rogue_halfling_cutpurse",
-        "background": "Piccolo borseggiatore delle vie mercantili, maestro nel muoversi tra la folla.",
-        "model": null,
         "level_checkpoints": [
           1,
           5,
           10
         ],
-        "level": 10,
-        "step_total": 16,
-        "expected_step_total": 16,
-        "extended_steps_available": true,
-        "step_total_ok": true,
-        "error": "File mancante",
-        "completeness_errors": [
-          "Elementi non presenti nel catalogo: feats:Arma accurata superiore, feats:Schivare prodigioso, feats:Talento ladresco: Opportunista",
-          "Prerequisiti catalogo non soddisfatti: Armatura di cuoio borchiato: Light armor proficiency"
-        ],
+        "spec_id": "rogue_halfling_cutpurse",
+        "mode_normalized": "extended"
+      },
+      {
+        "file": "src/data/builds/rogue_halfling_cutpurse_lvl10.json",
+        "class": "Rogue",
+        "mode": "extended",
         "missing_catalog_entries": [
           "feats:Arma accurata superiore",
           "feats:Schivare prodigioso",
@@ -1983,7 +1791,21 @@
         "catalog_version": [
           "2026.04.03"
         ],
-        "status": "missing"
+        "completeness_errors": [
+          "Elementi non presenti nel catalogo: feats:Arma accurata superiore, feats:Schivare prodigioso, feats:Talento ladresco: Opportunista",
+          "Prerequisiti catalogo non soddisfatti: Armatura di cuoio borchiato: Light armor proficiency"
+        ],
+        "error": "None is not of type 'string'; Elementi non presenti nel catalogo: feats:Arma accurata superiore, feats:Schivare prodigioso, feats:Talento ladresco: Opportunista; Prerequisiti catalogo non soddisfatti: Armatura di cuoio borchiato: Light armor proficiency",
+        "status": "invalid",
+        "level": 10,
+        "output_prefix": "rogue_halfling_cutpurse",
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "spec_id": "rogue_halfling_cutpurse",
+        "mode_normalized": "extended"
       },
       {
         "file": "src/data/builds/strict/cleric/cleric_wayang_shadowcaster_separatist.json",
@@ -2470,84 +2292,60 @@
       },
       {
         "file": "src/data/builds/wizard_elf_universalist.json",
-        "output_prefix": "wizard_elf_universalist",
         "class": "Wizard",
-        "race": "Elf",
-        "archetype": "Universalist",
         "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "wizard_elf_universalist",
-        "background": "Studiosa elfica ossessionata dalla versatilità dei grimori.",
-        "model": null,
+        "catalog_version": [
+          "2026.04.03"
+        ],
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "status": "invalid",
+        "level": 1,
+        "output_prefix": "wizard_elf_universalist",
         "level_checkpoints": [
           1,
           5,
           10
         ],
-        "level": 1,
-        "step_total": 16,
-        "expected_step_total": 16,
-        "extended_steps_available": true,
-        "step_total_ok": true,
-        "error": "File mancante",
-        "catalog_version": [
-          "2026.04.03"
-        ],
-        "status": "missing"
+        "spec_id": "wizard_elf_universalist",
+        "mode_normalized": "extended"
       },
       {
         "file": "src/data/builds/wizard_elf_universalist_lvl05.json",
-        "output_prefix": "wizard_elf_universalist",
         "class": "Wizard",
-        "race": "Elf",
-        "archetype": "Universalist",
         "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "wizard_elf_universalist",
-        "background": "Studiosa elfica ossessionata dalla versatilità dei grimori.",
-        "model": null,
+        "catalog_version": [
+          "2026.04.03"
+        ],
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "status": "invalid",
+        "level": 5,
+        "output_prefix": "wizard_elf_universalist",
         "level_checkpoints": [
           1,
           5,
           10
         ],
-        "level": 5,
-        "step_total": 16,
-        "expected_step_total": 16,
-        "extended_steps_available": true,
-        "step_total_ok": true,
-        "error": "File mancante",
-        "catalog_version": [
-          "2026.04.03"
-        ],
-        "status": "missing"
+        "spec_id": "wizard_elf_universalist",
+        "mode_normalized": "extended"
       },
       {
         "file": "src/data/builds/wizard_elf_universalist_lvl10.json",
-        "output_prefix": "wizard_elf_universalist",
         "class": "Wizard",
-        "race": "Elf",
-        "archetype": "Universalist",
         "mode": "extended",
-        "mode_normalized": "extended",
-        "spec_id": "wizard_elf_universalist",
-        "background": "Studiosa elfica ossessionata dalla versatilità dei grimori.",
-        "model": null,
+        "catalog_version": [
+          "2026.04.03"
+        ],
+        "error": "None is not of type 'string'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "status": "invalid",
+        "level": 10,
+        "output_prefix": "wizard_elf_universalist",
         "level_checkpoints": [
           1,
           5,
           10
         ],
-        "level": 10,
-        "step_total": 16,
-        "expected_step_total": 16,
-        "extended_steps_available": true,
-        "step_total_ok": true,
-        "error": "File mancante",
-        "catalog_version": [
-          "2026.04.03"
-        ],
-        "status": "missing"
+        "spec_id": "wizard_elf_universalist",
+        "mode_normalized": "extended"
       },
       {
         "file": "src/data/builds/wizard_human_evoker.json",
@@ -2688,21 +2486,21 @@
     "checkpoints": {
       "1": {
         "total": 33,
-        "invalid": 33,
-        "schema_errors": 5,
-        "completeness_errors": 4
+        "invalid": 32,
+        "schema_errors": 11,
+        "completeness_errors": 6
       },
       "5": {
         "total": 33,
-        "invalid": 33,
-        "schema_errors": 5,
-        "completeness_errors": 2
+        "invalid": 32,
+        "schema_errors": 11,
+        "completeness_errors": 5
       },
       "10": {
         "total": 33,
         "invalid": 33,
-        "schema_errors": 5,
-        "completeness_errors": 2
+        "schema_errors": 11,
+        "completeness_errors": 6
       }
     }
   },

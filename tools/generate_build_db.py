@@ -1645,9 +1645,27 @@ def _load_build_index_entries(
         file_path = entry.get("file")
         if not file_path:
             continue
-        resolved = Path(str(file_path)).resolve()
+        resolved = _resolve_index_entry_path(str(file_path), build_index_path)
         entries[resolved] = entry
     return entries
+
+
+def _resolve_index_entry_path(raw_path: str, index_path: Path | None) -> Path:
+    candidate = Path(raw_path)
+    if candidate.is_absolute():
+        return candidate.resolve()
+
+    probe_order: list[Path] = [Path.cwd()]
+    if index_path is not None:
+        probe_order.append(index_path.parent)
+        probe_order.extend(index_path.parents)
+
+    for base in probe_order:
+        resolved = (base / candidate).resolve()
+        if resolved.exists():
+            return resolved
+
+    return (Path.cwd() / candidate).resolve()
 
 
 def _worst_status(*statuses: str | None) -> str:
