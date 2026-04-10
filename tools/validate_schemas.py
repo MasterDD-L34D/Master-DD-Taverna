@@ -28,6 +28,7 @@ DEFAULT_BUILD_DIR_CANDIDATES = (
     Path("data/builds"),
     Path("reports/builds"),
 )
+REQUIRED_REFERENCE_DATASETS = ("spells", "feats", "items")
 
 
 def iter_schema_files(root: Path) -> Iterable[Path]:
@@ -73,9 +74,20 @@ def _manifest_file_paths(
         if candidate.is_absolute():
             resolved_path = candidate
         else:
+            manifest_anchor = (
+                manifest_path.parents[2]
+                if len(manifest_path.parents) >= 3
+                else manifest_path.parent
+            )
+            anchor_relative = (manifest_anchor / candidate).resolve()
             repo_relative = (Path.cwd() / candidate).resolve()
             manifest_relative = (manifest_path.parent / candidate).resolve()
-            resolved_path = repo_relative if repo_relative.exists() else manifest_relative
+            if anchor_relative.exists():
+                resolved_path = anchor_relative
+            elif repo_relative.exists():
+                resolved_path = repo_relative
+            else:
+                resolved_path = manifest_relative
         resolved[dataset_name] = resolved_path
 
     return resolved, errors
@@ -106,6 +118,14 @@ def validate_reference_contract(
         manifest_payload, manifest_path
     )
     errors.extend(manifest_file_errors)
+
+    missing_required_datasets = [
+        dataset for dataset in REQUIRED_REFERENCE_DATASETS if dataset not in manifest_files
+    ]
+    if missing_required_datasets:
+        errors.append(
+            f"{manifest_path}: dataset obbligatori mancanti nel manifest ({', '.join(missing_required_datasets)})"
+        )
 
     if manifest_files:
         for dataset_name, dataset_path in manifest_files.items():

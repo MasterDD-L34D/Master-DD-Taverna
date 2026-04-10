@@ -25,6 +25,10 @@ jobs:
         run: |
           python tools/validate_schemas.py
 
+      - name: Enforce reference catalog version gate
+        run: |
+          python tools/validate_schemas.py --manifest data/reference/manifest.json --build-dir src/data/builds
+
       - name: Verifica owner e checkpoint del piano
         run: |
           python tools/verify_owners.py --format markdown > verify_owners_report.md
