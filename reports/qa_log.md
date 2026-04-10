@@ -126,3 +126,16 @@
 - **Esito strict**: fallimento immediato sul validatore di scheda (`scheda_pg.schema.json`) per gli slot talento/abilità modellati come interi anziché array (es. payload `fighter_weapon_master_human`, `wizard_*`, `cleric_samsaran_cloistered_evangelist`). Lo strict report (`reports/dual_pass.json`) riporta lo stato `failed` con errore `4 is not of type 'array'; 3 is not of type 'array'` e non produce indici strict completi.【0fdaab†L16-L117】【43f9e0†L1-L8】
 - **Moduli grezzi**: il download dei raw module è riuscito tranne `adventurer_ledger.txt`, bloccato da `403 Forbidden` nonostante l'API key (`ALLOW_MODULE_DUMP=false`); recuperati i meta parziali (206) per gli altri moduli. La validazione metadata di `scheda_pg_markdown_template.md` resta non conforme allo schema (`integrates_with`/`core_min`).【0fdaab†L118-L168】
 - **Delta indici**: `reports/dual_pass.json` registra `builds.total=144` con `ok=3`, `invalid=102`, `errors=39`; gli output `keep-invalid` hanno aggiornato `src/data/build_index.json`, `src/data/module_index.json` e generato snapshot `src/data/modules/strict`/`src/data/builds/strict` per diagnosi. Nessun errore di connettività API dopo l'avvio locale del server.【2d5372†L1-L10】【0fdaab†L1-L65】
+
+## Delta release
+
+### File cambiati (questa release)
+- `docs/release_process_rationale.md`
+- `planning/roadmap.md`
+- `.github/workflows/pr-checklist.yml`
+- `reports/qa_log.md`
+
+### Impatto su moduli/build/schema
+- **Moduli runtime**: nessuna modifica diretta ai file modulo (`src/data/modules/*`), quindi nessun delta di comportamento funzionale atteso.
+- **Build/index data**: introdotto gate bloccante in CI su `pytest tests/test_module_index.py -q` per coerenza indice↔filesystem.
+- **Schema/contratti**: nessuna modifica ai file in `schemas/`; impatto solo procedurale (governance pre-merge e obbligo refresh artifact dati quando si tocca `src/data/`).
