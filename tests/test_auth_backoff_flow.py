@@ -7,6 +7,7 @@ from fastapi.testclient import TestClient
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 
 import src.app as app_module
+import src.auth_backoff as auth_backoff_module
 from src.app import app
 from src.config import settings
 
@@ -61,7 +62,7 @@ def controllable_monotonic(monkeypatch):
     def advance(delta: float):
         current["value"] += delta
 
-    monkeypatch.setattr(app_module, "monotonic", fake_monotonic)
+    monkeypatch.setattr(auth_backoff_module, "monotonic", fake_monotonic)
     return advance
 
 

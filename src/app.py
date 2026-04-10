@@ -11,6 +11,7 @@ from typing import Dict, List, Mapping
 
 import yaml
 from fastapi import (
+    APIRouter,
     Body,
     Depends,
     FastAPI,
@@ -25,6 +26,23 @@ from prometheus_client import CONTENT_TYPE_LATEST, Counter, Gauge, generate_late
 from jsonschema.exceptions import ValidationError
 
 from .config import MODULES_DIR, DATA_DIR, settings
+from .auth_backoff import (
+    _accepted_metrics_keys,
+    _failed_attempts,
+    _is_metrics_ip_allowed,
+    require_api_key,
+    require_metrics_access,
+    reset_failed_attempts as _reset_failed_attempts,
+)
+from .metadata_parser import (
+    load_reference_manifest as _load_reference_manifest,
+    parse_front_matter_metadata as _parse_front_matter_metadata,
+    parse_json_module_metadata as _parse_json_module_metadata,
+    parse_knowledge_pack_metadata as _parse_knowledge_pack_metadata,
+    parse_module_metadata as _parse_module_metadata,
+    reference_catalog_version as _reference_catalog_version,
+)
+from .storage_helpers import list_files as _list_files, taverna_saves_metadata as _taverna_saves_metadata, taverna_saves_metrics as _taverna_saves_metrics
 from tools.generate_build_db import schema_for_mode, validate_with_schema
 
 
@@ -41,6 +59,8 @@ async def lifespan(_: FastAPI):
     yield
 
 
+router = APIRouter()
+
 app = FastAPI(
     title="Pathfinder 1E Master DD Core API",
     version="1.0.0",
@@ -49,7 +69,7 @@ app = FastAPI(
 )
 
 
-_failed_attempts: Dict[str, Dict[str, float | int]] = {}
+_legacy_failed_attempts: Dict[str, Dict[str, float | int]] = {}
 
 
 REQUEST_COUNT = Counter(
@@ -83,13 +103,13 @@ TAVERNA_SAVES_DIR = MODULES_DIR / "taverna_saves"
 TAVERNA_SAVES_MAX_FILES = 200
 
 
-def _reset_failed_attempts() -> None:
+def _legacy_reset_failed_attempts() -> None:
     """Utility to clear the in-memory tracker (mainly for tests)."""
 
     _failed_attempts.clear()
 
 
-def _cleanup_failed_attempts(now: float) -> None:
+def _legacy_cleanup_failed_attempts(now: float) -> None:
     """Remove stale backoff entries older than configured TTL."""
 
     ttl_seconds = settings.auth_backoff_state_ttl_seconds
@@ -105,7 +125,7 @@ def _cleanup_failed_attempts(now: float) -> None:
         _failed_attempts.pop(client_id, None)
 
 
-def _evict_failed_attempts_if_needed(current_client_id: str) -> None:
+def _legacy_evict_failed_attempts_if_needed(current_client_id: str) -> None:
     """Ensure the tracker never grows beyond AUTH_BACKOFF_MAX_CLIENTS."""
 
     max_clients = settings.auth_backoff_max_clients
@@ -124,7 +144,7 @@ def _evict_failed_attempts_if_needed(current_client_id: str) -> None:
         _failed_attempts.pop(client_id_to_evict, None)
 
 
-def _record_failed_attempt(
+def _legacy_record_failed_attempt(
     client_id: str, *, count: int, blocked_until: float, now: float
 ) -> None:
     if client_id not in _failed_attempts:
@@ -137,7 +157,7 @@ def _record_failed_attempt(
     }
 
 
-def _load_reference_manifest() -> Mapping[str, object]:
+def _legacy_load_reference_manifest() -> Mapping[str, object]:
     try:
         manifest = json.loads(REFERENCE_MANIFEST_PATH.read_text(encoding="utf-8"))
     except Exception as exc:  # pragma: no cover - safety net for missing fixtures
@@ -147,19 +167,19 @@ def _load_reference_manifest() -> Mapping[str, object]:
     return manifest if isinstance(manifest, Mapping) else {}
 
 
-def _reference_catalog_version() -> str | None:
+def _legacy_reference_catalog_version() -> str | None:
     manifest = _load_reference_manifest()
     version = manifest.get("version") if isinstance(manifest, Mapping) else None
     return str(version) if version else None
 
 
-def _client_identifier(request: Request) -> str:
+def _legacy_client_identifier(request: Request) -> str:
     if request.client and request.client.host:
         return _forwarded_for_client_ip(request) or request.client.host
     return "unknown"
 
 
-def _is_trusted_proxy(request: Request) -> bool:
+def _legacy_is_trusted_proxy(request: Request) -> bool:
     if not settings.trust_proxy_headers:
         return False
     if not request.client or not request.client.host:
@@ -167,7 +187,7 @@ def _is_trusted_proxy(request: Request) -> bool:
     return request.client.host in settings.trusted_proxy_ips
 
 
-def _extract_first_valid_ip(value: str) -> str | None:
+def _legacy_extract_first_valid_ip(value: str) -> str | None:
     for candidate in value.split(","):
         ip_candidate = candidate.strip()
         if not ip_candidate:
@@ -179,7 +199,7 @@ def _extract_first_valid_ip(value: str) -> str | None:
     return None
 
 
-def _forwarded_for_client_ip(request: Request) -> str | None:
+def _legacy_forwarded_for_client_ip(request: Request) -> str | None:
     if not _is_trusted_proxy(request):
         return None
     forwarded_for = request.headers.get("x-forwarded-for")
@@ -188,7 +208,7 @@ def _forwarded_for_client_ip(request: Request) -> str | None:
     return _extract_first_valid_ip(forwarded_for)
 
 
-def _retry_after_for_active_backoff(client_id: str, now: float) -> int | None:
+def _legacy_retry_after_for_active_backoff(client_id: str, now: float) -> int | None:
     attempt_state = _failed_attempts.get(
         client_id, {"count": 0, "blocked_until": 0.0, "last_seen": now}
     )
@@ -205,7 +225,7 @@ def _retry_after_for_active_backoff(client_id: str, now: float) -> int | None:
     return max(int(blocked_until - now), 0)
 
 
-def _raise_backoff_active(client_id: str, retry_after: int) -> None:
+def _legacy_raise_backoff_active(client_id: str, retry_after: int) -> None:
     logging.warning(
         "Authentication backoff active",
         extra={
@@ -221,7 +241,7 @@ def _raise_backoff_active(client_id: str, retry_after: int) -> None:
     )
 
 
-def _raise_auth_backoff_triggered(
+def _legacy_raise_auth_backoff_triggered(
     client_id: str, now: float, updated_count: int
 ) -> None:
     blocked_until = now + settings.auth_backoff_seconds
@@ -248,7 +268,7 @@ def _raise_auth_backoff_triggered(
     )
 
 
-def _accepted_metrics_keys() -> set[str]:
+def _legacy_accepted_metrics_keys() -> set[str]:
     return {k for k in (settings.metrics_api_key, settings.api_key) if k}
 
 
@@ -260,7 +280,7 @@ _SENSITIVE_HEADER_NAMES = {
 }
 
 
-def _redact_header_value(header_name: str, header_value: str) -> str:
+def _legacy_redact_header_value(header_name: str, header_value: str) -> str:
     if header_name in _SENSITIVE_HEADER_NAMES:
         return "***REDACTED***"
 
@@ -274,7 +294,7 @@ def _redact_header_value(header_name: str, header_value: str) -> str:
     return f"{normalized[:4]}...{normalized[-2:]}"
 
 
-def _redacted_request_headers(request: Request) -> Dict[str, str]:
+def _legacy_redacted_request_headers(request: Request) -> Dict[str, str]:
     redacted_headers: Dict[str, str] = {}
     for header_name, header_value in request.headers.items():
         normalized_name = header_name.lower()
@@ -284,7 +304,7 @@ def _redacted_request_headers(request: Request) -> Dict[str, str]:
     return redacted_headers
 
 
-async def require_api_key(
+async def _legacyrequire_api_key(
     request: Request, x_api_key: str | None = Header(default=None, alias="x-api-key")
 ) -> None:
     """Validate the provided API key header against settings and apply backoff."""
@@ -341,7 +361,7 @@ async def require_api_key(
     _failed_attempts.pop(client_id, None)
 
 
-def _is_metrics_ip_allowed(request: Request) -> bool:
+def _legacy_is_metrics_ip_allowed(request: Request) -> bool:
     if not settings.metrics_ip_allowlist:
         return False
     if request.client and request.client.host in settings.metrics_ip_allowlist:
@@ -352,7 +372,7 @@ def _is_metrics_ip_allowed(request: Request) -> bool:
     return False
 
 
-async def require_metrics_access(
+async def _legacyrequire_metrics_access(
     request: Request, x_api_key: str | None = Header(default=None, alias="x-api-key")
 ) -> None:
     """Restrict access to the metrics endpoint via API key or IP allowlist."""
@@ -366,7 +386,7 @@ async def require_metrics_access(
     raise HTTPException(status_code=403, detail="Accesso alle metriche non autorizzato")
 
 
-def _list_files(base: Path) -> List[Dict]:
+def _legacy_list_files(base: Path) -> List[Dict]:
     out: List[Dict] = []
     if not base.exists() or not base.is_dir():
         raise HTTPException(
@@ -385,7 +405,7 @@ def _list_files(base: Path) -> List[Dict]:
     return out
 
 
-def _parse_json_module_metadata(
+def _legacy_parse_json_module_metadata(
     text: str, *, source: Path | None = None
 ) -> Dict[str, object]:
     try:
@@ -418,7 +438,7 @@ def _parse_json_module_metadata(
     return metadata
 
 
-def _taverna_saves_metrics() -> Dict[str, object]:
+def _legacy_taverna_saves_metrics() -> Dict[str, object]:
     if not TAVERNA_SAVES_DIR.exists() or not TAVERNA_SAVES_DIR.is_dir():
         raise HTTPException(
             status_code=503,
@@ -445,7 +465,7 @@ def _taverna_saves_metrics() -> Dict[str, object]:
     }
 
 
-def _taverna_saves_metadata() -> Dict[str, object]:
+def _legacy_taverna_saves_metadata() -> Dict[str, object]:
     metrics = _taverna_saves_metrics()
 
     auto_name_policy = {
@@ -600,7 +620,7 @@ async def list_modules(_: None = Depends(require_api_key)) -> List[Dict]:
     return _list_files(MODULES_DIR)
 
 
-def _parse_front_matter_metadata(
+def _legacy_parse_front_matter_metadata(
     text: str, *, source: Path | None = None
 ) -> Dict[str, object]:
     """Extract `version` and `compatibility` from YAML-like headers."""
@@ -648,7 +668,7 @@ def _parse_front_matter_metadata(
     return metadata
 
 
-def _parse_knowledge_pack_metadata(text: str) -> Dict[str, str]:
+def _legacy_parse_knowledge_pack_metadata(text: str) -> Dict[str, str]:
     match = re.search(
         r"\*\*Versione:\*\*\s*(?P<version>[^•\n]+).*?\*\*Compatibilit\u00e0:\*\*\s*(?P<compatibility>[^\n<]+)",
         text,
@@ -663,7 +683,7 @@ def _parse_knowledge_pack_metadata(text: str) -> Dict[str, str]:
     }
 
 
-def _parse_module_metadata(path: Path) -> Dict[str, object]:
+def _legacy_parse_module_metadata(path: Path) -> Dict[str, object]:
     """Extract optional metadata fields from a module file."""
 
     text = path.read_text(encoding="utf-8", errors="ignore")
@@ -708,7 +728,7 @@ async def get_taverna_saves_meta(
 ) -> Dict[str, object]:
     """Expose metadata and quota information for the taverna_saves service directory."""
 
-    meta = _taverna_saves_metadata()
+    meta = _taverna_saves_metadata(TAVERNA_SAVES_DIR)
     meta["storage_policy"] = {
         "file_naming": "{name}.json",
         "auto_name_pattern": meta.get("auto_name_policy", {}).get("pattern"),
@@ -723,14 +743,14 @@ async def get_taverna_saves_quota(
 ) -> Dict[str, object]:
     """Return a focused view on taverna_saves quota/usage metrics."""
 
-    return _taverna_saves_metrics()
+    return _taverna_saves_metrics(TAVERNA_SAVES_DIR)
 
 
 @app.get("/storage_meta")
 async def storage_meta(_: None = Depends(require_api_key)) -> Dict[str, object]:
     """Expose storage metadata with quota, max_files and auto-naming policy."""
 
-    return _taverna_saves_metadata()
+    return _taverna_saves_metadata(TAVERNA_SAVES_DIR)
 
 
 TEXT_SUFFIXES = {".txt", ".md"}
@@ -1789,13 +1809,13 @@ async def get_module_content(
     )
 
 
-@app.get("/knowledge", response_model=List[Dict])
+@router.get("/knowledge", response_model=List[Dict])
 async def list_knowledge(_: None = Depends(require_api_key)) -> List[Dict]:
     """List knowledge PDFs/MD available in /data."""
     return _list_files(DATA_DIR)
 
 
-@app.get("/knowledge/{name:path}/meta")
+@router.get("/knowledge/{name:path}/meta")
 async def get_knowledge_meta(name: str, _: None = Depends(require_api_key)) -> Dict:
     """Return metadata for a knowledge file (PDF/MD)."""
     name_path = Path(name)
@@ -1811,15 +1831,17 @@ async def get_knowledge_meta(name: str, _: None = Depends(require_api_key)) -> D
     }
 
 
-@app.post("/ruling-expert")
+@router.post("/ruling-expert")
 async def ruling_expert_stub(_: None = Depends(require_api_key)) -> Dict[str, object]:
     """Stub di Ruling Expert: restituisce sempre badge validato."""
 
     return {"ruling_badge": "validated", "sources": ["stub"], "violations": []}
 
 
-@app.get("/metrics")
+@router.get("/metrics")
 async def metrics(_: None = Depends(require_metrics_access)) -> Response:
     """Espone le metriche Prometheus protette da API key o allowlist IP."""
 
     return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
+
+app.include_router(router)
