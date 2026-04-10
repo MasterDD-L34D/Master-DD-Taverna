@@ -18,6 +18,11 @@ Questa guida riassume come usare l'API FastAPI esposta dal progetto, con esempi 
 - **Metriche Prometheus**: se manca una chiave valida e l'IP non è in allowlist, `/metrics` risponde `403`.
 - **Output modulare con dump disabilitato**: per `.txt`/`.md` il payload è troncato a 4k con `X-Content-Partial: true`, `X-Content-Partial-Reason: ALLOW_MODULE_DUMP=false`, `X-Content-Served-Bytes`, `X-Content-Remaining-Bytes`, `X-Content-Truncated` e status `206 Partial Content`.
 
+### Security logging policy
+
+- I log di autenticazione non includono mai chiavi/API token in chiaro: gli header sensibili (`x-api-key`, `authorization`, `cookie`, `set-cookie`) sono sempre mascherati.
+- Per audit vengono mantenuti solo metadati minimi: `client_ip`, `fail_count`, `route` e `user_agent` in forma redatta.
+
 ## Endpoint principali
 
 ### `GET /health`
