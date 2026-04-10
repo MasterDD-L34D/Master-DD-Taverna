@@ -1,7 +1,8 @@
 import asyncio
-from pathlib import Path
 import json
+import logging
 import re
+from pathlib import Path
 from urllib.parse import quote
 
 import pytest
@@ -564,6 +565,42 @@ def test_wrong_api_key_returns_unauthorized(client, auth_headers):
     response = client.get("/modules", headers={"x-api-key": "wrong"})
     assert response.status_code == 401
     assert response.json()["detail"] == "Invalid or missing API key"
+
+
+def test_auth_failed_log_redacts_sensitive_headers(client, caplog):
+    leaked_secret = "live-secret-value"
+    with caplog.at_level(logging.WARNING):
+        response = client.get(
+            "/modules",
+            headers={
+                "x-api-key": leaked_secret,
+                "authorization": "Bearer super-secret-token",
+                "cookie": "sessionid=secret-cookie",
+                "set-cookie": "token=another-secret",
+                "user-agent": "AuditClient/1.2.3 very-long-agent",
+                "x-forwarded-for": "198.51.100.20",
+            },
+        )
+
+    assert response.status_code == 401
+    assert leaked_secret not in caplog.text
+    assert "super-secret-token" not in caplog.text
+    assert "secret-cookie" not in caplog.text
+    assert "another-secret" not in caplog.text
+
+    auth_failed_record = next(
+        record
+        for record in caplog.records
+        if getattr(record, "event", None) == "auth_failed"
+    )
+    assert auth_failed_record.client_ip == "198.51.100.20"
+    assert auth_failed_record.fail_count == 1
+    assert auth_failed_record.route == "/modules"
+    assert auth_failed_record.user_agent == "Audi...nt"
+    assert auth_failed_record.headers["x-api-key"] == "***REDACTED***"
+    assert auth_failed_record.headers["authorization"] == "***REDACTED***"
+    assert auth_failed_record.headers["cookie"] == "***REDACTED***"
+    assert auth_failed_record.headers["set-cookie"] == "***REDACTED***"
 
 
 def test_repeated_wrong_api_key_triggers_backoff(client, short_backoff):

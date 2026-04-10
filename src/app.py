@@ -174,6 +174,38 @@ def _accepted_metrics_keys() -> set[str]:
     return {k for k in (settings.metrics_api_key, settings.api_key) if k}
 
 
+_SENSITIVE_HEADER_NAMES = {
+    "authorization",
+    "cookie",
+    "set-cookie",
+    "x-api-key",
+}
+
+
+def _redact_header_value(header_name: str, header_value: str) -> str:
+    if header_name in _SENSITIVE_HEADER_NAMES:
+        return "***REDACTED***"
+
+    normalized = header_value.strip()
+    if not normalized:
+        return normalized
+
+    if len(normalized) <= 8:
+        return "***"
+
+    return f"{normalized[:4]}...{normalized[-2:]}"
+
+
+def _redacted_request_headers(request: Request) -> Dict[str, str]:
+    redacted_headers: Dict[str, str] = {}
+    for header_name, header_value in request.headers.items():
+        normalized_name = header_name.lower()
+        redacted_headers[normalized_name] = _redact_header_value(
+            normalized_name, header_value
+        )
+    return redacted_headers
+
+
 async def require_api_key(
     request: Request, x_api_key: str | None = Header(default=None, alias="x-api-key")
 ) -> None:
@@ -200,13 +232,17 @@ async def require_api_key(
 
     if x_api_key != settings.api_key:
         updated_count = int(attempt_state.get("count", 0)) + 1
+        route = request.url.path if request.url else "unknown"
+        user_agent = request.headers.get("user-agent", "")
         logging.warning(
             "Authentication failed",
             extra={
                 "event": "auth_failed",
                 "client_ip": client_id,
                 "fail_count": updated_count,
-                "headers": dict(request.headers),
+                "route": route,
+                "user_agent": _redact_header_value("user-agent", user_agent),
+                "headers": _redacted_request_headers(request),
             },
         )
         blocked_until = attempt_state.get("blocked_until", 0.0)
