@@ -161,7 +161,7 @@ Risposta JSON semplificata:
 - Il contratto è **bloccante**: `reference_catalog_version` deve combaciare con `data/reference/manifest.json -> version` su tutti i payload build (root e `composite.build`).
 - In pipeline, `tools/validate_schemas.py` verifica coerenza tra manifesto, dataset `data/reference/*.json` (path + conteggio `entries`) e versioni dichiarate nei payload build presenti nelle directory candidate (`builds/`, `data/builds/`, `reports/builds/`).
 - In caso di mismatch, la pipeline deve terminare con exit code `1` per impedire la promozione di snapshot incoerenti.
-- Regola operativa dataset reference: ogni modifica a `data/reference/*.json` richiede nello stesso change set (1) update di `data/reference/manifest.json` e (2) nota esplicita in `CHANGELOG.md`.
+- Regola operativa dataset reference: ogni modifica a `data/reference/*.json` richiede nello stesso change set (1) update di `data/reference/manifest.json` e (2) nota esplicita in `CHANGELOG.md`; ogni bump di `manifest.version` senza update changelog è da considerarsi release-blocker.
 - Se non sono presenti payload build nelle directory candidate, il controllo emette warning ma continua a validare manifest + dataset; in CI è consigliato passare `--build-dir <path>` verso gli artifact di build reali.
 
 

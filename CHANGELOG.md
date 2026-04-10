@@ -6,6 +6,11 @@ Questo file riassume le modifiche rilevanti introdotte dall’integrazione di **
 
 ### Pipeline e controlli automatici
 - `tools/validate_schemas.py`: esteso con validazione del contratto versioni reference (manifest, dataset `data/reference/*.json`, controllo `entries`, verifica `reference_catalog_version` su payload build e `composite.build`) con exit code bloccante in caso di mismatch.
+- Rafforzata la validazione del manifest: i dataset obbligatori `spells`, `feats`, `items` devono essere presenti e coerenti, altrimenti il gate fallisce.
+- `.github/workflows/static-analysis.yml`: aggiunto step esplicito di gate `reference catalog version` con `--manifest data/reference/manifest.json --build-dir src/data/builds`.
+
+### Test
+- Aggiunta suite `tests/test_validate_schemas.py` per coprire: allineamento manifest/dataset, obbligo dei dataset canonici e mismatch di `reference_catalog_version`.
 
 ### Regola operativa
 - Formalizzata la regola: ogni modifica ai dataset `data/reference/*.json` deve includere aggiornamento del manifest e nota in `CHANGELOG.md`.

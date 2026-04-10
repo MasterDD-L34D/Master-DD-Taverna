@@ -124,6 +124,7 @@ Lo script lancia `black --check` sui file Python e compila i moduli con
 - Per validare il catalogo esegui i test: `pytest tests/test_generate_build_db.py -k reference`
   oppure lancia `python -m compileall data/reference schemas` per catturare
   errori di formattazione prima di eseguire lo script di harvest.
+- **Gate bloccante build**: esegui `python tools/validate_schemas.py --manifest data/reference/manifest.json --build-dir src/data/builds`; il comando fallisce (exit code `1`) se `reference_catalog_version` non coincide con il manifest o se i dataset `spells/feats/items` non sono coerenti con `entries`.
 - L'indice `src/data/module_index.json` espone il catalogo tramite il campo
   `reference_catalog`: aggiungi il manifest se crei nuovi dataset e mantieni
   l'elenco allineato.
