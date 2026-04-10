@@ -36,6 +36,12 @@ class Settings:
         self.auth_backoff_seconds: int = int(
             os.getenv("AUTH_BACKOFF_SECONDS", "60")
         )  # finestra di backoff in secondi
+        self.auth_backoff_state_ttl_seconds: int = int(
+            os.getenv("AUTH_BACKOFF_STATE_TTL_SECONDS", "3600")
+        )  # TTL per lo stato backoff in memoria
+        self.auth_backoff_max_clients: int = int(
+            os.getenv("AUTH_BACKOFF_MAX_CLIENTS", "10000")
+        )  # numero massimo di client tracciati in memoria
         self.metrics_api_key: str | None = os.getenv("METRICS_API_KEY")
         self.metrics_ip_allowlist: list[str] = [
             ip.strip()
@@ -73,6 +79,22 @@ ACCESS_POLICY_MATRIX = {
             "false: blocca dump non testuali e tronca i moduli testuali con header "
             "di contenuto parziale; true: abilita dump completo salvo moduli protetti "
             "non in whitelist."
+        ),
+    },
+    "AUTH_BACKOFF_STATE_TTL_SECONDS": {
+        "default": "3600",
+        "scope": "Tracker in memoria dei tentativi falliti auth",
+        "effect": (
+            "Rimuove entry inattive oltre il TTL durante la lettura/scrittura "
+            "del tracker, limitando crescita e retention dati in RAM."
+        ),
+    },
+    "AUTH_BACKOFF_MAX_CLIENTS": {
+        "default": "10000",
+        "scope": "Tracker in memoria dei tentativi falliti auth",
+        "effect": (
+            "Impone un limite massimo di client tracciati; al superamento "
+            "viene applicata eviction oldest-first basata su last_seen."
         ),
     },
     "METRICS_API_KEY": {

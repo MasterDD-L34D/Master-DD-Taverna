@@ -89,6 +89,54 @@ def _reset_failed_attempts() -> None:
     _failed_attempts.clear()
 
 
+def _cleanup_failed_attempts(now: float) -> None:
+    """Remove stale backoff entries older than configured TTL."""
+
+    ttl_seconds = settings.auth_backoff_state_ttl_seconds
+    if ttl_seconds <= 0:
+        return
+
+    expired_clients = [
+        client_id
+        for client_id, state in _failed_attempts.items()
+        if now - float(state.get("last_seen", 0.0)) > ttl_seconds
+    ]
+    for client_id in expired_clients:
+        _failed_attempts.pop(client_id, None)
+
+
+def _evict_failed_attempts_if_needed(current_client_id: str) -> None:
+    """Ensure the tracker never grows beyond AUTH_BACKOFF_MAX_CLIENTS."""
+
+    max_clients = settings.auth_backoff_max_clients
+    if max_clients <= 0:
+        _failed_attempts.clear()
+        return
+
+    while (
+        len(_failed_attempts) >= max_clients
+        and current_client_id not in _failed_attempts
+    ):
+        client_id_to_evict = min(
+            _failed_attempts.items(),
+            key=lambda item: float(item[1].get("last_seen", 0.0)),
+        )[0]
+        _failed_attempts.pop(client_id_to_evict, None)
+
+
+def _record_failed_attempt(
+    client_id: str, *, count: int, blocked_until: float, now: float
+) -> None:
+    if client_id not in _failed_attempts:
+        _evict_failed_attempts_if_needed(client_id)
+
+    _failed_attempts[client_id] = {
+        "count": count,
+        "blocked_until": blocked_until,
+        "last_seen": now,
+    }
+
+
 def _load_reference_manifest() -> Mapping[str, object]:
     try:
         manifest = json.loads(REFERENCE_MANIFEST_PATH.read_text(encoding="utf-8"))
@@ -141,10 +189,19 @@ def _forwarded_for_client_ip(request: Request) -> str | None:
 
 
 def _retry_after_for_active_backoff(client_id: str, now: float) -> int | None:
-    attempt_state = _failed_attempts.get(client_id, {"count": 0, "blocked_until": 0.0})
+    attempt_state = _failed_attempts.get(
+        client_id, {"count": 0, "blocked_until": 0.0, "last_seen": now}
+    )
     blocked_until = float(attempt_state.get("blocked_until", 0.0))
     if now >= blocked_until:
         return None
+
+    _record_failed_attempt(
+        client_id,
+        count=int(attempt_state.get("count", 0)),
+        blocked_until=blocked_until,
+        now=now,
+    )
     return max(int(blocked_until - now), 0)
 
 
@@ -178,10 +235,12 @@ def _raise_auth_backoff_triggered(
         },
     )
     AUTH_BACKOFF_TRIGGER.inc()
-    _failed_attempts[client_id] = {
-        "count": updated_count,
-        "blocked_until": blocked_until,
-    }
+    _record_failed_attempt(
+        client_id,
+        count=updated_count,
+        blocked_until=blocked_until,
+        now=now,
+    )
     raise HTTPException(
         status_code=429,
         detail="Troppi tentativi non autorizzati, riprova più tardi",
@@ -232,7 +291,10 @@ async def require_api_key(
 
     client_id = _client_identifier(request)
     now = monotonic()
-    attempt_state = _failed_attempts.get(client_id, {"count": 0, "blocked_until": 0.0})
+    _cleanup_failed_attempts(now)
+    attempt_state = _failed_attempts.get(
+        client_id, {"count": 0, "blocked_until": 0.0, "last_seen": now}
+    )
     retry_after = _retry_after_for_active_backoff(client_id, now)
     if retry_after is not None:
         _raise_backoff_active(client_id, retry_after)
@@ -268,10 +330,12 @@ async def require_api_key(
         if updated_count >= settings.auth_backoff_threshold:
             _raise_auth_backoff_triggered(client_id, now, updated_count)
 
-        _failed_attempts[client_id] = {
-            "count": updated_count,
-            "blocked_until": blocked_until,
-        }
+        _record_failed_attempt(
+            client_id,
+            count=updated_count,
+            blocked_until=float(blocked_until),
+            now=now,
+        )
         raise HTTPException(status_code=401, detail="Invalid or missing API key")
 
     _failed_attempts.pop(client_id, None)
