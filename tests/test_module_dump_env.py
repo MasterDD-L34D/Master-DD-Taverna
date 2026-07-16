@@ -19,6 +19,9 @@ def configure_settings(monkeypatch: pytest.MonkeyPatch):
     original_env_allow = os.getenv("ALLOW_MODULE_DUMP")
     original_env_api = os.getenv("API_KEY")
     original_settings = app_module.settings
+    original_allow_module_dump = original_settings.allow_module_dump
+    original_api_key = original_settings.api_key
+    original_module_dump_whitelist = set(original_settings.module_dump_whitelist)
 
     def _configure(allow_module_dump: str | None):
         monkeypatch.delenv("ALLOW_MODULE_DUMP", raising=False)
@@ -26,9 +29,14 @@ def configure_settings(monkeypatch: pytest.MonkeyPatch):
             monkeypatch.setenv("ALLOW_MODULE_DUMP", allow_module_dump)
         monkeypatch.setenv("API_KEY", "test-api-key")
 
-        new_settings = config.Settings()
-        app_module.settings = new_settings
-        config.settings = new_settings
+        # Mutate the existing settings object so every module that imported
+        # `settings` at load time sees the same values.
+        parsed_allow = (
+            allow_module_dump.lower() == "true" if allow_module_dump else False
+        )
+        original_settings.allow_module_dump = parsed_allow
+        original_settings.api_key = "test-api-key"
+        original_settings.module_dump_whitelist = set()
         if not hasattr(app_module, "LEDGER_TEXT_MODULES"):
             app_module.LEDGER_TEXT_MODULES = set()
         return app_module
@@ -43,8 +51,9 @@ def configure_settings(monkeypatch: pytest.MonkeyPatch):
         monkeypatch.delenv("API_KEY", raising=False)
     else:
         monkeypatch.setenv("API_KEY", original_env_api)
-    app_module.settings = original_settings
-    config.settings = original_settings
+    original_settings.allow_module_dump = original_allow_module_dump
+    original_settings.api_key = original_api_key
+    original_settings.module_dump_whitelist = original_module_dump_whitelist
 
 
 @pytest.fixture
@@ -83,5 +92,7 @@ def test_module_full_body_when_env_enabled(client_with_module_dump):
     response = client.get("/modules/base_profile.txt", headers=headers)
 
     assert response.status_code == 200
-    assert response.text == expected
+    # FileResponse preserves raw line endings; read_text() applies universal
+    # newline translation on Windows. Normalize both sides.
+    assert response.text.replace("\r\n", "\n") == expected.replace("\r\n", "\n")
     assert "X-Content-Partial" not in response.headers

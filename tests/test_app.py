@@ -417,7 +417,9 @@ def test_ruling_expert_full_dump_requires_whitelist(client, auth_headers):
         expected = (MODULES_DIR / "ruling_expert.txt").read_text(encoding="utf-8")
         response = client.get("/modules/ruling_expert.txt", headers=auth_headers)
         assert response.status_code == 200
-        assert response.text == expected
+        # FileResponse preserves raw line endings, while read_text() applies
+        # universal newline translation on Windows. Normalize both sides.
+        assert response.text.replace("\r\n", "\n") == expected.replace("\r\n", "\n")
     finally:
         settings.allow_module_dump = original_allow
         settings.module_dump_whitelist = original_whitelist
@@ -544,7 +546,11 @@ def test_get_module_rejects_symlink_outside_modules(client, auth_headers, tmp_pa
     external_file.write_text("top-secret")
 
     symlink_path = MODULES_DIR / "outside_link.txt"
-    symlink_path.symlink_to(external_file)
+    try:
+        symlink_path.symlink_to(external_file)
+    except OSError as exc:
+        # Symlink creation requires privileges on Windows without Developer Mode.
+        pytest.skip(f"Cannot create symlink in this environment: {exc}")
 
     try:
         response = client.get("/modules/outside_link.txt", headers=auth_headers)

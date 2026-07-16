@@ -1,4 +1,5 @@
 import os
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -19,9 +20,38 @@ exit 0
     return stub_python
 
 
+_BASH_PATH: str | None = None
+
+
+def _bash_available() -> bool:
+    global _BASH_PATH
+    if _BASH_PATH is not None:
+        return True
+    bash = shutil.which("bash")
+    if bash is None:
+        return False
+    try:
+        result = subprocess.run(
+            [bash, "-c", "echo ok"],
+            text=True,
+            capture_output=True,
+            timeout=5,
+        )
+        if result.returncode == 0 and "ok" in result.stdout:
+            _BASH_PATH = bash
+            return True
+        return False
+    except Exception:
+        return False
+
+
 def _run_daily_workflow(args, env):
+    if not _bash_available():
+        pytest.skip("bash not available in this environment")
+    # Use the discovered absolute path to avoid Windows resolving ``bash`` to
+    # a WSL app-execution alias when the script name is passed.
     return subprocess.run(
-        ["bash", str(PROJECT_ROOT / "tools" / "daily_workflow.sh"), *args],
+        [_BASH_PATH, str(PROJECT_ROOT / "tools" / "daily_workflow.sh"), *args],
         cwd=PROJECT_ROOT,
         env=env,
         text=True,
