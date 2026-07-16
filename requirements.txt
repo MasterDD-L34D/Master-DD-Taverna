@@ -11,3 +11,4 @@ Jinja2
 sentence-transformers>=2.3
 numpy
 streamlit>=1.35
+beautifulsoup4  # opzionale, usato da tools/enrich_reference.py per scraping d20pfsrd

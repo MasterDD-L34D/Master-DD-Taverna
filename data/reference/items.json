@@ -20,7 +20,9 @@
     "reference_urls": [
       "https://aonprd.com/MagicWondrousDisplay.aspx?ItemName=Amulet%20of%20Natural%20Armor%20%2B1",
       "https://www.d20pfsrd.com/magic-items/wondrous-items/a-b/amulet-of-natural-armor/"
-    ]
+    ],
+    "description": "Italiano: L'Amulet of Natural Armor +1 è un oggetto meraviglioso da indossare al collo che conferisce un bonus di miglioramento di +1 alla CA naturale. Aura faint transmutation; CL 5th; Slot neck; Price 2,000 gp; Weight —. Description: This amulet, usually crafted from bone or beast scales, toughens the wearer's body and flesh, giving him an enhancement bonus to his natural armor bonus of +1, +2, +3, +4, or +5, depending on the kind of amulet. Construction Requirements: Craft Wondrous Item, barkskin; Cost 1,000 gp (+1), 4,000 gp (+2), 9,000 gp (+3), 16,000 gp (+4), 25,000 gp (+5).",
+    "updated_at": "2026-07-16T20:29:18Z"
   },
   {
     "name": "Amuleto dell'armatura naturale +1",
@@ -645,7 +647,9 @@
     "reference_urls": [
       "https://aonprd.com/MagicBeltsDisplay.aspx?ItemName=Belt%20of%20Giant%20Strength%20%2B2",
       "https://www.d20pfsrd.com/magic-items/wondrous-items/belts/belt-of-giant-strength/"
-    ]
+    ],
+    "description": "Aura faint transmutation; CL 8th; Slot belt; Price 4,000 gp; Weight 1 lb. Description: This belt is a thick leather affair, often decorated with bronze. It grants the wearer an enhancement bonus to Strength of +2, +4, or +6. Treat this as a temporary ability bonus for the first 24 hours the belt is worn. Construction Requirements: Craft Wondrous Item, bull's strength; Cost 2,000 gp (+2), 8,000 gp (+4), 18,000 gp (+6).",
+    "updated_at": "2026-07-16T20:29:18Z"
   },
   {
     "name": "Belt of Giant Strength +4",
@@ -2153,7 +2157,9 @@
     "reference_urls": [
       "https://aonprd.com/MagicWondrousDisplay.aspx?ItemName=Headband%20of%20Vast%20Intelligence",
       "https://www.d20pfsrd.com/magic-items/wondrous-items/h-l/headband-of-vast-intelligence/"
-    ]
+    ],
+    "description": "Aura faint transmutation; CL 8th; Slot headband; Price 4,000 gp; Weight 1 lb. Description: This intricate gold headband is decorated with several small blue and deep purple gemstones. The headband grants the wearer an enhancement bonus to Intelligence of +2, +4, or +6. Treat this as a temporary ability bonus for the first 24 hours the headband is worn. A headband of vast intelligence has one skill associated with it per +2 bonus it grants. After being worn for 24 hours, the headband grants a number of skill ranks in those skills equal to the wearer's total Hit Dice. These ranks do not stack with the ranks a creature already possesses. Construction Requirements: Craft Wondrous Item, fox's cunning; Cost 2,000 gp (+2), 8,000 gp (+4), 18,000 gp (+6).",
+    "updated_at": "2026-07-16T20:29:18Z"
   },
   {
     "name": "Implemento panoply (aegis + weapon) lucidato",

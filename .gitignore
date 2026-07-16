@@ -13,4 +13,5 @@ data/audit/build_events.jsonl
 .env
 .env.local
 .env.*.local
+.cache/
 src/data/vector_store/
