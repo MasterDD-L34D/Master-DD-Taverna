@@ -66,12 +66,13 @@ def index_modules(modules_dir: Path | str, store: VectorStore, model_name: str, 
     return len(chunks)
 
 
-def _catalog_entries(catalog: dict, reference_dir: Path):
+def _catalog_entries(catalog: dict, reference_dir: Path, include_local: bool):
     """Return the list of entries for a manifest catalog, or None if skipped."""
     path = reference_dir / catalog.get("file", "")
     if not path.exists():
         return None
-    if "pi_local_only" in path.parts:
+    is_local = catalog.get("local_only", False) or "pi_local_only" in path.parts
+    if is_local and not include_local:
         return None
     data = json.load(open(path, encoding="utf-8"))
     if isinstance(data, dict):
@@ -79,11 +80,12 @@ def _catalog_entries(catalog: dict, reference_dir: Path):
     return data if isinstance(data, list) else []
 
 
-def index_reference_catalog(reference_dir: Path | str, store: VectorStore, model_name: str, encoder):
+def index_reference_catalog(reference_dir: Path | str, store: VectorStore, model_name: str, encoder, include_local: bool = False):
     """Index structured reference entries declared in manifest.json.
 
     Only catalogs with is_ogc=True or cup_allowed=True are indexed.
-    pi_local_only/ is always ignored.
+    Catalogs with local_only=True (or inside pi_local_only/) are indexed only
+    when include_local=True.
     """
     reference_dir = Path(reference_dir)
     manifest_path = reference_dir / "manifest.json"
@@ -97,10 +99,14 @@ def index_reference_catalog(reference_dir: Path | str, store: VectorStore, model
     for catalog in catalogs:
         if not isinstance(catalog, dict):
             continue
-        if not (catalog.get("is_ogc") or catalog.get("cup_allowed")):
+        is_local = catalog.get("local_only", False) or "pi_local_only" in str(catalog.get("file", ""))
+        if is_local:
+            if not include_local:
+                continue
+        elif not (catalog.get("is_ogc") or catalog.get("cup_allowed")):
             continue
         kind = catalog.get("kind") or Path(catalog.get("file", "")).stem
-        entries = _catalog_entries(catalog, reference_dir)
+        entries = _catalog_entries(catalog, reference_dir, include_local)
         if entries is None:
             continue
         for idx, entry in enumerate(entries):

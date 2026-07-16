@@ -25,6 +25,11 @@ ROOT_DIR = Path(__file__).resolve().parent.parent
 
 
 def main():
+    import argparse
+    ap = argparse.ArgumentParser(description="Costruisce l'indice RAG")
+    ap.add_argument("--include-local", action="store_true", help="Indicizza anche i cataloghi in pi_local_only/ (dati locali non commessi)")
+    args = ap.parse_args()
+
     model = os.getenv("RAG_EMBEDDING_MODEL", "paraphrase-multilingual-MiniLM-L12-v2")
     print(f"Caricamento modello embeddings: {model}")
     encoder = SentenceTransformer(model)
@@ -38,7 +43,7 @@ def main():
 
     ref_dir = ROOT_DIR / "data" / "reference"
     print(f"Indicizzazione catalogo reference da: {ref_dir}")
-    n_ref = index_reference_catalog(ref_dir, store, model, encoder)
+    n_ref = index_reference_catalog(ref_dir, store, model, encoder, include_local=args.include_local)
     print(f"  chunk reference indicizzati: {n_ref}")
 
     print(f"Indice salvato in: {store_dir}")

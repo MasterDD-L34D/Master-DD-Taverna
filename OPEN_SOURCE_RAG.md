@@ -230,6 +230,31 @@ Salva su file:
 
 Il mock restituisce una build valida di esempio. Con Ollama/OpenAI il LLM genera una build usando i chunk recuperati e il catalogo reference.
 
+## Importare mostri e NPC locali (opzionale)
+
+E' possibile arricchire il RAG con mostri/NPC da [PathfinderMonsterDatabase](https://github.com/c0d3rman/PathfinderMonsterDatabase), che parsa `aonprd.com`.
+I dati derivati **non sono redistribuibili**: restano in `data/reference/pi_local_only/` (gia' `.gitignore`).
+
+### Requisiti
+
+- Clone di PathfinderMonsterDatabase;
+- aver generato un `data.json` seguendo le istruzioni del repo (es. `data/poc/data.json` per una PoC).
+
+### Comandi
+
+```bash
+# Esempio con la PoC gia' disponibile in sessione-2026-07-16/ricerca/PathfinderMonsterDatabase
+.venv/Scripts/python tools/import_monsters.py \\
+  --source-dir ../../sessione-2026-07-16/ricerca/PathfinderMonsterDatabase \\
+  --input data/poc/data.json \\
+  --limit 10
+
+# Rigenera l'indice includendo i cataloghi locali
+.venv/Scripts/python tools/index_rag.py --include-local
+```
+
+Per indicizzare i mostri importati, `tools/index_rag.py` richiede esplicitamente il flag `--include-local`; senza di esso i cataloghi in `pi_local_only/` vengono saltati.
+
 ## Prossimi passi consigliati
 
 1. **Migliorare il builder**: usare un LLM più strutturato per ottenere build dettagliate (talenti per livello, equipaggiamento, benchmark DPR realistici).

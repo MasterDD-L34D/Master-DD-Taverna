@@ -212,6 +212,13 @@ def run() -> int:
             continue
         rel_path = catalog.get("file", "")
         kind = catalog.get("kind") or Path(rel_path).stem
+
+        # Cataloghi local_only non sono redistribuiti: non applichiamo i vincoli
+        # di header OGC o scan PI su di essi. Il check git su pi_local_only/ e'
+        # comunque eseguito piu' sotto.
+        if catalog.get("local_only") or "pi_local_only" in rel_path:
+            continue
+
         path = REFERENCE_DIR / rel_path
 
         if not path.exists():

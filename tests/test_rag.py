@@ -122,3 +122,17 @@ def test_rag_ask_endpoint(rag_auth):
         assert "answer" in data
         assert "RISPOSTA MOCK" in data["answer"]
         assert len(data["results"]) == 3
+
+
+@pytest.mark.skipif(
+    not VectorStore(str(Path(__file__).resolve().parent.parent / "src" / "data" / "vector_store")).is_ready(),
+    reason="Indice RAG non trovato; esegui python tools/index_rag.py --include-local",
+)
+def test_rag_search_includes_local_monsters(rag_auth):
+    with TestClient(app) as client:
+        # Nome di mostro specifico per evitare competizione con altri cataloghi
+        resp = client.post("/rag/search", json={"query": "Aballonian", "top_k": 10}, headers=rag_auth)
+        assert resp.status_code == 200
+        data = resp.json()
+        assert any("reference::monsters" in r["source"] for r in data["results"]), \
+            "Nessun mostro locale recuperato; esegui tools/index_rag.py --include-local"

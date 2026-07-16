@@ -74,6 +74,19 @@
       "entries": 15,
       "notes": "Riassunti meccanici degli archetipi core; nomi con riferimenti a setting PI sono stati rimossi o neutralizzati.",
       "last_verified": "2026-07-16"
+    },
+    {
+      "file": "pi_local_only/monsters_local.json",
+      "kind": "monsters",
+      "source": "PathfinderMonsterDatabase / Archives of Nethys",
+      "license": "OGL-1.0a",
+      "is_ogc": false,
+      "is_pi": false,
+      "cup_allowed": false,
+      "local_only": true,
+      "entries": 0,
+      "notes": "Mostri/NPC importati localmente da PathfinderMonsterDatabase. NON redistribuire. Usa tools/import_monsters.py e indicizza con tools/index_rag.py --include-local.",
+      "last_verified": "2026-07-16"
     }
   ],
   "files": {
