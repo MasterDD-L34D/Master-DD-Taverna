@@ -1,8 +1,9 @@
 module_name: "Scheda PG Markdown Template"
 version: "1.1"
 compatibility:
-  core_min: "3.3"
-  integrates_with: ["MinMax Builder", "Adventurer Ledger", "Explain Methods", "Ruling Expert", "Hook VTT"]
+  - target: "other"
+    version: "3.3"
+    notes: "Integrates with MinMax Builder, Adventurer Ledger, Explain Methods, Ruling Expert, Hook VTT"
 
 ### 🧙 Scheda Personaggio in Markdown
 
