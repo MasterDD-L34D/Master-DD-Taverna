@@ -71,17 +71,25 @@ class OpenAIProvider:
             return f"[Errore API OpenAI-compatibile: {exc}]"
 
 
-def get_provider(provider: str | None = None) -> MockProvider | OllamaProvider | OpenAIProvider:
+def get_provider(
+    provider: str | None = None,
+    *,
+    ollama_base_url: str | None = None,
+    ollama_model: str | None = None,
+    openai_base_url: str | None = None,
+    openai_model: str | None = None,
+    openai_api_key: str | None = None,
+) -> MockProvider | OllamaProvider | OpenAIProvider:
     name = (provider or os.getenv("RAG_LLM_PROVIDER", "mock")).lower()
     if name == "ollama":
         return OllamaProvider(
-            base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
-            model=os.getenv("OLLAMA_MODEL", "llama3.1"),
+            base_url=ollama_base_url or os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
+            model=ollama_model or os.getenv("OLLAMA_MODEL", "llama3.1"),
         )
     if name in ("openai", "openai-compatible"):
         return OpenAIProvider(
-            api_key=os.getenv("OPENAI_API_KEY"),
-            base_url=os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1"),
-            model=os.getenv("OPENAI_MODEL", "gpt-3.5-turbo"),
+            api_key=openai_api_key or os.getenv("OPENAI_API_KEY"),
+            base_url=openai_base_url or os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1"),
+            model=openai_model or os.getenv("OPENAI_MODEL", "gpt-3.5-turbo"),
         )
     return MockProvider()

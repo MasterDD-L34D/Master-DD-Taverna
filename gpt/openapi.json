@@ -530,6 +530,174 @@
                     }
                 }
             }
+        },
+        "/rag/search": {
+            "post": {
+                "operationId": "ragSearch",
+                "summary": "Ricerca semantica RAG",
+                "description": "Recupera i chunk più rilevanti dai moduli e dal catalogo reference in base alla query.",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "query": {
+                                        "type": "string",
+                                        "minLength": 1
+                                    },
+                                    "top_k": {
+                                        "type": "integer",
+                                        "default": 5,
+                                        "minimum": 1,
+                                        "maximum": 20
+                                    }
+                                },
+                                "required": ["query"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Query e chunk recuperati",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "503": {
+                        "description": "Indice RAG non trovato"
+                    }
+                }
+            }
+        },
+        "/rag/ask": {
+            "post": {
+                "operationId": "ragAsk",
+                "summary": "Domanda-risposta con RAG",
+                "description": "Recupera chunk rilevanti e genera una risposta tramite LLM locale (Ollama), API OpenAI-compatibile o mock offline.",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "query": {
+                                        "type": "string",
+                                        "minLength": 1
+                                    },
+                                    "top_k": {
+                                        "type": "integer",
+                                        "default": 5,
+                                        "minimum": 1,
+                                        "maximum": 20
+                                    },
+                                    "provider": {
+                                        "type": "string",
+                                        "enum": ["mock", "ollama", "openai"],
+                                        "description": "Provider LLM; se omesso usa RAG_LLM_PROVIDER o mock"
+                                    }
+                                },
+                                "required": ["query"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Risposta generata e chunk recuperati",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "503": {
+                        "description": "Indice RAG o provider LLM non disponibile"
+                    }
+                }
+            }
+        },
+        "/rag/build": {
+            "post": {
+                "operationId": "ragBuild",
+                "summary": "Genera una build PF1E via RAG + LLM",
+                "description": "Genera una scheda PF1E usando il catalogo reference e un LLM locale/remoto.",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "class": {
+                                        "type": "string",
+                                        "minLength": 1
+                                    },
+                                    "race": {
+                                        "type": "string"
+                                    },
+                                    "level": {
+                                        "type": "integer",
+                                        "minimum": 1,
+                                        "maximum": 20,
+                                        "default": 1
+                                    },
+                                    "archetype": {
+                                        "type": "string"
+                                    },
+                                    "focus": {
+                                        "type": "string"
+                                    },
+                                    "provider": {
+                                        "type": "string",
+                                        "enum": ["mock", "ollama", "openai"]
+                                    }
+                                },
+                                "required": ["class"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Build generata",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "503": {
+                        "description": "Indice RAG o provider LLM non disponibile"
+                    }
+                }
+            }
         }
     },
     "components": {

@@ -170,19 +170,19 @@ def main():
         results = retriever.search(prompt, top_k=top_k)
 
     with st.spinner("Generazione risposta..."):
+        provider_kwargs = {}
         if provider == "ollama":
-            os.environ["OLLAMA_BASE_URL"] = st.session_state.get("ollama_url", "http://localhost:11434")
-            os.environ["OLLAMA_MODEL"] = st.session_state.get("ollama_model", "qwen2.5-coder:7b")
+            provider_kwargs["ollama_base_url"] = st.session_state.get("ollama_url", "http://localhost:11434")
+            provider_kwargs["ollama_model"] = st.session_state.get("ollama_model", "qwen2.5-coder:7b")
         elif provider == "openai":
-            os.environ["OPENAI_BASE_URL"] = st.session_state.get("openai_base", "https://api.openai.com/v1")
-            os.environ["OPENAI_MODEL"] = st.session_state.get("openai_model", "gpt-3.5-turbo")
+            provider_kwargs["openai_base_url"] = st.session_state.get("openai_base", "https://api.openai.com/v1")
+            provider_kwargs["openai_model"] = st.session_state.get("openai_model", "gpt-3.5-turbo")
             key = st.session_state.get("openai_key", "")
             if key:
-                os.environ["OPENAI_API_KEY"] = key
-        os.environ["RAG_LLM_PROVIDER"] = provider
+                provider_kwargs["openai_api_key"] = key
 
         try:
-            gen = get_provider(provider)
+            gen = get_provider(provider, **provider_kwargs)
             answer = gen.generate(prompt, results)
         except Exception as e:
             answer = f"[Errore durante la generazione: {e}]\n\nPassa al provider mock per vedere solo i chunk recuperati."
