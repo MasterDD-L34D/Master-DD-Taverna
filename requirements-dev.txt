@@ -1,0 +1,5 @@
+# Dipendenze di sviluppo opzionali (non installate automaticamente).
+# Usare: pip install -r requirements-dev.txt
+black
+isort
+flake8

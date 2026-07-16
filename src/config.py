@@ -5,6 +5,18 @@ BASE_DIR = Path(__file__).resolve().parent
 MODULES_DIR = BASE_DIR / "modules"
 DATA_DIR = BASE_DIR / "data"
 
+# Carica .env solo se python-dotenv e' installato; non sovrascrive variabili
+# gia' esportate dall'ambiente.
+try:
+    from dotenv import load_dotenv
+except ImportError:  # pragma: no cover - dipendenza opzionale
+    load_dotenv = None
+
+if load_dotenv is not None:
+    env_file = BASE_DIR.parent / ".env"
+    if env_file.is_file():
+        load_dotenv(dotenv_path=str(env_file), override=False)
+
 
 class Settings:
     """Configurazione base caricata da variabili d'ambiente."""

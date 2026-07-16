@@ -27,6 +27,7 @@ DEFAULT_BUILD_DIR_CANDIDATES = (
     Path("builds"),
     Path("data/builds"),
     Path("reports/builds"),
+    Path("src/data/builds"),
 )
 REQUIRED_REFERENCE_DATASETS = ("spells", "feats", "items")
 
@@ -242,7 +243,7 @@ def main() -> int:
         default=None,
         help=(
             "Directory da scandire per payload build JSON; ripetibile. "
-            "Default: builds, data/builds, reports/builds"
+            "Default: builds, data/builds, reports/builds, src/data/builds"
         ),
     )
 

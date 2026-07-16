@@ -5435,9 +5435,28 @@ async def fetch_build(
     return await _append_combo_suggestions(best_payload)
 
 
+def _module_dump_info(response: httpx.Response) -> dict[str, object]:
+    """Estrae i metadati di parzialità dalla risposta di /modules/{name}."""
+    headers = response.headers
+    partial = (
+        response.status_code == 206
+        or headers.get("X-Content-Partial") == "true"
+        or headers.get("X-Truncated") == "true"
+    )
+    return {
+        "status_code": response.status_code,
+        "partial": partial,
+        "reason": headers.get("X-Content-Partial-Reason")
+        or headers.get("Warning")
+        or "",
+        "served_bytes": headers.get("X-Content-Served-Bytes"),
+        "total_bytes": headers.get("X-Content-Total-Bytes"),
+    }
+
+
 async def fetch_module(
     client: httpx.AsyncClient, api_key: str | None, module_name: str, max_retries: int
-) -> tuple[str, Mapping]:
+) -> tuple[str, Mapping, dict[str, object]]:
     headers = {"x-api-key": api_key} if api_key else {}
     content_resp = await request_with_retry(
         client,
@@ -5459,7 +5478,7 @@ async def fetch_module(
         backoff_factor=0.5,
     )
 
-    return content_resp.text, meta_resp.json()
+    return content_resp.text, meta_resp.json(), _module_dump_info(content_resp)
 
 
 async def discover_modules(
@@ -6702,9 +6721,18 @@ async def run_harvest(
 
                 logging.info("Scarico modulo raw %s", name)
                 try:
-                    content, meta = await fetch_module(
+                    content, meta, dump_info = await fetch_module(
                         client, api_key, name, max_retries
                     )
+                    partial_reason = str(dump_info.get("reason") or "")
+                    if (
+                        dump_info.get("partial")
+                        and "ALLOW_MODULE_DUMP=false" in partial_reason
+                    ):
+                        logging.warning(
+                            "API eseguita con ALLOW_MODULE_DUMP=false: "
+                            "abilita ALLOW_MODULE_DUMP=true per scaricare i moduli completi."
+                        )
                     validation_error = validate_with_schema(
                         MODULE_SCHEMA,
                         meta,
@@ -6726,6 +6754,34 @@ async def run_harvest(
                     )
                     if status == "ok" or keep_invalid:
                         destination.parent.mkdir(parents=True, exist_ok=True)
+                        # Se la risposta e' parziale e il corpo e' vuoto o molto piu'
+                        # corto del file esistente, non distruggiamo i dati locali.
+                        if destination.exists() and dump_info.get("partial"):
+                            existing_size = destination.stat().st_size
+                            fetched_size = len(content.encode("utf-8"))
+                            if (
+                                not content.strip()
+                                or fetched_size < existing_size * 0.5
+                            ):
+                                logging.warning(
+                                    "Modulo %s: risposta 206/partial con corpo vuoto "
+                                    "o significativamente piu' corto del file esistente "
+                                    "(%d byte vs %d byte). Non sovrascrivo %s.",
+                                    name,
+                                    fetched_size,
+                                    existing_size,
+                                    destination,
+                                )
+                                destination_path = destination
+                                normalized_meta = _normalize_module_meta(
+                                    meta,
+                                    record_status=_record_status_from_result("ok"),
+                                    actor="generate_build_db",
+                                    note="kept existing file due to partial/empty 206 response",
+                                )
+                                return name, module_index_entry(
+                                    name, destination_path, "ok", normalized_meta
+                                )
                         destination.write_text(content, encoding="utf-8")
                         destination_path = destination
                     elif destination.exists():

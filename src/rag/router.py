@@ -11,13 +11,20 @@ from ..config import MODULES_DIR, DATA_DIR
 router = APIRouter(prefix="/rag", tags=["rag"])
 
 
+_encoder = None
+
+
 def _get_encoder():
+    global _encoder
+    if _encoder is not None:
+        return _encoder
     try:
         from sentence_transformers import SentenceTransformer
     except ImportError as exc:
         raise HTTPException(status_code=503, detail=f"sentence-transformers non installato: {exc}")
     model = os.getenv("RAG_EMBEDDING_MODEL", "paraphrase-multilingual-MiniLM-L12-v2")
-    return SentenceTransformer(model)
+    _encoder = SentenceTransformer(model)
+    return _encoder
 
 
 def _get_store():

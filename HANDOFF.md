@@ -4,11 +4,24 @@
 
 - **Repository**: `tooling/Master-DD-Pathfinder-GPT`
 - **Branch**: `main`
+- **HEAD attuale**: `7c971fe`
 - **Commit locali già pushati su `origin/main`**:
   1. `4fda22c` — `fix: risolte anomalie repository Master-DD-Pathfinder-GPT`
   2. `5efcecb` — `test: correggi 7 fallimenti pre-esistenti su Windows`
   3. `d54303a` — `docs: aggiorna HANDOFF.md con risultati swarm NPC profiler/IPIP`
 - **Repo npc-profiler pushato**: `9cfb94b` — `docs: aggiungi handoff ricerca NPC profiler e assi IPIP`
+
+## Audit critico — correzioni applicate (HEAD `7c971fe`)
+
+1. **`tools/generate_build_db.py`**: il download dei moduli ora rileva risposte `206 Partial Content` / header `X-Content-Partial` e, se il corpo e' vuoto o molto piu' corto del file esistente, non sovrascrive il file locale; viene loggato un warning e si continua. Se l'API segnala `ALLOW_MODULE_DUMP=false`, lo script logga chiaramente che serve `ALLOW_MODULE_DUMP=true` per scaricare i moduli completi.
+2. **`src/agents/builder.py`**: corretta la chiamata a `validate_with_schema` con la firma corretta `(schema_filename, payload, context, strict=...)`; la validazione non fa piu' unpacking di una stringa.
+3. **`src/config.py`**: aggiunto caricamento opzionale di `.env` tramite `python-dotenv` (`override=False`), senza sovrascrivere variabili gia' esportate.
+4. **`tools/validate_schemas.py`**: aggiunta `src/data/builds` alle directory candidate di default.
+5. **`requirements-dev.txt`**: creato con `black`, `isort`, `flake8` (non installati automaticamente).
+6. **`src/data/modules/strict/`**: rimossa perche' vuota.
+7. **`.github/workflows/pr-checklist.yml`**: il job `qa-autofill` esiste; `needs: qa-autofill` e' semanticamente valido, quindi non sono state apportate modifiche.
+8. **Script bash**: convertiti `tools/run_static_analysis.sh`, `tools/daily_workflow.sh`, `tools/check_legacy_aon_links.sh` da CRLF a LF.
+9. **`src/rag/router.py`**: il modello SentenceTransformer viene caricato una sola volta in una variabile globale, invece che a ogni richiesta.
 
 ## Test suite
 

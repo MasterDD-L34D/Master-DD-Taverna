@@ -126,11 +126,14 @@ def _extract_json(text: str) -> dict | None:
 def _validate(payload: dict) -> list[str]:
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent / "tools"))
     from generate_build_db import validate_with_schema
-    schema_path = Path(__file__).resolve().parent.parent.parent / "schemas" / "build_core.schema.json"
-    ok, errors = validate_with_schema(payload, str(schema_path))
-    if not ok:
-        return errors
-    return []
+
+    error = validate_with_schema(
+        "build_core.schema.json",
+        payload,
+        "build agent output",
+        strict=False,
+    )
+    return [error] if error else []
 
 
 def _build_fallback(request: dict, references: list[dict]) -> dict:
