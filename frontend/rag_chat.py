@@ -1,18 +1,19 @@
 #!/usr/bin/env python3
-"""Frontend Streamlit per interrogare il RAG Master DD Pathfinder.
+"""Frontend Streamlit user-friendly per il RAG Master DD Pathfinder.
 
 Uso:
     .venv/Scripts/streamlit run frontend/rag_chat.py
 
-Requisito: avere eseguito almeno una volta `python tools/index_rag.py`.
+L'API FastAPI deve essere in esecuzione (di norma avviata da launch.py start).
 """
 import os
 import sys
+import urllib.error
+import urllib.request
 from pathlib import Path
 
 import streamlit as st
 
-# rendi disponibili src.*
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
@@ -30,7 +31,7 @@ def load_retriever():
     if not store.is_ready():
         st.error(
             f"Indice RAG non trovato in {store_dir}.\n\n"
-            "Esegui prima: `.venv/Scripts/python tools/index_rag.py`"
+            "Esegui prima: `python launch.py setup` (costruisce l'indice automaticamente)"
         )
         st.stop()
     model = os.getenv("RAG_EMBEDDING_MODEL", "paraphrase-multilingual-MiniLM-L12-v2")
@@ -38,48 +39,127 @@ def load_retriever():
     return Retriever(store, encoder)
 
 
+def ollama_is_running(url: str = "http://localhost:11434/api/tags") -> bool:
+    try:
+        with urllib.request.urlopen(url, timeout=2) as resp:
+            return resp.status == 200
+    except Exception:
+        return False
+
+
+def api_is_running(url: str = "http://localhost:8000/health") -> bool:
+    try:
+        with urllib.request.urlopen(url, timeout=2) as resp:
+            return resp.status == 200
+    except Exception:
+        return False
+
+
+def get_env_default(key: str, default: str) -> str:
+    return os.getenv(key, default)
+
+
 def main():
     st.set_page_config(page_title="Master DD Pathfinder — RAG", layout="wide")
     st.title("🎲 Master DD Pathfinder — Assistente RAG")
     st.markdown(
         "Fai domande su regole, talenti, incantesimi e build di Pathfinder 1E. "
-        "Il sistema recupera il contesto dai moduli e dal catalogo reference."
+        "Il sistema recupera il contesto dai moduli e dal catalogo reference e lo passa a un LLM."
     )
 
+    ollama_available = ollama_is_running()
+    api_available = api_is_running()
+
     with st.sidebar:
+        st.header("Stato")
+        if api_available:
+            st.success("API collegata ✅")
+        else:
+            st.error("API non raggiungibile ❌\nAvvia: `python launch.py start`")
+
+        if ollama_available:
+            st.success("Ollama rilevato ✅")
+        else:
+            st.warning("Ollama non rilevato ⚠️\nIl mock restituira' solo i chunk.")
+
+        st.divider()
         st.header("Configurazione LLM")
-        provider = st.selectbox("Provider", ["mock", "ollama", "openai"], index=0)
+
+        providers = ["mock", "ollama", "openai"]
+        default_provider = "ollama" if ollama_available else "mock"
+        provider = st.selectbox("Provider", providers, index=providers.index(default_provider))
+
         top_k = st.slider("Chunk da recuperare", min_value=1, max_value=10, value=5)
 
         if provider == "ollama":
-            st.text_input("Ollama URL", value="http://localhost:11434", key="ollama_url")
-            st.text_input("Modello", value="llama3.1", key="ollama_model")
+            st.text_input(
+                "Ollama URL",
+                value=get_env_default("OLLAMA_BASE_URL", "http://localhost:11434"),
+                key="ollama_url",
+            )
+            st.text_input(
+                "Modello",
+                value=get_env_default("OLLAMA_MODEL", "qwen2.5-coder:7b"),
+                key="ollama_model",
+            )
+            if st.button("Testa connessione Ollama"):
+                if ollama_is_running(st.session_state.ollama_url + "/api/tags"):
+                    st.success("Ollama raggiungibile!")
+                else:
+                    st.error("Ollama non raggiungibile. Verifica che sia avviato.")
         elif provider == "openai":
-            st.text_input("Base URL", value="https://api.openai.com/v1", key="openai_base")
-            st.text_input("Modello", value="gpt-3.5-turbo", key="openai_model")
+            st.text_input(
+                "Base URL",
+                value=get_env_default("OPENAI_BASE_URL", "https://api.openai.com/v1"),
+                key="openai_base",
+            )
+            st.text_input(
+                "Modello",
+                value=get_env_default("OPENAI_MODEL", "gpt-3.5-turbo"),
+                key="openai_model",
+            )
             st.text_input("API Key", type="password", key="openai_key")
 
         st.divider()
         st.caption(
-            "Provider mock = offline, restituisce solo i chunk recuperati. "
-            "Per risposte reali usa Ollama o un'API compatibile OpenAI."
+            "**mock**: offline, restituisce solo i chunk.\n"
+            "**ollama**: LLM locale (richiede Ollama).\n"
+            "**openai**: API compatibile OpenAI."
         )
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
+    st.subheader("Esempi di domande")
+    cols = st.columns(3)
+    examples = [
+        "cosa fa il talento Power Attack?",
+        "come funziona la classe Magus?",
+        "quali sono i prerequisiti di Furious Focus?",
+    ]
+    for i, ex in enumerate(examples):
+        if cols[i].button(ex, use_container_width=True):
+            st.session_state.pending_prompt = ex
+
     for msg in st.session_state.messages:
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
-            if "sources" in msg and msg["sources"]:
+            if msg.get("sources"):
                 with st.expander("Fonti"):
                     for src in msg["sources"]:
                         st.markdown(f"**{src['source']}** (score: {src['score']:.3f})")
                         st.markdown(f"> {src['text'][:500]}...")
 
     prompt = st.chat_input("Cosa vuoi chiedere?")
+    if not prompt and "pending_prompt" in st.session_state:
+        prompt = st.session_state.pop("pending_prompt")
+
     if not prompt:
         return
+
+    if not api_available and provider != "mock":
+        st.warning("L'API non e' raggiungibile; passo automaticamente al provider mock.")
+        provider = "mock"
 
     with st.chat_message("user"):
         st.markdown(prompt)
@@ -90,10 +170,9 @@ def main():
         results = retriever.search(prompt, top_k=top_k)
 
     with st.spinner("Generazione risposta..."):
-        # configura env per provider scelto
         if provider == "ollama":
             os.environ["OLLAMA_BASE_URL"] = st.session_state.get("ollama_url", "http://localhost:11434")
-            os.environ["OLLAMA_MODEL"] = st.session_state.get("ollama_model", "llama3.1")
+            os.environ["OLLAMA_MODEL"] = st.session_state.get("ollama_model", "qwen2.5-coder:7b")
         elif provider == "openai":
             os.environ["OPENAI_BASE_URL"] = st.session_state.get("openai_base", "https://api.openai.com/v1")
             os.environ["OPENAI_MODEL"] = st.session_state.get("openai_model", "gpt-3.5-turbo")
@@ -102,8 +181,11 @@ def main():
                 os.environ["OPENAI_API_KEY"] = key
         os.environ["RAG_LLM_PROVIDER"] = provider
 
-        gen = get_provider(provider)
-        answer = gen.generate(prompt, results)
+        try:
+            gen = get_provider(provider)
+            answer = gen.generate(prompt, results)
+        except Exception as e:
+            answer = f"[Errore durante la generazione: {e}]\n\nPassa al provider mock per vedere solo i chunk recuperati."
 
     sources = [
         {"source": r["source"], "score": r["score"], "text": r["text"]} for r in results
