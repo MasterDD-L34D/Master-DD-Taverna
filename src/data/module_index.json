@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-04-10T01:57:20Z",
-  "api_url": "http://127.0.0.1:8000",
+  "generated_at": "2026-07-16T16:27:23Z",
+  "api_url": "http://localhost:8000",
   "entries": [
     {
       "module": "Encounter_Designer.txt",
@@ -52,7 +52,7 @@
             "status": "validated"
           }
         ],
-        "hash_sha256": "b8fed138262d592ba748dcd0ce371d83b1a7919d1dd48d126861fffeb72c2a86",
+        "hash_sha256": "f8b7c753cc954bcf06fc78f13d9c89ccbb62a3df8b4d65411498766cb975e457",
         "tags": [
           "Designer",
           "Encounter",
@@ -110,7 +110,14 @@
             "action": "module_indexed",
             "status": "validated"
           }
-        ]
+        ],
+        "hash_sha256": "6a7489fe39ffb72b2a195d6d4f9ced6d3ae82f97cd3560ba50a0bddb21495bde",
+        "tags": [
+          "NPC",
+          "Taverna",
+          "module"
+        ],
+        "reference_urls": []
       }
     },
     {
@@ -155,6 +162,29 @@
             "action": "module_indexed",
             "status": "validated"
           }
+        ],
+        "hash_sha256": "71bc8edc22cb94b1eb006b656129e428a7ed1ba965c2808d827c296c36c8daf6",
+        "tags": [
+          "Avventuriero",
+          "Libro",
+          "Mastro",
+          "crafting",
+          "dell",
+          "economy",
+          "loot"
+        ],
+        "reference_urls": [
+          "https://aonprd.com/corerulebook/equipment.html",
+          "https://example.com",
+          "https://www.aonprd.com/Rules.aspx?ID=401",
+          "https://www.d20pfsrd.com/magic-items/",
+          "https://www.d20pfsrd.com/magic-items/rings/ring-of-protection/",
+          "https://www.d20pfsrd.com/magic-items/wondrous-items/a-b/amulet-of-natural-armor/",
+          "https://www.d20pfsrd.com/magic-items/wondrous-items/b-c/belt-of-incredible-dexterity/",
+          "https://www.d20pfsrd.com/magic-items/wondrous-items/c-d/cloak-of-resistance/",
+          "https://www.d20pfsrd.com/magic-items/wondrous-items/h-l/headband-of-inspired-wisdom/",
+          "https://www.reddit.com/r/Pathfinder_RPG/comments/2cv8z8/master_list_of_essentialuseful_magic_items/",
+          "https://zenithgames.blogspot.com/2013/11/improving-your-class-with-items.html"
         ]
       }
     },
@@ -208,7 +238,7 @@
             "status": "validated"
           }
         ],
-        "hash_sha256": "30277997e6a17d6e887bab76d8f300ac1672d453f60e3d81381290a0203f21ac",
+        "hash_sha256": "8d1e2d26905ce675cae4178c0e2f68379a47e979f3ae78dabf59c36435be6ad8",
         "tags": [
           "lore+qa+vtt"
         ],
@@ -264,7 +294,17 @@
             "action": "module_indexed",
             "status": "validated"
           }
-        ]
+        ],
+        "hash_sha256": "327bff8e1a6304d229ed3be48fecec3df3769d416bebdaee4e49342c6fbf3cba",
+        "tags": [
+          "\"core_internal\"",
+          "Base",
+          "DD",
+          "Master",
+          "Pathfinder",
+          "Profile"
+        ],
+        "reference_urls": []
       }
     },
     {
@@ -317,7 +357,7 @@
             "status": "validated"
           }
         ],
-        "hash_sha256": "be243e0faa3e5a415330c691b803b0835db8e15b9e48235169c9625ef13aa7d1",
+        "hash_sha256": "6118757427cba245a0f1bfd08f245dffe7c1abf68c07026a83e79650480eea86",
         "tags": [
           "explain"
         ],
@@ -374,7 +414,7 @@
             "status": "validated"
           }
         ],
-        "hash_sha256": "f040223632b1da5f4e5a4b62659179e4c86cc723adeab5c48e64a1e68b5856dd",
+        "hash_sha256": "76d6c976939f80aaf4aa5385c14c97cdd70e629f9d4ce845b0f224ba3f5e141b",
         "tags": [],
         "reference_urls": [
           "https://aonprd.com",
@@ -434,13 +474,14 @@
             "status": "validated"
           }
         ],
-        "hash_sha256": "e77955a3da64021b9926f3136d53a92122962c3ca649156a2b8654d3471e7bff",
+        "hash_sha256": "e7b20422da44ab1ea5ce31987120f38e9c7cbdd9dffd77c17b0f3a9d0ce06d42",
         "tags": [
           "Documenti",
           "module"
         ],
         "reference_urls": [
           "http://localhost:8000/modules/meta_doc.txt",
+          "https://homebrewery.naturalcrit.com){target:_blank",
           "https://i.imgur.com/AXmp4cl.jpeg",
           "https://i.imgur.com/AXmp4cl.jpeg){style:wrapLeft,max-width:35%",
           "https://i.imgur.com/GZfjDWV.png"
@@ -449,13 +490,32 @@
     },
     {
       "module": "minmax_builder.txt",
-      "file": null,
-      "status": "error",
-      "issues": [
-        "missing_audit",
-        "missing_record_status"
-      ],
-      "error": "Client error '400 Bad Request' for url 'http://127.0.0.1:8000/modules/minmax_builder.txt'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400"
+      "file": "src/data/modules/minmax_builder.txt",
+      "status": "ok",
+      "meta": {
+        "name": "minmax_builder.txt",
+        "suffix": ".txt",
+        "size_bytes": 96578,
+        "record_status": "validated",
+        "is_deleted": false,
+        "deleted_at": null,
+        "audit": [
+          {
+            "timestamp": "2026-07-16T16:20:22Z",
+            "actor": "fix-anomalies",
+            "action": "module_index_repaired",
+            "status": "validated",
+            "note": "Riparata entry corrotta (file:null, status:error) e allineata a src/data/modules/minmax_builder.txt"
+          }
+        ],
+        "hash_sha256": "134cdba009165c22102e52dea06df5f81aa1acbf24c9650a157ca2652469ce7a",
+        "tags": [
+          "Builder",
+          "MinMax",
+          "minmax"
+        ],
+        "reference_urls": []
+      }
     },
     {
       "module": "narrative_flow.txt",
@@ -507,7 +567,13 @@
             "action": "module_indexed",
             "status": "validated"
           }
-        ]
+        ],
+        "hash_sha256": "769182b7808bdd82b7b75f56e60f63bd9221cda024e3105b93a7e44463985eff",
+        "tags": [
+          "Narrativa",
+          "module"
+        ],
+        "reference_urls": []
       }
     },
     {
@@ -560,7 +626,7 @@
             "status": "validated"
           }
         ],
-        "hash_sha256": "4ed5e5cfacd8ee940e225651336c5b1f55a52e5f3ea95658643be6f48adf13ef",
+        "hash_sha256": "42fe5ff89ed270094f0b90eb580159fed518152f9eb8cf7568b9e6f08605d49d",
         "tags": [],
         "reference_urls": []
       }
@@ -615,7 +681,7 @@
             "status": "validated"
           }
         ],
-        "hash_sha256": "f5a7c91e5d8b812de3db09e56cf64246b57cf1c49bc1b33df7c3f2e4f39a318c",
+        "hash_sha256": "06f4b7240910d119926fb99faa991474c0729f94bb2f9ea53ff98441f1c37beb",
         "tags": [
           "Expert",
           "Ruling",
@@ -638,71 +704,38 @@
     {
       "module": "scheda_pg_markdown_template.md",
       "file": "src/data/modules/scheda_pg_markdown_template.md",
-      "status": "invalid",
+      "status": "ok",
       "meta": {
         "name": "scheda_pg_markdown_template.md",
-        "size_bytes": 29742,
+        "size_bytes": 30430,
         "suffix": ".md",
         "version": "1.1",
         "compatibility": {
-          "core_min": "3.3",
-          "integrates_with": [
-            "MinMax Builder",
-            "Adventurer Ledger",
-            "Explain Methods",
-            "Ruling Expert",
-            "Hook VTT"
-          ]
+          "target": "other",
+          "version": "3.3",
+          "notes": "Integrates with MinMax Builder, Adventurer Ledger, Explain Methods, Ruling Expert, Hook VTT"
         },
-        "record_status": "draft",
+        "record_status": "validated",
         "is_deleted": false,
         "deleted_at": null,
         "audit": [
           {
-            "timestamp": "2025-12-19T18:29:42Z",
-            "actor": "generate_build_db",
-            "action": "module_indexed",
-            "status": "draft",
-            "note": "meta validation: {'core_min': '3.3', 'integrates_with': ['MinMax Builder', 'Adventurer Ledger', 'Explain Methods', 'Ruling Expert', 'Hook VTT']} is not valid under any of the given schemas"
-          },
-          {
-            "timestamp": "2026-04-10T01:56:18Z",
-            "actor": "generate_build_db",
-            "action": "module_indexed",
-            "status": "draft",
-            "note": "meta validation: {'core_min': '3.3', 'integrates_with': ['MinMax Builder', 'Adventurer Ledger', 'Explain Methods', 'Ruling Expert', 'Hook VTT']} is not valid under any of the given schemas"
-          },
-          {
-            "timestamp": "2026-04-10T01:56:46Z",
-            "actor": "generate_build_db",
-            "action": "module_indexed",
-            "status": "draft",
-            "note": "meta validation: {'core_min': '3.3', 'integrates_with': ['MinMax Builder', 'Adventurer Ledger', 'Explain Methods', 'Ruling Expert', 'Hook VTT']} is not valid under any of the given schemas"
-          },
-          {
-            "timestamp": "2026-04-10T01:57:02Z",
-            "actor": "generate_build_db",
-            "action": "module_indexed",
-            "status": "draft",
-            "note": "meta validation: {'core_min': '3.3', 'integrates_with': ['MinMax Builder', 'Adventurer Ledger', 'Explain Methods', 'Ruling Expert', 'Hook VTT']} is not valid under any of the given schemas"
-          },
-          {
-            "timestamp": "2026-04-10T01:57:19Z",
-            "actor": "generate_build_db",
-            "action": "module_indexed",
-            "status": "draft",
-            "note": "meta validation: {'core_min': '3.3', 'integrates_with': ['MinMax Builder', 'Adventurer Ledger', 'Explain Methods', 'Ruling Expert', 'Hook VTT']} is not valid under any of the given schemas"
-          },
-          {
-            "timestamp": "2026-04-10T01:57:35Z",
-            "actor": "generate_build_db",
-            "action": "module_indexed",
-            "status": "draft",
-            "note": "meta validation: {'core_min': '3.3', 'integrates_with': ['MinMax Builder', 'Adventurer Ledger', 'Explain Methods', 'Ruling Expert', 'Hook VTT']} is not valid under any of the given schemas"
+            "timestamp": "2026-07-16T16:20:22Z",
+            "actor": "fix-anomalies",
+            "action": "module_front_matter_repaired",
+            "status": "validated",
+            "note": "Riparato front matter compatibility per conformità a module_metadata.schema.json (compatibility_target)"
           }
-        ]
-      },
-      "error": "{'core_min': '3.3', 'integrates_with': ['MinMax Builder', 'Adventurer Ledger', 'Explain Methods', 'Ruling Expert', 'Hook VTT']} is not valid under any of the given schemas"
+        ],
+        "hash_sha256": "a4343f625f62ae941a7f55fd0be42ab9e923802b119483dafa2c3506b0be44b5",
+        "tags": [
+          "Markdown",
+          "PG",
+          "Scheda",
+          "Template"
+        ],
+        "reference_urls": []
+      }
     },
     {
       "module": "sigilli_runner_module.txt",
@@ -754,7 +787,7 @@
             "status": "validated"
           }
         ],
-        "hash_sha256": "2bd2401eca72eaed5e47e2da9348c0258515b47ce604b93b65d8986d0a56d609",
+        "hash_sha256": "e3b4235b828047d63dc0441254f9ba27b87c19458abc2d0eca83cf7e360db398",
         "tags": [
           "\"decorator_logic\"",
           "Runner",
@@ -815,7 +848,7 @@
             "status": "validated"
           }
         ],
-        "hash_sha256": "3882a80751a077198bf18b227d75a88671eef28c6ee5573611a73d0a851ffc38",
+        "hash_sha256": "f50d81f18050ccfbf8b76d2c4ecfa71dbac45b2eaad9ca2265eca15f5c31a848",
         "tags": [],
         "reference_urls": []
       }
@@ -824,61 +857,5 @@
   "catalog_version": [
     "2026.04.03"
   ],
-  "module_plan": [
-    "base_profile.txt",
-    "Taverna_NPC.txt",
-    "narrative_flow.txt",
-    "scheda_pg_markdown_template.md",
-    "adventurer_ledger.txt",
-    "Encounter_Designer.txt",
-    "archivist.txt",
-    "explain_methods.txt",
-    "knowledge_pack.md",
-    "meta_doc.txt",
-    "minmax_builder.txt",
-    "preload_all_modules.txt",
-    "ruling_expert.txt",
-    "sigilli_runner_module.txt",
-    "tavern_hub.json"
-  ],
-  "discovery": {
-    "performed_at": "2026-04-10T01:57:35Z",
-    "include_filters": [],
-    "exclude_filters": [],
-    "raw": [
-      "Encounter_Designer.txt",
-      "Taverna_NPC.txt",
-      "adventurer_ledger.txt",
-      "archivist.txt",
-      "base_profile.txt",
-      "explain_methods.txt",
-      "knowledge_pack.md",
-      "meta_doc.txt",
-      "minmax_builder.txt",
-      "narrative_flow.txt",
-      "preload_all_modules.txt",
-      "ruling_expert.txt",
-      "scheda_pg_markdown_template.md",
-      "sigilli_runner_module.txt",
-      "tavern_hub.json"
-    ],
-    "raw_count": 15,
-    "selected": [
-      "Encounter_Designer.txt",
-      "Taverna_NPC.txt",
-      "adventurer_ledger.txt",
-      "archivist.txt",
-      "base_profile.txt",
-      "explain_methods.txt",
-      "knowledge_pack.md",
-      "meta_doc.txt",
-      "minmax_builder.txt",
-      "narrative_flow.txt",
-      "preload_all_modules.txt",
-      "ruling_expert.txt",
-      "scheda_pg_markdown_template.md",
-      "sigilli_runner_module.txt",
-      "tavern_hub.json"
-    ]
-  }
+  "module_plan": []
 }
