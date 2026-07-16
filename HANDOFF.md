@@ -4,10 +4,11 @@
 
 - **Repository**: `tooling/Master-DD-Pathfinder-GPT`
 - **Branch**: `main`
-- **Commit locali pronti per push**:
+- **Commit locali già pushati su `origin/main`**:
   1. `4fda22c` — `fix: risolte anomalie repository Master-DD-Pathfinder-GPT`
   2. `5efcecb` — `test: correggi 7 fallimenti pre-esistenti su Windows`
-- **Push su `origin/main`**: NON ancora eseguito; richiede conferma esplicita.
+  3. `d54303a` — `docs: aggiorna HANDOFF.md con risultati swarm NPC profiler/IPIP`
+- **Repo npc-profiler pushato**: `9cfb94b` — `docs: aggiungi handoff ricerca NPC profiler e assi IPIP`
 
 ## Test suite
 
@@ -136,14 +137,11 @@ Entrambi i documenti sono stati committati nel repo `tooling/npc-profiler/` come
 
 ## Prossimi passi consigliati (da decidere con l'utente)
 
-1. **Push**:
-   - `tooling/Master-DD-Pathfinder-GPT`: `git push origin main` (commit `4fda22c`, `5efcecb`)
-   - `tooling/npc-profiler`: `git push origin main` (commit `9cfb94b`)
-2. **NPC Profiler**: l'utente aveva menzionato ricerca e compilazione swarm del NPC Profiler con opposite review, bilanciamento e profili.
-3. **Open Source Review**: cercare correlazioni online da integrare (IPIP, assi core etc.).
-4. **IPIP extensions**: estendere gli assi coretti IPIP.
-5. **Merge e caso reale**: provare il lavoro mergiato in un caso reale.
-6. **Ispezione GPT Pathfinder Master DD**: verificare e risolvere anomalie residue nel contenuto.
+1. **NPC Profiler**: l'utente aveva menzionato ricerca e compilazione swarm del NPC Profiler con opposite review, bilanciamento e profili. Materiali pronti in `tooling/npc-profiler/RESEARCH_HANDOFF.md` e `IPIP_AXES_HANDOFF.md`.
+2. **Open Source Review**: cercare correlazioni online da integrare (IPIP, assi core etc.).
+3. **IPIP extensions**: estendere gli assi coretti IPIP.
+4. **Merge e caso reale**: provare il lavoro mergiato in un caso reale.
+5. **Ispezione GPT Pathfinder Master DD**: verificare e risolvere anomalie residue nel contenuto.
 
 ## Comandi utili per riprendere
 
