@@ -88,7 +88,9 @@ def test_mock_provider():
     assert "Power Attack" in out
 
 
-def test_get_provider():
+def test_get_provider(monkeypatch):
+    # Isola il test da eventuali variabili d'ambiente/.env
+    monkeypatch.delenv("RAG_LLM_PROVIDER", raising=False)
     assert isinstance(get_provider("mock"), MockProvider)
     # non crasha senza env
     assert isinstance(get_provider(), MockProvider)
