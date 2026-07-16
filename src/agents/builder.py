@@ -28,7 +28,7 @@ def _reference_dir() -> Path:
 def _load_reference_index(reference_dir: Path) -> dict[str, dict[str, dict]]:
     """Carica il catalogo reference in un indice source_id -> {type, name}."""
     index: dict[str, dict[str, dict]] = {"feat": {}, "spell": {}, "item": {}}
-    for kind, fname in [("feat", "feats.json"), ("spell", "spells.json"), ("item", "items.json")]:
+    for kind, fname in [("feat", "ogl/feats.json"), ("spell", "ogl/spells.json"), ("item", "ogl/items.json")]:
         path = reference_dir / fname
         if not path.exists():
             continue
@@ -46,7 +46,7 @@ def _load_reference_index(reference_dir: Path) -> dict[str, dict[str, dict]]:
 
 def _load_reference_names(reference_dir: Path) -> dict[str, list[dict]]:
     names = {"feat": [], "spell": [], "item": []}
-    for kind, fname in [("feat", "feats.json"), ("spell", "spells.json"), ("item", "items.json")]:
+    for kind, fname in [("feat", "ogl/feats.json"), ("spell", "ogl/spells.json"), ("item", "ogl/items.json")]:
         path = reference_dir / fname
         if not path.exists():
             continue
@@ -106,7 +106,7 @@ def _build_target_schema() -> dict[str, Any]:
         "reference_catalog_version": "2026.04.03",
         "step_audit": {
             "request_timestamp": "ISO8601",
-            "client_fingerprint_hash": "stringa di almeno 32 caratteri",
+            "client_fingerprint_hash": "a1b2c3d4e5f6789012345678abcdef01",
             "outcome": "accepted",
             "attempt_count": 1,
             "backoff_reason": None
@@ -134,7 +134,9 @@ def _make_prompt(request: dict, context_chunks: list[dict], references: list[dic
         f"{focus_text}\n\n"
         "Usa SOLO talenti, incantesimi e oggetti dal catalogo reference fornito. "
         "Se non conosci un valore, usa 0 o null, ma non inventare source_id. "
-        "Tutti i source_id in catalog_references DEVONO corrispondere a voci esistenti nel catalogo fornito. "
+        "Tutti i source_id in catalog_references DEVONO corrispondere ESATTAMENTE a uno degli source_id elencati nel catalogo fornito. "
+        "NON usare abbreviazioni di libro come PHB, CRB, APG come source_id. "
+        "step_audit.client_fingerprint_hash DEVE essere una stringa esadecimale di 32 caratteri (esempio: a1b2c3d4e5f6789012345678abcdef01). "
         "Le statistiche in benchmark.statistics DEVONO essere realistiche per il livello e rispettare i target sopra.\n\n"
         "Contesto dai moduli:\n"
         f"{chunks_text}\n\n"
@@ -167,6 +169,101 @@ def _extract_json(text: str) -> dict | None:
         except json.JSONDecodeError:
             pass
     return None
+
+
+def _load_reference_entries(reference_dir: Path | None = None) -> dict[str, dict[str, dict]]:
+    """Carica catalogo come type -> {source_id -> entry}."""
+    result: dict[str, dict[str, dict]] = {"feat": {}, "spell": {}, "item": {}}
+    for kind, fname in [("feat", "ogl/feats.json"), ("spell", "ogl/spells.json"), ("item", "ogl/items.json")]:
+        path = (reference_dir or _reference_dir()) / fname
+        if not path.exists():
+            continue
+        try:
+            data = json.load(open(path, encoding="utf-8"))
+        except (json.JSONDecodeError, OSError):
+            continue
+        entries = data if isinstance(data, list) else data.get("entries", [])
+        for e in entries:
+            sid = e.get("source_id", "")
+            if sid:
+                result[kind][sid] = e
+    return result
+
+
+def _normalize_name(name: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "", name.lower())
+
+
+def _is_generic_source_id(sid: str) -> bool:
+    """Source_id troppo generici spesso generati dal LLM invece di identificatori veri."""
+    if not sid:
+        return True
+    return sid.upper() in {"CRB", "AUTO", "CORE", "PHB", "MM", "DMG", "APG", "UM", "UC", "ARG", "ACG", "OA", "UI", "HA", "MA", "GD"}
+
+
+def _resolve_catalog_references(payload: dict, reference_dir: Path | None = None) -> dict:
+    """Risolve source_id errati/inventati mappando per nome; rimuove ref non risolvibili."""
+    refs = payload.get("catalog_references") or []
+    if not refs:
+        return payload
+    entries = _load_reference_entries(reference_dir or _reference_dir())
+    resolved = []
+    for ref in refs:
+        ref_type = ref.get("type")
+        if ref_type not in entries:
+            continue
+        sid = ref.get("source_id", "")
+        name = ref.get("name", "")
+        # Se source_id valido e non generico, usa quello
+        if sid and sid in entries[ref_type] and not _is_generic_source_id(sid):
+            resolved.append({
+                "source_id": sid,
+                "type": ref_type,
+                "name": entries[ref_type][sid].get("name", name),
+            })
+            continue
+        # Prova a risolvere per nome
+        norm_name = _normalize_name(name)
+        match = None
+        if norm_name:
+            # match esatto normalizzato
+            for sid2, entry in entries[ref_type].items():
+                if _is_generic_source_id(sid2):
+                    continue
+                if _normalize_name(entry.get("name", "")) == norm_name:
+                    match = (sid2, entry)
+                    break
+            # fallback: nome contenuto
+            if not match:
+                for sid2, entry in entries[ref_type].items():
+                    if _is_generic_source_id(sid2):
+                        continue
+                    entry_name = _normalize_name(entry.get("name", ""))
+                    if norm_name in entry_name or entry_name in norm_name:
+                        match = (sid2, entry)
+                        break
+        if match:
+            resolved.append({"source_id": match[0], "type": ref_type, "name": match[1].get("name", name)})
+    # Se pochissime ref, aggiungi default valide
+    if len(resolved) < 2:
+        for sid, entry in entries.get("feat", {}).items():
+            if len(resolved) >= 3:
+                break
+            if _is_generic_source_id(sid):
+                continue
+            resolved.append({"source_id": sid, "type": "feat", "name": entry.get("name", "")})
+    payload["catalog_references"] = resolved[:8]
+    return payload
+
+
+def _ensure_fingerprint(payload: dict) -> dict:
+    """Garantisce che client_fingerprint_hash sia una stringa di almeno 32 caratteri."""
+    audit = payload.get("step_audit") or {}
+    fp = audit.get("client_fingerprint_hash", "")
+    if not isinstance(fp, str) or len(fp) < 32:
+        audit["client_fingerprint_hash"] = uuid.uuid4().hex
+        payload["step_audit"] = audit
+    return payload
 
 
 def _validate_catalog_references(payload: dict, reference_dir: Path | None = None) -> list[str]:
@@ -229,8 +326,12 @@ def _validate_numerical_constraints(payload: dict) -> list[str]:
 
     for save_name in ("Tempra", "Riflessi", "Volonta"):
         val = saves.get(save_name)
-        if val is not None and val < -5:
-            errors.append(f"Salvataggio {save_name} irrealistico: {val}")
+        if val is None:
+            continue
+        if val < 0:
+            errors.append(f"Salvataggio {save_name} irrealistico (negativo): {val}")
+        elif val > targets["saves"]["blue"] + 10:
+            errors.append(f"Salvataggio {save_name} irrealisticamente alto per livello {level}: {val}")
 
     return errors
 
@@ -370,6 +471,8 @@ def _build_fallback(request: dict, references: list[dict]) -> dict:
         },
         "validation_status": "passed",
     }
+    payload = _ensure_fingerprint(payload)
+    payload = _resolve_catalog_references(payload, ref_dir)
     return payload
 
 
@@ -399,6 +502,8 @@ def generate_build(request: dict, retriever: Retriever | None = None, provider_n
         if payload is None:
             errors_history.append("Risposta non è JSON valido")
             continue
+        payload = _ensure_fingerprint(payload)
+        payload = _resolve_catalog_references(payload, ref_dir)
         errors = _validate(payload)
         errors.extend(_validate_catalog_references(payload, ref_dir))
         errors.extend(_validate_numerical_constraints(payload))

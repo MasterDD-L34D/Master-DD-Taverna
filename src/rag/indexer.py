@@ -66,22 +66,46 @@ def index_modules(modules_dir: Path | str, store: VectorStore, model_name: str, 
     return len(chunks)
 
 
+def _catalog_entries(catalog: dict, reference_dir: Path):
+    """Return the list of entries for a manifest catalog, or None if skipped."""
+    path = reference_dir / catalog.get("file", "")
+    if not path.exists():
+        return None
+    if "pi_local_only" in path.parts:
+        return None
+    data = json.load(open(path, encoding="utf-8"))
+    if isinstance(data, dict):
+        return data.get("entries", [])
+    return data if isinstance(data, list) else []
+
+
 def index_reference_catalog(reference_dir: Path | str, store: VectorStore, model_name: str, encoder):
-    """Index structured reference entries (any *.json except manifest) as short documents."""
+    """Index structured reference entries declared in manifest.json.
+
+    Only catalogs with is_ogc=True or cup_allowed=True are indexed.
+    pi_local_only/ is always ignored.
+    """
     reference_dir = Path(reference_dir)
-    files = {
-        path.stem: path
-        for path in sorted(reference_dir.glob("*.json"))
-        if path.name != "manifest.json"
-    }
+    manifest_path = reference_dir / "manifest.json"
+    if not manifest_path.exists():
+        raise ValueError(f"Manifest non trovato: {manifest_path}")
+    manifest = json.load(open(manifest_path, encoding="utf-8"))
+    catalogs = manifest.get("catalogs", []) if isinstance(manifest, dict) else []
+
     chunks = []
     texts = []
-    for kind, path in files.items():
-        if not path.exists():
+    for catalog in catalogs:
+        if not isinstance(catalog, dict):
             continue
-        data = json.load(open(path, encoding="utf-8"))
-        entries = data if isinstance(data, list) else data.get("entries", [])
+        if not (catalog.get("is_ogc") or catalog.get("cup_allowed")):
+            continue
+        kind = catalog.get("kind") or Path(catalog.get("file", "")).stem
+        entries = _catalog_entries(catalog, reference_dir)
+        if entries is None:
+            continue
         for idx, entry in enumerate(entries):
+            if not isinstance(entry, dict):
+                continue
             text_parts = [entry.get("name", "")]
             if "prerequisites" in entry:
                 text_parts.append(f"Prerequisiti: {entry['prerequisites']}")

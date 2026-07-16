@@ -51,7 +51,7 @@ def test_validate_catalog_references_ok():
     ref_dir = _reference_dir()
     payload = {
         "catalog_references": [
-            {"source_id": "CRB", "type": "feat", "name": "Power Attack"}
+            {"source_id": "feats:power_attack", "type": "feat", "name": "Power Attack"}
         ]
     }
     errors = _validate_catalog_references(payload, ref_dir)
@@ -83,7 +83,7 @@ def test_validate_numerical_constraints():
 
 def test_build_fallback():
     request = {"class": "Fighter", "race": "Human", "level": 5, "focus": "DPR"}
-    refs = [{"source_id": "CRB", "type": "feat", "name": "Power Attack"}]
+    refs = [{"source_id": "feats:power_attack", "type": "feat", "name": "Power Attack"}]
     payload = _build_fallback(request, refs)
     assert payload["build_state"]["class"] == "Fighter"
     assert payload["reference_catalog_version"] == "2026.04.03"
