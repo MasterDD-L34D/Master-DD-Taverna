@@ -67,12 +67,12 @@ def index_modules(modules_dir: Path | str, store: VectorStore, model_name: str, 
 
 
 def index_reference_catalog(reference_dir: Path | str, store: VectorStore, model_name: str, encoder):
-    """Index structured reference entries (feats, spells, items) as short documents."""
+    """Index structured reference entries (any *.json except manifest) as short documents."""
     reference_dir = Path(reference_dir)
     files = {
-        "feats": reference_dir / "feats.json",
-        "spells": reference_dir / "spells.json",
-        "items": reference_dir / "items.json",
+        path.stem: path
+        for path in sorted(reference_dir.glob("*.json"))
+        if path.name != "manifest.json"
     }
     chunks = []
     texts = []
