@@ -394,6 +394,49 @@ Variabili chiave (anche per run schedulati):
 
 Durante il setup nel GPT, forza sempre la modalità esplicita (`/set_mode core` oppure `/set_mode extended`) e verifica che l'avanzamento riporti `[step/step_total]` coerente: 8 step per `core`, 16 per `extended`.
 
+## Usare con LLM open source / locali (RAG)
+
+Il bundle GPT è stato esteso con un layer **RAG (Retrieval-Augmented Generation)**
+che permette di interrogare moduli e catalogo reference con LLM locali (Ollama)
+o API compatibili OpenAI, senza dipendere da ChatGPT.
+
+Cosa è incluso:
+
+- Vector store persistente in `src/data/vector_store/` (numpy + JSON).
+- Script di indicizzazione: `tools/index_rag.py`.
+- Endpoint FastAPI: `POST /rag/search`, `POST /rag/ask`, `POST /rag/build`.
+- Provider LLM: `mock` (offline), `ollama`, `openai`.
+- Frontend web di chat: `frontend/rag_chat.py` (Streamlit).
+- Build agent per generare schede PF1E via RAG: `src/agents/builder.py` + CLI `tools/build_agent.py`.
+
+Per installare, indicizzare e usare il RAG vedi la guida dedicata:
+
+**[`OPEN_SOURCE_RAG.md`](OPEN_SOURCE_RAG.md)**
+
+Comandi rapidi:
+
+```bash
+# 1. Indicizza
+.venv/Scripts/python tools/index_rag.py
+
+# 2. Avvia API
+.venv/Scripts/uvicorn src.app:app --reload --port 8000
+
+# 3. Prova una domanda in modalità mock (nessun LLM esterno)
+curl -X POST http://localhost:8000/rag/ask \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: $API_KEY" \
+  -d '{"query": "cosa fa Power Attack?", "top_k": 5, "provider": "mock"}'
+
+# Oppure chat web
+.venv/Scripts/streamlit run frontend/rag_chat.py
+
+# Oppure genera una build
+.venv/Scripts/python tools/build_agent.py --class Fighter --race Human --level 5 --focus DPR --provider mock
+```
+
+Stato test: `114 passed, 1 skipped` (inclusi `tests/test_rag.py` e `tests/test_build_agent.py`).
+
 ### Generare il database di build (e i dump dei moduli)
 
 Uno script di utilità (`tools/generate_build_db.py`) raccoglie automaticamente le build PF1e per tutte le classi target interrogando l'endpoint del **MinMax Builder** e, in parallelo, scarica i moduli grezzi indispensabili per ricostruire schede complete (base profile, taverna/narrativa, template scheda):
