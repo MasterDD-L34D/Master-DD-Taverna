@@ -11,6 +11,38 @@ from typing import Any
 from ..rag.generator import get_provider
 from ..rag.retriever import Retriever
 
+from .builder_benchmarks import (
+    class_good_saves,
+    compute_benchmarks,
+    evaluate_build,
+    estimated_hp,
+    format_benchmarks_for_prompt,
+    focus_guidance,
+)
+
+
+def _reference_dir() -> Path:
+    return Path(__file__).resolve().parent.parent.parent / "data" / "reference"
+
+
+def _load_reference_index(reference_dir: Path) -> dict[str, dict[str, dict]]:
+    """Carica il catalogo reference in un indice source_id -> {type, name}."""
+    index: dict[str, dict[str, dict]] = {"feat": {}, "spell": {}, "item": {}}
+    for kind, fname in [("feat", "feats.json"), ("spell", "spells.json"), ("item", "items.json")]:
+        path = reference_dir / fname
+        if not path.exists():
+            continue
+        try:
+            data = json.load(open(path, encoding="utf-8"))
+        except (json.JSONDecodeError, OSError):
+            continue
+        entries = data if isinstance(data, list) else data.get("entries", [])
+        for e in entries:
+            sid = e.get("source_id", "")
+            if sid:
+                index[kind][sid] = {"name": e.get("name", ""), "source_id": sid}
+    return index
+
 
 def _load_reference_names(reference_dir: Path) -> dict[str, list[dict]]:
     names = {"feat": [], "spell": [], "item": []}
@@ -37,9 +69,12 @@ def _find_reference_entries(query: str, reference_dir: Path, top_k: int = 10) ->
                 continue
             terms = set(re.findall(r"[a-zA-Z0-9]+", e["text"]))
             score = len(query_terms & terms)
+            # bonus se un termine della query compare nel nome esatto
+            name_terms = set(re.findall(r"[a-zA-Z0-9]+", e["name"].lower()))
+            score += len(query_terms & name_terms)
             if score > 0:
                 scored.append((score, {"source_id": e["source_id"], "type": kind, "name": e["name"]}))
-    scored.sort(key=lambda x: x[0], reverse=True)
+    scored.sort(key=lambda x: (x[0], x[1]["name"].lower()), reverse=True)
     return [x[1] for x in scored[:top_k]]
 
 
@@ -84,13 +119,23 @@ def _make_prompt(request: dict, context_chunks: list[dict], references: list[dic
     chunks_text = "\n\n---\n\n".join(c["text"] for c in context_chunks)
     refs_text = "\n".join(f"- [{r['type']}] {r['name']} ({r['source_id']})" for r in references)
     req_text = json.dumps(request, ensure_ascii=False, indent=2)
+    benchmarks = compute_benchmarks(
+        request.get("level", 5),
+        request.get("focus"),
+    )
+    benchmark_text = format_benchmarks_for_prompt(benchmarks)
+    focus_text = focus_guidance(request.get("focus"))["priority"]
     return (
         "Sei un esperto costruttore di personaggi Pathfinder 1E. "
         "Genera una build completa in formato JSON puro (nessun testo extra) "
         "rispettando esattamente questa struttura:\n\n"
         f"{schema}\n\n"
+        f"{benchmark_text}\n\n"
+        f"{focus_text}\n\n"
         "Usa SOLO talenti, incantesimi e oggetti dal catalogo reference fornito. "
-        "Se non conosci un valore, usa 0 o null, ma non inventare source_id.\n\n"
+        "Se non conosci un valore, usa 0 o null, ma non inventare source_id. "
+        "Tutti i source_id in catalog_references DEVONO corrispondere a voci esistenti nel catalogo fornito. "
+        "Le statistiche in benchmark.statistics DEVONO essere realistiche per il livello e rispettare i target sopra.\n\n"
         "Contesto dai moduli:\n"
         f"{chunks_text}\n\n"
         "Catalogo reference disponibile:\n"
@@ -124,6 +169,93 @@ def _extract_json(text: str) -> dict | None:
     return None
 
 
+def _validate_catalog_references(payload: dict, reference_dir: Path | None = None) -> list[str]:
+    """Verifica che i catalog_references esistano effettivamente nel catalogo reference."""
+    errors: list[str] = []
+    refs = payload.get("catalog_references") or []
+    if not refs:
+        return errors
+    index = _load_reference_index(reference_dir or _reference_dir())
+    for ref in refs:
+        ref_type = ref.get("type")
+        sid = ref.get("source_id")
+        if not ref_type or ref_type not in index:
+            errors.append(f"catalog_reference tipo non valido: {ref_type}")
+            continue
+        if not sid:
+            errors.append("catalog_reference con source_id mancante")
+            continue
+        if sid not in index[ref_type]:
+            errors.append(f"catalog_reference non trovata in catalogo: {ref_type}::{sid}")
+    return errors
+
+
+def _validate_numerical_constraints(payload: dict) -> list[str]:
+    """Verifica che le statistiche siano realistiche per livello/focus."""
+    errors: list[str] = []
+    request = payload.get("request") or {}
+    level = request.get("level", 5)
+    focus = request.get("focus")
+    benchmark = payload.get("benchmark") or {}
+    stats = benchmark.get("statistics") or {}
+
+    try:
+        targets = compute_benchmarks(level, focus)
+    except Exception:
+        return errors
+
+    pf = stats.get("PF")
+    ca = stats.get("CA")
+    dpr = stats.get("DPR")
+    saves = stats.get("saves") or {}
+
+    if pf is not None:
+        if pf < 0:
+            errors.append(f"PF negativo: {pf}")
+        elif pf > targets["hp"]["blue"] * 2:
+            errors.append(f"PF irrealisticamente alto per livello {level}: {pf} (target blue {targets['hp']['blue']})")
+
+    if ca is not None:
+        if ca < 0:
+            errors.append(f"CA negativa: {ca}")
+        elif ca > targets["ac"]["blue"] + 10:
+            errors.append(f"CA irrealistica per livello {level}: {ca} (target blue {targets['ac']['blue']})")
+
+    if dpr is not None:
+        if dpr < 0:
+            errors.append(f"DPR negativo: {dpr}")
+        elif dpr > targets["dpr"]["blue"] * 3:
+            errors.append(f"DPR irrealistico per livello {level}: {dpr} (target blue {targets['dpr']['blue']})")
+
+    for save_name in ("Tempra", "Riflessi", "Volonta"):
+        val = saves.get(save_name)
+        if val is not None and val < -5:
+            errors.append(f"Salvataggio {save_name} irrealistico: {val}")
+
+    return errors
+
+
+def _annotate_with_evaluation(payload: dict) -> dict:
+    """Aggiunge benchmark_evaluation ricalcolando tier e note."""
+    request = payload.get("request") or {}
+    level = request.get("level", 5)
+    focus = request.get("focus")
+    benchmark_payload = payload.get("benchmark") or {}
+    stats = benchmark_payload.get("statistics") or {}
+    if not stats:
+        return payload
+    try:
+        targets = compute_benchmarks(level, focus)
+        evaluation = evaluate_build(stats, targets, focus)
+        payload["benchmark_evaluation"] = evaluation
+        # Aggiorna meta_tier se presente in benchmark.
+        if "benchmark" in payload:
+            payload["benchmark"]["meta_tier"] = evaluation["meta_tier"]
+    except Exception:
+        pass
+    return payload
+
+
 def _validate(payload: dict) -> list[str]:
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent / "tools"))
     from generate_build_db import validate_with_schema
@@ -138,15 +270,77 @@ def _validate(payload: dict) -> list[str]:
 
 
 def _build_fallback(request: dict, references: list[dict]) -> dict:
-    """Fallback deterministico/mock che produce un payload valido."""
+    """Fallback deterministico/mock che produce un payload valido coerente con i benchmark."""
     now = datetime.now(timezone.utc).isoformat()
-    return {
+    level = request.get("level", 5)
+    focus = request.get("focus")
+    class_name = request.get("class", "Fighter")
+    benchmarks = compute_benchmarks(level, focus)
+
+    # Scegli target green/orange in base al focus per il fallback.
+    focus_l = (focus or "balanced").lower()
+    if focus_l == "dpr":
+        target_pf = benchmarks["hp"]["orange"]
+        target_ca = benchmarks["ac"]["orange"]
+        target_dpr = benchmarks["dpr"]["green"]
+    elif focus_l == "tank":
+        target_pf = benchmarks["hp"]["green"]
+        target_ca = benchmarks["ac"]["green"]
+        target_dpr = benchmarks["dpr"]["orange"]
+    elif focus_l == "control":
+        target_pf = benchmarks["hp"]["orange"]
+        target_ca = benchmarks["ac"]["orange"]
+        target_dpr = benchmarks["dpr"]["red"]  # DPR non rilevante per control
+    elif focus_l == "support":
+        target_pf = benchmarks["hp"]["orange"]
+        target_ca = benchmarks["ac"]["orange"]
+        target_dpr = benchmarks["dpr"]["red"]  # DPR non rilevante per support
+    else:
+        target_pf = benchmarks["hp"]["orange"]
+        target_ca = benchmarks["ac"]["orange"]
+        target_dpr = benchmarks["dpr"]["orange"]
+
+    # Stima PF realistica per classe.
+    estimated = estimated_hp(level, class_name, con_mod=2)
+    target_pf = max(target_pf, estimated)
+
+    good = class_good_saves(class_name)
+    stats = {
+        "PF": int(target_pf),
+        "CA": int(target_ca),
+        "DPR": round(float(target_dpr), 1),
+        "saves": {
+            "Tempra": benchmarks["saves"]["green"] if "Tempra" in good else benchmarks["saves"]["orange"],
+            "Riflessi": benchmarks["saves"]["green"] if "Riflessi" in good else benchmarks["saves"]["orange"],
+            "Volonta": benchmarks["saves"]["green"] if "Volonta" in good else benchmarks["saves"]["orange"],
+        },
+    }
+    evaluation = evaluate_build(stats, benchmarks, focus)
+
+    # Filtra solo reference esistenti.
+    ref_dir = _reference_dir()
+    index = _load_reference_index(ref_dir)
+    valid_refs = []
+    for r in references[:8]:
+        if r.get("source_id") and r.get("type") in index and r["source_id"] in index[r["type"]]:
+            valid_refs.append(r)
+    if not valid_refs:
+        # Cerca reference di default nel catalogo.
+        for sid, entry in index.get("feat", {}).items():
+            if "power" in entry.get("name", "").lower():
+                valid_refs.append({"source_id": sid, "type": "feat", "name": entry["name"]})
+                break
+        if not valid_refs and index.get("feat"):
+            first = next(iter(index["feat"].values()))
+            valid_refs.append({"source_id": first["source_id"], "type": "feat", "name": first["name"]})
+
+    payload = {
         "build_id": f"gen-{uuid.uuid4().hex[:12]}",
-        "class": request.get("class", "Fighter"),
+        "class": class_name,
         "mode": "full-pg",
         "request": request,
         "build_state": {
-            "class": request.get("class", "Fighter"),
+            "class": class_name,
             "mode": "full-pg",
             "race": request.get("race"),
             "archetype": request.get("archetype"),
@@ -156,20 +350,16 @@ def _build_fallback(request: dict, references: list[dict]) -> dict:
             "version": "2026.04.03"
         },
         "benchmark": {
-            "meta_tier": "T2",
-            "statistics": {
-                "PF": 45,
-                "CA": 18,
-                "DPR": 15,
-                "saves": {"Tempra": 7, "Riflessi": 3, "Volonta": 2}
-            }
+            "meta_tier": evaluation["meta_tier"],
+            "statistics": stats
         },
+        "benchmark_evaluation": evaluation,
         "export": {
             "sheet_locale": "it-IT",
-            "markdown": f"Build {request.get('class', 'Fighter')} {request.get('race', 'Human')} livello {request.get('level', 5)}. "
-                        "Generata dal Build Agent MVP."
+            "markdown": f"Build {class_name} {request.get('race', 'Human')} livello {level} (focus {focus_l}). "
+                        "Generata dal Build Agent MVP con benchmark per livello."
         },
-        "catalog_references": references[:5] or [{"source_id": "power_attack", "type": "feat", "name": "Power Attack"}],
+        "catalog_references": valid_refs[:5],
         "reference_catalog_version": "2026.04.03",
         "step_audit": {
             "request_timestamp": now,
@@ -177,24 +367,27 @@ def _build_fallback(request: dict, references: list[dict]) -> dict:
             "outcome": "accepted",
             "attempt_count": 1,
             "backoff_reason": None
-        }
+        },
+        "validation_status": "passed",
     }
+    return payload
 
 
 def generate_build(request: dict, retriever: Retriever | None = None, provider_name: str | None = None, max_retries: int = 2) -> dict:
-    """Genera una build PF1e valida usando RAG + LLM."""
+    """Genera una build PF1e valida usando RAG + LLM, con validazione numerica e catalogo."""
     provider = get_provider(provider_name)
+    ref_dir = _reference_dir()
 
-    if getattr(provider, "__class__.__name__", None) == "MockProvider":
+    if provider.__class__.__name__ == "MockProvider":
         refs = _find_reference_entries(
             f"{request.get('class', '')} {request.get('race', '')} {request.get('focus', '')}",
-            Path(__file__).resolve().parent.parent.parent / "data" / "reference"
+            ref_dir
         )
         return _build_fallback(request, refs)
 
     query = f"{request.get('class', '')} {request.get('race', '')} {request.get('archetype', '')} {request.get('focus', '')} Pathfinder 1E build"
     context = retriever.search(query, top_k=5) if retriever else []
-    refs = _find_reference_entries(query, Path(__file__).resolve().parent.parent.parent / "data" / "reference", top_k=15)
+    refs = _find_reference_entries(query, ref_dir, top_k=15)
 
     errors_history = []
     for attempt in range(1, max_retries + 1):
@@ -207,7 +400,10 @@ def generate_build(request: dict, retriever: Retriever | None = None, provider_n
             errors_history.append("Risposta non è JSON valido")
             continue
         errors = _validate(payload)
+        errors.extend(_validate_catalog_references(payload, ref_dir))
+        errors.extend(_validate_numerical_constraints(payload))
         if not errors:
+            payload = _annotate_with_evaluation(payload)
             payload["validation_status"] = "passed"
             return payload
         errors_history.extend(errors)
