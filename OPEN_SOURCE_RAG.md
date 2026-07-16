@@ -40,7 +40,25 @@ L'operazione:
 
 Dimensione attesa dell'indice: ~5.000 chunk (1.000 dai moduli + 4.000 dal catalogo reference).
 
-## Avviare l'API
+## Avvio rapido (launcher globale)
+
+Se stai usando la root del monorepo `pathfinder/`, il comando unico avvia API, frontend e browser:
+
+```bash
+python launch.py start
+```
+
+Il launcher:
+- rileva automaticamente Ollama su `localhost:11434` e, se presente, imposta `RAG_LLM_PROVIDER=ollama`;
+- se Ollama non è attivo, parte in modalità `mock` (solo chunk recuperati, nessun LLM);
+- costruisce l'indice RAG alla prima esecuzione se manca;
+- apre il browser su `http://localhost:8501`.
+
+Su Windows puoi anche fare doppio click su `start.bat` (o `start.ps1`) nella root.
+
+## Avvio manuale dell'API
+
+Se preferisci avviare i servizi separatamente da dentro questa cartella:
 
 ```bash
 .venv/Scripts/uvicorn src.app:app --reload --port 8000
@@ -167,7 +185,10 @@ src/modules/ + data/reference/
 
 ## Frontend Streamlit
 
-Un'interfaccia web di chat è disponibile in `frontend/rag_chat.py`:
+Un'interfaccia web di chat è disponibile in `frontend/rag_chat.py`.
+
+Con il launcher globale è già incluso in `python launch.py start`.  
+In alternativa, per avviare solo il frontend da questa cartella:
 
 ```bash
 .venv/Scripts/streamlit run frontend/rag_chat.py
@@ -175,10 +196,12 @@ Un'interfaccia web di chat è disponibile in `frontend/rag_chat.py`:
 
 Si apre il browser su `http://localhost:8501`. Supporta:
 
-- provider `mock`, `ollama`, `openai`
+- provider `mock`, `ollama`, `openai` con fallback automatico su `mock`
+- indicatori di stato per API e Ollama
 - scelta del numero di chunk
 - visualizzazione delle fonti recuperate
 - cronologia chat
+- esempi di domande pronte all'uso
 
 ## Build Agent
 

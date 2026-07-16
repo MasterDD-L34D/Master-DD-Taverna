@@ -49,7 +49,29 @@ Se vuoi abilitare esplicitamente l'accesso anonimo, imposta `ALLOW_ANONYMOUS=tru
 assenza di `API_KEY` e senza questo flag, l'API risponderà con `401 Unauthorized` alle
 richieste prive di chiave.
 
-### Avvio rapido
+### Avvio rapido (user-friendly)
+
+Se stai usando la root del monorepo `pathfinder/`, il comando unico avvia API, frontend e browser:
+
+```bash
+python launch.py start
+```
+
+Su Windows puoi anche fare doppio click su `start.bat` (o `start.ps1`).
+
+Il launcher:
+- crea/usa i venv di `npc-profiler` e `Master-DD-Pathfinder-GPT`;
+- rileva automaticamente Ollama su `localhost:11434` e, se presente, imposta `RAG_LLM_PROVIDER=ollama`;
+- costruisce l'indice RAG alla prima esecuzione se manca;
+- apre il browser su `http://localhost:8501`.
+
+Per eseguire solo i test:
+
+```bash
+python launch.py test
+```
+
+### Avvio manuale
 
 1. Esporta le variabili d'ambiente: `export API_KEY="la-tua-chiave"` e, se serve accesso senza chiave, `export ALLOW_ANONYMOUS=true`.
 2. Installa le dipendenze: `pip install -r requirements.txt`.
@@ -373,6 +395,14 @@ Canvas+Ledger, ripeti /self_check e verifica Echo ≥ soglia prima di rilanciare
 
 ### Avvio API locale
 
+User-friendly (dalla root del monorepo):
+
+```bash
+python launch.py start-master
+```
+
+Manuale (da dentro questa cartella):
+
 ```bash
 export API_KEY="la-tua-chiave"
 # opzionale: sblocca l'accesso senza chiave
@@ -413,7 +443,23 @@ Per installare, indicizzare e usare il RAG vedi la guida dedicata:
 
 **[`OPEN_SOURCE_RAG.md`](OPEN_SOURCE_RAG.md)**
 
-Comandi rapidi:
+Comandi rapidi (dalla root del monorepo `pathfinder/`):
+
+```bash
+# 1. Setup venv e dipendenze
+python launch.py setup
+
+# 2. Avvia API + frontend + browser (auto-detect Ollama)
+python launch.py start
+
+# 3. Prova una domanda in modalità mock (nessun LLM esterno)
+curl -X POST http://localhost:8000/rag/ask \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: test" \
+  -d '{"query": "cosa fa Power Attack?", "top_k": 5, "provider": "mock"}'
+```
+
+Comandi manuali avanzati (da dentro questa cartella):
 
 ```bash
 # 1. Indicizza
