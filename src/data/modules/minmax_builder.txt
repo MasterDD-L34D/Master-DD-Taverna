@@ -63,25 +63,26 @@ constraints:
       **Source Governance v1 (obbligatoria quando usi fonti META)**
 
       STEP -1 — META-SEARCH (solo discovery → META-CANDIDATE)
-      - Le fonti META (community/forum/blog/reddit/guide) si usano **solo** per scoprire candidati (claim + link + autore/canale se noto).
-      - In STEP -1 non dare ancora un verdetto di legalità/stacking: output = "META-CANDIDATE".
+      - Le fonti META (community/guide/... ) servono a scoprire "idee" o "combo" candidati.
+      - In questa fase è vietato dare verdetti: produce solo META-CANDIDATE (lista di claim + link + autore).
 
-      STEP 0 — RAW anchoring (AoN/Paizo)
-      - Prima di dichiarare una combo/build "funzionante", "legale" o "ottimale", ancorati a testo RAW (AoN/Paizo): cita URL + parafrasi (quote ≤25 parole).
-      - Se non riesci ad ancorare: niente verdetto; chiedi estratto della regola o proponi un percorso di verifica.
+      STEP 0 — RAW anchoring (AoN/Paizo) prima di qualsiasi verdetto
+      - Prima di consigliare/comparare una combo o dichiararla "legale/funziona", devi verificare il testo RAW su AoN/Paizo.
+      - Se il testo RAW non è disponibile, non dare verdetti: chiedi l'estratto o proponi come ipotesi da verificare.
 
-      4 gate quando usi META:
+      4 gate quando entri in META:
       1) Consultazione (tesi): estrai la tesi/claim.
-      2) Valutazione autore: classifica l'autore (ufficiale/esperto/community/sconosciuto).
-      3) Verifica RAW: conferma o smentisci con testo RAW.
+      2) Valutazione autore: identifica livello (META_OFFICIAL/EXPERT/COMMUNITY/UNKNOWN).
+      3) Verifica RAW: conferma o smentisci con testo AoN/Paizo.
       4) Classificazione finale: CONFERMATO / PROBABILE / INCERTO / SMENTITO / NON VERIFICABILE.
 
-      Breadcrumb obbligatoria quando META entra in gioco:
-      🔍 META-SEARCH → 📖 RAW check ✔ → 🧠 META-ANALYSIS → VERDETTO
-
       Regole automatiche:
-      - Autore sconosciuto → massimo "INCERTO" finché non è CONFERMATO da RAW.
-      - Ambiguità/contraddizione RAW → classifica "SMENTITO" e non raccomandare la combo; proponi alternative compatibili.
+      - Autore sconosciuto ⇒ massimo INCERTO finché non confermato da RAW.
+      - Ambiguità ⇒ INCERTO e richiedi chiarimento.
+      - Contraddizione RAW ⇒ SMENTITO (non raccomandare; proponi alternativa conforme a RAW).
+
+      Breadcrumb obbligatoria quando META è stata usata:
+      🔍 META-SEARCH → 📖 RAW check ✔ → 🧠 META-ANALYSIS → VERDETTO
       # END SOURCE_GOVERNANCE_V1
 meta_reference:
   enabled: true
@@ -171,12 +172,12 @@ data_structures:
       flavor: ''
     difetti: []
     statistiche:
-      FOR: 16
-      DES: 14
-      COS: 14
-      INT: 10
-      SAG: 10
-      CAR: 10
+      Forza: 16
+      Destrezza: 14
+      Costituzione: 14
+      Intelligenza: 10
+      Saggezza: 10
+      Carisma: 10
     salvezze:
       Tempra: null
       Riflessi: null
@@ -310,37 +311,23 @@ helpers:
   render_source_badge:
     params:
       - level
-    logic: |
-      mapping = {
-        "RAW_CANON": "[RAW]",
-        "PFS": "[PFS]",
-        "HR": "[HR]",
-        "META_OFFICIAL": "🏛️",
-        "META_EXPERT": "🏛️",
-        "META_CORE": "🏛️",
-        "META_GUIDE": "📘",
-        "META_COMMUNITY": "📚",
-        "META_LIVE": "💬",
-      }
-      L = (level or "").upper()
-      return mapping.get(L, "❓")
+    logic: "mapping = {\"RAW_CANON\":\"[RAW]\",\"PFS\":\"[PFS]\",\"HR\":\"[HR]\",\"META_EXPERT\":\"\U0001F3DB️\",\"META_CORE\":\"\U0001F3DB️\",\"META_COMMUNITY\":\"\U0001F4D6\",\"META_LIVE\":\"\U0001F4AC\"}\nL = (level or \"\").upper()\nreturn mapping.get(L,\"❓\")\n"
   source_level_rank:
     params:
       - level
     logic: >
       order =
-      {'RAW_CANON':1,'PFS':2,'META_OFFICIAL':3,'META_EXPERT':4,'META_CORE':5,'META_GUIDE':6,'META_COMMUNITY':7,'META_LIVE':8,'HR':9}
+      {'RAW_CANON':1,'PFS':2,'META_EXPERT':3,'META_CORE':4,'META_COMMUNITY':5,'META_LIVE':6,'HR':7}
 
-      # Default conservativo: se il livello è ignoto trattalo come COMMUNITY.
-      return order.get((level or 'META_COMMUNITY').upper(), order['META_COMMUNITY'])
+      return order.get((level or 'META_COMMUNITY').upper(), 5)
   sort_meta_by_level:
     params:
       - sources
     logic: |
       def rank(s):
-        lvl = (s.get("level") or "META_COMMUNITY").upper()
-        order = {'RAW_CANON':1,'PFS':2,'META_OFFICIAL':3,'META_EXPERT':4,'META_CORE':5,'META_GUIDE':6,'META_COMMUNITY':7,'META_LIVE':8,'HR':9}
-        return order.get(lvl, 99)
+        lvl = (s.get("level") or "META_LIVE").upper()
+        order = {'RAW_CANON':1,'PFS':2,'META_EXPERT':3,'META_CORE':4,'META_COMMUNITY':5,'META_LIVE':6,'HR':7}
+        return order.get(lvl, 9)
       return sorted(sources or [], key=lambda s: (rank(s), s.get("tipo","~")))
   lookup_meta_badges:
     params:
@@ -459,31 +446,6 @@ helpers:
       p = (provenienza or 'COMMUNITY').upper()
       if p not in ['PAIZO','COMMUNITY','3PP']: p = 'COMMUNITY'
       return f"[{p}]"
-
-  normalize_meta_level:
-    params:
-      - level
-      - provenienza
-    logic: |
-      # Normalizza il livello di una fonte META.
-      # Ammessi: META_OFFICIAL, META_EXPERT, META_CORE, META_GUIDE, META_COMMUNITY, META_LIVE
-      L = (level or "").strip().upper().replace("-", "_")
-      allowed = {
-        "META_OFFICIAL",
-        "META_EXPERT",
-        "META_CORE",
-        "META_GUIDE",
-        "META_COMMUNITY",
-        "META_LIVE",
-      }
-      if L in allowed:
-        return L
-
-      # Fallback: mappa provenienza → level (conservativo)
-      p = (provenienza or "COMMUNITY").strip().upper()
-      if p == "PAIZO":
-        return "META_OFFICIAL"
-      return "META_COMMUNITY"
   get_defense_metric:
     params: []
     logic: |
@@ -514,20 +476,30 @@ helpers:
       if r.get('pfs_active'):
         return '🧭 PFS'
       return '❗ House Rule' if hr else '✅ RAW-Summarized'
-  rules_status_text:
-    params: []
-    logic: |
-      r = build_state.get('rules',{}) or {}
-      parts = []
-      parts.append("PFS ON" if r.get('pfs_active') else "PFS OFF")
-      parts.append("ABP ON" if r.get('abp_active') else "ABP OFF")
-      parts.append("EitR ON" if r.get('eitr_active') else "EitR OFF")
-      return " • ".join(parts)
-  style_hint:
-    params:
-      - style
-    logic: >
-      s = (style or "").strip().lower()
+    rules_status_text:
+      params: []
+      logic: |
+        r = build_state.get('rules',{}) or {}
+        parts = []
+        parts.append("PFS ON" if r.get('pfs_active') else "PFS OFF")
+        parts.append("ABP ON" if r.get('abp_active') else "ABP OFF")
+        parts.append("EitR ON" if r.get('eitr_active') else "EitR OFF")
+        return " • ".join(parts)
+    minmax_export_filename:
+      params:
+        - fmt
+      logic: |
+        import re
+        fmt = (fmt or 'pdf').lower()
+        name = build_state.get('nome') or 'Build'
+        slug = re.sub(r'[^A-Za-z0-9_-]+','_', name).strip('_') or 'Build'
+        ext = 'xlsx' if fmt == 'excel' else fmt
+        return f"MinMax_{slug}.{ext}"
+    style_hint:
+      params:
+        - style
+      logic: >
+        s = (style or "").strip().lower()
 
       if s == "timmy":  return "Preferisci esplosioni: privilegia combo Nova,
       danno ad area e moltiplicatori."
@@ -668,8 +640,9 @@ helpers:
   raw_anchor_detected:
     params: []
     logic: |
-      # Heuristica: considera "ancorato" se esistono riferimenti ufficiali in build_state.fonti
-      # o se una fonte in fonti_meta punta a AoN/Paizo.
+      """Heuristica: considera "ancorato" se esistono riferimenti ufficiali
+      nelle fonti della build o se una fonte META punta a AoN/Paizo."""
+
       def _is_official_url(u):
         s = str(u or "").lower()
         return ("aonprd.com" in s) or ("paizo.com" in s) or ("archivesofnethys" in s)
@@ -895,12 +868,12 @@ commands:
             'flavor:""': null
           difetti: []
           statistiche:
-            FOR: 16
-            DES: 14
-            COS: 14
-            INT: 10
-            SAG: 10
-            CAR: 10
+            Forza: 16
+            Destrezza: 14
+            Costituzione: 14
+            Intelligenza: 10
+            Saggezza: 10
+            Carisma: 10
           salvezze:
             Tempra: null
             Riflessi: null
@@ -1078,7 +1051,7 @@ commands:
   /help:
     description: Mostra i comandi principali del Builder
     action:
-      - output: "\U0001F4D6 **MinMax Builder — Help rapido**\n/start_build — Avvia una nuova build\n/set_player_style <Timmy|Johnny|Spike> — Imposta stile\n/toggle_pfs <on|off> — Filtro legalità PFS\n/toggle_rules pfs=<on/off> abp=<on/off> eitr=<on/off> — Regole opzionali\n/update_build {...} — Aggiorna stato base\n/add_level {...} — Aggiungi livello/talento\n/add_spell <lvl> ['Inc1','Inc2'] — Aggiungi spell\n/bench [-q] — Benchmark (quick/full)\n/run_benchmark — Full benchmark\n/qa_check — QA rapido\n/export_build <pdf|excel> — Export\n/export_vtt — Export JSON VTT\n/set_profile {...} — Anagrafica/Lingue/CA/Velocità\n/set_roleplay {...} — Psico/Legami/Ganci/Flavor\n/set_spell_slots {...} — Slot/CD giornalieri\n/set_currency ... — Monete\n/set_inventory_weight ... — Peso/Carico\n/set_attacks ... /set_skills ... — Attacchi/Abilità\n"
+        - output: "\U0001F4D6 **MinMax Builder — Help rapido**\n/start_build — Avvia una nuova build\n/set_player_style <Timmy|Johnny|Spike> — Imposta stile\n/toggle_pfs <on|off> — Filtro legalità PFS\n/toggle_rules pfs=<on/off> abp=<on/off> eitr=<on/off> — Regole opzionali\n/update_build {...} — Aggiorna stato base\n/add_level {...} — Aggiungi livello/talento\n/add_spell <lvl> ['Inc1','Inc2'] — Aggiungi spell\n/bench [-q] — Benchmark (quick/full)\n/run_benchmark — Full benchmark\n/qa_check — QA rapido (gate QA export_requires, fonti>0, no HR se PFS attivo)\n/export_build <pdf|excel> — Export QA-only (passa gate export_requires; file: MinMax_<nome>.pdf/.xlsx, naming condivisa con Encounter_Designer)\n/export_vtt — Export JSON QA-only (passa gate export_requires; file: MinMax_<nome>.json, stessa naming Encounter_Designer)\n/set_profile {...} — Anagrafica/Lingue/CA/Velocità\n/set_roleplay {...} — Psico/Legami/Ganci/Flavor\n/set_spell_slots {...} — Slot/CD giornalieri\n/set_currency ... — Monete\n/set_inventory_weight ... — Peso/Carico\n/set_attacks ... /set_skills ... — Attacchi/Abilità\n"
   /about:
     description: Info modulo e versioning
     action:
@@ -1148,7 +1121,7 @@ commands:
           {{detect_synergies(build_state.progressione |
           map(attribute='talento'), build_state.magia)}}
       - set: build_state.derived.core.initiative_mod
-        value: '{{calc_init_mod(build_state.statistiche.DES)}}'
+        value: '{{calc_init_mod(build_state.statistiche.Destrezza)}}'
       - set: build_state.derived.core.speed_total
         value: >-
           {{ (build_state.derived.core.speed_base or 30) +
@@ -1205,25 +1178,26 @@ commands:
           - output: "\U0001F4C2 Build '{{nome_build}}' caricata."
         else:
           - output: '⚠ Build ''{{nome_build}}'' non trovata.'
-/export_build:
-  description: Esporta la Build Card completa
-  params: [format]
-  action:
-    - guard_all:
-        requires: qa_templates.gates.export_requires
-        on_fail: '@export_blocked'
-    - output_template: build_card_extended
-    - export: '{{format}}'
-    - output: "📦 Export {{format}} pronto."
-/export_vtt:
-  description: Esporta in JSON VTT (per VTT/roll20-like)
-  action:
-    - guard_all:
-        requires: qa_templates.gates.export_requires
-        on_fail: '@export_blocked'
-    - output_template: vtt_export_json
-    - export: json
-    - output: "\U0001F4E4 Export VTT completato."
+  /export_build:
+    description: Esporta la Build Card completa
+    params: [format]
+    action:
+      - guard_all:
+          requires: qa_templates.gates.export_requires
+          on_fail: '@export_blocked'
+      - output_template: build_card_extended
+      - export: '{{format}}'
+      - output: >-
+          📦 Export {{format}} pronto (file: {{ minmax_export_filename(format) }}).
+  /export_vtt:
+    description: Esporta in JSON VTT (per VTT/roll20-like)
+    action:
+      - guard_all:
+          requires: qa_templates.gates.export_requires
+          on_fail: '@export_blocked'
+      - output_template: vtt_export_json
+      - export: json
+      - output: "📤 Export VTT completato (file: {{ minmax_export_filename('json') }})."
   /list_builds:
     description: Elenca le build salvate nella sessione
     action:
@@ -1295,7 +1269,6 @@ commands:
       - descrizione
       - tipo
       - provenienza
-      - level
     action:
       - if: '{{ link in [f.link for f in build_state.fonti_meta] }}'
         then:
@@ -1303,18 +1276,14 @@ commands:
         else:
           - set: local.tag
             value: '{{format_meta_tag(provenienza)}}'
-          - set: local.level
-            value: '{{normalize_meta_level(level, provenienza)}}'
-          - set: local.badge
-            value: '{{render_source_badge(local.level)}}'
           - append: build_state.fonti_meta
             value:
               link: '{{link}}'
               descrizione: '{{descrizione}}'
               tipo: '{{tipo}}'
               tag: '{{local.tag}}'
-              level: '{{local.level}}'
-              badge: '{{local.badge}}'
+              level: META_COMMUNITY
+              badge: "\U0001F4D6"
           - output: 'Fonte meta aggiunta: {{local.tag}} {{link}}'
   /add_spell:
     description: Aggiunge incantesimi a un livello di magia
@@ -1363,7 +1332,9 @@ commands:
     description: Simula performance della build corrente
     action:
       - command: /run_benchmark
-      - output: "\U0001F9EA Simulazione completata. Usa /export_build o /export_vtt."
+      - output: >-
+          \U0001F9EA Simulazione completata. Usa /export_build (MinMax_<nome>.pdf/.xlsx)
+          o /export_vtt (MinMax_<nome>.json) — stessa nomenclatura di Encounter_Designer.
   /run_benchmark:
     description: 'Calcola benchmark RAW + Meta Tier (quick=true usa cache, salta re-scan)'
     params:
@@ -1419,17 +1390,17 @@ commands:
                       link:"{{result.link}}" descrizione:"{{result.summary}}"
                       tipo:"{{result.source_type}}" level:"{{local.level}}"
                       badge:"{{local.badge}}"
-          - set: build_state.fonti_meta
-            value: '{{sort_meta_by_level(build_state.fonti_meta)}}'
+            - set: build_state.fonti_meta
+              value: '{{sort_meta_by_level(build_state.fonti_meta)}}'
 
-          - if: '{{ any_meta_source() }}'
-            then:
-              - output: |
-                  {{ meta_governance_banner() }}
+            - if: '{{ any_meta_source() }}'
+              then:
+                - output: |
+                    {{ meta_governance_banner() }}
 
-          - call: meta_cache_set
-            with:
-              classe: '{{local.classe}}'
+            - call: meta_cache_set
+              with:
+                classe: '{{local.classe}}'
               patterns: '{{meta_reference.search_patterns}}'
               results: '{{build_state.fonti_meta}}'
             return_as: _cached_ok
@@ -1985,14 +1956,14 @@ steps:
     auto:
       on_enter:
         - 'Esegui /qa_check; se blocchi, suggerisci rollback/fork'
-    cta:
-      primary:
-        text: Esporta la build (PDF)
-        command: /export_build pdf
-      alternatives:
-        - when_unmet: 'true'
-          text: Crea variante finale
-          command: /fork_build variante_finale
+      cta:
+        primary:
+          text: Esporta la build (file MinMax_<nome>.pdf — QA richiesto: fonti OK, PFS senza HR; naming allineata a Encounter_Designer)
+          command: /export_build pdf
+        alternatives:
+          - when_unmet: 'true'
+            text: Crea variante finale
+            command: /fork_build variante_finale
   - id: 9
     step_badge: "\U0001F4D1"
     name: Dummies Sheet
@@ -2028,14 +1999,14 @@ steps:
     exit_conditions:
       must_pass:
         - qa_templates.gates.export_requires
-    cta:
-      primary:
-        text: Esporta e passa alle varianti
-        command: /export_build pdf
-      alternatives:
-        - when_unmet: '!qa_templates.gates.export_requires'
-          text: Risolvi QA bloccanti
-          command: /qa_check
+      cta:
+        primary:
+          text: Esporta (MinMax_<nome>.pdf/.xlsx, MinMax_<nome>.json) e passa alle varianti — QA: fonti OK + PFS senza HR
+          command: /export_build pdf
+        alternatives:
+          - when_unmet: '!qa_templates.gates.export_requires'
+            text: Risolvi QA bloccanti
+            command: /qa_check
   - id: 11
     step_badge: "\U0001F4DA"
     name: Fork/Varianti
@@ -2370,8 +2341,8 @@ notes:
     Le simulazioni dipendono da settaggi specifici e possono variare in presenza
     di HR.
 ui_templates:
-  build_card_compact: "---\n## \U0001F4DC Build Card — Stato Attuale\n**[Step {{step}}/{{step_total}}] {{step_labels[step]}}**\n\n### {% for c in classi %}{{c.nome}} ({{c.livelli}}){% if not loop.last %} / {% endif %}{% endfor %} — {{razza}} | CA {{statistiche_chiave.CA}} | PF {{statistiche_chiave.PF}} | DPR Nova {{statistiche_chiave.DPR_Nova}} | Meta Tier {{statistiche_chiave.meta_tier}}\n**Stats:** For {{statistiche.FOR}}, Dex {{statistiche.DES}}, Cos {{statistiche.COS}}, Int {{statistiche.INT}}, Sag {{statistiche.SAG}}, Car {{statistiche.CAR}}\n**Salvezze:** T {{salvezze.Tempra}}, R {{salvezze.Riflessi}}, V {{salvezze.Volontà}}\n\n\U0001F9E0 Interprete: {{mda_rating_text(player_style, roleplay.psico_top3)}} · \U0001F3AD Psico: {{roleplay.psico_top3 or \"—\"}}\n\U0001F9F7 Legami: {{ (roleplay.legami or []) | join(\", \") or \"—\" }}\n\U0001FA99 Monete: PP {{equipment_summary.currency.pp}} • GP {{equipment_summary.currency.gp}} • SP {{equipment_summary.currency.sp}} • CP {{equipment_summary.currency.cp}} • Peso {{equipment_summary.peso_totale_lb}} lb {{(\"(\"+equipment_summary.carico+\")\") if equipment_summary.carico else \"\"}}\n✨ Slot/Giorno: {% if magia.slots_per_day %}{% for k,v in magia.slots_per_day.items() %}{{k}}°={{v}}{% if not loop.last %}, {% endif %}{% endfor %}{% else %}—{% endif %}\n\n\U0001F3AF Ruolo: {{ruolo}}  ·  \U0001F3AD Stile: {{player_style or \"—\"}}\n\U0001F527 Regole: {{rules_status_text()}}\n\U0001F3F7️ Fonti: {{fonti | join(\", \")}} |  \U0001F4DA **Fonti Meta (ord. autorità)**:  {% for f in fonti_meta %}{{f.badge}} [{{f.tipo}}]({{f.link}}) — {{f.descrizione}}{% if not loop.last %} · {% endif %}{% endfor %}\n{% if tratti %}\U0001F396️ Tratti: {% for t in tratti %}{{t.nome}} ({{t.descrizione}}){% if not loop.last %} — {% endif %}{% endfor %}{% endif %}\n\U0001F4D6 Background: {{background}}\n\n\U0001F4C8 Progressione Livelli:\n       {% for p in progressione %}\n       {% set _priv = p.privilegi %}\n\U0001F539 Livello {{p.livello}}:\n       {{ _priv if (_priv is string) else ((_priv | default([])) | join(\", \")) }}\n       {% if p.talento %} ⭐ Talento: {{p.talento}}{% endif %}{% if note_progressione[loop.index0] %} \U0001F4DD Note: {{note_progressione[loop.index0]}}{% endif %}\n       {% endfor %}\n\n✨ Magia:\n{% for lvl, spells in magia.spell_list.items() %}{{lvl}}°: {{spells | join(\", \")}}{% endfor %}\n\n\U0001F6E0 Equipaggiamento: {{equipaggiamento | join(\", \")}}\n---\n**Benchmark:**\nDPR Early {{benchmarks.DPR_early_status}} {{benchmarks.DPR_early_delta}}%  \nDPR Late {{benchmarks.DPR_late_status}} {{benchmarks.DPR_late_delta}}%  \nDifesa {{benchmarks.Defense_status}} {{benchmarks.Defense_delta}}%  \nScalabilità: {{benchmarks.Scaling_status}}  \nOrigine: {{source_mix_summary()}}\n---\n\n<!-- @minmax_flags {{ flags_pack() }} -->\n<!-- @view_toggles {\"pfs\":\"{{ 'on' if (rules.pfs_active) else 'off' }}\",\"abp\":\"{{ 'on' if (rules.abp_active) else 'off' }}\",\"eitr\":\"{{ 'on' if (rules.eitr_active) else 'off' }}\",\"style\":\"{{ player_style or '' }}\"} -->\n---\n"
-  build_card_extended: "# \U0001F5C2 Build Card — Estesa\n\n## Informazioni Base\n- Nome: {{nome}}\n- Classi:\n  {% for c in classi %}\n  - {{c.nome}} ({{c.livelli}}){% if c.archetipi %} — Archetipi: {{c.archetipi | join(\", \")}}{% endif %}\n  {% endfor %}\n- Razza: {{razza}} · Livello Totale: {{get_total_level(classi)}}\n- Ruolo: {{ruolo}}  ·  \U0001F3AD Stile: {{player_style or \"—\"}}\n- Regole: {{rules_status_text()}}\n- Allineamento: {{profile.allineamento}} · Divinità: {{profile.divinita}} · Taglia: {{profile.taglia}} · Lingue: {{(profile.lingue or []) | join(\", \") or \"—\"}}\n\n## \U0001F3AD Narrativa / Roleplay\n- Stile interpretativo: {{mda_rating_text(player_style, roleplay.psico_top3)}}  (Psico Top-3: {{roleplay.psico_top3 or \"—\"}})\n- Storia breve: {{roleplay.storia_breve or \"—\"}}\n- Legami: {{(roleplay.legami or []) | join(\", \") or \"—\"}}\n- Ganci: {{(roleplay.ganci or []) | join(\", \") or \"—\"}}\n- Flavor: {{roleplay.flavor or \"—\"}}\n\n## \U0001F4CA Statistiche\n| Stat      | Valore |\n|-----------|--------|\n| Forza     | {{statistiche.FOR}} |\n| Destrezza | {{statistiche.DES}} |\n| Costituzione | {{statistiche.COS}} |\n| Intelligenza | {{statistiche.INT}} |\n| Saggezza  | {{statistiche.SAG}} |\n| Carisma   | {{statistiche.CAR}} |\n| CA Totale | {{statistiche_chiave.CA}} |\n| Touch / Flat | {{derived.core.ac_touch}} / {{derived.core.ac_flat}} |\n| PF        | {{statistiche_chiave.PF}} |\n| Tempra / Riflessi / Volontà | {{salvezze.Tempra}} / {{salvezze.Riflessi}} / {{salvezze.Volontà}} |\n| DPR Base / Nova | {{statistiche_chiave.DPR_Base}} / {{statistiche_chiave.DPR_Nova}} |\n\n### Breakdown CA\n- Base 10 + Armatura {{derived.core.ac_armor}} + Scudo {{derived.core.ac_shield}} + Des {{derived.core.ac_dex}} + Naturale {{derived.core.ac_natural}} + Deflessione {{derived.core.ac_deflection}} + Schivare {{derived.core.ac_dodge}} + Altro {{derived.core.ac_other}}\n\n## ⚔️ Combattimento\n- Iniziativa: {{derived.core.initiative_mod}}\n- Velocità: {{derived.core.speed_total}} ft (base {{derived.core.speed_base}}, mod {{derived.core.speed_mod}})\n- CMB/CMD: {{derived.core.cmb}} / {{derived.core.cmd}}\n- Attacchi (Mischia):\n  {% for a in (derived.core.attacks.melee or []) %}- {{a.name}} — {{a.atk}} — {{a.dmg}} {{(\"— \"+a.notes) if a.notes else \"\"}}{% endfor %}\n- Attacchi (Distanza):\n  {% for a in (derived.core.attacks.ranged or []) %}- {{a.name}} — {{a.atk}} — {{a.dmg}} {{(\"— \"+a.notes) if a.notes else \"\"}}{% endfor %}\n\n## \U0001F4D8 Abilità\n{% if derived.core.skills_by_name %}\n| Abilità | Gradi | Mod | Totale | Classe |\n|---|---:|---:|---:|:--:|\n{% for n, s in derived.core.skills_by_name.items() %}| {{n}} | {{s.gradi or 0}} | {{s.mod or 0}} | {{s.totale or 0}} | {{'✔' if s.classe else ''}} |\n{% endfor %}\n{% else %}- —{% endif %}\n\n## ✨ Magia\n### Riepilogo Slot & CD\n- Slot/giorno: {% if magia.slots_per_day %}{% for k,v in magia.slots_per_day.items() %}{{k}}°={{v}}{% if not loop.last %}, {% endif %}{% endfor %}{% else %}—{% endif %}\n- CD per livello: {% if magia.cd_by_level %}{% for k,v in magia.cd_by_level.items() %}{{k}}°={{v}}{% if not loop.last %}, {% endif %}{% endfor %}{% else %}—{% endif %}\n- Lista:\n{% for lvl, spells in magia.spell_list.items() %}- {{lvl}}°: {{spells | join(\", \")}}{% endfor %}\n\n## \U0001F4E6 Equipaggiamento\n- Oggetti: {{equipaggiamento | join(\", \") or \"—\"}}\n- Monete: PP {{equipment_summary.currency.pp}} • GP {{equipment_summary.currency.gp}} • SP {{equipment_summary.currency.sp}} • CP {{equipment_summary.currency.cp}}\n- Peso totale: {{equipment_summary.peso_totale_lb}} lb {{(\"— Carico: \"+equipment_summary.carico) if equipment_summary.carico else \"\"}}\n\n## \U0001F43E Companion / Famigli (sintesi)\n{% if companions and (companions | length) > 0 %}{% for c in companions %}- {{c.nome}} — {{c.tipo}} — {{c.note or \"\"}}{% endfor %}{% else %}- Nessuno{% endif %}\n\n## \U0001F517 Sinergie rilevate\n{% for s in sinergie %}- {{s}}{% endfor %}\n\n## \U0001F4DA Fonti Meta (ord. autorità)\n{% for f in fonti_meta %}- {{f.badge}} [{{f.tipo}}]({{f.link}}) — {{f.descrizione}}{% endfor %}\n\n## \U0001F4CA Benchmark Dettagliato — Auto Benchmark\n### \U0001F50E Riferimento: **{{benchmark_reference_label}}**\n| Categoria | Stato | Δ % vs Ref |\n|-----------|-------|------------|\n| DPR 1–3   | {{benchmarks.DPR_early_status}} | {{benchmarks.DPR_early_delta}}% |\n| DPR 4+    | {{benchmarks.DPR_late_status}} | {{benchmarks.DPR_late_delta}}% |\n| Difesa    | {{benchmarks.Defense_status}} | {{benchmarks.Defense_delta}}% |\n| Buff      | {{benchmarks.Buff_status}} | - |\n| Azioni    | {{benchmarks.Actions_status}} | - |\n| Scaling   | {{benchmarks.Scaling_status}} | - |\n\n**Origine suggerimenti:** {{source_mix_summary()}}\n\n## \U0001F3C6 Meta Tier\n**{{benchmarks.meta_tier or statistiche_chiave.meta_tier}}**\n\n{% if benchmark_comparison %}\n---\n## \U0001F4CA Confronto con Archetipi Esterni — Benchmark Comparativo\n### \U0001F50D Riferimento: **{{benchmark_comparison.reference_label}}** ({{\"Automatico\" if benchmark_comparison.auto else \"Manuale\"}})\n| Categoria | Stato | Δ % vs Ref |\n|-----------|-------|------------|\n{% for categoria, dati in benchmark_comparison.comparison.items() %}| {{categoria}} | {{dati.status}} | {{dati.diff}} |\n{% endfor %}\n{% endif %}\n\n<!-- @minmax_flags {{ flags_pack() }} -->\n<!-- @view_toggles {\"pfs\":\"{{ 'on' if (rules.pfs_active) else 'off' }}\",\"abp\":\"{{ 'on' if (rules.abp_active) else 'off' }}\",\"eitr\":\"{{ 'on' if (rules.eitr_active) else 'off' }}\",\"style\":\"{{ player_style or '' }}\"} -->\n"
+  build_card_compact: "---\n## \U0001F4DC Build Card — Stato Attuale\n**[Step {{step}}/{{step_total}}] {{step_labels[step]}}**\n\n### {% for c in classi %}{{c.nome}} ({{c.livelli}}){% if not loop.last %} / {% endif %}{% endfor %} — {{razza}} | CA {{statistiche_chiave.CA}} | PF {{statistiche_chiave.PF}} | DPR Nova {{statistiche_chiave.DPR_Nova}} | Meta Tier {{statistiche_chiave.meta_tier}}\n**Stats:** For {{statistiche.Forza}}, Dex {{statistiche.Destrezza}}, Cos {{statistiche.Costituzione}}, Int {{statistiche.Intelligenza}}, Sag {{statistiche.Saggezza}}, Car {{statistiche.Carisma}}\n**Salvezze:** T {{salvezze.Tempra}}, R {{salvezze.Riflessi}}, V {{salvezze.Volontà}}\n\n\U0001F9E0 Interprete: {{mda_rating_text(player_style, roleplay.psico_top3)}} · \U0001F3AD Psico: {{roleplay.psico_top3 or \"—\"}}\n\U0001F9F7 Legami: {{ (roleplay.legami or []) | join(\", \") or \"—\" }}\n\U0001FA99 Monete: PP {{equipment_summary.currency.pp}} • GP {{equipment_summary.currency.gp}} • SP {{equipment_summary.currency.sp}} • CP {{equipment_summary.currency.cp}} • Peso {{equipment_summary.peso_totale_lb}} lb {{(\"(\"+equipment_summary.carico+\")\") if equipment_summary.carico else \"\"}}\n✨ Slot/Giorno: {% if magia.slots_per_day %}{% for k,v in magia.slots_per_day.items() %}{{k}}°={{v}}{% if not loop.last %}, {% endif %}{% endfor %}{% else %}—{% endif %}\n\n\U0001F3AF Ruolo: {{ruolo}}  ·  \U0001F3AD Stile: {{player_style or \"—\"}}\n\U0001F527 Regole: {{rules_status_text()}}\n\U0001F3F7️ Fonti: {{fonti | join(\", \")}} |  \U0001F4DA **Fonti Meta (ord. autorità)**:  {% for f in fonti_meta %}{{f.badge}} [{{f.tipo}}]({{f.link}}) — {{f.descrizione}}{% if not loop.last %} · {% endif %}{% endfor %}\n{% if tratti %}\U0001F396️ Tratti: {% for t in tratti %}{{t.nome}} ({{t.descrizione}}){% if not loop.last %} — {% endif %}{% endfor %}{% endif %}\n\U0001F4D6 Background: {{background}}\n\n\U0001F4C8 Progressione Livelli:\n       {% for p in progressione %}\n       {% set _priv = p.privilegi %}\n\U0001F539 Livello {{p.livello}}:\n       {{ _priv if (_priv is string) else ((_priv | default([])) | join(\", \")) }}\n       {% if p.talento %} ⭐ Talento: {{p.talento}}{% endif %}{% if note_progressione[loop.index0] %} \U0001F4DD Note: {{note_progressione[loop.index0]}}{% endif %}\n       {% endfor %}\n\n✨ Magia:\n{% for lvl, spells in magia.spell_list.items() %}{{lvl}}°: {{spells | join(\", \")}}{% endfor %}\n\n\U0001F6E0 Equipaggiamento: {{equipaggiamento | join(\", \")}}\n---\n**Benchmark:**\nDPR Early {{benchmarks.DPR_early_status}} {{benchmarks.DPR_early_delta}}%  \nDPR Late {{benchmarks.DPR_late_status}} {{benchmarks.DPR_late_delta}}%  \nDifesa {{benchmarks.Defense_status}} {{benchmarks.Defense_delta}}%  \nScalabilità: {{benchmarks.Scaling_status}}  \nOrigine: {{source_mix_summary()}}\n---\n\n<!-- @minmax_flags {{ flags_pack() }} -->\n<!-- @view_toggles {\"pfs\":\"{{ 'on' if (rules.pfs_active) else 'off' }}\",\"abp\":\"{{ 'on' if (rules.abp_active) else 'off' }}\",\"eitr\":\"{{ 'on' if (rules.eitr_active) else 'off' }}\",\"style\":\"{{ player_style or '' }}\"} -->\n---\n"
+  build_card_extended: "# \U0001F5C2 Build Card — Estesa\n\n## Informazioni Base\n- Nome: {{nome}}\n- Classi:\n  {% for c in classi %}\n  - {{c.nome}} ({{c.livelli}}){% if c.archetipi %} — Archetipi: {{c.archetipi | join(\", \")}}{% endif %}\n  {% endfor %}\n- Razza: {{razza}} · Livello Totale: {{get_total_level(classi)}}\n- Ruolo: {{ruolo}}  ·  \U0001F3AD Stile: {{player_style or \"—\"}}\n- Regole: {{rules_status_text()}}\n- Allineamento: {{profile.allineamento}} · Divinità: {{profile.divinita}} · Taglia: {{profile.taglia}} · Lingue: {{(profile.lingue or []) | join(\", \") or \"—\"}}\n\n## \U0001F3AD Narrativa / Roleplay\n- Stile interpretativo: {{mda_rating_text(player_style, roleplay.psico_top3)}}  (Psico Top-3: {{roleplay.psico_top3 or \"—\"}})\n- Storia breve: {{roleplay.storia_breve or \"—\"}}\n- Legami: {{(roleplay.legami or []) | join(\", \") or \"—\"}}\n- Ganci: {{(roleplay.ganci or []) | join(\", \") or \"—\"}}\n- Flavor: {{roleplay.flavor or \"—\"}}\n\n## \U0001F4CA Statistiche\n| Stat      | Valore |\n|-----------|--------|\n| Forza     | {{statistiche.Forza}} |\n| Destrezza | {{statistiche.Destrezza}} |\n| Costituzione | {{statistiche.Costituzione}} |\n| Intelligenza | {{statistiche.Intelligenza}} |\n| Saggezza  | {{statistiche.Saggezza}} |\n| Carisma   | {{statistiche.Carisma}} |\n| CA Totale | {{statistiche_chiave.CA}} |\n| Touch / Flat | {{derived.core.ac_touch}} / {{derived.core.ac_flat}} |\n| PF        | {{statistiche_chiave.PF}} |\n| Tempra / Riflessi / Volontà | {{salvezze.Tempra}} / {{salvezze.Riflessi}} / {{salvezze.Volontà}} |\n| DPR Base / Nova | {{statistiche_chiave.DPR_Base}} / {{statistiche_chiave.DPR_Nova}} |\n\n### Breakdown CA\n- Base 10 + Armatura {{derived.core.ac_armor}} + Scudo {{derived.core.ac_shield}} + Des {{derived.core.ac_dex}} + Naturale {{derived.core.ac_natural}} + Deflessione {{derived.core.ac_deflection}} + Schivare {{derived.core.ac_dodge}} + Altro {{derived.core.ac_other}}\n\n## ⚔️ Combattimento\n- Iniziativa: {{derived.core.initiative_mod}}\n- Velocità: {{derived.core.speed_total}} ft (base {{derived.core.speed_base}}, mod {{derived.core.speed_mod}})\n- CMB/CMD: {{derived.core.cmb}} / {{derived.core.cmd}}\n- Attacchi (Mischia):\n  {% for a in (derived.core.attacks.melee or []) %}- {{a.name}} — {{a.atk}} — {{a.dmg}} {{(\"— \"+a.notes) if a.notes else \"\"}}{% endfor %}\n- Attacchi (Distanza):\n  {% for a in (derived.core.attacks.ranged or []) %}- {{a.name}} — {{a.atk}} — {{a.dmg}} {{(\"— \"+a.notes) if a.notes else \"\"}}{% endfor %}\n\n## \U0001F4D8 Abilità\n{% if derived.core.skills_by_name %}\n| Abilità | Gradi | Mod | Totale | Classe |\n|---|---:|---:|---:|:--:|\n{% for n, s in derived.core.skills_by_name.items() %}| {{n}} | {{s.gradi or 0}} | {{s.mod or 0}} | {{s.totale or 0}} | {{'✔' if s.classe else ''}} |\n{% endfor %}\n{% else %}- —{% endif %}\n\n## ✨ Magia\n### Riepilogo Slot & CD\n- Slot/giorno: {% if magia.slots_per_day %}{% for k,v in magia.slots_per_day.items() %}{{k}}°={{v}}{% if not loop.last %}, {% endif %}{% endfor %}{% else %}—{% endif %}\n- CD per livello: {% if magia.cd_by_level %}{% for k,v in magia.cd_by_level.items() %}{{k}}°={{v}}{% if not loop.last %}, {% endif %}{% endfor %}{% else %}—{% endif %}\n- Lista:\n{% for lvl, spells in magia.spell_list.items() %}- {{lvl}}°: {{spells | join(\", \")}}{% endfor %}\n\n## \U0001F4E6 Equipaggiamento\n- Oggetti: {{equipaggiamento | join(\", \") or \"—\"}}\n- Monete: PP {{equipment_summary.currency.pp}} • GP {{equipment_summary.currency.gp}} • SP {{equipment_summary.currency.sp}} • CP {{equipment_summary.currency.cp}}\n- Peso totale: {{equipment_summary.peso_totale_lb}} lb {{(\"— Carico: \"+equipment_summary.carico) if equipment_summary.carico else \"\"}}\n\n## \U0001F43E Companion / Famigli (sintesi)\n{% if companions and (companions | length) > 0 %}{% for c in companions %}- {{c.nome}} — {{c.tipo}} — {{c.note or \"\"}}{% endfor %}{% else %}- Nessuno{% endif %}\n\n## \U0001F517 Sinergie rilevate\n{% for s in sinergie %}- {{s}}{% endfor %}\n\n## \U0001F4DA Fonti Meta (ord. autorità)\n{% for f in fonti_meta %}- {{f.badge}} [{{f.tipo}}]({{f.link}}) — {{f.descrizione}}{% endfor %}\n\n## \U0001F4CA Benchmark Dettagliato — Auto Benchmark\n### \U0001F50E Riferimento: **{{benchmark_reference_label}}**\n| Categoria | Stato | Δ % vs Ref |\n|-----------|-------|------------|\n| DPR 1–3   | {{benchmarks.DPR_early_status}} | {{benchmarks.DPR_early_delta}}% |\n| DPR 4+    | {{benchmarks.DPR_late_status}} | {{benchmarks.DPR_late_delta}}% |\n| Difesa    | {{benchmarks.Defense_status}} | {{benchmarks.Defense_delta}}% |\n| Buff      | {{benchmarks.Buff_status}} | - |\n| Azioni    | {{benchmarks.Actions_status}} | - |\n| Scaling   | {{benchmarks.Scaling_status}} | - |\n\n**Origine suggerimenti:** {{source_mix_summary()}}\n\n## \U0001F3C6 Meta Tier\n**{{benchmarks.meta_tier or statistiche_chiave.meta_tier}}**\n\n{% if benchmark_comparison %}\n---\n## \U0001F4CA Confronto con Archetipi Esterni — Benchmark Comparativo\n### \U0001F50D Riferimento: **{{benchmark_comparison.reference_label}}** ({{\"Automatico\" if benchmark_comparison.auto else \"Manuale\"}})\n| Categoria | Stato | Δ % vs Ref |\n|-----------|-------|------------|\n{% for categoria, dati in benchmark_comparison.comparison.items() %}| {{categoria}} | {{dati.status}} | {{dati.diff}} |\n{% endfor %}\n{% endif %}\n\n<!-- @minmax_flags {{ flags_pack() }} -->\n<!-- @view_toggles {\"pfs\":\"{{ 'on' if (rules.pfs_active) else 'off' }}\",\"abp\":\"{{ 'on' if (rules.abp_active) else 'off' }}\",\"eitr\":\"{{ 'on' if (rules.eitr_active) else 'off' }}\",\"style\":\"{{ player_style or '' }}\"} -->\n"
   vtt_export_json: |
     {
       "name": "{{nome}}",
@@ -2386,7 +2357,7 @@ ui_templates:
         {"name": "{{c.nome}}", "archetypes": {{c.archetipi | default([]) | tojson}}, "levels": {{c.livelli}}}{% if not loop.last %},{% endif %}
         {% endfor %}
       ],
-      "stats": {"STR": {{statistiche.FOR}},"DEX": {{statistiche.DES}},"CON": {{statistiche.COS}},"INT": {{statistiche.INT}},"WIS": {{statistiche.SAG}},"CHA": {{statistiche.CAR}}},
+      "stats": {"STR": {{statistiche.Forza}},"DEX": {{statistiche.Destrezza}},"CON": {{statistiche.Costituzione}},"INT": {{statistiche.Intelligenza}},"WIS": {{statistiche.Saggezza}},"CHA": {{statistiche.Carisma}}},
       "saves": {"Fort": {{salvezze.Tempra}},"Ref": {{salvezze.Riflessi}},"Will": {{salvezze.Volontà}}},
       "initiative": {{derived.core.initiative_mod}},
       "speed": {{derived.core.speed_total}},
@@ -2408,3 +2379,125 @@ ui_templates:
 auto_append:
   mode: MinMax Builder
   append_template: build_card_compact
+
+# Wizard Evoker — Progressione di riferimento (livelli 3-10)
+wizard_evoker_progressione:
+  descrizione: "Linea guida pronta all'uso per compilare la progressione del mago umano Evoker, completa di slot, PF/TS/skill, CA e note equipaggiamento."
+  livelli:
+    - livello: 3
+      slot_incantesimi: "1°:6 / 2°:4 / 3°:2"
+      pf: 28
+      salvezze: {Tempra: 3, Riflessi: 4, Volontà: 6}
+      skill_hint: "Conoscenze (arcana) 9, Sapienza Magica 9, Percezione 6"
+      ca: 16
+      talento: "Incantesimi focalizzati (Invocazione)"
+      equip: ["Bacchetta di dardo incantato (CL3)"]
+    - livello: 4
+      slot_incantesimi: "1°:6 / 2°:5 / 3°:4"
+      pf: 36
+      salvezze: {Tempra: 4, Riflessi: 5, Volontà: 7}
+      skill_hint: "Conoscenze (arcana) 10, Sapienza Magica 10, Percezione 7"
+      ca: 16
+      talento: "Magia focalizzata superiore (Invocazione)"
+      equip: ["Veste da mago rinforzata"]
+    - livello: 5
+      slot_incantesimi: "1°:7 / 2°:6 / 3°:5 / 4°:3"
+      pf: 44
+      salvezze: {Tempra: 4, Riflessi: 5, Volontà: 8}
+      skill_hint: "Conoscenze (arcana) 12, Sapienza Magica 12, Percezione 8"
+      ca: 17
+      talento: "Incantesimi massimizzati"
+      equip: ["Perla di potere I", "Anello di protezione +1"]
+    - livello: 6
+      slot_incantesimi: "1°:7 / 2°:6 / 3°:6 / 4°:4"
+      pf: 52
+      salvezze: {Tempra: 5, Riflessi: 6, Volontà: 9}
+      skill_hint: "Conoscenze (arcana) 13, Sapienza Magica 13, Percezione 9"
+      ca: 17
+      talento: "Talento bonus (Mago) — Incantesimi rapidi"
+      equip: ["Bacchetta di palla di fuoco (CL6)"]
+    - livello: 7
+      slot_incantesimi: "1°:8 / 2°:7 / 3°:7 / 4°:5 / 5°:3"
+      pf: 60
+      salvezze: {Tempra: 5, Riflessi: 6, Volontà: 10}
+      skill_hint: "Conoscenze (arcana) 14, Sapienza Magica 14, Percezione 9"
+      ca: 18
+      talento: "Incantesimi focalizzati superiori (Invocazione)"
+      equip: ["Cintura della destrezza +2"]
+    - livello: 8
+      slot_incantesimi: "1°:8 / 2°:7 / 3°:7 / 4°:6 / 5°:4"
+      pf: 68
+      salvezze: {Tempra: 6, Riflessi: 7, Volontà: 11}
+      skill_hint: "Conoscenze (arcana) 15, Sapienza Magica 15, Percezione 10"
+      ca: 18
+      talento: "Penetrare resistenza magica"
+      equip: ["Pergamena di muro di forza"]
+    - livello: 9
+      slot_incantesimi: "1°:8 / 2°:7 / 3°:7 / 4°:7 / 5°:5"
+      pf: 76
+      salvezze: {Tempra: 6, Riflessi: 7, Volontà: 12}
+      skill_hint: "Conoscenze (arcana) 17, Sapienza Magica 17, Percezione 10"
+      ca: 19
+      talento: "Incantesimi rapidi migliorati"
+      equip: ["Bacchetta di fulmine (CL9)"]
+    - livello: 10
+      slot_incantesimi: "1°:8 / 2°:7 / 3°:7 / 4°:7 / 5°:6"
+      pf: 84
+      salvezze: {Tempra: 7, Riflessi: 8, Volontà: 13}
+      skill_hint: "Conoscenze (arcana) 18, Sapienza Magica 18, Percezione 11"
+      ca: 20
+      talento: "Incantesimi potenziati + Penetrare resistenza magica migliorato"
+      equip: ["Perla di potere IV", "Focus runici"]
+
+# Fighter (Shielded Fighter) — progressione difensiva livelli 5-10
+shielded_fighter_progressione:
+  descrizione: "Checkpoint rapidi per estendere il Fighter Shielded fino al livello 10 con PF, TS, CA, skill ed equipaggiamento da tank." 
+  livelli:
+    - livello: 5
+      pf: 52
+      salvezze: {Tempra: 7, Riflessi: 4, Volontà: 3}
+      ca: 24
+      privilegi: ["Shielded Stance avanzata (+2 CA in copertura)", "Weapon Training (scudi) +1"]
+      talento: "Greater Shield Focus"
+      skill_hint: "Percezione 8, Raggirare 5 per controllare la folla"
+      equip: ["Scudo pesante +1 (bashing)", "Pietra della fortuna"]
+    - livello: 6
+      pf: 63
+      salvezze: {Tempra: 8, Riflessi: 4, Volontà: 3}
+      ca: 25
+      privilegi: ["Armor Training II"]
+      talento: "Improved Bull Rush (bonus) + Bodyguard"
+      skill_hint: "Professione (soldato) 6, Sopravvivenza 5"
+      equip: ["Corazza completa +1", "Mantello della resistenza +1"]
+    - livello: 7
+      pf: 74
+      salvezze: {Tempra: 9, Riflessi: 5, Volontà: 3}
+      ca: 26
+      privilegi: ["Bravery +2", "Ricochet Bash"]
+      talento: "Step Up and Strike"
+      skill_hint: "Acrobazia 8 per chiudere le distanze"
+      equip: ["Scudo pesante +2 con emblema", "Cintura della forza +4"]
+    - livello: 8
+      pf: 85
+      salvezze: {Tempra: 10, Riflessi: 5, Volontà: 4}
+      ca: 27
+      privilegi: ["Armor Training III", "Penalità scudo azzerata"]
+      talento: "Saving Shield (bonus)"
+      skill_hint: "Percezione 10, Artigianato (armi) 5"
+      equip: ["Armatura a piastre +2", "Guanti dell'arma focalizzata"]
+    - livello: 9
+      pf: 96
+      salvezze: {Tempra: 11, Riflessi: 6, Volontà: 4}
+      ca: 28
+      privilegi: ["Weapon Training (scudi) +2", "Interruzione con scudo contro cariche"]
+      talento: "Disruptive"
+      skill_hint: "Intimidire 11 per tenere l'aggro"
+      equip: ["Scudo pesante +2 fortificato", "Anello di protezione +2"]
+    - livello: 10
+      pf: 107
+      salvezze: {Tempra: 12, Riflessi: 6, Volontà: 5}
+      ca: 29
+      privilegi: ["Armor Training IV", "Bastione esperto (RD 2/- con scudo alzato)"]
+      talento: "Improved Critical (scudo pesante) + Stand Still"
+      skill_hint: "Percezione 12, Furtività 5 per pattuglie notturne"
+      equip: ["Scudo torreggiante in mithral", "Amuleto dell'armatura naturale +2", "Pozioni di cura maggiore"]

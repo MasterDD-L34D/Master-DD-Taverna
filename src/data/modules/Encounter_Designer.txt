@@ -50,6 +50,14 @@ constraints:
   - Se PFS attivo, niente 3PP/HR e i contenuti non legali vengono marcati.
   - Bilanciamento guidato da soglie astratte (Easy/Moderate/Challenging/Deadly).
 
+tracker_notes:
+  - id: ENC-OBS-01
+    note: "Conformità legale tracciata: stat, DC e badge restano numerici/astratti senza testo protetto PFS/Paizo."
+  - id: ENC-OBS-02
+    note: "Pipeline completa registrata: setup → auto-bilanciamento → QA obbligatoria → export VTT/MD/PDF con CTA dedicate."
+  - id: ENC-ERR-01
+    note: "QA clampata: nessun errore bloccante sul calcolo CR/QA dopo il rerun dei gate e helper clamped."
+
 integration:
   uses:
     - minmax_builder.txt   # DPR/CA benchmarks
@@ -381,7 +389,7 @@ commands:
     action:
       - if: '{{ (encounter_state.enemies or []) | length == 0 }}'
         then: { output: "❌ Nessun nemico nell'incontro." }
-      - if: '{{ not encounter_state.balance_snapshot.cr_effective_est }}'
+      - if: '{{ not (encounter_state.balance_snapshot.cr_effective_est and encounter_state.balance_snapshot.xp_budget_est) }}'
         then: { command: /auto_balance }
       - set: encounter_state.export.sources_tagged
         value: '{{ enemies_badge_ok(encounter_state.enemies) }}'
@@ -391,17 +399,22 @@ commands:
         value: '{{ pacing_waves_defined(encounter_state.pacing) }}'
       - set: encounter_state.export.loot_resolved
         value: '{{ loot_policy_resolved(encounter_state.enemies, encounter_state.loot) }}'
+      - set: balance_estimated
+        value: '{{ encounter_state.balance_snapshot.cr_effective_est is not none and encounter_state.balance_snapshot.xp_budget_est is not none }}'
+      - set: encounter_state.export.balance_estimated
+        value: '{{ balance_estimated }}'
       - run_qagates:
-          requires: [enemies_exist, cr_estimated, sources_tagged, pfs_gate_ok, pacing_defined, loot_resolved]
+          requires: [enemies_exist, cr_estimated, balance_estimated, sources_tagged, pfs_gate_ok, pacing_defined, loot_resolved]
           as: qa_ok
       - set: encounter_state.export.qa_ok
-        value: '{{ qa_ok and encounter_state.export.sources_tagged and encounter_state.export.pfs_gate_ok and encounter_state.export.pacing_defined and encounter_state.export.loot_resolved }}'
+        value: '{{ qa_ok and encounter_state.export.sources_tagged and encounter_state.export.pfs_gate_ok and encounter_state.export.pacing_defined and encounter_state.export.loot_resolved and encounter_state.export.balance_estimated }}'
       - output: >-
           {{ '✅ QA OK.' if encounter_state.export.qa_ok else '❌ QA FAIL: rivedi bilanciamento o rischi.' }}
-          Checklist: badge={{'OK' if encounter_state.export.sources_tagged else 'KO'}},
+          Checklist: bilanciamento={{'OK' if encounter_state.export.balance_estimated else 'KO (usa /auto_balance o /simulate_encounter)'}},
+          badge={{'OK' if encounter_state.export.sources_tagged else 'KO'}},
           PFS={{'OK' if encounter_state.export.pfs_gate_ok else 'KO (HR bloccato)'}},
-          Pacing={{'OK' if encounter_state.export.pacing_defined else 'KO (usa /set_pacing con waves)'}},
-          Loot={{'OK' if encounter_state.export.loot_resolved else 'KO (imposta /set_loot_policy o loot_policy per nemici)'}}.
+          Pacing={{'OK' if encounter_state.export.pacing_defined else 'KO (usa /set_pacing)'}},
+          Loot={{'OK' if encounter_state.export.loot_resolved else 'KO (usa /set_loot_policy o loot_policy per nemici)'}}.
 
   /export_encounter:
     description: Esporta card estesa, JSON VTT o MD (QA-gated).
@@ -488,6 +501,16 @@ commands:
     action:
       - output: "⚖️ RULING → {{question}}"
       - output_template: ruling_stub    # placeholder, delega a ruling_expert.txt
+
+pipeline_definition:
+  ready_steps:
+    - "Setup party/difficoltà (\"/start_encounter\" o \"/set_party\") con badge PFS e timer QA."
+    - "Ambiente/obiettivi definiti prima di aggiungere nemici (\"/set_environment\", \"/set_objectives\")."
+    - "Nemici aggiunti o generati (\"/add_enemy\"/\"/auto_pick_enemies\") prima del bilanciamento."
+    - "Auto-bilanciamento e simulazione (\"/auto_balance\", \"/simulate_encounter\") per ottenere snapshot CR/XP."
+    - "QA e gate export tramite \"/validate_encounter\" che richiama i gate e blocca export se falliscono."
+    - "Export finale (\"/export_encounter\") disponibile solo quando `export.qa_ok` è true."
+  qa_gate: "QA autoinvocata nello step 6 del flow; l’export rifiuta richieste senza QA riuscita."
 
 flow:
   steps:

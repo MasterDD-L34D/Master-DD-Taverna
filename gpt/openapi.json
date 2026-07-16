@@ -26,6 +26,9 @@
                                 }
                             }
                         }
+                    },
+                    "503": {
+                        "description": "Directory mancanti o file obbligatori assenti"
                     }
                 }
             }
@@ -74,7 +77,7 @@
             "get": {
                 "operationId": "getModuleContent",
                 "summary": "Contenuto testuale di un modulo",
-                "description": "Restituisce il testo del modulo. Se ALLOW_MODULE_DUMP=false lato server, il contenuto viene troncato a 4000 caratteri con un marcatore finale.",
+                "description": "Restituisce il testo del modulo. Se ALLOW_MODULE_DUMP=false lato server, il contenuto viene troncato a 4000 caratteri con un marcatore finale. Supporta anche stub per il minmax builder.",
                 "parameters": [
                     {
                         "name": "name",
@@ -84,6 +87,56 @@
                             "type": "string"
                         },
                         "description": "Nome del file modulo (es. base_profile.txt)"
+                    },
+                    {
+                        "name": "mode",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "default": "extended"
+                        },
+                        "description": "Modalita' builder (core/extended/full-pg)"
+                    },
+                    {
+                        "name": "class",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Classe per lo stub minmax builder"
+                    },
+                    {
+                        "name": "race",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Razza per lo stub minmax builder"
+                    },
+                    {
+                        "name": "archetype",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Archetipo per lo stub minmax builder"
+                    },
+                    {
+                        "name": "level",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "Livello per lo stub minmax builder"
+                    },
+                    {
+                        "name": "stub",
+                        "in": "query",
+                        "schema": {
+                            "type": "boolean",
+                            "default": false
+                        },
+                        "description": "Restituisce lo stub payload per il minmax builder"
                     }
                 ],
                 "security": [
@@ -93,11 +146,111 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Contenuto testuale",
+                        "description": "Contenuto testuale o JSON stub",
                         "content": {
                             "text/plain": {
                                 "schema": {
                                     "type": "string"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Modulo non trovato"
+                    }
+                }
+            },
+            "post": {
+                "operationId": "postModuleContent",
+                "summary": "Contenuto testuale di un modulo (modalita' POST)",
+                "description": "Equivalente POST di /modules/{name}; utile per inviare body JSON per lo stub builder.",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Nome del file modulo"
+                    },
+                    {
+                        "name": "mode",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "default": "extended"
+                        }
+                    },
+                    {
+                        "name": "class",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "race",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "archetype",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "level",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "stub",
+                        "in": "query",
+                        "schema": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Contenuto testuale o JSON stub",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            },
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
                                 }
                             }
                         }
@@ -164,6 +317,75 @@
                     },
                     "404": {
                         "description": "Modulo non trovato"
+                    }
+                }
+            }
+        },
+        "/modules/taverna_saves/meta": {
+            "get": {
+                "operationId": "getTavernaSavesMeta",
+                "summary": "Metadati directory taverna_saves",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Metadati e policy di storage",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/modules/taverna_saves/quota": {
+            "get": {
+                "operationId": "getTavernaSavesQuota",
+                "summary": "Quota e utilizzo taverna_saves",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Metriche quota",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/storage_meta": {
+            "get": {
+                "operationId": "getStorageMeta",
+                "summary": "Metadati storage globale",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Metadati storage",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -254,6 +476,57 @@
                     },
                     "404": {
                         "description": "Risorsa non trovata"
+                    }
+                }
+            }
+        },
+        "/ruling-expert": {
+            "post": {
+                "operationId": "rulingExpert",
+                "summary": "Stub Ruling Expert",
+                "description": "Restituisce un badge ruling validato; il vero ruling e' nel modulo ruling_expert.txt.",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ruling badge",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/metrics": {
+            "get": {
+                "operationId": "getMetrics",
+                "summary": "Metriche Prometheus",
+                "description": "Espone le metriche Prometheus; richiede API key o IP in allowlist.",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Metriche Prometheus",
+                        "content": {
+                            "text/plain": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Accesso non autorizzato"
                     }
                 }
             }

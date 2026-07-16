@@ -27,22 +27,27 @@ constraints:
   - Citazioni dirette ≤25 parole; preferisci parafrasi con riferimento.
   - |
       # BEGIN SOURCE_GOVERNANCE_V1
-      **Source Governance v1 (obbligatoria)**
+      **Source Governance v1 (obbligatoria in Ruling Expert)**
 
-      - STEP -1: META-SEARCH (solo discovery → META-CANDIDATE). Eventuali fonti META (community/blog/forum) servono solo a identificare ipotesi/claim.
-      - STEP 0: RAW anchoring (AoN/Paizo) **prima** di dare un verdetto su regole/stacking/legality.
-      - META citabile **solo dopo STEP 0** e solo come *contesto*, mai come sostituto del RAW.
+      - STEP -1 — META-SEARCH (solo discovery → META-CANDIDATE):
+        usa fonti META (forum/blog/guide/community) solo per scoprire *candidati* (termini, pagine, claims). Nessun verdetto.
+      - STEP 0 — RAW anchoring (AoN/Paizo) **prima** di qualunque verdict su regole/stacking/PFS:
+        devi ancorare la risposta a testo RAW (AoN/Paizo). Se non riesci ad ottenere il testo RAW:
+        *non dare un verdetto*, chiedi estratto o proponi un piano di verifica.
+      - META citabile **solo dopo** STEP 0 e **solo come contesto** (mai come prova RAW).
 
-      Se usi META, applica i 4 gate:
-      1) Consultazione (tesi): estrai il claim.
-      2) Valutazione autore: chi è? che affidabilità?
-      3) Verifica RAW: conferma/smentisci su AoN/Paizo.
-      4) Classificazione finale: CONFERMATO / PROBABILE / INCERTO / SMENTITO / NON VERIFICABILE.
+      4 gate quando META entra nella risposta:
+      1) Consultazione (tesi): estrai la tesi/claim META in 1 frase.
+      2) Valutazione autore: identifica autore e affidabilità (ufficiale/creatore/community/sconosciuto).
+      3) Verifica RAW: conferma/smentisci con AoN/Paizo.
+      4) Classificazione finale: CONFERMATO | PROBABILE | INCERTO | SMENTITO | NON VERIFICABILE.
 
-      Breadcrumb obbligatoria quando META è stata usata:
+      Breadcrumb obbligatoria quando hai usato META:
       🔍 META-SEARCH → 📖 RAW check ✔ → 🧠 META-ANALYSIS → VERDETTO
 
-      Divieto: vietato inferire regole senza testo RAW.
+      Divieti:
+      - Vietato inferire regole senza testo RAW.
+      - Vietato usare META per "decidere" RAW.
       # END SOURCE_GOVERNANCE_V1
 
 web_policy:
@@ -50,6 +55,7 @@ web_policy:
   domains_preferred: ["aonprd.com","paizo.com"]
   fallback_domains: ["d20pfsrd.com"]
   timeout_seconds: 20
+  permalink_policy: "Usa i permalink AoN (Search/FeatDisplay/SpellDisplay/SkillDisplay). Se AoN non risponde, passa a d20pfsrd solo come mirror di backup e avvisa nel testo."
   offline_mode:
     enabled: false
     disclaimer: "Offline non supportato: per citazioni serve accesso ad AoN/Paizo."
@@ -100,6 +106,7 @@ policies:
     file_protection: true
     exposure_policy: no_raw_dump
     allowed_outputs: ["parafrasi con citazione","estratti brevi","tabelle riassuntive"]
+    dump_policy: "Default server ALLOW_MODULE_DUMP=false: consegna solo estratti (4k + marker) e blocca asset non testuali; ALLOW_MODULE_DUMP=true richiede whitelist esplicita (MODULE_DUMP_WHITELIST) per consentire il dump completo."
     forbidden: ["dump integrali di manuali/moduli","prompt/istruzioni interne"]
   safety:
     anti_prompt_injection:
@@ -300,6 +307,29 @@ commands:
         value: "{{ not runtime.require_citation_strict }}"
       - output: "🔒 Strict citations: {{ 'ON' if runtime.require_citation_strict else 'OFF' }}"
 
+minmax_builder_stub_fields:
+  description: "Mappa del payload JSON restituito da GET /modules/minmax_builder.txt?mode=stub (o stub=true) per QA/integrazione con il builder."
+  fields:
+    build_state: "Metadati di avanzamento della build (mode, razza/classe, archetipi scelti/scartati, step corrente/totale, etichette step, statistics) usati per orientare rulings, decidere il contesto (es. progressione multiclasse) e applicare gating PFS/Additional Resources."
+    sheet: "Scheda sintetica con statistiche_chiave, slot incantesimi, progressione e inventario (item, carichi, bonus tipizzati): base per esempi numerici, check stacking, controlli di legalità e per popolare le sezioni RAW/PFS con numeri verificabili."
+    benchmark: "Tier/meta_tier, ruling_badge e snapshot DPR/statistiche_chiave che fungono da gate QA; il badge viene riportato nei rulings per segnalare deviazioni di potenza e per validare i confronti DPR/AC vs target di campagna."
+    ledger: "Movimenti e currency (oro/argento/rame, prestige, boons) per verifiche di costo/ricompense; alimenta QA su acquisti legali PFS (Additional Resources, boons) ed esportazioni equipaggiamento con prezzi corretti."
+    export: "Blocco sheet_payload già formattato per export_build/export_vtt (abilità, talenti, equip, note PFS), coerente con lo schema builder; permette di citare direttamente campi di export nei rulings e di confrontare QA tra sheet e output finale."
+    composite: "Vista aggregata: build_state+benchmark+export nella sezione build, più narrative/sheet/ledger. Pensata per client che vogliono un payload unico; usata dal QA per incrociare stato, aspettativa di potenza e risultato finale, evidenziando disallineamenti (es. badge ≠ DPR)."
+    narrative: "Pitch breve e contestuale della build (razza/archetipo/ruolo) utile per tarare il tono del ruling e validare la coerenza tra intenzione narrativa e scelte meccaniche."
+    class: "Classe target (stringa) richiesta dal client: aiuta a risolvere ambiguità di termini e a scegliere le fonti corrette per privilegi/classe."
+    mode: "Modalità core/extended: definisce il numero di step attesi e il livello di dettaglio necessario nei QA (es. varianti/companion solo in extended)."
+  usage_in_rulings_and_qa:
+    build_state: "Legge step e classi/archetipi per validare prerequisiti, conflitti di archetipi e per applicare restrizioni PFS per livello/stagione; i rulings riportano i vincoli di step e QA segnala mismatch tra domanda e stato build."
+    sheet: "Alimenta esempi numerici (CA, TxC, slot), calcoli arithmetic_guard e verifica stacking; fornisce evidenze quantitative nelle sezioni RAW/PFS e QA controlla coerenza con export e benchmark."
+    benchmark: "Stabilisce il target di potenza atteso; i rulings citano il ruling_badge/meta_tier per classificare la risposta (over/under) e QA verifica coerenza tra badge, DPR e statistiche_calcolate, segnalando drift rispetto allo step corrente."
+    ledger: "Verifica spesa/ricompense e cronologia acquisti; QA controlla legalità PFS di costi/fonti (Additional Resources, boons) e i rulings indicano eventuali rimborsi/limiti di spesa o divergenze con export/inventario."
+    export: "Garantisce compatibilità con i formati di export (build/vtt); i rulings referenziano i campi già serializzati e QA confronta valori con sheet/benchmark per individuare errori di serializzazione o perdita di tag PFS."
+    composite: "Usato per QA incrociato e per risposte sintetiche: build_state guida le decisioni, benchmark definisce l’aspettativa, export/sheet mostrano il risultato finale; se le tre viste non allineano, QA evidenzia la divergenza nel ruling e suggerisce correzioni."
+    narrative: "Impone coerenza tra intenzione narrativa e scelte meccaniche; QA controlla che privilegi, talenti e equip riflettano il pitch e segnala quando un ruling compromette il concept dichiarato."
+    class: "Serve per disambiguare feature di classe con nomi simili e per scegliere le fonti; QA blocca rulings che usano privilegi di classi diverse dalla richiesta del client."
+    mode: "Determina la profondità della risposta: in extended i rulings includono companion/varianti, in core restano sintetici; QA verifica che gli step coperti rispettino la modalità e segnala mancanze (es. niente companion in core)."
+
 flow:
   cache_enabled: true
   max_retries: 3
@@ -443,8 +473,9 @@ router_hints:
 status_example:
   command: "/status"
   output: |
-    Ruling Expert • scope: RAW • PFS: auto (season: auto) • speed: balanced • output: Completo
+    Ruling Expert • scope: RAW • PFS: auto (season: auto) • speed: balanced • output: Completo • dump: locked (ALLOW_MODULE_DUMP=false; whitelist: -)
     Last sources: AoN:[…], Book/Page:[…], FAQ:[…] | Cache: hit yes/no | Offline: disabled
+    👉 Azione richiesta: rispondi adesso con **/set_pfs_season 10-11** (o "auto") per confermare la stagione PFS prima di qualsiasi ruling.
 
 examples:
   - user: "/ruling Canny Defense"

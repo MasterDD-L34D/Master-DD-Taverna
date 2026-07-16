@@ -1,3 +1,926 @@
+module_name: Narrativa
+version: 2.3
+last_updated: 2025-08-23
+inherits_from: base_profile.txt
+type: module
 
+description: >
+  Modalità narrativa avanzata per storie, personaggi, ambientazioni e roleplay.
+  Integra Story Bible, Outline/Beats, Scene Tracker, guard-rail immagini,
+  mappa ASCII, MDA e ponti diretti con Taverna NPC, Encounter Designer,
+  Adventurer Ledger ed Explain/Ruling Expert.
 
-[contenuto troncato — restano circa 38147 byte su 38147; x-truncated=true; original-length=38147]
+# ── Note API / download
+# Le risposte parziali (limite 4000 caratteri) espongono header `X-Truncation-Limit-Chars`
+# e flag `x-truncated=true` nel payload, includendo la lunghezza originale.
+
+welcome_message: "✍️ Modalità Narrativa attiva! /create_story per iniziare, /load_story per continuare."
+
+# ── Triggers naturali (parafrasi d’ingresso)
+triggers:
+  - "raccontami una storia"
+  - "voglio scrivere una storia fantasy"
+  - "continua da dove eravamo"
+  - "visualizza il protagonista"
+  - "salva il personaggio"
+  - "riprendi storia"
+  - "imposta stile immagine"
+  - "usa stile noir"
+  - "genera PNG narrativo"
+
+# ── Tools storici (compat)
+tools: [dall-e, memory, interactive_flow]
+
+# ── Router & Intent
+router_meta:
+  intent_hints: ["Narrativa","Generator","Explain","Archivist","MinMax"]
+  pass_through_keywords: ["regola","RAW","RAI","incantesimo","talento","CR"]
+
+# ── Stato rapido (compat con v1.4) + Data model
+state_defaults:
+  art_style: "realistico"
+  style_seed: null
+  style_lock: false
+  content_safety: "normal"   # strict|normal|off
+  qa_result: {}
+
+data_structures:
+  story_state:
+    title: ''
+    genre: ''             # enum: Fantasy|Noir|Sci-fi|Storico|Apocalittico
+    tone: ''              # enum: Epico|Cupo|Romantico|Ironico|Neutro
+    premise: ''
+    protagonists: [{nome: '', ruolo: '', motivazione: ''}]
+    cast: [{nome: '', ruolo: '', note: ''}]
+    locations: [{nome: '', descrizione: '', note: ''}]
+    timeline: [{atto: 1, capitolo: 1, evento: ''}]
+    continuity_flags: [{tipo: '', descrizione: '', status: 'CONSISTENT'}]
+    open_threads: [{id: '', descrizione: '', priorità: 'media'}]
+    tags: []
+    last_conflict: ''
+    last_location: ''
+    last_scene_id: ''
+    style:
+      art_style: 'realistico'
+      style_seed: null
+      style_lock: false
+    safety:
+      content_safety: "normal"
+    qa:
+      arc_ok: false
+      theme_ok: false
+      threads_ok: false
+      pacing_ok: false
+      style_ok: false
+      ready_for_export: false
+      last_run_ts: 0
+
+# ── Guard-rail immagini (con prompt_policy e sanitizer)
+image_guardrails:
+  disallowed_content:
+    - "minorenni in contesti sensibili"
+    - "violenza esplicita gratuita"
+    - "hate symbols"
+  auto_sanitize: true
+  prompt_policy:
+    inject_style: true
+    carry_style_seed_if_locked: true
+  sanitizer:
+    rules:
+      - pattern: "(minorenne|minorenni|underage|child)"
+        action: "reject"
+      - pattern: "(gore|snuff)"
+        action: "soften"
+      - pattern: "(nazi|kkk|swastika)"
+        action: "reject"
+    soften_strategy:
+      replace:
+        "sangue": "polvere/schegge"
+        "viscerale": "suggestivo"
+
+# ── Narrative Metrics & QA
+narrative_metrics:
+  scene_fields: ["tensione","valenza_emotiva","pacing_wpm","dialogo_pct","show_vs_tell"]
+  aggregates:
+    per_act: ["tensione_media","valenza_media","dialogo_pct_media"]
+    whole_story: ["tensione_trend","risoluzione_threads_pct"]
+  defaults:
+    tension_baseline: 45
+    emotion_baseline: 50
+    dialogo_target_pct: 35
+
+arc_engine:
+  protagonist_fields: ["want","need","lie","ghost","flaw","change_signal"]
+  beats:
+    - Setup
+    - Inciting Incident
+    - First Threshold
+    - Midpoint (Reversal/Truth)
+    - Dark Night of the Soul
+    - Climax (Choice with Cost)
+    - Resolution (New Equilibrium)
+  enforce_change: true
+
+theme_engine:
+  themes: []
+  per_scene_tagging: true
+  require_presence_every_act: true
+
+motif_registry:
+  items: []
+  chekhov_rules:
+    default_recall_within_scenes: 3
+    auto_create_on_first_use: true
+
+continuity_watch:
+  track:
+    - pov
+    - tense
+    - objects
+    - time
+    - cast_status
+  flags:
+    - {type: "POV_SHIFT", severity: "warn"}
+    - {type: "TENSE_MIX", severity: "warn"}
+    - {type: "MISSING_RECALL", severity: "info"}
+    - {type: "THREAD_STALLED", severity: "warn"}
+
+style_bible:
+  presets:
+    - id: HighFantasy
+      diction: ["epico","mitico","solenne"]
+      sensory_palette: ["luce", "vento", "metallo", "incenso"]
+      forbid_words: ["modernismi fuori contesto", "slang attuale"]
+      sentence_mix: {short_pct: 30, medium_pct: 50, long_pct: 20}
+    - id: DashiellNoir
+      diction: ["secco","cinico","metafore taglienti"]
+      sensory_palette: ["pioggia","fumo","neon","ghiaia"]
+      forbid_words: ["aggettivazione eccessiva"]
+      sentence_mix: {short_pct: 55, medium_pct: 35, long_pct: 10}
+
+pacing_controller:
+  targets:
+    words_per_scene: {min: 300, max: 900}
+    dialog_pct: {min: 25, max: 55}
+  controls:
+    - shrink_scene
+    - expand_scene
+    - raise_tension
+    - slow_down
+
+# ── QA templates
+qa_templates:
+  validators:
+    validate_enum:
+      params: [field, allowed]
+      logic: "value(field) in allowed"
+      error: "Valore non ammesso per {{field}}."
+    validate_non_empty:
+      params: [field]
+      logic: "len(value(field) or '') > 0"
+      error: "Campo obbligatorio mancante: {{field}}."
+  gates:
+    story_requires:
+      - validate_arc_coherence
+      - validate_theme_consistency
+      - validate_threads_resolution
+      - validate_pacing_ok
+      - validate_style_guardrails_ok
+  checklists:
+    story_qa:
+      - "Arco del protagonista definito (want/need/lie)?"
+      - "Tema espresso in ogni atto?"
+      - "Hook irrisolti ≤ 3 prima di Atto III?"
+      - "Chekhov registrati: richiamati entro 2–3 scene?"
+      - "POV e tempo verbale coerenti?"
+  retry_policy:
+    max_retries: 2
+    backoff: linear
+
+# ── Comandi
+commands:
+
+  # Storici / alias
+  /create_story:
+    description: "Inizia una storia (genere/tema/tono)"
+    params: [genere, tono, tema]
+    action:
+      - set: story_state.genre
+        value: '{{genere}}'
+      - set: story_state.tone
+        value: '{{tono}}'
+      - output: "📖 Storia creata — Genere: {{genere}}, Tono: {{tono}}."
+  /generate_scene:
+    description: "Scrive una scena (ambientazione/personaggi)"
+    params: [ambientazione, personaggi]
+    action:
+      - output: "✍️ Scena ambientata in {{ambientazione}}, con {{personaggi}}…"
+  /continue_story:
+    description: "Riprende una storia salvata"
+    params: [titolo]
+    action:
+      - load_session: { key: 'story_{{titolo}}', as: loaded_story }
+      - if: '{{loaded_story is not None}}'
+        then:
+          - set: story_state
+            value: '{{loaded_story}}'
+          - output: "📚 Storia '{{titolo}}' caricata."
+        else:
+          - output: "⚠️ Nessuna storia trovata con titolo '{{titolo}}'."
+  /load_story:
+    description: "Alias di /continue_story"
+    params: [titolo]
+    action:
+      - call: /continue_story
+        with: {titolo: "{{titolo}}"}
+  /save_story:
+    description: "Salva storia corrente"
+    params: [titolo]
+    action:
+      - save_session: { key: 'story_{{titolo}}', value: '{{story_state}}' }
+      - output: "📚 Storia '{{titolo}}' salvata."
+  /list_saved_stories:
+    description: "Elenca storie salvate"
+    action:
+      - list_session_keys: { prefix: story_, as: story_keys }
+      - if: '{{story_keys | length > 0}}'
+        then:
+          - output: "📚 Storie salvate:\n{% for k in story_keys %}- {{k | replace('story_','')}}{% endfor %}"
+        else:
+          - output: "⚠️ Nessuna storia salvata."
+  /save_character:
+    description: "Salva personaggio creato"
+    params: [nome]
+    action:
+      - append: story_state.protagonists
+        value: {nome: "{{nome}}", ruolo: "", motivazione: ""}
+      - output: "🧾 Personaggio '{{nome}}' salvato."
+  /list_saved_characters:
+    description: "Elenco personaggi salvati"
+    action:
+      - if: "{{ (story_state.protagonists or []) | length > 0 }}"
+        then:
+          - output: "👥 Personaggi:\n{% for p in story_state.protagonists %}- {{p.nome}} ({{p.ruolo or '—'}}){% endfor %}"
+        else:
+          - output: "⚠️ Nessun personaggio in Story Bible."
+  /visualize:
+    description: "Genera immagine AI coerente"
+    params: [descrizione]
+    action:
+      - output: "🎨 (placeholder) Visual: {{descrizione}} — Style={{story_state.style.art_style}} Seed={{story_state.style.style_seed}}"
+  /check_conversation:
+    description: "Riepilogo + suggerimenti salvataggio"
+    action:
+      - output: "🧾 Riepilogo pronto. Usa /save_story [titolo] per salvare; /export_story_md o /export_story_pdf per esportare."
+
+  # Stile & sicurezza
+  /set_art_style:
+    description: "Imposta stile immagine"
+    params: [stile]
+    action:
+      - set: story_state.style.art_style
+        value: "{{stile}}"
+      - output: "🎛️ Stile aggiornato: {{stile}}."
+  /style_lock:
+    description: "Blocca stile (seed+preset)"
+    params: [onoff]
+    action:
+      - set: story_state.style.style_lock
+        value: "{{ onoff|lower == 'on' }}"
+      - if: "{{ story_state.style.style_seed is none and onoff|lower == 'on' }}"
+        then:
+          - set: story_state.style.style_seed
+            value: "{{ (now()) % 100000 }}"
+      - output: "🔒 Style Lock {{ 'ON' if story_state.style.style_lock else 'OFF' }} — Seed: {{story_state.style.style_seed}}."
+  /content_safety:
+    description: "Imposta filtro contenuti sensibili"
+    params: [level]
+    action:
+      - set: story_state.safety.content_safety
+        value: "{{level}}"
+      - output: "🛡️ Content Safety impostato su {{level}}."
+
+  # Outline / Beat / Bible / Tracker
+  /outline:
+    description: "Genera outline capitoli/atti"
+    params: [titolo]
+    action:
+      - output: "🗺️ Outline «{{titolo}}» su 4 atti / 5 beats per atto (placeholder)."
+  /beat:
+    description: "Crea beat narrativo (scena puntata)"
+    params: [descrizione]
+    action:
+      - append: story_state.timeline
+        value: {atto: 0, capitolo: 0, evento: "{{descrizione}}"}
+      - output: "🎯 Beat aggiunto: {{descrizione}}."
+  /bible:
+    description: "Mostra/aggiorna Story Bible"
+    params: [opzione, termine]
+    action:
+      - output: "📖 Bible ({{opzione}}): {{termine}} — placeholder gestione."
+  /scene_tracker:
+    description: "Mostra stato scene e hook"
+    action:
+      - output: "🎬 Scene Tracker — hook aperti: {{ (story_state.open_threads or []) | length }}."
+  /explain_theme:
+    description: "Spiega un tema o motif narrativo in chiave didattica"
+    params: [termine]
+    action:
+      - emit_event:
+          topic: "explain.theme"
+          payload: {termine: "{{termine}}", from: "Narrativa"}
+      - output: "📘 Inoltrato a Explain Methods (tema/motif): {{termine}}."
+
+  # NEW — QA/Arc/Theme/Motif/Metrics/Export
+  /qa_story:
+    description: "QA narrativo completo (archi, temi, hook, pacing, stile)"
+    action:
+      - output: "🧪 Story QA avviato…"
+      - compute: qa_result.story_preview
+        logic: |
+          timeline = story_state.get("timeline") or []
+          snippets = [s.get("evento") or s.get("testo") or "" for s in timeline]
+          text = " ".join([s for s in snippets if s])
+          max_len = 520
+          truncated = len(text) > max_len
+          preview = text[:max_len].strip()
+          if truncated:
+            preview = preview.rstrip(".,;: ") + " … [TRUNCATED]"
+          return preview or "Nessuna scena registrata."
+      - compute: qa_result.preview_truncated
+        logic: |
+          timeline = story_state.get("timeline") or []
+          text = " ".join([(s.get("evento") or s.get("testo") or "") for s in timeline])
+          return len(text) > 520
+      - compute: qa_result.validate_arc_coherence
+        logic: |
+          return validate_arc_coherence(story_state)
+      - compute: qa_result.validate_theme_consistency
+        logic: |
+          return validate_theme_consistency(story_state)
+      - compute: qa_result.validate_threads_resolution
+        logic: |
+          return validate_threads_resolution(story_state)
+      - compute: qa_result.validate_pacing_ok
+        logic: |
+          return validate_pacing_ok(story_state)
+      - compute: qa_result.validate_style_guardrails_ok
+        logic: |
+          return validate_style_guardrails_ok(story_state)
+      - set: story_state.qa.arc_ok
+        value: "{{ qa_result.validate_arc_coherence.ok }}"
+      - set: story_state.qa.theme_ok
+        value: "{{ qa_result.validate_theme_consistency.ok }}"
+      - set: story_state.qa.threads_ok
+        value: "{{ qa_result.validate_threads_resolution.ok }}"
+      - set: story_state.qa.pacing_ok
+        value: "{{ qa_result.validate_pacing_ok.ok }}"
+      - set: story_state.qa.style_ok
+        value: "{{ qa_result.validate_style_guardrails_ok.ok }}"
+      - compute: story_state.qa.ready_for_export
+        logic: |
+          res = qa_result or {}
+          return all([
+            (res.get("validate_arc_coherence") or {}).get("ok"),
+            (res.get("validate_theme_consistency") or {}).get("ok"),
+            (res.get("validate_threads_resolution") or {}).get("ok"),
+            (res.get("validate_pacing_ok") or {}).get("ok"),
+            (res.get("validate_style_guardrails_ok") or {}).get("ok"),
+          ])
+      - compute: story_state.qa.last_run_ts
+        logic: now()
+      - output: |
+          ✅ Story QA completato.
+          - Arco: {{ '✅ Coerente' if qa_result.validate_arc_coherence.ok else '❌ Incoerente — ripassa i beats Setup→Midpoint→Climax con want/need/lie' }}
+          - Tema: {{ '✅ Copertura adeguata' if qa_result.validate_theme_consistency.ok else '❌ Tema poco presente — tagga il tema in ≥60% scene e per ogni atto' }}
+          - Hook: {{ '✅ Thread sotto controllo' if qa_result.validate_threads_resolution.ok else '❌ Troppi hook aperti — chiudi a ≤2 entro Atto II e 0 in Atto III' }}
+          - Pacing/Dialogo: {{ '✅ Dentro range' if qa_result.validate_pacing_ok.ok else '❌ Fuori range — mantieni 300–900 parole/scene e 25–55% dialogo' }}
+          - Stile: {{ '✅ Guard-rail rispettati' if qa_result.validate_style_guardrails_ok.ok else '❌ Violazioni stile — evita forbid_words e rispetta mix frasi del preset' }}
+          - Export: {{ '🟢 Sbloccato' if story_state.qa.ready_for_export else '🚫 Bloccato finché i check QA non sono tutti ok' }}
+          Preview{{ ' (partial preview)' if qa_result.preview_truncated else '' }}: {{ qa_result.story_preview }}
+          Suggerimenti: usa /scene_tracker per verificare hook, /arc per riallineare want/need/lie, /theme per marcare i temi e /style_lock per fissare il preset.
+  /arc:
+    description: "Imposta/mostra arco del protagonista"
+    params: [want, need, lie, ghost, flaw, change_signal]
+    action:
+      - set: story_state.protagonists[0].arc
+        value: {want:"{{want}}", need:"{{need}}", lie:"{{lie}}", ghost:"{{ghost}}", flaw:"{{flaw}}", change_signal:"{{change_signal}}"}
+      - output: "🎯 Arco aggiornato (W/N/L/G/Flaw/Signal)."
+  /theme:
+    description: "Definisci tema/i portante/i"
+    params: [themes]
+    action:
+      - set: theme_engine.themes
+        value: "{{themes}}"
+      - output: "🧵 Tema impostato: {{themes}}"
+  /motif_add:
+    description: "Registra un motif/Chekhov"
+    params: [label, tipo, rule]
+    action:
+      - append: motif_registry.items
+        value: {id:"{{ now() }}", label:"{{label}}", tipo:"{{tipo}}", rule:"{{rule or 'default'}}"}
+      - output: "📌 Motif registrato: {{label}}."
+  /register_chekhov:
+    description: "Alias rapido per oggetto di Chekhov"
+    params: [label]
+    action:
+      - command: /motif_add
+        with: {label:"{{label}}", tipo:"oggetto", rule:"recall<=3"}
+  /plot_curve:
+    description: "Mostra curva Tensione/Emozione per atti/scena"
+    action:
+      - output: "📈 Tensione per Atto: {{ narrative_metrics.aggregates.per_act }} (placeholder)."
+  /export_bible_md:
+    description: "Esporta Story Bible Markdown"
+    action:
+      - output: "{{ '🚫 Export bloccato: QA incompleto (/qa_story).' if not story_state.qa.ready_for_export else '📚 Export story_bible.md pronto.' }}"
+      - when: "{{ story_state.qa.ready_for_export }}"
+        export:
+          format: md
+          filename: "story_bible.md"
+      - when: "{{ story_state.qa.ready_for_export }}"
+        output: "📚 Story Bible esportata come story_bible.md{{ ' — partial preview (truncated in QA)' if qa_result.preview_truncated else '' }}."
+  /export_beats_csv:
+    description: "Esporta Beat Sheet (CSV)"
+    action:
+      - output: "{{ '🚫 Export bloccato: QA incompleto (/qa_story).' if not story_state.qa.ready_for_export else '🧾 Export story_beats.csv pronto.' }}"
+      - when: "{{ story_state.qa.ready_for_export }}"
+        export:
+          format: csv
+          filename: "story_beats.csv"
+      - when: "{{ story_state.qa.ready_for_export }}"
+        output: "🧾 Beat Sheet esportato come story_beats.csv{{ ' — partial preview (truncated in QA)' if qa_result.preview_truncated else '' }}."
+  /export_story_md:
+    description: "Esporta la storia corrente in Markdown"
+    action:
+      - output: "{{ '🚫 Export bloccato: QA incompleto (/qa_story).' if not story_state.qa.ready_for_export else '📝 Export narrative_story.md pronto.' }}"
+      - when: "{{ story_state.qa.ready_for_export }}"
+        export:
+          format: md
+          filename: "narrative_story.md"
+      - when: "{{ story_state.qa.ready_for_export }}"
+        output: "📝 Storia esportata come narrative_story.md{{ ' — partial preview (truncated in QA)' if qa_result.preview_truncated else '' }}."
+  /export_story_pdf:
+    description: "Esporta la storia corrente in PDF"
+    action:
+      - output: "{{ '🚫 Export bloccato: QA incompleto (/qa_story).' if not story_state.qa.ready_for_export else '📄 Export narrative_story.pdf pronto.' }}"
+      - when: "{{ story_state.qa.ready_for_export }}"
+        export:
+          format: pdf
+          filename: "narrative_story.pdf"
+      - when: "{{ story_state.qa.ready_for_export }}"
+        output: "📄 Storia esportata come narrative_story.pdf{{ ' — partial preview (truncated in QA)' if qa_result.preview_truncated else '' }}."
+
+  # Bridge verso altri moduli
+  /spawn_npc_from_scene:
+    description: "Invia seed PNG a Taverna NPC"
+    params: [ruolo, competenze, tratto_chiave]
+    action:
+      - emit_event:
+          topic: "npc.seed.create"
+          payload:
+            source: "Narrativa"
+            ruolo: "{{ruolo}}"
+            competenze: "{{competenze}}"
+            tratto_chiave: "{{tratto_chiave}}"
+            scene_ref: "{{story_state.last_scene_id}}"
+      - output: "🧑‍🎭 PNG seed inviato a Taverna NPC."
+  /encounter_seed_from_conflict:
+    description: "Crea seed incontro dall’ultimo conflitto"
+    params: [min_cr, max_cr, ambiente, obiettivo]
+    action:
+      - emit_event:
+          topic: "encounter.seed.create"
+          payload:
+            conflict: "{{story_state.last_conflict}}"
+            location: "{{story_state.last_location}}"
+            min_cr: "{{min_cr}}"
+            max_cr: "{{max_cr}}"
+            ambiente: "{{ambiente}}"
+            obiettivo: "{{obiettivo}}"
+      - output: "⚔️ Seed incontro inviato all'Encounter Designer."
+  /ledger_log_from_scene:
+    description: "Registra un movimento economico nel Ledger"
+    params: [tipo, oggetto, qty, val_unit, source]
+    action:
+      - compute: total
+        logic: "{{qty|int}} * {{val_unit|float}}"
+      - emit_event:
+          topic: "ledger.movement.add"
+          payload:
+            tipo: "{{tipo}}"
+            oggetto: "{{oggetto}}"
+            qty: "{{qty}}"
+            vu: "{{val_unit}}"
+            tot: "{{total}}"
+            delta_gp: "{{total}}"
+            source: "{{source}}"
+      - output: "💰 Movimento ledger registrato: {{oggetto}} ({{total}} gp)."
+  /explain_rule:
+    description: "Spiega regola citata nella scena"
+    params: [termine]
+    action:
+      - emit_event:
+          topic: "explain.lookup"
+          payload: {termine: "{{termine}}", from: "Narrativa"}
+      - output: "📘 Inoltrato a Explain Methods: {{termine}}."
+  /ruling_check:
+    description: "Richiesta ruling RAW/RAI/PFS su caso emerso"
+    params: [caso]
+    action:
+      - emit_event:
+          topic: "ruling.request"
+          payload: {caso: "{{caso}}", from: "Narrativa"}
+      - output: "⚖️ Ruling Expert allertato."
+  /export_arc_to_build:
+    description: "Invia arco narrativo e tema al MinMax Builder"
+    params: [pg_id]
+    action:
+      - emit_event:
+          topic: "minmax.arc.import"
+          payload:
+            pg_id: "{{pg_id}}"
+            arc: "{{story_state.protagonists[0].arc}}"
+            themes: "{{theme_engine.themes}}"
+      - output: "📤 Arco e Tema inviati a MinMax per il PG {{pg_id}}."
+  /export_continuity_to_archivist:
+    description: "Invia continuity flags a Archivist"
+    action:
+      - emit_event:
+          topic: "archivist.continuity.add"
+          payload:
+            continuity: "{{story_state.continuity_flags}}"
+      - output: "📤 Continuity flags inviati ad Archivist."
+
+# ── UI Templates
+ui_templates:
+  scene_card:
+    fields: ["titolo","setup","obiettivo","conflitto","esito","hook_prossima"]
+    render: |
+      ## {{titolo}}
+      **Setup:** {{setup}}
+      **Obiettivo:** {{obiettivo}}
+      **Conflitto:** {{conflitto}}
+      **Esito:** {{esito}}
+      **Hook:** {{hook_prossima}}
+  outline_card:
+    fields: ["atto","beat","scena","obiettivo","conflitto","esito","tensione"]
+    render: |
+      ### {{atto}} — {{beat}}: {{scena}}
+      - **Obiettivo:** {{obiettivo}}
+      - **Conflitto:** {{conflitto}}
+      - **Esito:** {{esito}}
+      - **Tensione:** {{tensione}}/100
+  bible_entry:
+    fields: ["nome","ruolo","motivazione","arc","relazioni","note"]
+    render: |
+      **{{nome}}** — {{ruolo}}
+      - Motivazione: {{motivazione}}
+      - Arco: {{arc}}
+      - Relazioni: {{relazioni}}
+      - Note: {{note}}
+  arc_card:
+    fields: ["want","need","lie","ghost","flaw","change_signal"]
+    render: |
+      **Arco del Protagonista**
+      - Want: {{want}} | Need: {{need}}
+      - Lie: {{lie}} | Ghost: {{ghost}}
+      - Flaw: {{flaw}} | Segnale di Cambiamento: {{change_signal}}
+  tension_sparkline:
+    fields: ["values"]
+    render: |
+      `▁▂▃▄▅▆▇`  {{values}}
+
+# ── Flusso guidato
+flow:
+  cache_enabled: true
+  max_retries: 3
+  steps:
+    - id: 1
+      step_badge: 📖
+      name: Scegli Genere
+      progress_pct: 10
+      goal: "Definire il genere della storia."
+      auto:
+        on_enter:
+          - output: "📖 Che tipo di storia vuoi raccontare?"
+      cta:
+        primary: {text: "Fantasy", command: "/create_story Fantasy Epico"}
+        alternatives:
+          - {text: "Noir", command: "/create_story Noir Cupo"}
+          - {text: "Sci-fi", command: "/create_story Sci-fi Neutro"}
+          - {text: "Storico", command: "/create_story Storico Epico"}
+          - {text: "Apocalittico", command: "/create_story Apocalittico Cupo"}
+
+    - id: 2
+      step_badge: 🎭
+      name: Scegli Tono
+      progress_pct: 20
+      goal: "Impostare il tono narrativo."
+      auto:
+        on_enter:
+          - output: "🎭 Che tono vuoi?"
+      cta:
+        primary: {text: "Epico", command: "/set_art_style realistico"}
+        alternatives:
+          - {text: "Cupamente realistico", command: "/set_art_style pittorico"}
+          - {text: "Romantico", command: "/set_art_style anime"}
+          - {text: "Ironico", command: "/set_art_style noir"}
+          - {text: "Neutro", command: "/set_art_style realistico"}
+
+    - id: 3
+      step_badge: 🧙
+      name: Protagonista
+      progress_pct: 30
+      goal: "Definire nome, ruolo e motivazione del protagonista."
+      auto:
+        on_enter:
+          - output: "🧙 Protagonista? Nome, ruolo, motivazione?"
+      exit_conditions:
+        must_pass:
+          - {use: validate_non_empty, with: {field: "nome"}}
+          - {use: validate_non_empty, with: {field: "ruolo"}}
+
+    - id: 4
+      step_badge: 🔥
+      name: Conflitto centrale
+      progress_pct: 40
+      goal: "Stabilire conflitto centrale o antagonista."
+      auto:
+        on_enter:
+          - output: "🔥 Qual è il conflitto centrale o l'antagonista?"
+      exit_conditions:
+        must_pass: [{use: validate_non_empty, with: {field: "conflitto"}}]
+
+    - id: 5
+      step_badge: 🌍
+      name: Dettagli Mondo
+      progress_pct: 50
+      goal: "Definire ambientazione principale."
+      auto:
+        on_enter:
+          - output: "🌍 Dove si svolge la storia?"
+      exit_conditions:
+        must_pass: [{use: validate_non_empty, with: {field: "ambientazione"}}]
+
+    - id: 5.1
+      step_badge: 🎯
+      name: Definisci Arco & Tema
+      progress_pct: 55
+      goal: "Impostare arco narrativo e tema"
+      cta:
+        primary: {text: "Imposta Arco", command: "/arc want='__' need='__' lie='__' ghost='__' flaw='__' change_signal='__'"}
+        alternatives:
+          - {text: "Imposta Tema", command: "/theme Libertà vs Sicurezza"}
+          - {text: "Registra Chekhov", command: "/register_chekhov Daga d'argento"}
+
+    - id: 6
+      step_badge: 🎬
+      name: Scena di Apertura
+      progress_pct: 60
+      goal: "Generare scena di apertura coerente con il tono."
+      auto:
+        on_enter:
+          - output: "🎬 Genero scena di apertura…"
+          - append: story_state.open_threads
+            value: {id: "hook1", descrizione: "Gancio narrativo iniziale", priorità: "alta"}
+          - set: story_state.last_scene_id
+            value: "scene_opening"
+
+    - id: 6.1
+      step_badge: 📈
+      name: Curva Narrativa
+      progress_pct: 65
+      goal: "Calcolare e mostrare Tensione/Valenza"
+      auto:
+        on_enter:
+          - output: "📈 Calcolo curva narrativa… usa /plot_curve per il grafico testuale."
+
+    - id: 7
+      step_badge: 🎨
+      name: Visualizza Protagonista
+      progress_pct: 70
+      goal: "Opzione per generare immagine AI del protagonista."
+      auto:
+        on_enter:
+          - output: "🎨 Vuoi visualizzare il protagonista?"
+      cta:
+        primary: {text: "Sì", command: "/visualize protagonista"}
+        alternatives:
+          - {text: "No", command: "/scene_tracker"}
+
+    - id: 8
+      step_badge: 🎲
+      name: Attivare Roleplay
+      progress_pct: 80
+      goal: "Trasformare la storia in sessione interattiva."
+      cta:
+        primary: {text: "Sì", command: "/scene_tracker"}
+        alternatives:
+          - {text: "No", command: "/save_story {titolo}"}
+
+    - id: 9
+      step_badge: 💾
+      name: Salvataggio Storia
+      progress_pct: 90
+      goal: "Chiedere se salvare la storia."
+      auto:
+        on_enter:
+          - output: "💾 Vuoi salvare la storia? (/save_story [titolo])"
+
+    - id: 10
+      step_badge: 🧾
+      name: Salvataggio Personaggio
+      progress_pct: 95
+      goal: "Chiedere se salvare il protagonista creato."
+      auto:
+        on_enter:
+          - output: "🧾 Vuoi salvare il personaggio? (/save_character [nome])"
+
+    - id: 11
+      step_badge: ✅
+      name: Chiusura
+      progress_pct: 100
+      goal: "Chiudere flusso e dare riepilogo."
+      auto:
+        on_enter:
+          - output: "✅ Usa /check_conversation per riepilogo e suggerimenti di salvataggio."
+
+# ── Estensioni
+extensions:
+  outline_engine:
+    structure: ["Atto I","Atto II (A)","Atto II (B)","Atto III"]
+    beats_per_act: 5
+    ensure_progression: true
+  scene_tracker:
+    fields: ["scena","obiettivo","conflitto","esito","hook_prossima"]
+    show_unresolved_threads: true
+  bible_tools:
+    search_in: ["protagonists","cast","locations","timeline","open_threads"]
+    update_on_new_info: true
+  visual_mapping:
+    enabled: true
+    trigger_keywords: ["/show_visual_map","/map_narrativa"]
+    examples:
+      - input: "/map_narrativa"
+        output: |
+          [Setup]→[Opening]→[Roleplay?]→[Beats/Scenes]→[Save/Export]
+        legend: {"□":"nodo","→":"flusso"}
+  mda:
+    enabled: true
+    trigger: "/run_mda Module:Narrativa"
+    passes: ["Technical","Operational","DataModel","FlowLogic","DoubleReview"]
+    qa_checklist:
+      - "Schema story_state valido"
+      - "Guard-rail immagini attivi"
+      - "Salvataggi testati"
+      - "Nessun loop"
+
+# ── Validator functions
+functions:
+  validate_arc_coherence:
+    description: "Controlla che i beats riflettano cambio da Want→Need e superamento Lie"
+    input: story_state
+    output: {ok: boolean, report: string, hint: string}
+    logic: |
+      arc = ((story_state or {}).get("protagonists") or [{}])[0].get("arc", {})
+      beats = [b.get("evento", "") for b in (story_state.get("timeline") or [])]
+      required = ["Setup", "Inciting Incident", "Midpoint", "Climax", "Resolution"]
+      missing_beats = [b for b in required if not any(b.lower() in evt.lower() for evt in beats)]
+      want_need_ok = all(len(arc.get(k, "")) >= 3 for k in ["want", "need", "lie"])
+      change_signal_ok = any("change" in evt.lower() or arc.get("change_signal") for evt in beats)
+      lie_resolved = any("truth" in evt.lower() or "lie superata" in evt.lower() for evt in beats)
+      ok = want_need_ok and change_signal_ok and lie_resolved and len(missing_beats) == 0
+      report = "Beats completi e arco coerente" if ok else f"Beats mancanti: {missing_beats} / want_need_ok={want_need_ok} / change_signal_ok={change_signal_ok} / lie_resolved={lie_resolved}"
+      hint = "Assicurati di avere Setup→Midpoint→Climax→Resolution e di mostrare il cambio da want a need con un segnale esplicito di verità che supera la lie. Usa /arc per compilare i campi mancanti."
+      return {"ok": ok, "report": report, "hint": hint}
+  validate_theme_consistency:
+    description: "Tema presente almeno in 3 atti e citato in ≥60% scene"
+    input: story_state
+    output: {ok: boolean, report: string, hint: string}
+    logic: |
+      themes = (story_state.get("tags") or []) + (story_state.get("theme_tags") or []) + (story_state.get("themes") or [])
+      timeline = story_state.get("timeline") or []
+      scenes = len(timeline)
+      acts = {}
+      theme_hits = 0
+      for scene in timeline:
+        act = scene.get("atto", 0)
+        tags = scene.get("tags") or []
+        has_theme = any(t.lower() in [tag.lower() for tag in tags] for t in themes)
+        if has_theme:
+          theme_hits += 1
+          acts[act] = True
+      coverage = (theme_hits / scenes) if scenes else 0
+      ok = scenes > 0 and coverage >= 0.6 and len(acts.keys()) >= 3
+      report = f"Tema in {theme_hits}/{scenes} scene ({coverage:.0%}), atti coperti: {sorted(list(acts.keys()))}"
+      hint = "Tagga il tema in almeno il 60% delle scene e assicurati che ogni atto riporti almeno un richiamo. Usa /theme per impostare i temi e aggiorna i tags scena." if not ok else "Copertura tema ok"
+      return {"ok": ok, "report": report, "hint": hint}
+  validate_threads_resolution:
+    description: "Hook aperti ≤2 a fine Atto II; 0 a fine Atto III"
+    input: story_state.open_threads
+    output: {ok: boolean, report: string, hint: string}
+    logic: |
+      threads = story_state.get("open_threads") or []
+      act_max = max([s.get("atto", 0) for s in (story_state.get("timeline") or [])] or [0])
+      open_count = len([t for t in threads if t.get("status", "open") != "closed"])
+      if act_max >= 3:
+        ok = open_count == 0
+        threshold = 0
+      elif act_max >= 2:
+        ok = open_count <= 2
+        threshold = 2
+      else:
+        ok = open_count <= 3
+        threshold = 3
+      report = f"Act massimo: {act_max}, hook aperti: {open_count}, soglia: {threshold}"
+      hint = "Chiudi o declassa i thread secondari prima dell'Atto III; usa /scene_tracker per segnare la chiusura." if not ok else "Hook sotto controllo"
+      return {"ok": ok, "report": report, "hint": hint}
+  validate_pacing_ok:
+    description: "Parole/scene e % dialogo entro range"
+    input: story_state
+    output: {ok: boolean, report: string, hint: string}
+    logic: |
+      scenes = story_state.get("timeline") or []
+      if not scenes:
+        return {"ok": False, "report": "Nessuna scena tracciata", "hint": "Aggiungi scene con parole_totali e dialog_pct per valutare il pacing."}
+      words = [s.get("parole_totali") for s in scenes if s.get("parole_totali") is not None]
+      dialogs = [s.get("dialogo_pct") for s in scenes if s.get("dialogo_pct") is not None]
+      words_ok = all(300 <= w <= 900 for w in words) if words else False
+      dialog_ok = all(25 <= d <= 55 for d in dialogs) if dialogs else False
+      avg_words = sum(words) / len(words) if words else 0
+      avg_dialog = sum(dialogs) / len(dialogs) if dialogs else 0
+      ok = words_ok and dialog_ok
+      report = f"media parole: {avg_words:.0f}, media dialogo%: {avg_dialog:.0f}, words_ok={words_ok}, dialog_ok={dialog_ok}"
+      hint = "Mantieni 300–900 parole per scena e 25–55% di dialogo; usa /pacing_controller per adeguare lunghezza e dialoghi." if not ok else "Pacing nella norma"
+      return {"ok": ok, "report": report, "hint": hint}
+  validate_style_guardrails_ok:
+    description: "Rispetta Style Bible (forbid_words, sentence_mix)"
+    input: string
+    output: {ok: boolean, report: string, hint: string}
+    logic: |
+      style_state = story_state.get("style") or {}
+      preset = style_state.get("preset") or style_state.get("art_style")
+      presets = {p.get("id"): p for p in (style_bible.get("presets") or [])}
+      active_preset = presets.get(preset) or {}
+      last_scene = (story_state.get("timeline") or [{}])[-1]
+      text = last_scene.get("testo", "") + " " + " ".join(last_scene.get("dialoghi", []))
+      forbid = active_preset.get("forbid_words") or []
+      sentence_mix = active_preset.get("sentence_mix") or {}
+      violations = [w for w in forbid if w.lower() in text.lower()]
+      lengths = last_scene.get("sentence_mix") or sentence_mix
+      mix_ok = True
+      if isinstance(lengths, dict) and sentence_mix:
+        mix_ok = all(abs((lengths.get(k, 0) or 0) - (sentence_mix.get(k, 0) or 0)) <= 20 for k in ["short_pct", "medium_pct", "long_pct"])
+      ok = len(violations) == 0 and mix_ok
+      report = f"Preset: {preset}, forbid_hits: {violations}, mix_ok={mix_ok}"
+      hint = "Rimuovi parole vietate e avvicina il mix di frasi al preset scelto; attiva /style_lock per non deviare." if not ok else "Stile conforme"
+      return {"ok": ok, "report": report, "hint": hint}
+
+# ── Validator examples (pass/fail quick refs)
+validator_examples:
+  validate_arc_coherence:
+    pass: "protagonist.arc filled (want/need/lie/change_signal) + timeline contiene Setup, Inciting Incident, Midpoint, Climax, Resolution e scena 'truth' che supera la menzogna"
+    fail: "arc mancante o Midpoint assente; nessuna scena con cambio/‘truth’, quindi ok=False con hint di ricollegare want→need"
+  validate_theme_consistency:
+    pass: "theme_tags=['speranza']; timeline 5 scene con tag 'speranza' in almeno 3 atti → coverage 80%"
+    fail: "timeline da 6 scene ma solo 2 con tag tema e nessuna in Atto III → coverage 33%, atti coperti=2 → ok=False"
+  validate_threads_resolution:
+    pass: "Atto II completato con 2 hook aperti; Atto III con open_threads=[] → ok=True"
+    fail: "Act massimo=3 ma open_threads contiene 3 elementi status=open → ok=False, suggerisce chiusura prima del finale"
+  validate_pacing_ok:
+    pass: "scene con parole_totali 650/720/540 e dialogo_pct 30/40/35 → words_ok=True & dialog_ok=True"
+    fail: "scene con 1200 parole e dialogo_pct 10 → ok=False, hint a ridurre lunghezza e alzare dialoghi"
+  validate_style_guardrails_ok:
+    pass: "preset=DashiellNoir, forbid_words assenti nel testo ultimo scene, sentence_mix aderente ±20%"
+    fail: "testo contiene parola vietata 'slang attuale' o sentence_mix long_pct 60% → ok=False con hint su style_lock"
+
+# ── Helpers (aggiunta per seed/tempo)
+helpers:
+  now:
+    params: []
+    logic: |
+      import time
+      return int(time.time())
+
+# ── Seed: Progressione wizard evoker (livello 3-10)
+wizard_evoker_seed:
+  purpose: "Appoggio narrativo per descrivere evoluzioni di build (evoker) con numeri coerenti."
+  checkpoints:
+    - { livello: 3, slot: "1°:6 / 2°:4 / 3°:2", pf: 28, ca: 16, talenti: "Incantesimi focalizzati (Invocazione)", equip: "Bacchetta di dardo incantato (CL3)", ts: "+3/+4/+6" }
+    - { livello: 4, slot: "1°:6 / 2°:5 / 3°:4", pf: 36, ca: 16, talenti: "Magia focalizzata superiore", equip: "Veste da mago rinforzata", ts: "+4/+5/+7" }
+    - { livello: 5, slot: "1°:7 / 2°:6 / 3°:5 / 4°:3", pf: 44, ca: 17, talenti: "Incantesimi massimizzati", equip: "Perla di potere I, anello di protezione +1", ts: "+4/+5/+8" }
+    - { livello: 6, slot: "1°:7 / 2°:6 / 3°:6 / 4°:4", pf: 52, ca: 17, talenti: "Talento bonus — Incantesimi rapidi", equip: "Bacchetta di palla di fuoco (CL6)", ts: "+5/+6/+9" }
+    - { livello: 7, slot: "1°:8 / 2°:7 / 3°:7 / 4°:5 / 5°:3", pf: 60, ca: 18, talenti: "Incantesimi focalizzati superiori", equip: "Cintura della destrezza +2", ts: "+5/+6/+10" }
+    - { livello: 8, slot: "1°:8 / 2°:7 / 3°:7 / 4°:6 / 5°:4", pf: 68, ca: 18, talenti: "Penetrare resistenza magica", equip: "Pergamena di muro di forza", ts: "+6/+7/+11" }
+    - { livello: 9, slot: "1°:8 / 2°:7 / 3°:7 / 4°:7 / 5°:5", pf: 76, ca: 19, talenti: "Incantesimi rapidi migliorati", equip: "Bacchetta di fulmine (CL9)", ts: "+6/+7/+12" }
+    - { livello: 10, slot: "1°:8 / 2°:7 / 3°:7 / 4°:7 / 5°:6", pf: 84, ca: 20, talenti: "Incantesimi potenziati + Penetrare RM migliorato", equip: "Perla di potere IV, focus runici", ts: "+7/+8/+13" }
+
+# ── Note
+compatibility: "Compatibile con MinMax, Taverna NPC, Encounter Designer, Ledger, Explain e Ruling Expert."
+notes:
+  best_practices:
+    - "Usa /style_lock on prima delle immagini per coerenza visiva"
+    - "Aggiorna la Bible dopo nuovi personaggi"
+    - "Chiudi i thread aperti entro 2–3 scene"
+    - "Esporta periodicamente la storia in MD/PDF"

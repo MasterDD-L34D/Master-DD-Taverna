@@ -12,6 +12,10 @@ provides: ["WBL tracking","ledger","buylist+craft","PFS audit","MIC safe"]
 requires: ["base_profile.txt"]
 exports: ["ledger:api","qa:pfs_flags","pg_binding","vtt_json"]
 
+tracker_notes:
+  - id: LED-OBS-01
+    note: "Welcome/flow in 5 passi (policy → stile giocatore → profilo WBL → roll loot → export) documentato con CTA/template per ledger/buylist/scheda PG."
+
 description: >
   Modulo completo per la gestione economica e magica in Pathfinder 1E.  
   Integra in un unico strumento:
@@ -47,6 +51,8 @@ welcome_message: |
 principles:
   - Solo materiale Paizo PF1e (RAW). Nessuna tabella Paizo riprodotta testualmente.
   - Ogni output marca fonte: RAW / PFS / HR / META_*.
+  - Preferisci permalink AoN per loot/equip/crafting; se AoN è offline, usa d20pfsrd come backup e avvisa l’utente che stai
+    citando un mirror secondario.
   - QA export gate: blocca export se |Δ% WBL| > policies.wbl_tolerance_pct (default 20%).
   - PFS: se attivo, filtra/etichetta item non legali.
   - Trasparenza & riproducibilità: seed opzionale, ledger chiaro.

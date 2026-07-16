@@ -1107,6 +1107,10 @@ def _is_placeholder(value: object) -> bool:
         lowered = value.strip().lower()
         if "x-truncated=true" in lowered or "contenuto troncato" in lowered:
             return True
+        # Long strings are real content (e.g. module templates that mention
+        # "stub" in their documentation), not placeholder markers.
+        if len(lowered) > 200:
+            return False
         if lowered.startswith(("n/d", "nd", "n/a", "na")):
             return True
         return not lowered or "stub" in lowered or lowered in {"todo", "tbd"}

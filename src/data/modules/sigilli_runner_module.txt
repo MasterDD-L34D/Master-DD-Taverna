@@ -3,6 +3,22 @@ version: "2.1"
 last_updated: "2025-09-06"
 type: "decorator_logic"
 
+tracker_notes:
+  - id: SIG-OBS-01
+    note: "Raro disponibile solo dall’indice 14: finestra evidenziata per evitare percezione di guasti iniziali."
+  - id: SIG-OBS-02
+    note: "Portale aggiunto anche senza altri sigilli per garantire almeno un elemento in `seals`."
+  - id: SIG-OBS-03
+    note: "Report marcato come completo: API, metadati, modello dati, flow/CTA ed errori simulati coperti."
+  - id: SIG-ERR-01
+    note: "401 senza API key verificata con TestClient."
+  - id: SIG-ERR-02
+    note: "404 su modulo inesistente verificata con TestClient."
+  - id: SIG-ERR-03
+    note: "Dump limitato con header di troncamento testato quando `ALLOW_MODULE_DUMP=false`."
+  - id: SIG-ERR-04
+    note: "Nessun errore bloccante dopo integrazione `code_ok` e tagging MDA/CTA." 
+
 features:
   sigilli_enabled: true
   sigilli_mini_threshold: 200        # lunghezza minima output per assegnare sigilli
@@ -141,9 +157,13 @@ exports:
       if mode_set:
         _add(mode_set[0], f"Bonus modalità {mode_key} attivo.", ["MDA:mode_bonus"])
 
-      # 3) raro (cooldown + crescita)
+      # 3) raro (cooldown + finestra minima)
       cd = int(features.get("sigilli_rotation_cooldown", 3))
-      if length_ok and _rarity_roll(idx, cd) and (idx - lastR) >= cd:
+      rare_min_idx = int(features.get("sigilli_rare_min_index", 14))
+      current_idx = idx + 1  # conteggio user-facing
+      if current_idx < rare_min_idx:
+        notes.append({"reason": f"Raro disponibile solo da indice {rare_min_idx}: finestra non ancora aperta (idx={current_idx}).", "tags": ["MDA:rare_window"]})
+      elif length_ok and _rarity_roll(idx, cd) and (idx - lastR) >= cd:
         rare_set = tables.get("rare", [])[:1]
         if rare_set:
           _add(rare_set[0], "Raro assegnato: cooldown rispettato e roll positivo.", ["MDA:rarity_roll"])

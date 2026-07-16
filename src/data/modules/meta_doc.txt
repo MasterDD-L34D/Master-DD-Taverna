@@ -9,12 +9,13 @@ api_usage:
   flow: "Decidi la modalità → GET /modules/{name} con header x-api-key → riformula con badge RAW/RAI/PFS/HR/🧠META."
   sample_call: |
     curl -H "x-api-key: $API_KEY" http://localhost:8000/modules/meta_doc.txt
+  dump_variants: "Con ALLOW_MODULE_DUMP=false l'elenco /modules rimane disponibile ma i singoli file possono esporre size ridotta e suffix '-partial' nel listing (≈4k + marker '[contenuto troncato]')."
 
 summary: >-
   Modulo per creare, mantenere e pubblicare la documentazione dei moduli Master DD
   (MinMax Builder, Taverna NPC, Encounter Designer, Adventurer Ledger, Archivist,
   Explain/Ruling). Fornisce blueprint pronti (Spec, README, Changelog, Release Notes,
-  Knowledge Pack, Manuale Homebrewery), peer review simulata a 3 esperti e pacchetti ZIP finali.
+  Knowledge Pack, Manuale Homebrewery), peer review simulata a 3 esperti e pacchetti ZIP finali, con esempi di export bloccati per outline/fonti mancanti e CTA Homebrewery per `/render_brew_example`.
   Ogni consultazione deve seguire il flusso architettura (`decidi modalità → GET /modules/{name} con x-api-key → riformula`), senza duplicare il kernel nel prompt GPT e mantenendo i tag [RAW]/[RAI]/[PFS]/[HR]/🧠META nelle sezioni esempio.
 
 integrates_with:
@@ -221,7 +222,7 @@ commands:
           /export_doc <md|pdf|canvas|zip> — esporta
           /export_doc_brew — esporta Homebrewery V3
           /brew_lint — conformità V3 (headers/spazi/footers/immagini)
-          /render_brew_example <kind> — snippet cover/toc/box/image
+          /render_brew_example <kind> — snippet cover/toc/box/image/hr-primary/dual/cta
           /generate_briefing {...} — crea Briefing Modulo da template
           /doc_pack — crea pacchetto finale (ZIP)
 
@@ -456,6 +457,24 @@ commands:
               - output: "📤 Export {{format}} avviato (md/pdf/canvas/zip)."
               - export: '{{ format }}'
 
+  export_doc_examples:
+    - scenario: "Mancanza outline"
+      input: "/export_doc pdf"
+      prereq: "/new_doc senza /import_template né outline manuale"
+      expected: "❌ Export bloccato: outline assente. Usa /import_template."
+    - scenario: "Mancanza fonti RAW/PFS"
+      input: "/export_doc md"
+      prereq: "Outline presente ma doc_state.sources vuoto"
+      expected: "❌ Export bloccato: servono almeno 1 RAW/PFS (Archivist/Ruling)."
+    - scenario: "Outline impostato ma nessuna fonte ancora allegata"
+      input: "/export_doc canvas"
+      prereq: "Dopo /import_template spec senza /attach_sources o /embed_from Archivist/Ruling"
+      expected: "❌ Export bloccato: servono almeno 1 RAW/PFS (Archivist/Ruling)."
+    - scenario: "Outline e fonti vuote"
+      input: "/export_doc zip"
+      prereq: "Doc nuovo appena creato (outline=[], fonti=[])"
+      expected: "❌ Export bloccato: outline assente. Usa /import_template."
+
   /doc_pack:
     description: Crea pacchetto ZIP finale secondo struttura standard
     action:
@@ -486,7 +505,7 @@ commands:
       - export: brew
 
   /render_brew_example:
-    description: Restituisce snippet di esempio per Homebrewery (cover/toc/box)
+    description: Restituisce snippet di esempio per Homebrewery (cover/toc/box/checklist/CTA)
     params: [kind]
     action:
       - switch: kind
@@ -519,6 +538,61 @@ commands:
               - output: |
                   >aside
                   🧠 Nota di commento/meta.
+          - when: 'box_hr'
+            do:
+              - output: |
+                  >warning
+                  **[HR]** House Rule / variante di tavolo.
+          - when: 'box_primary'
+            do:
+              - output: |
+                  >note
+                  🏛️ Primary Source: riferimento ufficiale
+          - when: 'box_hr_primary'
+            do:
+              - output: |
+                  >warning
+                  **[HR]** Variante di tavolo: sostituisci il tiro conoscenze con Percezione.
+                  >note
+                  🏛️ Primary Source — Regola base: richiedi Ricordare Conoscenze con CD adeguata.
+          - when: 'box_hr_primary_banner'
+            do:
+              - output: |
+                  >warning
+                  **[HR]** House Rule — applica condizioni personalizzate per i tiri di conoscenza.
+                  ---
+                  >note
+                  🏛️ Primary Source — Mantieni le CD ufficiali e cita il manuale di riferimento.
+          - when: 'box_hr_primary_split'
+            do:
+              - output: |
+                  >warning
+                  **[HR]** House Rule (tavolo): applica svantaggio ai Recall Knowledge contro creature già note.
+                  ---
+                  >note
+                  🏛️ Primary Source — Regola base: un Recall Knowledge riuscito fornisce 1 info utile; ripetizioni aumentano la CD.
+          - when: 'box_primary_dual'
+            do:
+              - output: |
+                  >note
+                  🏛️ Primary Source — Codex: CD Recall Knowledge = difficoltà moderata per livello creatura.
+                  &emsp;
+                  >note
+                  🏛️ Primary Source — Bestiario: consenti un secondo tiro solo se cambia l'abilità usata (Arcana/Natura/Occultismo/Religione).
+          - when: 'box_primary_reference'
+            do:
+              - output: |
+                  >note
+                  🏛️ Primary Source — Citazione completa
+                  *Libro:* GMG p.123
+                  *Testo:* "Il tiro di Recall Knowledge usa la CD di difficoltà moderata per il livello della creatura."
+          - when: 'box_primary_stack'
+            do:
+              - output: |
+                  >note
+                  🏛️ Primary Source — Elenco rapido
+                  - Core Rulebook p.506: Ricordare Conoscenze = CD moderata
+                  - Bestiario p.6: RI-sfrutti abilità diversa per secondo tentativo
           - when: 'wrap_left'
             do:
               - output: |
@@ -535,8 +609,25 @@ commands:
             do:
               - output: |
                   {{text-align:center,margin-left:40px,margin-right:40px,margin-bottom:10px Testo centrato}}
+          - when: 'checklist'
+            do:
+              - output: |
+                  ### Brew Checklist Rapida
+                  - [ ] Renderer **V3** attivo
+                  - [ ] Header 1-5 corretti (#, ##, ### gialla, #### rossa, ##### nera)
+                  - [ ] Spazi verticali con `:` e `&emsp;` dove richiesto
+                  - [ ] Footnote e `{{pageNumber,auto}}` prima dei page break
+                  - [ ] Immagini wrap/mask con `{style:wrapLeft|wrapRight}` o watercolor
+                  - [ ] /brew_lint eseguito prima della pubblicazione
+          - when: 'cta'
+            do:
+              - output: |
+                  ### CTA — Esporta in Homebrewery {#cta-export}
+                  {{text-align:center,margin-left:60px,margin-right:60px,margin-bottom:16px Apri la renderer V3 e incolla lo snippet}}
+                  [Apri Homebrewery](https://homebrewery.naturalcrit.com){target:_blank}
+                  {{pageNumber,auto}}
           - default:
-              - output: "⚠ Tipo di esempio non riconosciuto. Usa cover/toc/box_raw/box_pfs/box_meta/wrap_left/watercolor_corner/center_note."
+              - output: "⚠ Tipo di esempio non riconosciuto. Usa cover/toc/box_raw/box_pfs/box_meta/box_hr/box_primary/box_hr_primary/box_hr_primary_banner/box_hr_primary_split/box_primary_dual/box_primary_reference/box_primary_stack/wrap_left/watercolor_corner/center_note/checklist/cta."
 
   /generate_briefing:
     description: Genera un briefing usando lo standard_briefing_template
@@ -609,10 +700,11 @@ blueprints:
         # {{doc_state.title}}
         _Compendio Pathfinder_
         :::
-      Indice: |
-        ## Table of Contents
-        - [Capitolo 1](#capitolo-1)
-        - [Capitolo 2](#capitolo-2)
+        Indice: |
+          ## Table of Contents
+          - [Capitolo 1](#capitolo-1)
+          - [Capitolo 2](#capitolo-2)
+          - [CTA Export](#cta-export)
       Capitoli: ""
       Appendici: ""
 
@@ -631,6 +723,7 @@ ui_templates:
     # README_HOME_BREW
     Incolla i contenuti esportati con `/export_doc_brew` su homebrewery.naturalcrit.com (Renderer V3).
     Usa `/brew_lint` per i controlli (header, spaziatura `:`, footnote, immagini wrap, tabelle in %).
+    Se serve un prompt rapido, chiama `/render_brew_example checklist|cta` prima di esportare.
 
 # --- COMPATIBILITY & SECURITY ---------------------------------------------
 compatibility:
