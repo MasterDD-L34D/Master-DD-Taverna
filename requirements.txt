@@ -10,3 +10,4 @@ prometheus_client
 Jinja2
 sentence-transformers>=2.3
 numpy
+streamlit>=1.35

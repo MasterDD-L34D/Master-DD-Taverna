@@ -22,9 +22,9 @@ def run(cmd, check=True):
 def check_pytest():
     res = run([".venv/Scripts/python", "-m", "pytest", "-q"])
     out = res.stdout + res.stderr
-    if "110 passed" not in out or "1 skipped" not in out:
-        sys.exit("ERRORE: test suite non conforme (atteso 110 passed, 1 skipped)")
-    print("OK: pytest -> 110 passed, 1 skipped")
+    if "114 passed" not in out or "1 skipped" not in out:
+        sys.exit("ERRORE: test suite non conforme (atteso 114 passed, 1 skipped)")
+    print("OK: pytest -> 114 passed, 1 skipped")
 
 
 def check_validate_schemas():
@@ -122,6 +122,40 @@ def check_rag_endpoints():
         settings.allow_anonymous = original_allow
 
 
+def check_build_endpoint():
+    from fastapi.testclient import TestClient
+    from src.app import app
+    from src.config import settings
+    from src.rag.store import VectorStore
+
+    store_dir = Path("src/data/vector_store")
+    if not VectorStore(store_dir).is_ready():
+        print("SKIP: endpoint /rag/build non testato per indice mancante")
+        return
+
+    original_key = settings.api_key
+    original_allow = settings.allow_anonymous
+    try:
+        settings.api_key = "verify-build-key"
+        settings.allow_anonymous = False
+        headers = {"x-api-key": "verify-build-key"}
+        with TestClient(app) as client:
+            resp = client.post(
+                "/rag/build",
+                json={"class": "Fighter", "race": "Human", "level": 5, "focus": "DPR", "provider": "mock"},
+                headers=headers,
+            )
+            if resp.status_code != 200:
+                sys.exit(f"ERRORE: /rag/build ha risposto {resp.status_code}: {resp.text}")
+            data = resp.json()
+            if "build" not in data or data["build"]["build_state"]["class"] != "Fighter":
+                sys.exit("ERRORE: /rag/build non ha restituito una build valida")
+        print("OK: endpoint /rag/build funzionante")
+    finally:
+        settings.api_key = original_key
+        settings.allow_anonymous = original_allow
+
+
 def main():
     check_pytest()
     check_validate_schemas()
@@ -131,6 +165,7 @@ def main():
     check_reports_valid_json()
     check_rag_index()
     check_rag_endpoints()
+    check_build_endpoint()
     print("\n=== VERIFICA Master-DD-Pathfinder-GPT: TUTTO OK ===")
 
 

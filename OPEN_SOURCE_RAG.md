@@ -160,13 +160,54 @@ Vector Store (numpy + JSON)
 src/modules/ + data/reference/
 ```
 
+## Frontend Streamlit
+
+Un'interfaccia web di chat è disponibile in `frontend/rag_chat.py`:
+
+```bash
+.venv/Scripts/streamlit run frontend/rag_chat.py
+```
+
+Si apre il browser su `http://localhost:8501`. Supporta:
+
+- provider `mock`, `ollama`, `openai`
+- scelta del numero di chunk
+- visualizzazione delle fonti recuperate
+- cronologia chat
+
+## Build Agent
+
+Genera build Pathfinder 1E in formato JSON valido usando RAG + LLM.
+
+### Endpoint API
+
+```bash
+curl -X POST http://localhost:8000/rag/build \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: la-tua-chiave" \
+  -d '{"class": "Fighter", "race": "Human", "level": 5, "focus": "DPR", "provider": "mock"}'
+```
+
+### CLI
+
+```bash
+.venv/Scripts/python tools/build_agent.py --class Fighter --race Human --level 5 --focus DPR --provider mock
+```
+
+Salva su file:
+
+```bash
+.venv/Scripts/python tools/build_agent.py --class Wizard --race Elf --level 10 --focus control --provider ollama --output build_wizard.json
+```
+
+Il mock restituisce una build valida di esempio. Con Ollama/OpenAI il LLM genera una build usando i chunk recuperati e il catalogo reference.
+
 ## Prossimi passi consigliati
 
-1. **Builder reale**: sostituire lo stub `/modules/minmax_builder.txt?stub=true` con un agente che usa il catalogo reference + LLM per generare build validate.
+1. **Migliorare il builder**: usare un LLM più strutturato per ottenere build dettagliate (talenti per livello, equipaggiamento, benchmark DPR realistici).
 2. **Memoria conversazionale**: aggiungere uno state DB (SQLite) per Taverna e sessioni di gioco.
-3. **Frontend**: aggiungere Streamlit/Gradio per renderlo accessibile a non-tecnici.
-4. **Docker**: containerizzare FastAPI + Ollama opzionale.
-5. **Migliorare chunking**: usare markdown headers per chunk semantici più precisi.
+3. **Docker**: containerizzare FastAPI + Ollama opzionale.
+4. **Migliorare chunking**: usare markdown headers per chunk semantici più precisi.
 
 ---
 

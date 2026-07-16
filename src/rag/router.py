@@ -46,6 +46,15 @@ class AskRequest(BaseModel):
     provider: str | None = None
 
 
+class BuildRequest(BaseModel):
+    class_name: str = Field(..., min_length=1, alias="class")
+    race: str | None = None
+    level: int = Field(1, ge=1, le=20)
+    archetype: str | None = None
+    focus: str | None = None
+    provider: str | None = None
+
+
 @router.post("/search")
 async def rag_search(req: SearchRequest, _=Depends(require_api_key)):
     retriever = _get_retriever()
@@ -66,3 +75,14 @@ async def rag_ask(req: AskRequest, _=Depends(require_api_key)):
         "results": results,
         "answer": answer,
     }
+
+
+@router.post("/build")
+async def rag_build(req: BuildRequest, _=Depends(require_api_key)):
+    from ..agents.builder import generate_build
+    retriever = _get_retriever()
+    request_dict = req.model_dump(by_alias=True)
+    # 'class' è riservato in Python; BuildRequest usa class_name mappato sull'alias "class"
+    request_dict["class"] = request_dict.pop("class_name", request_dict.get("class"))
+    payload = generate_build(request_dict, retriever=retriever, provider_name=req.provider)
+    return {"request": request_dict, "build": payload}
