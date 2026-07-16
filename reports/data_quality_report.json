@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-16T21:49:44.288247+00:00",
+  "generated_at": "2026-07-16T23:19:29.120678+00:00",
   "tables": {
     "build_index": {
       "name": "build_index",
@@ -112,7 +112,7 @@
       "null_percentages": {
         "name": 0.0,
         "source": 0.0,
-        "prerequisites": 70.83,
+        "prerequisites": 69.58,
         "tags": 23.05,
         "references": 0.0
       },

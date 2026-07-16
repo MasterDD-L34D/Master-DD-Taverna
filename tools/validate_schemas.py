@@ -140,15 +140,24 @@ def validate_reference_contract(
             except Exception as exc:
                 errors.append(f"{dataset_path}: errore lettura/parse dataset — {exc}")
                 continue
-            if not isinstance(dataset_payload, list):
-                errors.append(f"{dataset_path}: dataset deve essere una lista JSON")
+            if isinstance(dataset_payload, dict):
+                dataset_entries = dataset_payload.get("entries")
+                if not isinstance(dataset_entries, list):
+                    errors.append(
+                        f"{dataset_path}: dataset dict deve contenere una lista 'entries'"
+                    )
+                    continue
+                actual_entries = len(dataset_entries)
+            elif isinstance(dataset_payload, list):
+                actual_entries = len(dataset_payload)
+            else:
+                errors.append(f"{dataset_path}: dataset deve essere una lista JSON o un oggetto con 'entries'")
                 continue
             descriptor = (manifest_payload.get("files") or {}).get(dataset_name)
             expected_entries = (
                 descriptor.get("entries") if isinstance(descriptor, Mapping) else None
             )
             if isinstance(expected_entries, int):
-                actual_entries = len(dataset_payload)
                 if actual_entries != expected_entries:
                     errors.append(
                         f"{dataset_path}: entries={actual_entries} non coerente con manifest ({expected_entries})"

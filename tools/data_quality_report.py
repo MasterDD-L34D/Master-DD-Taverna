@@ -302,11 +302,12 @@ def analyze_reference_catalog(
             continue
 
         data = json.loads(path.read_text(encoding="utf-8"))
-        datasets[key] = data
+        entries = data if isinstance(data, list) else data.get("entries", [])
+        datasets[key] = entries
         expected_entries = info.get("entries")
-        if isinstance(expected_entries, int) and expected_entries != len(data):
+        if isinstance(expected_entries, int) and expected_entries != len(entries):
             referential["entry_count_mismatch"].append(
-                f"{key}: expected {expected_entries}, found {len(data)}"
+                f"{key}: expected {expected_entries}, found {len(entries)}"
             )
 
     total_rows = sum(len(items) for items in datasets.values())

@@ -156,7 +156,15 @@ def check_build_endpoint():
         settings.allow_anonymous = original_allow
 
 
+def check_legal_filter():
+    res = run([".venv/Scripts/python", "tools/legal_filter.py"], check=False)
+    if res.returncode != 0:
+        sys.exit("ERRORE: tools/legal_filter.py ha rilevato violazioni bloccanti")
+    print("OK: legal_filter.py -> nessuna violazione")
+
+
 def main():
+    check_legal_filter()
     check_pytest()
     check_validate_schemas()
     check_data_quality_report()

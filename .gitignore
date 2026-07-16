@@ -15,3 +15,16 @@ data/audit/build_events.jsonl
 .env.*.local
 .cache/
 src/data/vector_store/
+
+# Product Identity: mai committare
+data/reference/pi_local_only/*
+!data/reference/pi_local_only/.gitkeep
+
+# Dati derivati grezzi non ancora classificati
+*.raw.json
+*.aondump.json
+sessione-*/ricerca/*/data/*.json
+
+# Report generati dai tool di verifica/filtro
+reports/legal_filter_report.*
+reports/embedding_advanced_benchmark.*
