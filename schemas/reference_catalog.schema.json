@@ -97,6 +97,14 @@
           "minItems": 1,
           "uniqueItems": true
         },
+        "description": {
+          "type": "string",
+          "description": "Descrizione completa dell'elemento di catalogo"
+        },
+        "short_description": {
+          "type": "string",
+          "description": "Descrizione breve dell'elemento di catalogo"
+        },
         "notes": {
           "type": "string",
           "description": "Annotazioni libere opzionali"

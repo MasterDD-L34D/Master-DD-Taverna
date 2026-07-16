@@ -13,6 +13,18 @@
     "items": {
       "path": "data/reference/items.json",
       "entries": 257
+    },
+    "classes": {
+      "path": "data/reference/classes.json",
+      "entries": 12
+    },
+    "races": {
+      "path": "data/reference/races.json",
+      "entries": 7
+    },
+    "archetypes": {
+      "path": "data/reference/archetypes.json",
+      "entries": 15
     }
   }
 }

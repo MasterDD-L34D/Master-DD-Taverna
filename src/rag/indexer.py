@@ -89,6 +89,10 @@ def index_reference_catalog(reference_dir: Path | str, store: VectorStore, model
                 text_parts.append(entry["description"])
             elif "short_description" in entry:
                 text_parts.append(entry["short_description"])
+            if "notes" in entry and entry["notes"]:
+                text_parts.append(entry["notes"])
+            if "tags" in entry and entry["tags"]:
+                text_parts.append("Tags: " + ", ".join(str(t) for t in entry["tags"]))
             text = "\n".join(text_parts)
             if not text.strip():
                 continue
