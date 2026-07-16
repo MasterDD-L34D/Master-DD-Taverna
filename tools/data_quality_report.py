@@ -136,7 +136,13 @@ def analyze_build_index(path: Path, manifest_version: str | None) -> TableQualit
 
     referential: dict[str, list[str]] = defaultdict(list)
     for record in entries:
-        file_path = Path(record.get("file", ""))
+        file_ref = record.get("file")
+        if is_nullish(file_ref):
+            referential["missing_files"].append(
+                f"{record.get('module') or record.get('spec_id') or 'unknown'}: file mancante"
+            )
+            continue
+        file_path = Path(str(file_ref))
         if not file_path.exists():
             referential["missing_files"].append(str(file_path))
         if manifest_version is not None:
@@ -229,7 +235,13 @@ def analyze_module_index(path: Path, manifest_version: str | None) -> TableQuali
 
     referential: dict[str, list[str]] = defaultdict(list)
     for record in entries:
-        file_path = Path(record.get("file", ""))
+        file_ref = record.get("file")
+        if is_nullish(file_ref):
+            referential["missing_files"].append(
+                f"{record.get('module') or 'unknown'}: file mancante"
+            )
+            continue
+        file_path = Path(str(file_ref))
         if not file_path.exists():
             referential["missing_files"].append(str(file_path))
         if manifest_version is not None:
