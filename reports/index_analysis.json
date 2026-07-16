@@ -1,15 +1,15 @@
 {
-  "generated_at": "2026-04-09T23:31:52Z",
-  "build_index": "src/data/build_index.json",
-  "module_index": "src/data/module_index.json",
+  "generated_at": "2026-07-16T16:29:03Z",
+  "build_index": "src\\data\\build_index.json",
+  "module_index": "src\\data\\module_index.json",
   "builds": {
-    "total": 76,
-    "ok": 0,
-    "invalid": 76,
+    "total": 105,
+    "ok": 2,
+    "invalid": 103,
     "errors": 0,
     "invalid_entries": [
       {
-        "file": "src/data/builds/alchemist-goblin-vivisectionist.json",
+        "file": "src\\data\\builds\\alchemist-goblin-vivisectionist.json",
         "status": "invalid",
         "output_prefix": "alchemist_goblin_vivisectionist",
         "class": "Alchemist",
@@ -31,7 +31,7 @@
         ]
       },
       {
-        "file": "src/data/builds/alchemist-goblin-vivisectionist_lvl05.json",
+        "file": "src\\data\\builds\\alchemist-goblin-vivisectionist_lvl05.json",
         "status": "invalid",
         "output_prefix": "alchemist_goblin_vivisectionist",
         "class": "Alchemist",
@@ -53,7 +53,7 @@
         ]
       },
       {
-        "file": "src/data/builds/alchemist-goblin-vivisectionist_lvl10.json",
+        "file": "src\\data\\builds\\alchemist-goblin-vivisectionist_lvl10.json",
         "status": "invalid",
         "output_prefix": "alchemist_goblin_vivisectionist",
         "class": "Alchemist",
@@ -75,7 +75,7 @@
         ]
       },
       {
-        "file": "src/data/builds/alchemist_goblin_bombardier.json",
+        "file": "src\\data\\builds\\alchemist_goblin_bombardier.json",
         "status": "invalid",
         "output_prefix": "alchemist_goblin_bombardier",
         "class": "Alchemist",
@@ -102,7 +102,7 @@
         ]
       },
       {
-        "file": "src/data/builds/alchemist_goblin_bombardier_lvl05.json",
+        "file": "src\\data\\builds\\alchemist_goblin_bombardier_lvl05.json",
         "status": "invalid",
         "output_prefix": "alchemist_goblin_bombardier",
         "class": "Alchemist",
@@ -129,7 +129,7 @@
         ]
       },
       {
-        "file": "src/data/builds/alchemist_goblin_bombardier_lvl10.json",
+        "file": "src\\data\\builds\\alchemist_goblin_bombardier_lvl10.json",
         "status": "invalid",
         "output_prefix": "alchemist_goblin_bombardier",
         "class": "Alchemist",
@@ -156,7 +156,7 @@
         ]
       },
       {
-        "file": "src/data/builds/arcanist_tiefling_hexcrafter_blood_arcanist.json",
+        "file": "src\\data\\builds\\arcanist_tiefling_hexcrafter_blood_arcanist.json",
         "status": "invalid",
         "output_prefix": "arcanist_tiefling_hexcrafter_blood_arcanist",
         "class": "Arcanist",
@@ -178,7 +178,7 @@
         ]
       },
       {
-        "file": "src/data/builds/arcanist_tiefling_hexcrafter_blood_arcanist_lvl05.json",
+        "file": "src\\data\\builds\\arcanist_tiefling_hexcrafter_blood_arcanist_lvl05.json",
         "status": "invalid",
         "output_prefix": "arcanist_tiefling_hexcrafter_blood_arcanist",
         "class": "Arcanist",
@@ -200,7 +200,7 @@
         ]
       },
       {
-        "file": "src/data/builds/arcanist_tiefling_hexcrafter_blood_arcanist_lvl10.json",
+        "file": "src\\data\\builds\\arcanist_tiefling_hexcrafter_blood_arcanist_lvl10.json",
         "status": "invalid",
         "output_prefix": "arcanist_tiefling_hexcrafter_blood_arcanist",
         "class": "Arcanist",
@@ -222,7 +222,117 @@
         ]
       },
       {
-        "file": "src/data/builds/bloodrager-shabti-steelblood-metamagic-rager.json",
+        "file": "src\\data\\builds\\barbarian_fetchling_invulnerable_rager.json",
+        "status": "invalid",
+        "output_prefix": "barbarian_fetchling_invulnerable_rager",
+        "class": "Barbarian",
+        "race": "Fetchling",
+        "archetype": "Invulnerable Rager",
+        "mode": "full-pg",
+        "mode_normalized": "extended",
+        "spec_id": "barbarian_fetchling_invulnerable_rager",
+        "background": null,
+        "model": null,
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "level": 1,
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "catalog_version": [
+          "2026.04.03"
+        ]
+      },
+      {
+        "file": "src\\data\\builds\\barbarian_fetchling_invulnerable_rager_lvl05.json",
+        "status": "invalid",
+        "output_prefix": "barbarian_fetchling_invulnerable_rager",
+        "class": "Barbarian",
+        "race": "Fetchling",
+        "archetype": "Invulnerable Rager",
+        "mode": "full-pg",
+        "mode_normalized": "extended",
+        "spec_id": "barbarian_fetchling_invulnerable_rager",
+        "background": null,
+        "model": null,
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "level": 5,
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "catalog_version": [
+          "2026.04.03"
+        ]
+      },
+      {
+        "file": "src\\data\\builds\\barbarian_fetchling_invulnerable_rager_lvl10.json",
+        "status": "invalid",
+        "output_prefix": "barbarian_fetchling_invulnerable_rager",
+        "class": "Barbarian",
+        "race": "Fetchling",
+        "archetype": "Invulnerable Rager",
+        "mode": "full-pg",
+        "mode_normalized": "extended",
+        "spec_id": "barbarian_fetchling_invulnerable_rager",
+        "background": null,
+        "model": null,
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "level": 10,
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "catalog_version": [
+          "2026.04.03"
+        ]
+      },
+      {
+        "file": "src\\data\\builds\\bard_kitsune_sound_striker_sandman_lvl10.json",
+        "status": "invalid",
+        "output_prefix": "bard_kitsune_sound_striker_sandman",
+        "class": "Bard",
+        "race": "Kitsune",
+        "archetype": "Sound Striker + Sandman",
+        "mode": "extended",
+        "mode_normalized": "extended",
+        "spec_id": "bard_kitsune_sound_striker_sandman",
+        "background": null,
+        "model": null,
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "level": 10,
+        "error": "Prerequisiti catalogo non soddisfatti: Greater Spell Penetration: Spell Penetration",
+        "completeness_errors": [
+          "Prerequisiti catalogo non soddisfatti: Greater Spell Penetration: Spell Penetration"
+        ],
+        "prerequisite_violations": [
+          "Greater Spell Penetration: Spell Penetration"
+        ],
+        "catalog_version": [
+          "2026.04.03"
+        ]
+      },
+      {
+        "file": "src\\data\\builds\\bloodrager-shabti-steelblood-metamagic-rager.json",
         "status": "invalid",
         "output_prefix": "bloodrager-shabti-steelblood-metamagic-rager",
         "class": "Bloodrager",
@@ -249,7 +359,7 @@
         ]
       },
       {
-        "file": "src/data/builds/bloodrager-shabti-steelblood-metamagic-rager_lvl05.json",
+        "file": "src\\data\\builds\\bloodrager-shabti-steelblood-metamagic-rager_lvl05.json",
         "status": "invalid",
         "output_prefix": "bloodrager-shabti-steelblood-metamagic-rager",
         "class": "Bloodrager",
@@ -276,7 +386,7 @@
         ]
       },
       {
-        "file": "src/data/builds/bloodrager-shabti-steelblood-metamagic-rager_lvl10.json",
+        "file": "src\\data\\builds\\bloodrager-shabti-steelblood-metamagic-rager_lvl10.json",
         "status": "invalid",
         "output_prefix": "bloodrager-shabti-steelblood-metamagic-rager",
         "class": "Bloodrager",
@@ -303,7 +413,7 @@
         ]
       },
       {
-        "file": "src/data/builds/brawler_grippli_mutagenic_mauler_strangler.json",
+        "file": "src\\data\\builds\\brawler_grippli_mutagenic_mauler_strangler.json",
         "status": "invalid",
         "output_prefix": "brawler_grippli_mutagenic_mauler_strangler",
         "class": "Brawler",
@@ -325,7 +435,7 @@
         ]
       },
       {
-        "file": "src/data/builds/brawler_grippli_mutagenic_mauler_strangler_lvl05.json",
+        "file": "src\\data\\builds\\brawler_grippli_mutagenic_mauler_strangler_lvl05.json",
         "status": "invalid",
         "output_prefix": "brawler_grippli_mutagenic_mauler_strangler",
         "class": "Brawler",
@@ -347,7 +457,7 @@
         ]
       },
       {
-        "file": "src/data/builds/brawler_grippli_mutagenic_mauler_strangler_lvl10.json",
+        "file": "src\\data\\builds\\brawler_grippli_mutagenic_mauler_strangler_lvl10.json",
         "status": "invalid",
         "output_prefix": "brawler_grippli_mutagenic_mauler_strangler",
         "class": "Brawler",
@@ -369,7 +479,7 @@
         ]
       },
       {
-        "file": "src/data/builds/cavalier_strix_strategist_honor_guard.json",
+        "file": "src\\data\\builds\\cavalier_strix_strategist_honor_guard.json",
         "status": "invalid",
         "output_prefix": "cavalier_strix_strategist_honor_guard",
         "class": "Cavalier",
@@ -391,7 +501,7 @@
         ]
       },
       {
-        "file": "src/data/builds/cavalier_strix_strategist_honor_guard_lvl05.json",
+        "file": "src\\data\\builds\\cavalier_strix_strategist_honor_guard_lvl05.json",
         "status": "invalid",
         "output_prefix": "cavalier_strix_strategist_honor_guard",
         "class": "Cavalier",
@@ -413,7 +523,7 @@
         ]
       },
       {
-        "file": "src/data/builds/cavalier_strix_strategist_honor_guard_lvl10.json",
+        "file": "src\\data\\builds\\cavalier_strix_strategist_honor_guard_lvl10.json",
         "status": "invalid",
         "output_prefix": "cavalier_strix_strategist_honor_guard",
         "class": "Cavalier",
@@ -435,7 +545,88 @@
         ]
       },
       {
-        "file": "src/data/builds/druid_half_orc_feral.json",
+        "file": "src\\data\\builds\\cleric_samsaran_cloistered_evangelist.json",
+        "status": "invalid",
+        "output_prefix": "cleric_samsaran_cloistered_evangelist",
+        "class": "Cleric",
+        "race": "Samsaran",
+        "archetype": "Cloistered Evangelist",
+        "mode": "full-pg",
+        "mode_normalized": "extended",
+        "spec_id": "cleric_samsaran_cloistered_evangelist",
+        "background": null,
+        "model": null,
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "level": 1,
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "catalog_version": [
+          "2026.04.03"
+        ]
+      },
+      {
+        "file": "src\\data\\builds\\cleric_samsaran_cloistered_evangelist_lvl05.json",
+        "status": "invalid",
+        "output_prefix": "cleric_samsaran_cloistered_evangelist",
+        "class": "Cleric",
+        "race": "Samsaran",
+        "archetype": "Cloistered Evangelist",
+        "mode": "full-pg",
+        "mode_normalized": "extended",
+        "spec_id": "cleric_samsaran_cloistered_evangelist",
+        "background": null,
+        "model": null,
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "level": 5,
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "catalog_version": [
+          "2026.04.03"
+        ]
+      },
+      {
+        "file": "src\\data\\builds\\cleric_samsaran_cloistered_evangelist_lvl10.json",
+        "status": "invalid",
+        "output_prefix": "cleric_samsaran_cloistered_evangelist",
+        "class": "Cleric",
+        "race": "Samsaran",
+        "archetype": "Cloistered Evangelist",
+        "mode": "full-pg",
+        "mode_normalized": "extended",
+        "spec_id": "cleric_samsaran_cloistered_evangelist",
+        "background": null,
+        "model": null,
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "level": 10,
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "catalog_version": [
+          "2026.04.03"
+        ]
+      },
+      {
+        "file": "src\\data\\builds\\druid_half_orc_feral.json",
         "status": "invalid",
         "output_prefix": "druid_half_orc_feral",
         "class": "Druid",
@@ -462,7 +653,7 @@
         ]
       },
       {
-        "file": "src/data/builds/druid_half_orc_feral_lvl05.json",
+        "file": "src\\data\\builds\\druid_half_orc_feral_lvl05.json",
         "status": "invalid",
         "output_prefix": "druid_half_orc_feral",
         "class": "Druid",
@@ -489,7 +680,7 @@
         ]
       },
       {
-        "file": "src/data/builds/druid_half_orc_feral_lvl10.json",
+        "file": "src\\data\\builds\\druid_half_orc_feral_lvl10.json",
         "status": "invalid",
         "output_prefix": "druid_half_orc_feral",
         "class": "Druid",
@@ -516,7 +707,169 @@
         ]
       },
       {
-        "file": "src/data/builds/fighter_weapon_master_human.json",
+        "file": "src\\data\\builds\\druid_wayang_mooncaller_shapeshifter.json",
+        "status": "invalid",
+        "output_prefix": "druid_wayang_mooncaller_shapeshifter",
+        "class": "Druid",
+        "race": "Wayang",
+        "archetype": "Mooncaller Shapeshifter",
+        "mode": "full-pg",
+        "mode_normalized": "extended",
+        "spec_id": "druid_wayang_mooncaller_shapeshifter",
+        "background": null,
+        "model": null,
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "level": 1,
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "catalog_version": [
+          "2026.04.03"
+        ]
+      },
+      {
+        "file": "src\\data\\builds\\druid_wayang_mooncaller_shapeshifter_lvl05.json",
+        "status": "invalid",
+        "output_prefix": "druid_wayang_mooncaller_shapeshifter",
+        "class": "Druid",
+        "race": "Wayang",
+        "archetype": "Mooncaller Shapeshifter",
+        "mode": "full-pg",
+        "mode_normalized": "extended",
+        "spec_id": "druid_wayang_mooncaller_shapeshifter",
+        "background": null,
+        "model": null,
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "level": 5,
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "catalog_version": [
+          "2026.04.03"
+        ]
+      },
+      {
+        "file": "src\\data\\builds\\druid_wayang_mooncaller_shapeshifter_lvl10.json",
+        "status": "invalid",
+        "output_prefix": "druid_wayang_mooncaller_shapeshifter",
+        "class": "Druid",
+        "race": "Wayang",
+        "archetype": "Mooncaller Shapeshifter",
+        "mode": "full-pg",
+        "mode_normalized": "extended",
+        "spec_id": "druid_wayang_mooncaller_shapeshifter",
+        "background": null,
+        "model": null,
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "level": 10,
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "catalog_version": [
+          "2026.04.03"
+        ]
+      },
+      {
+        "file": "src\\data\\builds\\fighter_dwarf_shielded.json",
+        "status": "invalid",
+        "output_prefix": "fighter_dwarf_shielded",
+        "class": "Fighter",
+        "race": "Dwarf",
+        "archetype": "Shielded Fighter",
+        "mode": "full-pg",
+        "mode_normalized": "extended",
+        "spec_id": "fighter_dwarf_shielded_fighter",
+        "background": null,
+        "model": null,
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "level": 1,
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "catalog_version": [
+          "2026.04.03"
+        ]
+      },
+      {
+        "file": "src\\data\\builds\\fighter_dwarf_shielded_lvl05.json",
+        "status": "invalid",
+        "output_prefix": "fighter_dwarf_shielded",
+        "class": "Fighter",
+        "race": "Dwarf",
+        "archetype": "Shielded Fighter",
+        "mode": "full-pg",
+        "mode_normalized": "extended",
+        "spec_id": "fighter_dwarf_shielded_fighter",
+        "background": null,
+        "model": null,
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "level": 5,
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "catalog_version": [
+          "2026.04.03"
+        ]
+      },
+      {
+        "file": "src\\data\\builds\\fighter_dwarf_shielded_lvl10.json",
+        "status": "invalid",
+        "output_prefix": "fighter_dwarf_shielded",
+        "class": "Fighter",
+        "race": "Dwarf",
+        "archetype": "Shielded Fighter",
+        "mode": "full-pg",
+        "mode_normalized": "extended",
+        "spec_id": "fighter_dwarf_shielded_fighter",
+        "background": null,
+        "model": null,
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "level": 10,
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "catalog_version": [
+          "2026.04.03"
+        ]
+      },
+      {
+        "file": "src\\data\\builds\\fighter_weapon_master_human.json",
         "status": "invalid",
         "output_prefix": "fighter_weapon_master_human",
         "class": "Fighter",
@@ -543,7 +896,7 @@
         ]
       },
       {
-        "file": "src/data/builds/fighter_weapon_master_human_lvl05.json",
+        "file": "src\\data\\builds\\fighter_weapon_master_human_lvl05.json",
         "status": "invalid",
         "output_prefix": "fighter_weapon_master_human",
         "class": "Fighter",
@@ -570,7 +923,7 @@
         ]
       },
       {
-        "file": "src/data/builds/fighter_weapon_master_human_lvl10.json",
+        "file": "src\\data\\builds\\fighter_weapon_master_human_lvl10.json",
         "status": "invalid",
         "output_prefix": "fighter_weapon_master_human",
         "class": "Fighter",
@@ -597,7 +950,7 @@
         ]
       },
       {
-        "file": "src/data/builds/gunslinger_strix_gun_tank.json",
+        "file": "src\\data\\builds\\gunslinger_strix_gun_tank.json",
         "status": "invalid",
         "output_prefix": "gunslinger_strix_gun_tank",
         "class": "Gunslinger",
@@ -619,7 +972,7 @@
         ]
       },
       {
-        "file": "src/data/builds/gunslinger_strix_gun_tank_lvl05.json",
+        "file": "src\\data\\builds\\gunslinger_strix_gun_tank_lvl05.json",
         "status": "invalid",
         "output_prefix": "gunslinger_strix_gun_tank",
         "class": "Gunslinger",
@@ -641,7 +994,7 @@
         ]
       },
       {
-        "file": "src/data/builds/gunslinger_strix_gun_tank_lvl10.json",
+        "file": "src\\data\\builds\\gunslinger_strix_gun_tank_lvl10.json",
         "status": "invalid",
         "output_prefix": "gunslinger_strix_gun_tank",
         "class": "Gunslinger",
@@ -663,7 +1016,7 @@
         ]
       },
       {
-        "file": "src/data/builds/gunslinger_tengu_pistolero_bolt_ace.json",
+        "file": "src\\data\\builds\\gunslinger_tengu_pistolero_bolt_ace.json",
         "status": "invalid",
         "output_prefix": "gunslinger_tengu_pistolero_bolt_ace",
         "class": "Gunslinger",
@@ -685,7 +1038,7 @@
         ]
       },
       {
-        "file": "src/data/builds/gunslinger_tengu_pistolero_bolt_ace_lvl05.json",
+        "file": "src\\data\\builds\\gunslinger_tengu_pistolero_bolt_ace_lvl05.json",
         "status": "invalid",
         "output_prefix": "gunslinger_tengu_pistolero_bolt_ace",
         "class": "Gunslinger",
@@ -707,7 +1060,7 @@
         ]
       },
       {
-        "file": "src/data/builds/gunslinger_tengu_pistolero_bolt_ace_lvl10.json",
+        "file": "src\\data\\builds\\gunslinger_tengu_pistolero_bolt_ace_lvl10.json",
         "status": "invalid",
         "output_prefix": "gunslinger_tengu_pistolero_bolt_ace",
         "class": "Gunslinger",
@@ -729,7 +1082,7 @@
         ]
       },
       {
-        "file": "src/data/builds/hunter_kasatha_packmaster.json",
+        "file": "src\\data\\builds\\hunter_kasatha_packmaster.json",
         "status": "invalid",
         "output_prefix": "hunter_kasatha_packmaster",
         "class": "Hunter",
@@ -750,7 +1103,7 @@
         ]
       },
       {
-        "file": "src/data/builds/hunter_kasatha_packmaster_lvl05.json",
+        "file": "src\\data\\builds\\hunter_kasatha_packmaster_lvl05.json",
         "status": "invalid",
         "output_prefix": "hunter_kasatha_packmaster",
         "class": "Hunter",
@@ -771,7 +1124,7 @@
         ]
       },
       {
-        "file": "src/data/builds/hunter_kasatha_packmaster_lvl10.json",
+        "file": "src\\data\\builds\\hunter_kasatha_packmaster_lvl10.json",
         "status": "invalid",
         "output_prefix": "hunter_kasatha_packmaster",
         "class": "Hunter",
@@ -792,7 +1145,7 @@
         ]
       },
       {
-        "file": "src/data/builds/inquisitor_vishkanya_tactical_leader_preacher.json",
+        "file": "src\\data\\builds\\inquisitor_vishkanya_tactical_leader_preacher.json",
         "status": "invalid",
         "output_prefix": "inquisitor_vishkanya_tactical_leader_preacher",
         "class": "Inquisitor",
@@ -813,7 +1166,7 @@
         ]
       },
       {
-        "file": "src/data/builds/inquisitor_vishkanya_tactical_leader_preacher_lvl05.json",
+        "file": "src\\data\\builds\\inquisitor_vishkanya_tactical_leader_preacher_lvl05.json",
         "status": "invalid",
         "output_prefix": "inquisitor_vishkanya_tactical_leader_preacher",
         "class": "Inquisitor",
@@ -834,7 +1187,7 @@
         ]
       },
       {
-        "file": "src/data/builds/inquisitor_vishkanya_tactical_leader_preacher_lvl10.json",
+        "file": "src\\data\\builds\\inquisitor_vishkanya_tactical_leader_preacher_lvl10.json",
         "status": "invalid",
         "output_prefix": "inquisitor_vishkanya_tactical_leader_preacher",
         "class": "Inquisitor",
@@ -855,7 +1208,7 @@
         ]
       },
       {
-        "file": "src/data/builds/investigator_catfolk_empiricist_psychic_detective.json",
+        "file": "src\\data\\builds\\investigator_catfolk_empiricist_psychic_detective.json",
         "status": "invalid",
         "output_prefix": "investigator_catfolk_empiricist_psychic_detective_detective_psichico_delle_steppe_felide",
         "class": "Investigator",
@@ -877,7 +1230,7 @@
         ]
       },
       {
-        "file": "src/data/builds/investigator_catfolk_empiricist_psychic_detective_lvl05.json",
+        "file": "src\\data\\builds\\investigator_catfolk_empiricist_psychic_detective_lvl05.json",
         "status": "invalid",
         "output_prefix": "investigator_catfolk_empiricist_psychic_detective_detective_psichico_delle_steppe_felide",
         "class": "Investigator",
@@ -899,7 +1252,7 @@
         ]
       },
       {
-        "file": "src/data/builds/investigator_catfolk_empiricist_psychic_detective_lvl10.json",
+        "file": "src\\data\\builds\\investigator_catfolk_empiricist_psychic_detective_lvl10.json",
         "status": "invalid",
         "output_prefix": "investigator_catfolk_empiricist_psychic_detective_detective_psichico_delle_steppe_felide",
         "class": "Investigator",
@@ -921,7 +1274,7 @@
         ]
       },
       {
-        "file": "src/data/builds/kineticist_strix_kinetic_knight_overwhelming_soul.json",
+        "file": "src\\data\\builds\\kineticist_strix_kinetic_knight_overwhelming_soul.json",
         "status": "invalid",
         "output_prefix": "kineticist_strix_kinetic_knight_overwhelming_soul_guardia_alata_delle_cittadelle_strix",
         "class": "Kineticist",
@@ -943,7 +1296,7 @@
         ]
       },
       {
-        "file": "src/data/builds/kineticist_strix_kinetic_knight_overwhelming_soul_lvl05.json",
+        "file": "src\\data\\builds\\kineticist_strix_kinetic_knight_overwhelming_soul_lvl05.json",
         "status": "invalid",
         "output_prefix": "kineticist_strix_kinetic_knight_overwhelming_soul_guardia_alata_delle_cittadelle_strix",
         "class": "Kineticist",
@@ -965,7 +1318,7 @@
         ]
       },
       {
-        "file": "src/data/builds/kineticist_strix_kinetic_knight_overwhelming_soul_lvl10.json",
+        "file": "src\\data\\builds\\kineticist_strix_kinetic_knight_overwhelming_soul_lvl10.json",
         "status": "invalid",
         "output_prefix": "kineticist_strix_kinetic_knight_overwhelming_soul_guardia_alata_delle_cittadelle_strix",
         "class": "Kineticist",
@@ -987,7 +1340,7 @@
         ]
       },
       {
-        "file": "src/data/builds/kineticist_suli_kinetic_knight_overwhelming_soul.json",
+        "file": "src\\data\\builds\\kineticist_suli_kinetic_knight_overwhelming_soul.json",
         "status": "invalid",
         "output_prefix": "kineticist_suli_kinetic_knight_overwhelming_soul_guardia_delle_carovane_dell_oasi_suli",
         "class": "Kineticist",
@@ -1009,7 +1362,7 @@
         ]
       },
       {
-        "file": "src/data/builds/kineticist_suli_kinetic_knight_overwhelming_soul_lvl05.json",
+        "file": "src\\data\\builds\\kineticist_suli_kinetic_knight_overwhelming_soul_lvl05.json",
         "status": "invalid",
         "output_prefix": "kineticist_suli_kinetic_knight_overwhelming_soul_guardia_delle_carovane_dell_oasi_suli",
         "class": "Kineticist",
@@ -1031,7 +1384,7 @@
         ]
       },
       {
-        "file": "src/data/builds/kineticist_suli_kinetic_knight_overwhelming_soul_lvl10.json",
+        "file": "src\\data\\builds\\kineticist_suli_kinetic_knight_overwhelming_soul_lvl10.json",
         "status": "invalid",
         "output_prefix": "kineticist_suli_kinetic_knight_overwhelming_soul_guardia_delle_carovane_dell_oasi_suli",
         "class": "Kineticist",
@@ -1053,7 +1406,7 @@
         ]
       },
       {
-        "file": "src/data/builds/magus_kitsune_bladebound_hexcrafter.json",
+        "file": "src\\data\\builds\\magus_kitsune_bladebound_hexcrafter.json",
         "status": "invalid",
         "output_prefix": "magus_kitsune_bladebound_hexcrafter",
         "class": "Magus",
@@ -1082,7 +1435,7 @@
         ]
       },
       {
-        "file": "src/data/builds/magus_kitsune_bladebound_hexcrafter_lvl05.json",
+        "file": "src\\data\\builds\\magus_kitsune_bladebound_hexcrafter_lvl05.json",
         "status": "invalid",
         "output_prefix": "magus_kitsune_bladebound_hexcrafter",
         "class": "Magus",
@@ -1104,7 +1457,7 @@
         ]
       },
       {
-        "file": "src/data/builds/magus_kitsune_bladebound_hexcrafter_lvl10.json",
+        "file": "src\\data\\builds\\magus_kitsune_bladebound_hexcrafter_lvl10.json",
         "status": "invalid",
         "output_prefix": "magus_kitsune_bladebound_hexcrafter",
         "class": "Magus",
@@ -1126,7 +1479,7 @@
         ]
       },
       {
-        "file": "src/data/builds/medium_oread_spirit_dancer_reanimated_medium.json",
+        "file": "src\\data\\builds\\medium_oread_spirit_dancer_reanimated_medium.json",
         "status": "invalid",
         "output_prefix": "medium_oread_spirit_dancer_reanimated_medium",
         "class": "Medium",
@@ -1153,7 +1506,7 @@
         ]
       },
       {
-        "file": "src/data/builds/medium_oread_spirit_dancer_reanimated_medium_lvl05.json",
+        "file": "src\\data\\builds\\medium_oread_spirit_dancer_reanimated_medium_lvl05.json",
         "status": "invalid",
         "output_prefix": "medium_oread_spirit_dancer_reanimated_medium",
         "class": "Medium",
@@ -1180,7 +1533,7 @@
         ]
       },
       {
-        "file": "src/data/builds/medium_oread_spirit_dancer_reanimated_medium_lvl10.json",
+        "file": "src\\data\\builds\\medium_oread_spirit_dancer_reanimated_medium_lvl10.json",
         "status": "invalid",
         "output_prefix": "medium_oread_spirit_dancer_reanimated_medium",
         "class": "Medium",
@@ -1207,7 +1560,139 @@
         ]
       },
       {
-        "file": "src/data/builds/paladin_aasimar_holy_tactician_sacred_servant_lvl01.json",
+        "file": "src\\data\\builds\\monk_vanara_qinggong_master_of_many_styles.json",
+        "status": "invalid",
+        "output_prefix": "monk_vanara_qinggong_master_of_many_styles",
+        "class": "Monk",
+        "race": "Vanara",
+        "archetype": "Qinggong + Master of Many Styles",
+        "mode": "full-pg",
+        "mode_normalized": "extended",
+        "spec_id": "monk_vanara_qinggong_master_of_many_styles",
+        "background": null,
+        "model": null,
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "level": 1,
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "'sheet_payload' is a required property; Elementi non presenti nel catalogo: feats:Tiger Style + Crane Style; Prerequisiti catalogo non soddisfatti: Crane Style: Improved Unarmed Strike, Tiger Style: Improved Unarmed Strike",
+        "completeness_errors": [
+          "Elementi non presenti nel catalogo: feats:Tiger Style + Crane Style",
+          "Prerequisiti catalogo non soddisfatti: Crane Style: Improved Unarmed Strike, Tiger Style: Improved Unarmed Strike"
+        ],
+        "missing_catalog_entries": [
+          "feats:Tiger Style + Crane Style"
+        ],
+        "prerequisite_violations": [
+          "Crane Style: Improved Unarmed Strike",
+          "Tiger Style: Improved Unarmed Strike"
+        ],
+        "catalog_version": [
+          "2026.04.03"
+        ]
+      },
+      {
+        "file": "src\\data\\builds\\monk_vanara_qinggong_master_of_many_styles_lvl05.json",
+        "status": "invalid",
+        "output_prefix": "monk_vanara_qinggong_master_of_many_styles",
+        "class": "Monk",
+        "race": "Vanara",
+        "archetype": "Qinggong + Master of Many Styles",
+        "mode": "full-pg",
+        "mode_normalized": "extended",
+        "spec_id": "monk_vanara_qinggong_master_of_many_styles",
+        "background": null,
+        "model": null,
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "level": 5,
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "'sheet_payload' is a required property; Elementi non presenti nel catalogo: feats:Dodge + Mobility, feats:Power Attack + Tiger Claws, feats:Tiger Style + Crane Style; Prerequisiti catalogo non soddisfatti: Amuleto dell'armatura naturale +1: Craft Wondrous Item, Amuleto dell'armatura naturale +1: barkskin, Crane Style: Improved Unarmed Strike, Crane Wing: Improved Unarmed Strike, Dragon Style: Improved Unarmed Strike, Tiger Claws: Improved Unarmed Strike, Tiger Style: Improved Unarmed Strike",
+        "completeness_errors": [
+          "Elementi non presenti nel catalogo: feats:Dodge + Mobility, feats:Power Attack + Tiger Claws, feats:Tiger Style + Crane Style",
+          "Prerequisiti catalogo non soddisfatti: Amuleto dell'armatura naturale +1: Craft Wondrous Item, Amuleto dell'armatura naturale +1: barkskin, Crane Style: Improved Unarmed Strike, Crane Wing: Improved Unarmed Strike, Dragon Style: Improved Unarmed Strike, Tiger Claws: Improved Unarmed Strike, Tiger Style: Improved Unarmed Strike"
+        ],
+        "missing_catalog_entries": [
+          "feats:Dodge + Mobility",
+          "feats:Power Attack + Tiger Claws",
+          "feats:Tiger Style + Crane Style"
+        ],
+        "prerequisite_violations": [
+          "Amuleto dell'armatura naturale +1: Craft Wondrous Item",
+          "Amuleto dell'armatura naturale +1: barkskin",
+          "Crane Style: Improved Unarmed Strike",
+          "Crane Wing: Improved Unarmed Strike",
+          "Dragon Style: Improved Unarmed Strike",
+          "Tiger Claws: Improved Unarmed Strike",
+          "Tiger Style: Improved Unarmed Strike"
+        ],
+        "catalog_version": [
+          "2026.04.03"
+        ]
+      },
+      {
+        "file": "src\\data\\builds\\monk_vanara_qinggong_master_of_many_styles_lvl10.json",
+        "status": "invalid",
+        "output_prefix": "monk_vanara_qinggong_master_of_many_styles",
+        "class": "Monk",
+        "race": "Vanara",
+        "archetype": "Qinggong + Master of Many Styles",
+        "mode": "full-pg",
+        "mode_normalized": "extended",
+        "spec_id": "monk_vanara_qinggong_master_of_many_styles",
+        "background": null,
+        "model": null,
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "level": 10,
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "'sheet_payload' is a required property; Elementi non presenti nel catalogo: feats:Dodge + Mobility, feats:Power Attack + Tiger Claws, feats:Tiger Style + Crane Style; Prerequisiti catalogo non soddisfatti: Crane Riposte: Improved Unarmed Strike, Crane Style: Improved Unarmed Strike, Crane Wing: Improved Unarmed Strike, Dragon Ferocity: Improved Unarmed Strike, Dragon Style: Improved Unarmed Strike, Headband of Inspired Wisdom +2: Craft Wondrous Item, Headband of Inspired Wisdom +2: owl's wisdom, Medusa's Wrath: Improved Unarmed Strike, Medusa's Wrath: Stunning Fist, Tiger Claws: Improved Unarmed Strike, Tiger Style: Improved Unarmed Strike",
+        "completeness_errors": [
+          "Elementi non presenti nel catalogo: feats:Dodge + Mobility, feats:Power Attack + Tiger Claws, feats:Tiger Style + Crane Style",
+          "Prerequisiti catalogo non soddisfatti: Crane Riposte: Improved Unarmed Strike, Crane Style: Improved Unarmed Strike, Crane Wing: Improved Unarmed Strike, Dragon Ferocity: Improved Unarmed Strike, Dragon Style: Improved Unarmed Strike, Headband of Inspired Wisdom +2: Craft Wondrous Item, Headband of Inspired Wisdom +2: owl's wisdom, Medusa's Wrath: Improved Unarmed Strike, Medusa's Wrath: Stunning Fist, Tiger Claws: Improved Unarmed Strike, Tiger Style: Improved Unarmed Strike"
+        ],
+        "missing_catalog_entries": [
+          "feats:Dodge + Mobility",
+          "feats:Power Attack + Tiger Claws",
+          "feats:Tiger Style + Crane Style"
+        ],
+        "prerequisite_violations": [
+          "Crane Riposte: Improved Unarmed Strike",
+          "Crane Style: Improved Unarmed Strike",
+          "Crane Wing: Improved Unarmed Strike",
+          "Dragon Ferocity: Improved Unarmed Strike",
+          "Dragon Style: Improved Unarmed Strike",
+          "Headband of Inspired Wisdom +2: Craft Wondrous Item",
+          "Headband of Inspired Wisdom +2: owl's wisdom",
+          "Medusa's Wrath: Improved Unarmed Strike",
+          "Medusa's Wrath: Stunning Fist",
+          "Tiger Claws: Improved Unarmed Strike",
+          "Tiger Style: Improved Unarmed Strike"
+        ],
+        "catalog_version": [
+          "2026.04.03"
+        ]
+      },
+      {
+        "file": "src\\data\\builds\\paladin_aasimar_holy_tactician_sacred_servant_lvl01.json",
         "status": "invalid",
         "output_prefix": "paladin_aasimar_holy_tactician_sacred_servant",
         "class": "Paladin",
@@ -1236,7 +1721,255 @@
         ]
       },
       {
-        "file": "src/data/builds/strict/cleric/cleric_wayang_shadowcaster_separatist.json",
+        "file": "src\\data\\builds\\paladin_aasimar_holy_tactician_sacred_servant_lvl05.json",
+        "status": "invalid",
+        "output_prefix": "paladin_aasimar_holy_tactician_sacred_servant",
+        "class": "Paladin",
+        "race": "Aasimar",
+        "archetype": "Holy Tactician + Sacred Servant",
+        "mode": "extended",
+        "mode_normalized": "extended",
+        "spec_id": "paladin_aasimar_holy_tactician_sacred_servant",
+        "background": null,
+        "model": null,
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "level": 5,
+        "error": "Prerequisiti catalogo non soddisfatti: Coordinated Charge: Combat Reflexes",
+        "completeness_errors": [
+          "Prerequisiti catalogo non soddisfatti: Coordinated Charge: Combat Reflexes"
+        ],
+        "prerequisite_violations": [
+          "Coordinated Charge: Combat Reflexes"
+        ],
+        "catalog_version": [
+          "2026.04.03"
+        ]
+      },
+      {
+        "file": "src\\data\\builds\\paladin_aasimar_holy_tactician_sacred_servant_lvl10.json",
+        "status": "invalid",
+        "output_prefix": "paladin_aasimar_holy_tactician_sacred_servant",
+        "class": "Paladin",
+        "race": "Aasimar",
+        "archetype": "Holy Tactician + Sacred Servant",
+        "mode": "extended",
+        "mode_normalized": "extended",
+        "spec_id": "paladin_aasimar_holy_tactician_sacred_servant",
+        "background": null,
+        "model": null,
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "level": 10,
+        "error": "Prerequisiti catalogo non soddisfatti: Coordinated Charge: Combat Reflexes",
+        "completeness_errors": [
+          "Prerequisiti catalogo non soddisfatti: Coordinated Charge: Combat Reflexes"
+        ],
+        "prerequisite_violations": [
+          "Coordinated Charge: Combat Reflexes"
+        ],
+        "catalog_version": [
+          "2026.04.03"
+        ]
+      },
+      {
+        "file": "src\\data\\builds\\ranger_halfelf_skirmisher.json",
+        "status": "invalid",
+        "output_prefix": "ranger_halfelf_skirmisher",
+        "class": "Ranger",
+        "race": "Half-Elf",
+        "archetype": "Skirmisher",
+        "mode": "full-pg",
+        "mode_normalized": "extended",
+        "spec_id": "ranger_half-elf_skirmisher",
+        "background": null,
+        "model": null,
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "level": 1,
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "catalog_version": [
+          "2026.04.03"
+        ]
+      },
+      {
+        "file": "src\\data\\builds\\ranger_halfelf_skirmisher_lvl05.json",
+        "status": "invalid",
+        "output_prefix": "ranger_halfelf_skirmisher",
+        "class": "Ranger",
+        "race": "Half-Elf",
+        "archetype": "Skirmisher",
+        "mode": "full-pg",
+        "mode_normalized": "extended",
+        "spec_id": "ranger_half-elf_skirmisher",
+        "background": null,
+        "model": null,
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "level": 5,
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "catalog_version": [
+          "2026.04.03"
+        ]
+      },
+      {
+        "file": "src\\data\\builds\\ranger_halfelf_skirmisher_lvl10.json",
+        "status": "invalid",
+        "output_prefix": "ranger_halfelf_skirmisher",
+        "class": "Ranger",
+        "race": "Half-Elf",
+        "archetype": "Skirmisher",
+        "mode": "full-pg",
+        "mode_normalized": "extended",
+        "spec_id": "ranger_half-elf_skirmisher",
+        "background": null,
+        "model": null,
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "level": 10,
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "catalog_version": [
+          "2026.04.03"
+        ]
+      },
+      {
+        "file": "src\\data\\builds\\rogue_halfling_cutpurse.json",
+        "status": "invalid",
+        "output_prefix": "rogue_halfling_cutpurse",
+        "class": "Rogue",
+        "race": "Halfling",
+        "archetype": "Cutpurse",
+        "mode": "full-pg",
+        "mode_normalized": "extended",
+        "spec_id": "rogue_halfling_cutpurse",
+        "background": null,
+        "model": null,
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "level": 1,
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "'sheet_payload' is a required property; Prerequisiti catalogo non soddisfatti: Armatura di cuoio borchiato: Light armor proficiency",
+        "completeness_errors": [
+          "Prerequisiti catalogo non soddisfatti: Armatura di cuoio borchiato: Light armor proficiency"
+        ],
+        "prerequisite_violations": [
+          "Armatura di cuoio borchiato: Light armor proficiency"
+        ],
+        "catalog_version": [
+          "2026.04.03"
+        ]
+      },
+      {
+        "file": "src\\data\\builds\\rogue_halfling_cutpurse_lvl05.json",
+        "status": "invalid",
+        "output_prefix": "rogue_halfling_cutpurse",
+        "class": "Rogue",
+        "race": "Halfling",
+        "archetype": "Cutpurse",
+        "mode": "full-pg",
+        "mode_normalized": "extended",
+        "spec_id": "rogue_halfling_cutpurse",
+        "background": null,
+        "model": null,
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "level": 5,
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "'sheet_payload' is a required property; Elementi non presenti nel catalogo: feats:Schivare prodigioso; Prerequisiti catalogo non soddisfatti: Armatura di cuoio borchiato: Light armor proficiency",
+        "completeness_errors": [
+          "Elementi non presenti nel catalogo: feats:Schivare prodigioso",
+          "Prerequisiti catalogo non soddisfatti: Armatura di cuoio borchiato: Light armor proficiency"
+        ],
+        "missing_catalog_entries": [
+          "feats:Schivare prodigioso"
+        ],
+        "prerequisite_violations": [
+          "Armatura di cuoio borchiato: Light armor proficiency"
+        ],
+        "catalog_version": [
+          "2026.04.03"
+        ]
+      },
+      {
+        "file": "src\\data\\builds\\rogue_halfling_cutpurse_lvl10.json",
+        "status": "invalid",
+        "output_prefix": "rogue_halfling_cutpurse",
+        "class": "Rogue",
+        "race": "Halfling",
+        "archetype": "Cutpurse",
+        "mode": "full-pg",
+        "mode_normalized": "extended",
+        "spec_id": "rogue_halfling_cutpurse",
+        "background": null,
+        "model": null,
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "level": 10,
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "'sheet_payload' is a required property; Elementi non presenti nel catalogo: feats:Arma accurata superiore, feats:Schivare prodigioso, feats:Talento ladresco: Opportunista; Prerequisiti catalogo non soddisfatti: Armatura di cuoio borchiato: Light armor proficiency",
+        "completeness_errors": [
+          "Elementi non presenti nel catalogo: feats:Arma accurata superiore, feats:Schivare prodigioso, feats:Talento ladresco: Opportunista",
+          "Prerequisiti catalogo non soddisfatti: Armatura di cuoio borchiato: Light armor proficiency"
+        ],
+        "missing_catalog_entries": [
+          "feats:Arma accurata superiore",
+          "feats:Schivare prodigioso",
+          "feats:Talento ladresco: Opportunista"
+        ],
+        "prerequisite_violations": [
+          "Armatura di cuoio borchiato: Light armor proficiency"
+        ],
+        "catalog_version": [
+          "2026.04.03"
+        ]
+      },
+      {
+        "file": "src\\data\\builds\\strict\\cleric\\cleric_wayang_shadowcaster_separatist.json",
         "status": "invalid",
         "output_prefix": "cleric_wayang_umbral_shadowcaster_separatist_cleric_wayang_ombra_che_separa_dottrina_e_fede_per_massimizzare_controllo_t1",
         "class": "Cleric",
@@ -1258,7 +1991,7 @@
         ]
       },
       {
-        "file": "src/data/builds/strict/cleric/cleric_wayang_shadowcaster_separatist_lvl05.json",
+        "file": "src\\data\\builds\\strict\\cleric\\cleric_wayang_shadowcaster_separatist_lvl05.json",
         "status": "invalid",
         "output_prefix": "cleric_wayang_umbral_shadowcaster_separatist_cleric_wayang_ombra_che_separa_dottrina_e_fede_per_massimizzare_controllo_t1",
         "class": "Cleric",
@@ -1280,7 +2013,7 @@
         ]
       },
       {
-        "file": "src/data/builds/strict/cleric/cleric_wayang_shadowcaster_separatist_lvl10.json",
+        "file": "src\\data\\builds\\strict\\cleric\\cleric_wayang_shadowcaster_separatist_lvl10.json",
         "status": "invalid",
         "output_prefix": "cleric_wayang_umbral_shadowcaster_separatist_cleric_wayang_ombra_che_separa_dottrina_e_fede_per_massimizzare_controllo_t1",
         "class": "Cleric",
@@ -1302,7 +2035,7 @@
         ]
       },
       {
-        "file": "src/data/builds/strict/mesmerist_catfolk_vexing_daredevil_enigma.json",
+        "file": "src\\data\\builds\\strict\\mesmerist_catfolk_vexing_daredevil_enigma.json",
         "status": "invalid",
         "output_prefix": "mesmerist_catfolk_vexing_daredevil_enigma_acrobata_da_arena_che_ipnotizza_e_strappa_vantaggi_sporchi_per_il_clan",
         "class": "Mesmerist",
@@ -1324,7 +2057,7 @@
         ]
       },
       {
-        "file": "src/data/builds/strict/mesmerist_catfolk_vexing_daredevil_enigma_lvl05.json",
+        "file": "src\\data\\builds\\strict\\mesmerist_catfolk_vexing_daredevil_enigma_lvl05.json",
         "status": "invalid",
         "output_prefix": "mesmerist_catfolk_vexing_daredevil_enigma_acrobata_da_arena_che_ipnotizza_e_strappa_vantaggi_sporchi_per_il_clan",
         "class": "Mesmerist",
@@ -1346,7 +2079,7 @@
         ]
       },
       {
-        "file": "src/data/builds/strict/mesmerist_catfolk_vexing_daredevil_enigma_lvl10.json",
+        "file": "src\\data\\builds\\strict\\mesmerist_catfolk_vexing_daredevil_enigma_lvl10.json",
         "status": "invalid",
         "output_prefix": "mesmerist_catfolk_vexing_daredevil_enigma_acrobata_da_arena_che_ipnotizza_e_strappa_vantaggi_sporchi_per_il_clan",
         "class": "Mesmerist",
@@ -1368,7 +2101,7 @@
         ]
       },
       {
-        "file": "src/data/builds/strict/occultist/occultist_ghoran_battle_host_panoply_savant.json",
+        "file": "src\\data\\builds\\strict\\occultist\\occultist_ghoran_battle_host_panoply_savant.json",
         "status": "invalid",
         "output_prefix": "occultist_ghoran_battle_host_panoply_savant_guardiano_ghoran_che_vincola_panoply_viventi_alla_propria_armatura_di_linfa",
         "class": "Occultist",
@@ -1390,7 +2123,7 @@
         ]
       },
       {
-        "file": "src/data/builds/strict/occultist/occultist_ghoran_battle_host_panoply_savant_lvl05.json",
+        "file": "src\\data\\builds\\strict\\occultist\\occultist_ghoran_battle_host_panoply_savant_lvl05.json",
         "status": "invalid",
         "output_prefix": "occultist_ghoran_battle_host_panoply_savant_guardiano_ghoran_che_vincola_panoply_viventi_alla_propria_armatura_di_linfa",
         "class": "Occultist",
@@ -1412,7 +2145,7 @@
         ]
       },
       {
-        "file": "src/data/builds/strict/occultist/occultist_ghoran_battle_host_panoply_savant_lvl10.json",
+        "file": "src\\data\\builds\\strict\\occultist\\occultist_ghoran_battle_host_panoply_savant_lvl10.json",
         "status": "invalid",
         "output_prefix": "occultist_ghoran_battle_host_panoply_savant_guardiano_ghoran_che_vincola_panoply_viventi_alla_propria_armatura_di_linfa",
         "class": "Occultist",
@@ -1434,7 +2167,7 @@
         ]
       },
       {
-        "file": "src/data/builds/strict/oracle/oracle_ghoran_spirit_guide_seer.json",
+        "file": "src\\data\\builds\\strict\\oracle\\oracle_ghoran_spirit_guide_seer.json",
         "status": "invalid",
         "output_prefix": "oracle_ghoran_spirit_guide_seer_oracolo_ghoran_che_intreccia_presagi_vegetali_e_patroni_shamanici",
         "class": "Oracle",
@@ -1456,7 +2189,7 @@
         ]
       },
       {
-        "file": "src/data/builds/strict/oracle/oracle_ghoran_spirit_guide_seer_lvl05.json",
+        "file": "src\\data\\builds\\strict\\oracle\\oracle_ghoran_spirit_guide_seer_lvl05.json",
         "status": "invalid",
         "output_prefix": "oracle_ghoran_spirit_guide_seer_oracolo_ghoran_che_intreccia_presagi_vegetali_e_patroni_shamanici",
         "class": "Oracle",
@@ -1478,7 +2211,7 @@
         ]
       },
       {
-        "file": "src/data/builds/strict/oracle/oracle_ghoran_spirit_guide_seer_lvl10.json",
+        "file": "src\\data\\builds\\strict\\oracle\\oracle_ghoran_spirit_guide_seer_lvl10.json",
         "status": "invalid",
         "output_prefix": "oracle_ghoran_spirit_guide_seer_oracolo_ghoran_che_intreccia_presagi_vegetali_e_patroni_shamanici",
         "class": "Oracle",
@@ -1500,7 +2233,7 @@
         ]
       },
       {
-        "file": "src/data/builds/strict/paladin/paladin_aasimar_holy_tactician_sacred_servant.json",
+        "file": "src\\data\\builds\\strict\\paladin\\paladin_aasimar_holy_tactician_sacred_servant.json",
         "status": "invalid",
         "output_prefix": "paladin_aasimar_holy_tactician_sacred_servant",
         "class": "Paladin",
@@ -1529,7 +2262,7 @@
         ]
       },
       {
-        "file": "src/data/builds/strict/paladin/paladin_aasimar_holy_tactician_sacred_servant_lvl05.json",
+        "file": "src\\data\\builds\\strict\\paladin\\paladin_aasimar_holy_tactician_sacred_servant_lvl05.json",
         "status": "invalid",
         "output_prefix": "paladin_aasimar_holy_tactician_sacred_servant",
         "class": "Paladin",
@@ -1558,7 +2291,7 @@
         ]
       },
       {
-        "file": "src/data/builds/strict/paladin/paladin_aasimar_holy_tactician_sacred_servant_lvl10.json",
+        "file": "src\\data\\builds\\strict\\paladin\\paladin_aasimar_holy_tactician_sacred_servant_lvl10.json",
         "status": "invalid",
         "output_prefix": "paladin_aasimar_holy_tactician_sacred_servant",
         "class": "Paladin",
@@ -1587,7 +2320,7 @@
         ]
       },
       {
-        "file": "src/data/builds/strict/witch_sylph_gravewalker_hedge_witch.json",
+        "file": "src\\data\\builds\\strict\\witch_sylph_gravewalker_hedge_witch.json",
         "status": "invalid",
         "output_prefix": "witch_sylph_gravewalker_hedge_witch_veggente_del_vento_che_guida_anime_e_cura_con_erbe_sospese",
         "class": "Witch",
@@ -1609,7 +2342,7 @@
         ]
       },
       {
-        "file": "src/data/builds/strict/witch_sylph_gravewalker_hedge_witch_lvl05.json",
+        "file": "src\\data\\builds\\strict\\witch_sylph_gravewalker_hedge_witch_lvl05.json",
         "status": "invalid",
         "output_prefix": "witch_sylph_gravewalker_hedge_witch_veggente_del_vento_che_guida_anime_e_cura_con_erbe_sospese",
         "class": "Witch",
@@ -1631,7 +2364,7 @@
         ]
       },
       {
-        "file": "src/data/builds/strict/witch_sylph_gravewalker_hedge_witch_lvl10.json",
+        "file": "src\\data\\builds\\strict\\witch_sylph_gravewalker_hedge_witch_lvl10.json",
         "status": "invalid",
         "output_prefix": "witch_sylph_gravewalker_hedge_witch_veggente_del_vento_che_guida_anime_e_cura_con_erbe_sospese",
         "class": "Witch",
@@ -1653,7 +2386,7 @@
         ]
       },
       {
-        "file": "src/data/builds/witch_sylph_gravewalker_hedge_witch.json",
+        "file": "src\\data\\builds\\witch_sylph_gravewalker_hedge_witch.json",
         "status": "invalid",
         "output_prefix": "witch_sylph_gravewalker_hedge_witch_veggente_del_vento_che_guida_anime_e_cura_con_erbe_sospese",
         "class": "Witch",
@@ -1675,7 +2408,7 @@
         ]
       },
       {
-        "file": "src/data/builds/witch_sylph_gravewalker_hedge_witch_lvl05.json",
+        "file": "src\\data\\builds\\witch_sylph_gravewalker_hedge_witch_lvl05.json",
         "status": "invalid",
         "output_prefix": "witch_sylph_gravewalker_hedge_witch_veggente_del_vento_che_guida_anime_e_cura_con_erbe_sospese",
         "class": "Witch",
@@ -1697,7 +2430,7 @@
         ]
       },
       {
-        "file": "src/data/builds/witch_sylph_gravewalker_hedge_witch_lvl10.json",
+        "file": "src\\data\\builds\\witch_sylph_gravewalker_hedge_witch_lvl10.json",
         "status": "invalid",
         "output_prefix": "witch_sylph_gravewalker_hedge_witch_veggente_del_vento_che_guida_anime_e_cura_con_erbe_sospese",
         "class": "Witch",
@@ -1719,7 +2452,88 @@
         ]
       },
       {
-        "file": "src/data/builds/wizard_human_evoker.json",
+        "file": "src\\data\\builds\\wizard_elf_universalist.json",
+        "status": "invalid",
+        "output_prefix": "wizard_elf_universalist",
+        "class": "Wizard",
+        "race": "Elf",
+        "archetype": "Universalist",
+        "mode": "full-pg",
+        "mode_normalized": "extended",
+        "spec_id": "wizard_elf_universalist",
+        "background": null,
+        "model": null,
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "level": 1,
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "catalog_version": [
+          "2026.04.03"
+        ]
+      },
+      {
+        "file": "src\\data\\builds\\wizard_elf_universalist_lvl05.json",
+        "status": "invalid",
+        "output_prefix": "wizard_elf_universalist",
+        "class": "Wizard",
+        "race": "Elf",
+        "archetype": "Universalist",
+        "mode": "full-pg",
+        "mode_normalized": "extended",
+        "spec_id": "wizard_elf_universalist",
+        "background": null,
+        "model": null,
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "level": 5,
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "catalog_version": [
+          "2026.04.03"
+        ]
+      },
+      {
+        "file": "src\\data\\builds\\wizard_elf_universalist_lvl10.json",
+        "status": "invalid",
+        "output_prefix": "wizard_elf_universalist",
+        "class": "Wizard",
+        "race": "Elf",
+        "archetype": "Universalist",
+        "mode": "full-pg",
+        "mode_normalized": "extended",
+        "spec_id": "wizard_elf_universalist",
+        "background": null,
+        "model": null,
+        "level_checkpoints": [
+          1,
+          5,
+          10
+        ],
+        "level": 10,
+        "step_total": 16,
+        "expected_step_total": 16,
+        "extended_steps_available": true,
+        "step_total_ok": true,
+        "error": "'sheet_payload' is a required property; 4 is not of type 'array'; 3 is not of type 'array'; 4 is not of type 'array'; 3 is not of type 'array'",
+        "catalog_version": [
+          "2026.04.03"
+        ]
+      },
+      {
+        "file": "src\\data\\builds\\wizard_human_evoker.json",
         "status": "invalid",
         "output_prefix": "wizard_human_evoker",
         "class": "Wizard",
@@ -1754,7 +2568,7 @@
         ]
       },
       {
-        "file": "src/data/builds/wizard_human_evoker_lvl05.json",
+        "file": "src\\data\\builds\\wizard_human_evoker_lvl05.json",
         "status": "invalid",
         "output_prefix": "wizard_human_evoker",
         "class": "Wizard",
@@ -1798,7 +2612,7 @@
         ]
       },
       {
-        "file": "src/data/builds/wizard_human_evoker_lvl10.json",
+        "file": "src\\data\\builds\\wizard_human_evoker_lvl10.json",
         "status": "invalid",
         "output_prefix": "wizard_human_evoker",
         "class": "Wizard",
@@ -1857,61 +2671,15 @@
   },
   "modules": {
     "total": 15,
-    "ok": 13,
-    "invalid": 1,
-    "errors": 1,
-    "invalid_entries": [
-      {
-        "module": "adventurer_ledger.txt",
-        "file": null,
-        "status": "error",
-        "issues": [
-          "missing_audit",
-          "missing_record_status"
-        ],
-        "error": "Client error '403 Forbidden' for url 'http://localhost:8000/modules/adventurer_ledger.txt'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403"
-      },
-      {
-        "module": "scheda_pg_markdown_template.md",
-        "file": "src/data/modules/scheda_pg_markdown_template.md",
-        "status": "invalid",
-        "meta": {
-          "name": "scheda_pg_markdown_template.md",
-          "size_bytes": 29742,
-          "suffix": ".md",
-          "version": "1.1",
-          "compatibility": {
-            "core_min": "3.3",
-            "integrates_with": [
-              "MinMax Builder",
-              "Adventurer Ledger",
-              "Explain Methods",
-              "Ruling Expert",
-              "Hook VTT"
-            ]
-          },
-          "record_status": "draft",
-          "is_deleted": false,
-          "deleted_at": null,
-          "audit": [
-            {
-              "timestamp": "2025-12-19T18:29:42Z",
-              "actor": "generate_build_db",
-              "action": "module_indexed",
-              "status": "draft",
-              "note": "meta validation: {'core_min': '3.3', 'integrates_with': ['MinMax Builder', 'Adventurer Ledger', 'Explain Methods', 'Ruling Expert', 'Hook VTT']} is not valid under any of the given schemas"
-            }
-          ]
-        },
-        "error": "{'core_min': '3.3', 'integrates_with': ['MinMax Builder', 'Adventurer Ledger', 'Explain Methods', 'Ruling Expert', 'Hook VTT']} is not valid under any of the given schemas"
-      }
-    ]
+    "ok": 15,
+    "invalid": 0,
+    "errors": 0,
+    "invalid_entries": []
   },
   "archived_files": [],
   "alerts": {
     "missing_core_classes": [
       "Barbarian",
-      "Bard",
       "Cleric",
       "Druid",
       "Fighter",
