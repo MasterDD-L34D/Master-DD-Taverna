@@ -43,6 +43,7 @@ from .metadata_parser import (
     reference_catalog_version as _reference_catalog_version,
 )
 from .storage_helpers import list_files as _list_files, taverna_saves_metadata as _taverna_saves_metadata, taverna_saves_metrics as _taverna_saves_metrics
+from .rag.router import router as rag_router
 from tools.generate_build_db import schema_for_mode, validate_with_schema
 
 
@@ -1369,3 +1370,4 @@ async def metrics(_: None = Depends(require_metrics_access)) -> Response:
     return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
 
 app.include_router(router)
+app.include_router(rag_router)

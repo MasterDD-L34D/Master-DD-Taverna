@@ -4,6 +4,7 @@ import json
 import os
 import subprocess
 import sys
+from pathlib import Path
 
 
 def run(cmd, check=True):
@@ -21,9 +22,9 @@ def run(cmd, check=True):
 def check_pytest():
     res = run([".venv/Scripts/python", "-m", "pytest", "-q"])
     out = res.stdout + res.stderr
-    if "104 passed" not in out or "1 skipped" not in out:
-        sys.exit("ERRORE: test suite non conforme (atteso 104 passed, 1 skipped)")
-    print("OK: pytest -> 104 passed, 1 skipped")
+    if "110 passed" not in out or "1 skipped" not in out:
+        sys.exit("ERRORE: test suite non conforme (atteso 110 passed, 1 skipped)")
+    print("OK: pytest -> 110 passed, 1 skipped")
 
 
 def check_validate_schemas():
@@ -77,6 +78,50 @@ def check_reports_valid_json():
     print("OK: tutti i report principali sono JSON validi")
 
 
+def check_rag_index():
+    store_dir = Path("src/data/vector_store")
+    if not (store_dir / "chunks.json").exists() or not (store_dir / "embeddings.npy").exists():
+        sys.exit("ERRORE: indice RAG non trovato in src/data/vector_store")
+    chunks = json.load(open(store_dir / "chunks.json", encoding="utf-8"))
+    if len(chunks) < 5000:
+        sys.exit(f"ERRORE: indice RAG troppo piccolo ({len(chunks)} chunk)")
+    print(f"OK: indice RAG pronto con {len(chunks)} chunk")
+
+
+def check_rag_endpoints():
+    from fastapi.testclient import TestClient
+    from src.app import app
+    from src.config import settings
+    from src.rag.store import VectorStore
+
+    store_dir = Path("src/data/vector_store")
+    if not VectorStore(store_dir).is_ready():
+        print("SKIP: endpoint RAG non testati per indice mancante")
+        return
+
+    original_key = settings.api_key
+    original_allow = settings.allow_anonymous
+    try:
+        settings.api_key = "verify-rag-key"
+        settings.allow_anonymous = False
+        headers = {"x-api-key": "verify-rag-key"}
+        with TestClient(app) as client:
+            resp = client.post("/rag/search", json={"query": "talento Power Attack", "top_k": 3}, headers=headers)
+            if resp.status_code != 200:
+                sys.exit(f"ERRORE: /rag/search ha risposto {resp.status_code}: {resp.text}")
+            data = resp.json()
+            if len(data.get("results", [])) != 3:
+                sys.exit("ERRORE: /rag/search non ha restituito 3 risultati")
+
+            resp = client.post("/rag/ask", json={"query": "cosa fa Power Attack?", "top_k": 3, "provider": "mock"}, headers=headers)
+            if resp.status_code != 200:
+                sys.exit(f"ERRORE: /rag/ask ha risposto {resp.status_code}: {resp.text}")
+        print("OK: endpoint RAG /search e /ask funzionanti")
+    finally:
+        settings.api_key = original_key
+        settings.allow_anonymous = original_allow
+
+
 def main():
     check_pytest()
     check_validate_schemas()
@@ -84,6 +129,8 @@ def main():
     check_orphans()
     check_module_index()
     check_reports_valid_json()
+    check_rag_index()
+    check_rag_endpoints()
     print("\n=== VERIFICA Master-DD-Pathfinder-GPT: TUTTO OK ===")
 
 

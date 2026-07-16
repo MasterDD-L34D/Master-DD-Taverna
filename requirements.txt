@@ -8,3 +8,5 @@ pytest
 hypothesis>=6.0
 prometheus_client
 Jinja2
+sentence-transformers>=2.3
+numpy
