@@ -22,9 +22,9 @@ def run(cmd, check=True):
 def check_pytest():
     res = run([".venv/Scripts/python", "-m", "pytest", "-q"])
     out = res.stdout + res.stderr
-    if "114 passed" not in out or "1 skipped" not in out:
-        sys.exit("ERRORE: test suite non conforme (atteso 114 passed, 1 skipped)")
-    print("OK: pytest -> 114 passed, 1 skipped")
+    if "130 passed" not in out or "1 skipped" not in out:
+        sys.exit("ERRORE: test suite non conforme (atteso 130 passed, 1 skipped)")
+    print("OK: pytest -> 130 passed, 1 skipped")
 
 
 def check_validate_schemas():
