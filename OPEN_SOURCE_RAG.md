@@ -82,18 +82,23 @@ Il provider `mock` non chiama alcun LLM: restituisce la query e i chunk recupera
 
 ### Domanda-risposta con Ollama
 
-Avvia Ollama in locale con un modello, es. `llama3.1`:
+Avvia Ollama in locale con un modello. Nella sessione 2026-07-16 e' stato testato con successo `qwen2.5-coder:7b`:
 
 ```bash
-ollama run llama3.1
+ollama pull qwen2.5-coder:7b
+ollama run qwen2.5-coder:7b
 ```
 
-Poi:
+Poi configura `.env` (o esporta le variabili):
 
 ```bash
 export RAG_LLM_PROVIDER="ollama"
-export OLLAMA_MODEL="llama3.1"
+export OLLAMA_MODEL="qwen2.5-coder:7b"
+```
 
+E prova:
+
+```bash
 curl -X POST http://localhost:8000/rag/ask \
   -H "Content-Type: application/json" \
   -H "x-api-key: la-tua-chiave" \
@@ -122,7 +127,7 @@ curl -X POST http://localhost:8000/rag/ask \
 | `RAG_STORE_DIR` | `src/data/vector_store` | Directory dell'indice |
 | `RAG_LLM_PROVIDER` | `mock` | `mock`, `ollama`, `openai` |
 | `OLLAMA_BASE_URL` | `http://localhost:11434` | URL Ollama |
-| `OLLAMA_MODEL` | `llama3.1` | Modello Ollama |
+| `OLLAMA_MODEL` | `llama3.1` | Modello Ollama (testato anche `qwen2.5-coder:7b`) |
 | `OPENAI_API_KEY` | — | API key per provider OpenAI-compatibile |
 | `OPENAI_BASE_URL` | `https://api.openai.com/v1` | Base URL API |
 | `OPENAI_MODEL` | `gpt-3.5-turbo` | Modello remoto |
