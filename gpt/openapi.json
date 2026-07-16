@@ -612,6 +612,14 @@
                                         "type": "string",
                                         "enum": ["mock", "ollama", "openai"],
                                         "description": "Provider LLM; se omesso usa RAG_LLM_PROVIDER o mock"
+                                    },
+                                    "ollama_model": {
+                                        "type": "string",
+                                        "description": "Modello Ollama da usare (solo provider ollama)"
+                                    },
+                                    "ollama_base_url": {
+                                        "type": "string",
+                                        "description": "URL base del server Ollama (solo provider ollama)"
                                     }
                                 },
                                 "required": ["query"]
