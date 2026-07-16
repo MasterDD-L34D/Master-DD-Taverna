@@ -51,6 +51,8 @@ class AskRequest(BaseModel):
     query: str = Field(..., min_length=1)
     top_k: int = Field(5, ge=1, le=20)
     provider: str | None = None
+    ollama_model: str | None = None
+    ollama_base_url: str | None = None
 
 
 class BuildRequest(BaseModel):
@@ -74,7 +76,11 @@ async def rag_ask(req: AskRequest, _=Depends(require_api_key)):
     retriever = _get_retriever()
     results = retriever.search(req.query, top_k=req.top_k)
     from .generator import get_provider
-    provider = get_provider(req.provider)
+    provider = get_provider(
+        req.provider,
+        ollama_model=req.ollama_model,
+        ollama_base_url=req.ollama_base_url,
+    )
     answer = provider.generate(req.query, results)
     return {
         "query": req.query,
