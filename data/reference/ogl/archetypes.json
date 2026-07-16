@@ -1,0 +1,441 @@
+{
+  "_license": "Open Game Content under OGL 1.0a. See LICENSE-OGL.txt and COPYRIGHT_NOTICE.txt.",
+  "_source": "Pathfinder RPG Reference Document © 2011 Paizo Publishing, LLC; d20PFSRD.",
+  "entries": [
+    {
+      "name": "Fighter (Archer)",
+      "source": "Pathfinder SRD",
+      "source_id": "fighter:archer",
+      "prerequisites": [],
+      "tags": [
+        "archery",
+        "archetipo",
+        "archetype",
+        "fighter",
+        "fighter (archer)",
+        "pathfinder 1e",
+        "ranged combat",
+        "trick shot"
+      ],
+      "references": [
+        "d20PFSRD: Fighter Archetype - Archer"
+      ],
+      "reference_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/fighter/archetypes/paizo-fighter-archetypes/archer/"
+      ],
+      "category": "other",
+      "edition": "1E",
+      "short_description": "Pathfinder 1E archetype: Fighter (Archer). Archetipo PF1e.",
+      "notes": "Archetipo del Fighter orientato al tiro con l'arco. Modifiche: sostituisce Armor Training 1-4 con Hawkeye (+1 Perception e ranged attack ogni 4 livelli) e Trick Shot (sunder/disarm/trip a distanza). Sostituisce Weapon Training 1 con Expert Archer (+1 attacco/danno con archi, +1 ogni 4 livelli dopo il 5°). Safe Shot al 9°: non provoca AoO quando tira con l'arco. Volley al 17°. Weapon Mastery si applica all'arco. Perde progressione Armor Training e Weapon Training standard in favore di bonus specifici per archi.",
+      "status": "approved",
+      "validation_status": "passed",
+      "reviewed_by": "swarm-classes-races-2026-07-16"
+    },
+    {
+      "name": "Fighter (Two-Weapon Warrior)",
+      "source": "Pathfinder SRD",
+      "source_id": "fighter:two_weapon_warrior",
+      "prerequisites": [],
+      "tags": [
+        "archetipo",
+        "archetype",
+        "doublestrike",
+        "fighter",
+        "fighter (two-weapon warrior)",
+        "pathfinder 1e",
+        "twin blades",
+        "two-weapon fighting"
+      ],
+      "references": [
+        "d20PFSRD: Fighter Archetype - Two-Weapon Warrior"
+      ],
+      "reference_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/fighter/archetypes/paizo-fighter-archetypes/two-weapon-warrior/"
+      ],
+      "category": "other",
+      "edition": "1E",
+      "short_description": "Pathfinder 1E archetype: Fighter (Two-Weapon Warrior). Archetipo PF1e.",
+      "notes": "Archetipo del Fighter specializzato in doppia arma. Modifiche: Doublestrike al 2° (full-round action per attaccare con entrambe le armi, ogni arma colpisce due volte). Defensive Flurry al 3°: bonus CA +1 ogni 4 livelli quando full attack con due armi. Twin Blades al 5°: riduce penalità TWF di 1 (minimo -1/-1). Improved Balance al 7°: considera armi one-handed come light per TWF. Equal Opportunity al 11°. Deceptive Strike al 13°. Perfect Balance al 15°. Deft Doublestrike e Deadly Defense ai livelli alti. Perde Bravery, Armor Training 1, Weapon Training 1/2/3/4 standard.",
+      "status": "approved",
+      "validation_status": "passed",
+      "reviewed_by": "swarm-classes-races-2026-07-16"
+    },
+    {
+      "name": "Fighter (Weapon Master)",
+      "source": "Pathfinder SRD",
+      "source_id": "fighter:weapon_master",
+      "prerequisites": [],
+      "tags": [
+        "archetipo",
+        "archetype",
+        "fighter",
+        "fighter (weapon master)",
+        "pathfinder 1e",
+        "single weapon focus",
+        "weapon specialization"
+      ],
+      "references": [
+        "d20PFSRD: Fighter Archetype - Weapon Master"
+      ],
+      "reference_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/fighter/archetypes/paizo-fighter-archetypes/weapon-master/"
+      ],
+      "category": "other",
+      "edition": "1E",
+      "short_description": "Pathfinder 1E archetype: Fighter (Weapon Master). Archetipo PF1e.",
+      "notes": "Archetipo del Fighter votato a un'unica arma. Modifiche: Weapon Training al 3° (invece del 5°) in un singolo gruppo di armi, bonus +1 ogni 4 livelli (invece che ogni 4 dopo il 5°). Reliable Strike al 5° (1/giorno tira di nuovo un attacco, danno o TS). Mirror Move al 9°: usa bonus Weapon Training per parare attacchi. Deadly Critical al 13°. Unstoppable Strike al 17°. Weapon Mastery al 20° con l'arma scelta. Perde Armor Training 2/3/4 e Bravery.",
+      "status": "approved",
+      "validation_status": "passed",
+      "reviewed_by": "swarm-classes-races-2026-07-16"
+    },
+    {
+      "name": "Fighter (Shielded Fighter)",
+      "source": "Pathfinder SRD",
+      "source_id": "fighter:shielded_fighter",
+      "prerequisites": [],
+      "tags": [
+        "archetipo",
+        "archetype",
+        "defensive",
+        "fighter",
+        "fighter (shielded fighter)",
+        "pathfinder 1e",
+        "shield",
+        "shield bash"
+      ],
+      "references": [
+        "d20PFSRD: Fighter Archetype - Shielded Fighter"
+      ],
+      "reference_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/fighter/archetypes/paizo-fighter-archetypes/shielded-fighter/"
+      ],
+      "category": "other",
+      "edition": "1E",
+      "short_description": "Pathfinder 1E archetype: Fighter (Shielded Fighter). Archetipo PF1e.",
+      "notes": "Archetipo del Fighter difensivo con scudo. Modifiche: Active Defense al 3° (spendere AoO per +1 CA con scudo, scala con livello). Shield Buffet al 5° (free action bull shield bash per imporre -2 agli attacchi del nemico). Fortification al 9°: chance di negare critico/sneak attack mentre impugna scudo. Shield Guard al 13°: può usare scudo per coprire alleato adiacente. Shield Mastery e Absorb Damage ai livelli alti. Perde Armor Training 1/2/3/4 e Weapon Training 1/2/3/4 standard.",
+      "status": "approved",
+      "validation_status": "passed",
+      "reviewed_by": "swarm-classes-races-2026-07-16"
+    },
+    {
+      "name": "Wizard (Evoker)",
+      "source": "Pathfinder SRD",
+      "source_id": "wizard:evoker",
+      "prerequisites": [],
+      "tags": [
+        "arcane school",
+        "archetipo",
+        "archetype",
+        "blast",
+        "evocation school",
+        "pathfinder 1e",
+        "wizard",
+        "wizard (evoker)"
+      ],
+      "references": [
+        "d20PFSRD: Wizard Arcane School - Evocation"
+      ],
+      "reference_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/wizard/arcane-schools/paizo-arcane-schools/evocation/"
+      ],
+      "category": "other",
+      "edition": "1E",
+      "short_description": "Pathfinder 1E archetype: Wizard (Evoker). Archetipo PF1e.",
+      "notes": "Archetipo scuola arcana del Wizard. Modifiche: specializzazione in Evocation, proibisce solitamente Conjuration e Transmutation (a scelta del giocatore). Intense Spells: +1 danno con incantesimi evocation di danno, +1 ogni 5 livelli. Force Missile al 1°: magic missile 1/giorno +1 ogni 5 livelli. Ea bardental Wall al 8°: crea muro di energia. Bonus Spell Slots: 1 slot extra per livello da usare solo per evocation. Powers sostituiscono le abilities della scuola di specializzazione standard.",
+      "status": "approved",
+      "validation_status": "passed",
+      "reviewed_by": "swarm-classes-races-2026-07-16"
+    },
+    {
+      "name": "Wizard (Conjurer)",
+      "source": "Pathfinder SRD",
+      "source_id": "wizard:conjurer",
+      "prerequisites": [],
+      "tags": [
+        "arcane school",
+        "archetipo",
+        "archetype",
+        "conjuration school",
+        "pathfinder 1e",
+        "summoning",
+        "wizard",
+        "wizard (conjurer)"
+      ],
+      "references": [
+        "d20PFSRD: Wizard Arcane School - Conjuration"
+      ],
+      "reference_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/wizard/arcane-schools/paizo-arcane-schools/conjuration/"
+      ],
+      "category": "other",
+      "edition": "1E",
+      "short_description": "Pathfinder 1E archetype: Wizard (Conjurer). Archetipo PF1e.",
+      "notes": "Archetipo scuola arcana del Wizard. Modifiche: specializzazione in Conjuration. Summoner's Charm: duration di conjuration (summoning) aumentata di round pari a metà livello. Acid Dart: ranged touch 1d6+1 ogni 2 livelli acido, usi = 3 + Int. Dimensional Steps al 8°: teletrasporto come move action, totale metri = 400. Bonus Spell Slots per conjuration. Powers sostituiscono le abilities della scuola di specializzazione standard.",
+      "status": "approved",
+      "validation_status": "passed",
+      "reviewed_by": "swarm-classes-races-2026-07-16"
+    },
+    {
+      "name": "Magus (Kensai)",
+      "source": "Pathfinder SRD",
+      "source_id": "magus:kensai",
+      "prerequisites": [],
+      "tags": [
+        "archetipo",
+        "archetype",
+        "critical",
+        "kensai",
+        "magus",
+        "magus (kensai)",
+        "pathfinder 1e",
+        "single weapon",
+        "weapon focus"
+      ],
+      "references": [
+        "d20PFSRD: Magus Archetype - Kensai"
+      ],
+      "reference_urls": [
+        "https://www.d20pfsrd.com/classes/base-classes/magus/archetypes/paizo-magus-archetypes/kensai/"
+      ],
+      "category": "other",
+      "edition": "1E",
+      "short_description": "Pathfinder 1E archetype: Magus (Kensai). Archetipo PF1e.",
+      "notes": "Archetipo Kensai del Magus, specializzato in un'unica arma da mischia. Modifiche: Diminished Spellcasting (meno slot giornalieri, -1 per ogni livello). Canny Defense al 1°: aggiunge Int alla CA se armatura leggera o senza armatura, max +1 ogni 4 livelli. Weapon Focus con l'arma prescelta al 1° come bonus feat. Perfect Strike al 4°: +1 attacco con l'arma scelta, scala. Fighter Training al 7° (invece del 10°). Iaijutsu al 7°: +2 initiative quando l'arma è in mano. Critical Perfection al 9°: bonus a confermare critici con l'arma. Superior Reflexes al 11°. Perde competenza negli scudi e nelle armature; usa solo armature leggere e nessuno scudo. Ideale per build magus melee con un'arma critica.",
+      "status": "approved",
+      "validation_status": "passed",
+      "reviewed_by": "swarm-classes-races-2026-07-16"
+    },
+    {
+      "name": "Magus (Bladebound)",
+      "source": "Pathfinder SRD",
+      "source_id": "magus:bladebound",
+      "prerequisites": [],
+      "tags": [
+        "archetipo",
+        "archetype",
+        "black blade",
+        "bladebound",
+        "magus",
+        "magus (bladebound)",
+        "pathfinder 1e",
+        "sentient weapon"
+      ],
+      "references": [
+        "d20PFSRD: Magus Archetype - Bladebound"
+      ],
+      "reference_urls": [
+        "https://www.d20pfsrd.com/classes/base-classes/magus/archetypes/paizo-magus-archetypes/bladebound/"
+      ],
+      "category": "other",
+      "edition": "1E",
+      "short_description": "Pathfinder 1E archetype: Magus (Bladebound). Archetipo PF1e.",
+      "notes": "Archetipo del Magus con arma senziente. Modifiche: Black Blade al 3°: lama magica senziente che scala di potere con il Magus. La black blade ha Int, Sag, Car e Ego propri, bonus enhancement crescente, energy resistance e special purpose. Arcane Pool ridotto di 1 punto. Perde 3 Magus Arcana (3°, 9°, 15°) e 1 punto di arcane pool. La black blade può essere di varie forme (rapier, longsword, etc.) scelta dal giocatore.",
+      "status": "approved",
+      "validation_status": "passed",
+      "reviewed_by": "swarm-classes-races-2026-07-16"
+    },
+    {
+      "name": "Magus (Eldritch Archer)",
+      "source": "Pathfinder SRD",
+      "source_id": "magus:eldritch_archer",
+      "prerequisites": [],
+      "tags": [
+        "archery",
+        "archetipo",
+        "archetype",
+        "eldritch archer",
+        "magus",
+        "magus (eldritch archer)",
+        "pathfinder 1e",
+        "ranged spellstrike"
+      ],
+      "references": [
+        "d20PFSRD: Magus Archetype - Eldritch Archer"
+      ],
+      "reference_urls": [
+        "https://www.d20pfsrd.com/classes/base-classes/magus/archetypes/paizo-magus-archetypes/eldritch-archer/"
+      ],
+      "category": "other",
+      "edition": "1E",
+      "short_description": "Pathfinder 1E archetype: Magus (Eldritch Archer). Archetipo PF1e.",
+      "notes": "Archetipo Eldritch Archer del Magus, orientato al combattimento a distanza. Modifiche: Spell Combat funziona con armi a distanza; richiede una mano libera per caricare. Ranged Spellstrike al 2°: lancia incantesimi touch range attraverso proiettile. Arcane Pool può dare bonus a munizioni. Mantiene competenza in armature leggere ma non negli scudi. Magus Arcana e altre feature restano invariate. Ideale per build con arco e incantesimi di danno a distanza.",
+      "status": "approved",
+      "validation_status": "passed",
+      "reviewed_by": "swarm-classes-races-2026-07-16"
+    },
+    {
+      "name": "Rogue (Thug)",
+      "source": "Pathfinder SRD",
+      "source_id": "rogue:thug",
+      "prerequisites": [],
+      "tags": [
+        "archetipo",
+        "archetype",
+        "frightening",
+        "intimidate",
+        "pathfinder 1e",
+        "rogue",
+        "rogue (thug)",
+        "thug"
+      ],
+      "references": [
+        "d20PFSRD: Rogue Archetype - Thug"
+      ],
+      "reference_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/rogue/archetypes/paizo-rogue-archetypes/thug/"
+      ],
+      "category": "other",
+      "edition": "1E",
+      "short_description": "Pathfinder 1E archetype: Rogue (Thug). Archetipo PF1e.",
+      "notes": "Archetipo del Rogue basato su Intimidate. Modifiche: Frightening (sostituisce trapfinding): quando colpisce con sneak attack può Intimidare come swift action, -1 round shaken diventa frightened. Brutal Beating al 3° (sostituisce trap sense): con sneak attack può rendere target sickened per round pari a metà livello. Mantiene sneak attack, rogue talents, evasion, uncanny dodge. Ottimo per build intimidate/demoralize.",
+      "status": "approved",
+      "validation_status": "passed",
+      "reviewed_by": "swarm-classes-races-2026-07-16"
+    },
+    {
+      "name": "Rogue (Scout)",
+      "source": "Pathfinder SRD",
+      "source_id": "rogue:scout",
+      "prerequisites": [],
+      "tags": [
+        "archetipo",
+        "archetype",
+        "move action sneak attack",
+        "pathfinder 1e",
+        "rogue",
+        "rogue (scout)",
+        "scout",
+        "skirmisher"
+      ],
+      "references": [
+        "d20PFSRD: Rogue Archetype - Scout"
+      ],
+      "reference_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/rogue/archetypes/paizo-rogue-archetypes/scout/"
+      ],
+      "category": "other",
+      "edition": "1E",
+      "short_description": "Pathfinder 1E archetype: Rogue (Scout). Archetipo PF1e.",
+      "notes": "Archetipo del Rogue mobile. Modifiche: Skirmisher al 4°: sneak attack quando colpisce dopo aver mosso almeno 3 m. Scout's Charge al 8°: sneak attack su charge. Skirmisher migliora a +2d6 a 8°, +3d6 a 12°, +4d6 a 16°, +5d6 a 20°. Perde Uncanny Dodge e Improved Uncanny Dodge. Mantiene sneak attack, trapfinding, evasion, rogue talents.",
+      "status": "approved",
+      "validation_status": "passed",
+      "reviewed_by": "swarm-classes-races-2026-07-16"
+    },
+    {
+      "name": "Rogue (Knife Master)",
+      "source": "Pathfinder SRD",
+      "source_id": "rogue:knife_master",
+      "prerequisites": [],
+      "tags": [
+        "archetipo",
+        "archetype",
+        "blades",
+        "knife master",
+        "pathfinder 1e",
+        "rogue",
+        "rogue (knife master)",
+        "sneak attack d8"
+      ],
+      "references": [
+        "d20PFSRD: Rogue Archetype - Knife Master"
+      ],
+      "reference_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/rogue/archetypes/paizo-rogue-archetypes/knife-master/"
+      ],
+      "category": "other",
+      "edition": "1E",
+      "short_description": "Pathfinder 1E archetype: Rogue (Knife Master). Archetipo PF1e.",
+      "notes": "Archetipo del Rogue con armi da taglio leggere. Modifiche: Sneak Stab: sneak attack con dagger, kerambit, kukri, punching dagger, starknife o sword cane tira d8 invece di d6. Con armi a due mani o altre armi il danno resta d6. Hidden Blade al 5°: +1 a Sleight of Hand per nascondere armi da lancio/lama. Perde trapfinding. Mantiene sneak attack, evasion, rogue talents.",
+      "status": "approved",
+      "validation_status": "passed",
+      "reviewed_by": "swarm-classes-races-2026-07-16"
+    },
+    {
+      "name": "Barbarian (Invulnerable Rager)",
+      "source": "Pathfinder SRD",
+      "source_id": "barbarian:invulnerable_rager",
+      "prerequisites": [],
+      "tags": [
+        "archetipo",
+        "archetype",
+        "barbarian",
+        "barbarian (invulnerable rager)",
+        "damage reduction",
+        "invulnerable rager",
+        "pathfinder 1e",
+        "tank"
+      ],
+      "references": [
+        "d20PFSRD: Barbarian Archetype - Invulnerable Rager"
+      ],
+      "reference_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/barbarian/archetypes/paizo-barbarian-archetypes/invulnerable-rager/"
+      ],
+      "category": "other",
+      "edition": "1E",
+      "short_description": "Pathfinder 1E archetype: Barbarian (Invulnerable Rager). Archetipo PF1e.",
+      "notes": "Archetipo del Barbariano tank. Modifiche: Extreme Endurance al 3°: resistenza 1 a freddo o fuoco, aumenta ogni 3 livelli. Damage Reduction aumentata: DR 1/- al 2°, +1 ogni 2 livelli (invece che dal 7°). Perde Uncanny Dodge, Improved Uncanny Dodge, Trap Sense. Mantiene Rage, Rage Powers, Fast Movement. Ottimo per build difensive ad alta sopravvivenza.",
+      "status": "approved",
+      "validation_status": "passed",
+      "reviewed_by": "swarm-classes-races-2026-07-16"
+    },
+    {
+      "name": "Barbarian (Beast Totem)",
+      "source": "Pathfinder SRD",
+      "source_id": "barbarian:beast_totem",
+      "prerequisites": [],
+      "tags": [
+        "archetipo",
+        "archetype",
+        "barbarian",
+        "barbarian (beast totem)",
+        "beast totem",
+        "natural attacks",
+        "pathfinder 1e",
+        "rage power"
+      ],
+      "references": [
+        "d20PFSRD: Barbarian Rage Power - Beast Totem"
+      ],
+      "reference_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/barbarian/rage-powers/paizo-rage-powers/beast-totem/"
+      ],
+      "category": "other",
+      "edition": "1E",
+      "short_description": "Pathfinder 1E archetype: Barbarian (Beast Totem). Archetipo PF1e.",
+      "notes": "Rage Power Totem non archetipo vero e proprio, ma build comune. Lesser Beast Totem: 2 claw attacks (1d6) durante rage. Beast Totem: +1 naturale AC durante rage, +1 ogni 4 barbarian levels. Greater Beast Totem: pounce durante rage (full attack su charge). Richiede livelli 2, 6, 10 per i tre poteri. Molto popolare per DPR barbarico.",
+      "status": "approved",
+      "validation_status": "passed",
+      "reviewed_by": "swarm-classes-races-2026-07-16"
+    },
+    {
+      "name": "Paladin (Divine Hunter)",
+      "source": "Pathfinder SRD",
+      "source_id": "paladin:divine_hunter",
+      "prerequisites": [],
+      "tags": [
+        "archery",
+        "archetipo",
+        "archetype",
+        "divine hunter",
+        "paladin",
+        "paladin (divine hunter)",
+        "pathfinder 1e",
+        "ranged smite"
+      ],
+      "references": [
+        "d20PFSRD: Paladin Archetype - Divine Hunter"
+      ],
+      "reference_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/paladin/archetypes/paizo-paladin-archetypes/divine-hunter/"
+      ],
+      "category": "other",
+      "edition": "1E",
+      "short_description": "Pathfinder 1E archetype: Paladin (Divine Hunter). Archetipo PF1e.",
+      "notes": "Archetipo del Paladino a distanza. Modifiche: Precise Shot come bonus feat al 1° (sostituisce Heavy Armor Proficiency). Divine Hunter's Bond al 5°: può scegliere ranged weapon invece di mount, aggiunge bonus a proiettili. Shared Precision al 3°: concede Precise Shot agli alleati entro 9 m per 1 round. Aura di Justice funziona a distanza. Perde Heavy Armor Proficiency e Divine Bond standard. Mantiene Smite Evil, Lay on Hands, Mercy, Spells.",
+      "status": "approved",
+      "validation_status": "passed",
+      "reviewed_by": "swarm-classes-races-2026-07-16"
+    }
+  ]
+}

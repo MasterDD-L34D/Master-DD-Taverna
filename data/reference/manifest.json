@@ -1,29 +1,104 @@
 {
   "version": "2026.04.03",
   "source": "Pathfinder 1E RAW/SRD snapshot curato offline",
+  "policy_url": "LEGAL_POLICY.md",
+  "catalogs": [
+    {
+      "file": "ogl/feats.json",
+      "kind": "feats",
+      "source": "Pathfinder RPG Reference Document / d20pfsrd",
+      "license": "OGL-1.0a",
+      "is_ogc": true,
+      "is_pi": false,
+      "cup_allowed": false,
+      "entries": 2839,
+      "notes": "Nomi e meccaniche generiche; rimossi nomi propri e riferimenti a Golarion. 2800/2839 voci arricchite con description.",
+      "last_verified": "2026-07-16"
+    },
+    {
+      "file": "ogl/spells.json",
+      "kind": "spells",
+      "source": "Pathfinder RPG Reference Document / d20pfsrd",
+      "license": "OGL-1.0a",
+      "is_ogc": true,
+      "is_pi": false,
+      "cup_allowed": false,
+      "entries": 1035,
+      "notes": "Nomi e meccaniche generiche; rimossi nomi propri e riferimenti a Golarion. 1032/1035 voci arricchite con description.",
+      "last_verified": "2026-07-16"
+    },
+    {
+      "file": "ogl/items.json",
+      "kind": "items",
+      "source": "Pathfinder RPG Reference Document / d20pfsrd",
+      "license": "OGL-1.0a",
+      "is_ogc": true,
+      "is_pi": false,
+      "cup_allowed": false,
+      "entries": 257,
+      "notes": "Oggetti generici; 3/257 voci arricchite con description (work in progress).",
+      "last_verified": "2026-07-16"
+    },
+    {
+      "file": "ogl/classes.json",
+      "kind": "classes",
+      "source": "Pathfinder RPG Reference Document / d20pfsrd",
+      "license": "OGL-1.0a",
+      "is_ogc": true,
+      "is_pi": false,
+      "cup_allowed": false,
+      "entries": 12,
+      "notes": "Riassunti meccanici delle classi core + Magus; nessun nome proprio di setting.",
+      "last_verified": "2026-07-16"
+    },
+    {
+      "file": "ogl/races.json",
+      "kind": "races",
+      "source": "Pathfinder RPG Reference Document / d20pfsrd",
+      "license": "OGL-1.0a",
+      "is_ogc": true,
+      "is_pi": false,
+      "cup_allowed": false,
+      "entries": 7,
+      "notes": "Riassunti meccanici delle razze core; nessun nome proprio di setting.",
+      "last_verified": "2026-07-16"
+    },
+    {
+      "file": "ogl/archetypes.json",
+      "kind": "archetypes",
+      "source": "Pathfinder RPG Reference Document / d20pfsrd",
+      "license": "OGL-1.0a",
+      "is_ogc": true,
+      "is_pi": false,
+      "cup_allowed": false,
+      "entries": 15,
+      "notes": "Riassunti meccanici degli archetipi core; nomi con riferimenti a setting PI sono stati rimossi o neutralizzati.",
+      "last_verified": "2026-07-16"
+    }
+  ],
   "files": {
     "spells": {
-      "path": "data/reference/spells.json",
+      "path": "ogl/spells.json",
       "entries": 1035
     },
     "feats": {
-      "path": "data/reference/feats.json",
+      "path": "ogl/feats.json",
       "entries": 2839
     },
     "items": {
-      "path": "data/reference/items.json",
+      "path": "ogl/items.json",
       "entries": 257
     },
     "classes": {
-      "path": "data/reference/classes.json",
+      "path": "ogl/classes.json",
       "entries": 12
     },
     "races": {
-      "path": "data/reference/races.json",
+      "path": "ogl/races.json",
       "entries": 7
     },
     "archetypes": {
-      "path": "data/reference/archetypes.json",
+      "path": "ogl/archetypes.json",
       "entries": 15
     }
   }
