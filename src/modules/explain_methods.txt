@@ -82,12 +82,18 @@ rubric:
   method_selection:
     default: Technical Breakdown
     rules:
-      - if: "user_level in ['novizio','bambino','niubbo']"         choose: ELI5
-      - if: "topic_complexity == 'alta' and user_wants_rigor"      choose: First Principles
-      - if: "user_asks_for_story or query.contains_any(['racconto','narrazione'])" choose: Storytelling
-      - if: "query.contains_any(['diagramma','visualizza','mappa','schema'])"      choose: Visualization
-      - if: "query.contains_any(['analogia','metafora'])"          choose: Analogies & Metaphors
-      - if: "user_is_expert or needs_api_level_detail"             choose: Technical Breakdown
+      - if: "user_level in ['novizio','bambino','niubbo']"
+        choose: ELI5
+      - if: "topic_complexity == 'alta' and user_wants_rigor"
+        choose: First Principles
+      - if: "user_asks_for_story or query.contains_any(['racconto','narrazione'])"
+        choose: Storytelling
+      - if: "query.contains_any(['diagramma','visualizza','mappa','schema'])"
+        choose: Visualization
+      - if: "query.contains_any(['analogia','metafora'])"
+        choose: Analogies & Metaphors
+      - if: "user_is_expert or needs_api_level_detail"
+        choose: Technical Breakdown
 
 quality_checks:
   - {name: coverage,      rule: "Coprire domanda, prerequisiti, passaggi, esempi, takeaway."}
@@ -209,9 +215,10 @@ methods:
     style: {max_words: 500}
 
 output_modes:
-  - {name: "Sintesi", max_words: 160}
-  - {name: "Completo", max_words: 600}
-  - {name: "Solo fonti", max_words: 80}
+  modes:
+    - {name: "Sintesi", max_words: 160}
+    - {name: "Completo", max_words: 600}
+    - {name: "Solo fonti", max_words: 80}
   default: "Completo"
 
 method_output_examples:
@@ -225,12 +232,13 @@ policies:
     preferred: extended_with_refs
     fallback: excerpt_plus_page_ref
 output_checklist:
-  - "Header: metodo scelto, profondità, speed, lingua, raw_gate attivo/sospeso."
-  - "Fonti marcate (RAW/RAI/FAQ/PFS/META) con citazioni estese o excerpt." 
-  - "Struttura minima: definizione/contesto, corpo per metodo, esempio PF1e, takeaway."
-  - "QA rapida: coverage, grounding, jargon definito, almeno 1 esempio." 
-  - "Memoria: prefer_last_method aggiornato; note su eventuale redirect eseguito."
-    when_unknown: ask_or_flag_uncertain
+  items:
+    - "Header: metodo scelto, profondità, speed, lingua, raw_gate attivo/sospeso."
+    - "Fonti marcate (RAW/RAI/FAQ/PFS/META) con citazioni estese o excerpt."
+    - "Struttura minima: definizione/contesto, corpo per metodo, esempio PF1e, takeaway."
+    - "QA rapida: coverage, grounding, jargon definito, almeno 1 esempio."
+    - "Memoria: prefer_last_method aggiornato; note su eventuale redirect eseguito."
+  when_unknown: ask_or_flag_uncertain
   raw_router:
     kernel_managed: true
     detect_keywords: ["RAW","RAI","PFS","errata","regola","CD","bonus","talento","incantesimo","azione"]

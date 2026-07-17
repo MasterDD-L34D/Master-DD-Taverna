@@ -208,7 +208,7 @@ export_notes:
     Import pregens PFS ed export Record Sheet CUP sono disattivati se mancano i pacchetti zip in
     src/data: i check di avvio impostano WARN e spengono pfs_pregens_import e cup_record_export con
     messaggi guida per il reperimento. I check disattivano automaticamente knowledge_packs e
-    pdf_exports se mancano i PDF in assets/knowledge_packs; disattivano minmax_builder,
+    pdf_exports se mancano i PDF in src/data; disattivano minmax_builder,
     adventurer_ledger, archivist, ruling_expert, explain_methods e core_profile se non trovano i
     profili/schemi in dependencies. Vedi README per il provisioning opzionale (pfs_pregens.zip e
     record_sheets.zip in src/data) e per riattivare i flag/azioni se necessario.
@@ -309,7 +309,7 @@ policies:
     echo_guard:
       enforce_min_score: "${runtime.echo_min_score}"
       auto_refine_if_below: "${runtime.auto_refine}"
-      remediation_guidance: "Se Echo < soglia: esegui /grade per note puntuali, applica /refine_npc e ripeti /grade finché non superi ≥${runtime.echo_min_score}; prima di salvare o esportare rifai /self_check e, solo in sandbox, puoi disattivare il gate con /echo off."
+      remediation_guidance: "Se Echo < soglia: esegui /grade per note puntuali, applica i fix suggeriti e ripeti /grade finché non superi ≥${runtime.echo_min_score}; prima di salvare o esportare rifai /self_check e, solo in sandbox, puoi disattivare il gate con /echo off."
   exposure_guard:
     no_internal_dump: true
     allowed_outputs: ["parafrasi con citazione","estratti brevi","tabelle riassuntive"]
@@ -347,7 +347,7 @@ entities:
   QUEST:  {fields: [id,titolo,seed,tier,gancio,complicazioni,scene,requisiti,ricompense,stato,assegnata_a,tags]}
   RUMOR:  {fields: [id,testo,veridicita,fonte,prove]}
   BOUNTY: {fields: [id,bersaglio,CR,luogo,ricompensa,scadenza,complicazioni,stato]}
-  FACTION:{fields: [id,nome,agenda,contatti,reputazione,benefici,richieste]}
+  FACTION: {fields: [id,nome,agenda,contatti,reputazione,benefici,richieste]}
   SHOP:   {fields: [id,tipo,tier,lista,prezzi,speciali,servizi]}
   EVENT:  {fields: [id,tipo,quando,effetti,hooks]}
   LEDGER: {fields: [id,ts,type,text,gp_delta,xp_delta,rep_delta,ref,tags]}
@@ -482,7 +482,8 @@ state_machine:
         actions:
           - if: "{{gen}}"
             then:
-              - set: "@GameMode.shared.profile.portrait_done", value: true
+              - set: "@GameMode.shared.profile.portrait_done"
+                value: true
               - output: "🖼️ Ritratto richiesto (1:1), stile: {{@GameMode.shared.world.universe}}."
         next: "@GameMode.BackgroundTraits.entry"
 
@@ -587,11 +588,13 @@ state_machine:
                 params: { oggetto: "{{DT.add_item}}" }
           - if: "{{DT.unlock=='kingdom'}}"
             then:
-              - set: "@GameMode.shared.flags.unlocked.kingdom", value: true
+              - set: "@GameMode.shared.flags.unlocked.kingdom"
+                value: true
               - output: "🏰 Arco **Kingdom Turn** sbloccato."
           - if: "{{DT.unlock=='mass_combat'}}"
             then:
-              - set: "@GameMode.shared.flags.unlocked.mass_combat", value: true
+              - set: "@GameMode.shared.flags.unlocked.mass_combat"
+                value: true
               - output: "⚔️ Arco **Mass Combat** sbloccato."
           - append: "@GameMode.shared.diary"
             value: "Downtime: {{action_text}} → {{DT.summary}}"
@@ -738,7 +741,8 @@ state_machine:
           - call: GameMode.helpers.build_explain
             with: { topic: "{{explain.request_topic}}" }
             return_as: EX
-          - set: "@GameMode.shared.explain_block", value: "{{EX}}"
+          - set: "@GameMode.shared.explain_block"
+            value: "{{EX}}"
           - output: "**Explain:** {{EX.tldr}}\\nRAW/RAI: {{EX.raw_vs_rai}}\\nFonti: {{EX.sources}}"
         end: true
 
@@ -799,34 +803,47 @@ commands:
   /self_check:
     description: "Esegue controlli rapidi su canvas/minmax/ledger/feature flags."
     action:
-      - set: _canvas_ok, value: "{{ (export.canvas_schema.npc_card.fields_map and export.canvas_schema.required_keys) and (set(export.canvas_schema.required_keys) - set(export.canvas_schema.npc_card.fields_map.keys()))|length == 0 }}"
-      - set: _minmax_on, value: "{{ feature_flags.minmax_builder=='on' }}"
-      - set: _ledger_ok, value: "{{ ledger_storage.path is not none }}"
-      - set: _hub_on,    value: "{{ feature_flags.hub_board=='on' }}"
+      - set: _canvas_ok
+        value: "{{ (export.canvas_schema.npc_card.fields_map and export.canvas_schema.required_keys) and (set(export.canvas_schema.required_keys) - set(export.canvas_schema.npc_card.fields_map.keys()))|length == 0 }}"
+      - set: _minmax_on
+        value: "{{ feature_flags.minmax_builder=='on' }}"
+      - set: _ledger_ok
+        value: "{{ ledger_storage.path is not none }}"
+      - set: _hub_on
+        value: "{{ feature_flags.hub_board=='on' }}"
       - output: "QA={{ 'OK' if (_canvas_ok and _ledger_ok) else 'CHECK' }} | Canvas={{ 'OK' if _canvas_ok else 'FAIL' }} | MinMax={{ 'ON' if _minmax_on else 'OFF' }} | Ledger={{ 'OK' if _ledger_ok else 'FAIL' }} | Hub={{ 'ON' if _hub_on else 'OFF' }}"
       - if: "{{ not (_canvas_ok and _ledger_ok) }}"
         then:
-          - if: "{{ not _canvas_ok }}": { output: "📑 Canvas mancante/incompleto: usa /canvas_set o rigenera la card finché i campi richiesti sono coperti." }
-          - if: "{{ not _ledger_ok }}": { output: "💾 Ledger non montato: inizializza con /ledger_init o importa con /ledger_append per riprendere un salvataggio." }
-          - output: "ℹ️ QA CHECK: completa i punti sopra, poi riesegui /self_check. Se Echo < {{runtime.echo_min_score}} esegui /grade (ripeti finché ≥soglia) o /refine_npc; in sandbox puoi disattivare temporaneamente con /echo off. Solo quando QA=OK ed Echo ≥ soglia riprova /save_npc o /npc_export: finché QA=CHECK o Echo < soglia restano bloccati."
+          - if: "{{ not _canvas_ok }}"
+            then:
+              - output: "📑 Canvas mancante/incompleto: rigenera la card con /npc_quick o /npc_compact finché i campi richiesti sono coperti."
+          - if: "{{ not _ledger_ok }}"
+            then:
+              - output: "💾 Ledger non montato: inizializzalo con /save_hub o riprendi un salvataggio con /load_hub."
+          - output: "ℹ️ QA CHECK: completa i punti sopra, poi riesegui /self_check. Se Echo < {{runtime.echo_min_score}} esegui /grade (ripeti finché ≥soglia); in sandbox puoi disattivare temporaneamente con /echo off. Solo quando QA=OK ed Echo ≥ soglia riprova /save_npc o /npc_export: finché QA=CHECK o Echo < soglia restano bloccati."
 
   /echo <on|off>:
     description: "Abilita/disabilita il grading+gate Echo locale (rispetta anche i toggles globali)."
     action:
-      - set: feature_flags.echo_gate, value: "{{ 'on' if arg(0)=='on' else 'off' }}"
+      - set: feature_flags.echo_gate
+        value: "{{ 'on' if arg(0)=='on' else 'off' }}"
       - output: "Echo gate: {{feature_flags.echo_gate}}"
 
   /portrait_validate:
     description: "Valida/raffina il prompt-ritratto secondo image_policy (no lens terms, glow ≤10%, anatomy, FG/MG/BG)."
     action:
-      - set: _p, value: "{{ (current_npc and current_npc.image_prompt) or '' }}"
-      - if: "{{ not _p }}": { output: "⚠️ Nessun prompt ritratto impostato (usa /npc_portrait)." }
+      - set: _p
+        value: "{{ (current_npc and current_npc.image_prompt) or '' }}"
+      - if: "{{ not _p }}"
+        then:
+          - output: "⚠️ Nessun prompt ritratto impostato (usa /npc_portrait)."
       - call: Echo.portrait_validate
         with: { prompt: "{{_p}}" }
         return_as: PV
       - if: "{{ PV.ok }}"
         then:
-          - set: current_npc.image_prompt, value: "{{ PV.prompt }}"
+          - set: current_npc.image_prompt
+            value: "{{ PV.prompt }}"
           - output: "🔎 Prompt validato: {{ PV.prompt }} ({{ (PV.notes or []) | join('; ') }})"
         else:
           - output: "⛔ Prompt non valido. Note: {{ (PV.notes or []) | join('; ') }}"
@@ -834,8 +851,10 @@ commands:
   /grade:
     description: "Genera quality report (0–10) per l'NPC corrente e l'ultimo testo prodotto."
     action:
-      - set: _npc, value: "{{ current_npc or {} }}"
-      - set: _txt, value: "{{ last_output_text or '' }}"
+      - set: _npc
+        value: "{{ current_npc or {} }}"
+      - set: _txt
+        value: "{{ last_output_text or '' }}"
       - call: Echo.grade
         with: { npc: "{{_npc}}", text: "{{_txt}}", context: "{{ status.output }}" }
         return_as: QR
@@ -848,12 +867,18 @@ commands:
   /quiz_start:
     description: "Avvia quiz professionale (MaxDiff → Pairwise → SJT; CAT con early-stop)."
     action:
-      - set: tavern_state.quiz, value: "{{ tavern_state.quiz or {} }}"
-      - set: tavern_state.quiz.stage, value: "maxdiff"
-      - set: tavern_state.quiz.picks, value: []
-      - set: tavern_state.quiz.btl, value: {}
-      - set: tavern_state.quiz.sjt, value: []
-      - set: tavern_state.quiz.axes_scores, value: {}
+      - set: tavern_state.quiz
+        value: "{{ tavern_state.quiz or {} }}"
+      - set: tavern_state.quiz.stage
+        value: "maxdiff"
+      - set: tavern_state.quiz.picks
+        value: []
+      - set: tavern_state.quiz.btl
+        value: {}
+      - set: tavern_state.quiz.sjt
+        value: []
+      - set: tavern_state.quiz.axes_scores
+        value: {}
       # calcola subito il primo set da mostrare
       - call: Quiz.select_next_cat_item
         with:
@@ -871,7 +896,8 @@ commands:
   /npc_quiz_abort:
     description: "Interrompe il quiz e torna a IDLE."
     action:
-      - set: tavern_state.quiz.stage, value: "idle"
+      - set: tavern_state.quiz.stage
+        value: "idle"
       - goto_state: IDLE
       - output: "⏹️ Quiz interrotto."
 
@@ -883,7 +909,8 @@ commands:
       - call: Quiz.maxdiff_score
         with: { sets: "{{ quiz.maxdiff_sets }}", picks: "{{ tavern_state.quiz.picks }}" }
         return_as: MDS
-      - set: tavern_state.quiz.axes_scores, value: "{{ Mapping.from_maxdiff(MDS) }}"
+      - set: tavern_state.quiz.axes_scores
+        value: "{{ Mapping.from_maxdiff(MDS) }}"
       - call: Quiz.select_next_cat_item
         with:
           posterior: "{{ tavern_state.quiz.axes_scores }}"
@@ -891,15 +918,18 @@ commands:
         return_as: NEXT
       - if: "{{ (tavern_state.quiz.picks | length) >= (quiz.flow.maxdiff_to_pairwise or 2) }}"
         then:
-          - set: tavern_state.quiz.stage, value: "pairwise"
+          - set: tavern_state.quiz.stage
+            value: "pairwise"
           - call: Quiz.btl_suggest_pair
             with:
               items: "{{ quiz.pairwise_btl.items }}"
               ratings: "{{ tavern_state.quiz.btl }}"
               asked_pairs: "{{ tavern_state.quiz.asked.pairwise }}"
             return_as: PR
-          - set: PAIR_A, value: "{{ PR.a }}"
-          - set: PAIR_B, value: "{{ PR.b }}"
+          - set: PAIR_A
+            value: "{{ PR.a }}"
+          - set: PAIR_B
+            value: "{{ PR.b }}"
           - output_template: ui_templates_quiz_pro.quiz_pro_pairwise_card
         else:
           - output_template: ui_templates_quiz_pro.quiz_pro_maxdiff_card
@@ -907,19 +937,24 @@ commands:
   /quiz_pair <winner> <loser>:
     description: "Duello concettuale (Bradley–Terry)."
     action:
-      - set: prior, value: "{{ tavern_state.quiz.btl or {} }}"
+      - set: prior
+        value: "{{ tavern_state.quiz.btl or {} }}"
       - call: Quiz.btl_update
         with: { prior: "{{prior}}", winner: "{{winner}}", loser: "{{loser}}", k: 0.5 }
         return_as: NEWBTL
       - set: tavern_state.quiz.btl
         value: "{{ prior | combine(NEWBTL) }}"
       # traccia coppia chiesta (normalizzata) per evitare repeat
-      - set: _pkey, value: "{{ [winner, loser] | sort | join(' | ') }}"
-      - append: tavern_state.quiz.asked.pairwise, value: "{{ _pkey }}"
+      - set: _pkey
+        value: "{{ [winner, loser] | sort | join(' | ') }}"
+      - append: tavern_state.quiz.asked.pairwise
+        value: "{{ _pkey }}"
       - if: "{{ (tavern_state.quiz.asked.pairwise | length) >= (quiz.pairwise_btl.rounds or 6) }}"
         then:
-          - set: tavern_state.quiz.stage, value: "sjt"
-          - set: SJT_Q, value: "{{ (quiz.sjt | selectattr('id','equalto','V1') | list)[0] or quiz.sjt[0] }}"
+          - set: tavern_state.quiz.stage
+            value: "sjt"
+          - set: SJT_Q
+            value: "{{ (quiz.sjt | selectattr('id','equalto','V1') | list)[0] or quiz.sjt[0] }}"
           - output_template: ui_templates_quiz_pro.quiz_pro_sjt_card
         else:
           - call: Quiz.btl_suggest_pair
@@ -928,8 +963,10 @@ commands:
               ratings: "{{ tavern_state.quiz.btl }}"
               asked_pairs: "{{ tavern_state.quiz.asked.pairwise }}"
             return_as: PR
-          - set: PAIR_A, value: "{{ PR.a }}"
-          - set: PAIR_B, value: "{{ PR.b }}"
+          - set: PAIR_A
+            value: "{{ PR.a }}"
+          - set: PAIR_B
+            value: "{{ PR.b }}"
           - output_template: ui_templates_quiz_pro.quiz_pro_pairwise_card
 
   /quiz_sjt <id> <option_idx>:
@@ -948,18 +985,22 @@ commands:
           btl: "{{ tavern_state.quiz.btl }}"
           mapping: "{{ quiz.mapping }}"
         return_as: SUGG
-      - set: tavern_state.quiz.suggested, value: "{{ SUGG }}"
+      - set: tavern_state.quiz.suggested
+        value: "{{ SUGG }}"
       - if: "{{ SUGG.confidence >= quiz.cat.early_stop_confidence and
                (tavern_state.quiz.picks | length) +
                (tavern_state.quiz.sjt | length) +
                (tavern_state.quiz.asked.pairwise | length) >= quiz.cat.min_questions }}"
         then:
-          - set: tavern_state.quiz.stage, value: "done"
+          - set: tavern_state.quiz.stage
+            value: "done"
           - command: /quiz_finalize
         else:
           # mostra la prossima vignetta non ancora risposta, altrimenti lo status
-          - set: _answered_ids, value: "{{ tavern_state.quiz.sjt | map(attribute='id') | list }}"
-          - set: SJT_Q, value: "{{ (quiz.sjt | rejectattr('id','in', _answered_ids) | list)[0] if (quiz.sjt | rejectattr('id','in', _answered_ids) | list) else None }}"
+          - set: _answered_ids
+            value: "{{ tavern_state.quiz.sjt | map(attribute='id') | list }}"
+          - set: SJT_Q
+            value: "{{ (quiz.sjt | rejectattr('id','in', _answered_ids) | list)[0] if (quiz.sjt | rejectattr('id','in', _answered_ids) | list) else None }}"
           - if: "{{ SJT_Q is not none }}"
             then: { output_template: ui_templates_quiz_pro.quiz_pro_sjt_card }
             else:  { output_template: ui_templates_quiz_pro.quiz_pro_status_card }
@@ -980,14 +1021,16 @@ commands:
               btl: "{{ tavern_state.quiz.btl }}"
               mapping: "{{ quiz.mapping }}"
             return_as: SUGG
-          - set: tavern_state.quiz.suggested, value: "{{SUGG}}"
+          - set: tavern_state.quiz.suggested
+            value: "{{SUGG}}"
       - output_template: ui_templates_quiz_pro.quiz_pro_result_card
       - if: "{{ feature_flags.echo_gate=='on' }}"
         then:
           - call: Echo.grade
             with: { npc: "{{ current_npc or {} }}", text: "{{ status.output }}", context: "quiz_finalize" }
             return_as: QRQ
-          - set: tavern_state.quiz.quality_report, value: "{{ QRQ }}"
+          - set: tavern_state.quiz.quality_report
+            value: "{{ QRQ }}"
           - output: "📈 Echo score (quiz): {{QRQ.score}}/10 — {{ (QRQ.improvements or []) | join('; ') }}"
       - goto_state: SYNTHESIS
 
@@ -998,23 +1041,27 @@ commands:
       - { type: regex, target: "arg(role)",  pattern: "^(striker|tank|control|healer|skill)$", on_fail: E-NO-ROLE }
       - { type: range, target: "arg(level)", min: 1, max: 20, on_fail: E-LEVEL-RANGE }
     action:
-      - set: _role,  value: "{{ arg('role') }}"
-      - set: _lvl,   value: "{{ int(arg('level')) }}"
+      - set: _role
+        value: "{{ arg('role') }}"
+      - set: _lvl
+        value: "{{ int(arg('level')) }}"
       - call: Synthesis.build_npc_from_role
         with: { role: "{{_role}}", level: "{{_lvl}}", rules: "{{ synthesis_rules }}" }
         return_as: NPC
-      - set: current_npc, value: "{{ NPC }}"
+      - set: current_npc
+        value: "{{ NPC }}"
       - if: "{{ feature_flags.echo_gate=='on' }}"
         then:
           - call: Echo.grade
             with: { npc: "{{current_npc}}", text: "{{ ui_templates.npc_card_compact | format(**current_npc) if ui_templates else '' }}", context: "npc_auto" }
             return_as: QR
-          - set: current_npc.quality_report, value: "{{ QR }}"
+          - set: current_npc.quality_report
+            value: "{{ QR }}"
           - if: "{{ QR.score < runtime.echo_min_score }}"
             then:
               - output: "🧪 Echo gate: score {{QR.score}}/10 (< {{runtime.echo_min_score}}) → applico micro-refine (card più compatta/equip/feats coerenti)."
               - # (eventuale micro-refine qui; lasciamo nota)
-              - output: "➡️ Remediation: applica i fix suggeriti da /grade, riesegui /grade finché Echo ≥ {{runtime.echo_min_score}} o usa /refine_npc; in sandbox puoi disattivare il gate con /echo off per iterare rapidamente ma prima di salvare/export rifai /grade e /self_check finché Echo ≥ soglia. I salvataggi/export su taverna_saves restano bloccati finché Echo < soglia."
+              - output: "➡️ Remediation: applica i fix suggeriti da /grade, riesegui /grade finché Echo ≥ {{runtime.echo_min_score}}; in sandbox puoi disattivare il gate con /echo off per iterare rapidamente ma prima di salvare/export rifai /grade e /self_check finché Echo ≥ soglia. I salvataggi/export su taverna_saves restano bloccati finché Echo < soglia."
             else:
               - output: "✅ Echo gate: OK ({{QR.score}}/10)."
       - output_template: ui_templates.npc_card_compact
@@ -1023,14 +1070,21 @@ commands:
   /generate_npc [class] [level] [race] [style]:
     description: "Alias di /npc_auto con parsing classe/razza/stile."
     action:
-      - set: _role,  value: "{{ helpers.ClassMap.class_to_role(class) }}"
-      - if: "{{ not _role }}": { error: E-NO-ROLE }
-      - set: _lvl,   value: "{{ int(level or 1) }}"
+      - set: _role
+        value: "{{ helpers.ClassMap.class_to_role(class) }}"
+      - if: "{{ not _role }}"
+        then:
+          - error: E-NO-ROLE
+      - set: _lvl
+        value: "{{ int(level or 1) }}"
       - route: "/npc_auto {{_role}} {{_lvl}}"
         passthrough: true
-      - if: "{{ race }}":
-          - set: current_npc.razza, value: "{{ race }}"
-      - if: "{{ style }}":
+      - if: "{{ race }}"
+        then:
+          - set: current_npc.razza
+            value: "{{ race }}"
+      - if: "{{ style }}"
+        then:
           - route: "/set_build_style {{style}}"
             passthrough: true
       - output: "🧩 Post-parse: Razza={{ race or 'Human (default)' }}, Style={{ style or 'strict' }}."
@@ -1041,19 +1095,24 @@ commands:
     action:
       - roll: "1d5"
         as: R
-      - set: _role, value: "{{ ['striker','tank','control','healer','skill'][R-1] }}"
-      - set: _lvl,  value: "{{ 3 }}"
+      - set: _role
+        value: "{{ ['striker','tank','control','healer','skill'][R-1] }}"
+      - set: _lvl
+        value: "{{ 3 }}"
       - call: Synthesis.build_npc_from_role
         with: { role: "{{_role}}", level: "{{_lvl}}", rules: "{{ synthesis_rules }}" }
         return_as: NPC
-      - set: current_npc, value: "{{ NPC }}"
+      - set: current_npc
+        value: "{{ NPC }}"
       - output_template: ui_templates.npc_card_compact
       - goto_state: READY
 
   /npc_compact:
     description: "Vista rapida dell’NPC (card con stat essenziali)."
     action:
-      - if: "{{ not current_npc }}": { output: "⚠️ Nessun NPC in memoria. Usa /npc_quick o /npc_auto." }
+      - if: "{{ not current_npc }}"
+        then:
+          - output: "⚠️ Nessun NPC in memoria. Usa /npc_quick o /npc_auto."
       - output_template: ui_templates.npc_card_compact
 
   /npc_review [nome_opzionale]:
@@ -1069,9 +1128,9 @@ commands:
         return_as: EX
       - output: "✍️ Explain: {{EX.payload}}"
 
-  /npc_portrait [descrizione_opz] [stile?]:
+  /npc_portrait [descrizione_opz] ["stile?"]:
     when: feature_flags.portraits=='on'
-    params: [descrizione_opz?, stile?]
+    params: ["descrizione_opz?", "stile?"]
     description: "Genera prompt immagine del ritratto (dichiara stile; PFS-safe)."
     action:
       - set: current_npc.image_prompt
@@ -1086,14 +1145,16 @@ commands:
   /portrait_render:
     when: "feature_flags.portraits=='on' and feature_flags.image_pipeline=='on'"
     description: "Renderizza un ritratto dalla image_pipeline usando l’ultimo image_prompt o un nuovo prompt."
-    inputs: [prompt|use_last, size?]
+    inputs: [prompt|use_last, "size?"]
     policy:
       disclosure: "Immagine generata via ${image_pipeline.provider}; stile: ${art_settings.default_style}."
       pfs_safe: "Evita IP protette; usa descrizioni originali."
     action:
       - set: _prompt
         value: "{{ prompt or current_npc.image_prompt }}"
-      - if: "{{ not _prompt }}": { error: "⚠️ Nessun prompt disponibile. Usa /npc_portrait prima." }
+      - if: "{{ not _prompt }}"
+        then:
+          - error: "⚠️ Nessun prompt disponibile. Usa /npc_portrait prima."
       - output: "🎨 Render richiesto — {{ size or image_pipeline.size }} — {{ _prompt }}\n(ℹ️ Generato via {{image_pipeline.provider}} • stile={{art_settings.default_style}} • PFS-safe={{image_pipeline.safety.pfs_safe}})"
 
   /npc_party size=<N> role_mix=[...] level=<N>:
@@ -1120,28 +1181,44 @@ commands:
           - "Oppure aggiorna export.canvas_schema.required_keys"
           - "Riprova: /npc_export canvas"
     action:
-      - set: _fmt, value: "{{ arg(0) or 'md' }}"
-      - set: _allow_dump, value: "{{ env.ALLOW_MODULE_DUMP or runtime.allow_module_dump or false }}"
-      - set: _dump_marker, value: "{{ policies.exposure_guard.dump_policy.marker }}"
-      - set: _dump_warning, value: "{{ policies.exposure_guard.dump_policy.standard_response }}"
-      - set: _canvas_ok, value: "{{ (export.canvas_schema.npc_card.fields_map and export.canvas_schema.required_keys) and (set(export.canvas_schema.required_keys) - set(export.canvas_schema.npc_card.fields_map.keys()))|length == 0 }}"
-      - set: _ledger_ok, value: "{{ ledger_storage.path is not none }}"
-      - set: _qa_status, value: "{{ 'OK' if (_canvas_ok and _ledger_ok) else 'CHECK' }}"
-      - set: _echo_score, value: "{{ (current_npc and (current_npc.quality_report or {})).get('score', 10) }}"
-      - set: _echo_gate_on, value: "{{ feature_flags.echo_gate=='on' }}"
-      - set: _gate_reason, value: "{{ 'QA=' ~ _qa_status ~ ' (Canvas=' ~ ('OK' if _canvas_ok else 'FAIL') ~ ', Ledger=' ~ ('OK' if _ledger_ok else 'FAIL') ~ ')' }}"
-      - set: _blocked, value: "{{ _qa_status != 'OK' or (_echo_gate_on and (_echo_score < runtime.echo_min_score)) }}"
+      - set: _fmt
+        value: "{{ arg(0) or 'md' }}"
+      - set: _allow_dump
+        value: "{{ env.ALLOW_MODULE_DUMP or runtime.allow_module_dump or false }}"
+      - set: _dump_marker
+        value: "{{ policies.exposure_guard.dump_policy.marker }}"
+      - set: _dump_warning
+        value: "{{ policies.exposure_guard.dump_policy.standard_response }}"
+      - set: _canvas_ok
+        value: "{{ (export.canvas_schema.npc_card.fields_map and export.canvas_schema.required_keys) and (set(export.canvas_schema.required_keys) - set(export.canvas_schema.npc_card.fields_map.keys()))|length == 0 }}"
+      - set: _ledger_ok
+        value: "{{ ledger_storage.path is not none }}"
+      - set: _qa_status
+        value: "{{ 'OK' if (_canvas_ok and _ledger_ok) else 'CHECK' }}"
+      - set: _echo_score
+        value: "{{ (current_npc and (current_npc.quality_report or {})).get('score', 10) }}"
+      - set: _echo_gate_on
+        value: "{{ feature_flags.echo_gate=='on' }}"
+      - set: _gate_reason
+        value: "{{ 'QA=' ~ _qa_status ~ ' (Canvas=' ~ ('OK' if _canvas_ok else 'FAIL') ~ ', Ledger=' ~ ('OK' if _ledger_ok else 'FAIL') ~ ')' }}"
+      - set: _blocked
+        value: "{{ _qa_status != 'OK' or (_echo_gate_on and (_echo_score < runtime.echo_min_score)) }}"
       - if: "{{ _echo_gate_on and (_echo_score < runtime.echo_min_score) }}"
         then:
-          - set: _gate_reason, value: "{{ _gate_reason ~ '; Echo=' ~ _echo_score ~ '/10 (< ' ~ runtime.echo_min_score ~ ')' }}"
-      - set: _storage_used, value: "{{ storage_metrics.taverna_saves.count | default(0) }}"
-      - set: _storage_max, value: "{{ storage.auto_name_policy.max_files }}"
-      - set: _storage_remaining, value: "{{ (_storage_max|int) - (_storage_used|int) }}"
+          - set: _gate_reason
+            value: "{{ _gate_reason ~ '; Echo=' ~ _echo_score ~ '/10 (< ' ~ runtime.echo_min_score ~ ')' }}"
+      - set: _storage_used
+        value: "{{ storage_metrics.taverna_saves.count | default(0) }}"
+      - set: _storage_max
+        value: "{{ storage.auto_name_policy.max_files }}"
+      - set: _storage_remaining
+        value: "{{ (_storage_max|int) - (_storage_used|int) }}"
       - if: "{{ _blocked }}"
         then:
-          - set: logs.export_gate.last_failure, value: "{{ _gate_reason }}"
+          - set: logs.export_gate.last_failure
+            value: "{{ _gate_reason }}"
           - output: "⛔ Export bloccato: {{ _gate_reason }}."
-          - output: "➡️ CTA: riesegui /self_check finché QA=OK, poi /grade (ripeti) o /refine_npc se Echo < {{runtime.echo_min_score}}; in sandbox puoi disattivare Echo con /echo off prima di iterare. Solo con QA=OK+Echo ≥ soglia riprova /npc_export o /save_npc."
+          - output: "➡️ CTA: riesegui /self_check finché QA=OK, poi /grade (ripeti) se Echo < {{runtime.echo_min_score}}; in sandbox puoi disattivare Echo con /echo off prima di iterare. Solo con QA=OK+Echo ≥ soglia riprova /npc_export o /save_npc."
           - goto_state: READY
         else:
           - continue
@@ -1191,7 +1268,8 @@ commands:
     when: feature_flags.hub_board=='on'
     description: "Stato Hub (NPC/Quest/Rumor/Bounty/Fazioni/Shops/Eventi)."
     action:
-      - set: _N, value: "{{ {
+      - set: _N
+        value: "{{ {
           'NPC': (tavern_state.npcs or [])|length,
           'Quest': (tavern_state.quests or [])|length,
           'Rumor': (tavern_state.rumors or [])|length,
@@ -1214,26 +1292,37 @@ commands:
   /adventure_outline [quest_id|seed]:
     description: "Traccia un’avventura in 5–7 scene da seed/quest selezionato; hook a Encounter/Loot."
     action:
-      - set: _allow_dump, value: "{{ env.ALLOW_MODULE_DUMP or runtime.allow_module_dump or false }}"
-      - set: _dump_marker, value: "{{ policies.exposure_guard.dump_policy.marker }}"
-      - set: _dump_warning, value: "{{ policies.exposure_guard.dump_policy.standard_response }}"
-      - set: _canvas_ok, value: "{{ (export.canvas_schema.npc_card.fields_map and export.canvas_schema.required_keys) and (set(export.canvas_schema.required_keys) - set(export.canvas_schema.npc_card.fields_map.keys()))|length == 0 }}"
-      - set: _ledger_ok, value: "{{ ledger_storage.path is not none }}"
-      - set: _qa_status, value: "{{ 'OK' if (_canvas_ok and _ledger_ok) else 'CHECK' }}"
-      - set: _gate_reason, value: "{{ 'QA=' ~ _qa_status ~ ' (Canvas=' ~ ('OK' if _canvas_ok else 'FAIL') ~ ', Ledger=' ~ ('OK' if _ledger_ok else 'FAIL') ~ ')' }}"
-      - set: _blocked, value: "{{ _qa_status != 'OK' }}"
+      - set: _allow_dump
+        value: "{{ env.ALLOW_MODULE_DUMP or runtime.allow_module_dump or false }}"
+      - set: _dump_marker
+        value: "{{ policies.exposure_guard.dump_policy.marker }}"
+      - set: _dump_warning
+        value: "{{ policies.exposure_guard.dump_policy.standard_response }}"
+      - set: _canvas_ok
+        value: "{{ (export.canvas_schema.npc_card.fields_map and export.canvas_schema.required_keys) and (set(export.canvas_schema.required_keys) - set(export.canvas_schema.npc_card.fields_map.keys()))|length == 0 }}"
+      - set: _ledger_ok
+        value: "{{ ledger_storage.path is not none }}"
+      - set: _qa_status
+        value: "{{ 'OK' if (_canvas_ok and _ledger_ok) else 'CHECK' }}"
+      - set: _gate_reason
+        value: "{{ 'QA=' ~ _qa_status ~ ' (Canvas=' ~ ('OK' if _canvas_ok else 'FAIL') ~ ', Ledger=' ~ ('OK' if _ledger_ok else 'FAIL') ~ ')' }}"
+      - set: _blocked
+        value: "{{ _qa_status != 'OK' }}"
       - if: "{{ not _allow_dump }}"
         then:
-          - set: _blocked, value: true
-          - set: _gate_reason, value: "{{ _gate_reason ~ '; Dump disabilitato (ALLOW_MODULE_DUMP=false)' }}"
+          - set: _blocked
+            value: true
+          - set: _gate_reason
+            value: "{{ _gate_reason ~ '; Dump disabilitato (ALLOW_MODULE_DUMP=false)' }}"
           - output: "{{ _dump_warning }}"
           - output: "{{ _dump_marker }}"
       - if: "{{ _blocked }}"
         then:
-          - set: logs.export_gate.last_failure, value: "{{ _gate_reason }}"
+          - set: logs.export_gate.last_failure
+            value: "{{ _gate_reason }}"
           - output: "⛔ Export bloccato: {{ _gate_reason }}."
-          - output: "➡️ CTA: riesegui /self_check finché QA=OK, poi /grade (ripeti) o /refine_npc se Echo < {{runtime.echo_min_score}}; in sandbox puoi disattivare Echo con /echo off prima di iterare. Solo con QA=OK+Echo ≥ soglia riprova /npc_export o /save_npc."
-          - output: "🛠️ Remediation: esegui /self_check per forzare il QA CHECK/repair (Canvas+Ledger); se Echo < {{runtime.echo_min_score}} ripeti /grade o /refine_npc finché non superi la soglia oppure, in sandbox, disattiva temporaneamente con /echo off prima di riprovare. Prima di un nuovo export/salvataggio verifica QA=OK ed Echo ≥ soglia con /self_check + /grade."
+          - output: "➡️ CTA: riesegui /self_check finché QA=OK, poi /grade (ripeti) se Echo < {{runtime.echo_min_score}}; in sandbox puoi disattivare Echo con /echo off prima di iterare. Solo con QA=OK+Echo ≥ soglia riprova /npc_export o /save_npc."
+          - output: "🛠️ Remediation: esegui /self_check per forzare il QA CHECK/repair (Canvas+Ledger); se Echo < {{runtime.echo_min_score}} ripeti /grade finché non superi la soglia oppure, in sandbox, disattiva temporaneamente con /echo off prima di riprovare. Prima di un nuovo export/salvataggio verifica QA=OK ed Echo ≥ soglia con /self_check + /grade."
           - goto_state: READY
         else:
           - output: "🗺️ (stub) Outline avventura generato da seed/quest selezionato."
@@ -1257,12 +1346,14 @@ commands:
   /events [schedule|list|close]:
     when: feature_flags.hub_board=='on'
     description: "Calendario eventi taverna."
-    params: [quando?, tipo?, effetti?, hooks?, reminder_hours_before?, id?]
+    params: ["quando?", "tipo?", "effetti?", "hooks?", "reminder_hours_before?", "id?"]
     action:
-      - set: _mode, value: "{{ (args_raw or 'list').split(' ')[0] }}"
+      - set: _mode
+        value: "{{ (args_raw or 'list').split(' ')[0] }}"
       - if: "{{ _mode=='schedule' }}"
         then:
-          - set: _id, value: "{{ 'EV-' ~ now('%Y%m%d-%H%M%S') }}"
+          - set: _id
+            value: "{{ 'EV-' ~ now('%Y%m%d-%H%M%S') }}"
           - append: tavern_state.events
             value:
               id: "{{_id}}"
@@ -1276,16 +1367,21 @@ commands:
         else:
           - if: "{{ _mode=='close' }}"
             then:
-              - set: _idc, value: "{{ id }}"
-              - if: "{{ not _idc }}": { output: "ℹ️ Usa: `/events close id=<EVENT_ID>`" }
+              - set: _idc
+                value: "{{ id }}"
+              - if: "{{ not _idc }}"
+                then:
+                  - output: "ℹ️ Usa: `/events close id=<EVENT_ID>`"
               - for: e in "{{ tavern_state.events or [] }}"
                 do:
                   - if: "{{ e.id == _idc }}"
                     then:
-                      - set: e.stato, value: "chiuso"
+                      - set: e.stato
+                        value: "chiuso"
                       - output: "✅ Evento {{_idc}} chiuso."
             else:
-              - set: _n, value: "{{ (tavern_state.events or []) | length }}"
+              - set: _n
+                value: "{{ (tavern_state.events or []) | length }}"
               - output: "📋 Eventi in agenda ({{_n}}): {{ (tavern_state.events or []) | map(attribute='id') | list }}"
 
   /events_weekly_digest:
@@ -1300,34 +1396,52 @@ commands:
     when: feature_flags.hub_board=='on'
     description: "Report Hub (Mappa+NPC+Quest+Rumor+Taglie+Fazioni+Negozi+Eventi)."
     action:
-      - set: _fmt, value: "{{ arg(0) or 'md' }}"
-      - set: _allow_dump, value: "{{ env.ALLOW_MODULE_DUMP or runtime.allow_module_dump or false }}"
-      - set: _dump_marker, value: "{{ policies.exposure_guard.dump_policy.marker }}"
-      - set: _dump_warning, value: "{{ policies.exposure_guard.dump_policy.standard_response }}"
-      - set: _canvas_ok, value: "{{ (export.canvas_schema.npc_card.fields_map and export.canvas_schema.required_keys) and (set(export.canvas_schema.required_keys) - set(export.canvas_schema.npc_card.fields_map.keys()))|length == 0 }}"
-      - set: _ledger_ok, value: "{{ ledger_storage.path is not none }}"
-      - set: _qa_status, value: "{{ 'OK' if (_canvas_ok and _ledger_ok) else 'CHECK' }}"
-      - set: _echo_score, value: "{{ (current_npc and (current_npc.quality_report or {})).get('score', 10) }}"
-      - set: _echo_gate_on, value: "{{ feature_flags.echo_gate=='on' }}"
-      - set: _gate_reason, value: "{{ 'QA=' ~ _qa_status ~ ' (Canvas=' ~ ('OK' if _canvas_ok else 'FAIL') ~ ', Ledger=' ~ ('OK' if _ledger_ok else 'FAIL') ~ ')' }}"
-      - set: _blocked, value: "{{ _qa_status != 'OK' or (_echo_gate_on and (_echo_score < runtime.echo_min_score)) }}"
+      - set: _fmt
+        value: "{{ arg(0) or 'md' }}"
+      - set: _allow_dump
+        value: "{{ env.ALLOW_MODULE_DUMP or runtime.allow_module_dump or false }}"
+      - set: _dump_marker
+        value: "{{ policies.exposure_guard.dump_policy.marker }}"
+      - set: _dump_warning
+        value: "{{ policies.exposure_guard.dump_policy.standard_response }}"
+      - set: _canvas_ok
+        value: "{{ (export.canvas_schema.npc_card.fields_map and export.canvas_schema.required_keys) and (set(export.canvas_schema.required_keys) - set(export.canvas_schema.npc_card.fields_map.keys()))|length == 0 }}"
+      - set: _ledger_ok
+        value: "{{ ledger_storage.path is not none }}"
+      - set: _qa_status
+        value: "{{ 'OK' if (_canvas_ok and _ledger_ok) else 'CHECK' }}"
+      - set: _echo_score
+        value: "{{ (current_npc and (current_npc.quality_report or {})).get('score', 10) }}"
+      - set: _echo_gate_on
+        value: "{{ feature_flags.echo_gate=='on' }}"
+      - set: _gate_reason
+        value: "{{ 'QA=' ~ _qa_status ~ ' (Canvas=' ~ ('OK' if _canvas_ok else 'FAIL') ~ ', Ledger=' ~ ('OK' if _ledger_ok else 'FAIL') ~ ')' }}"
+      - set: _blocked
+        value: "{{ _qa_status != 'OK' or (_echo_gate_on and (_echo_score < runtime.echo_min_score)) }}"
       - if: "{{ _echo_gate_on and (_echo_score < runtime.echo_min_score) }}"
         then:
-          - set: _gate_reason, value: "{{ _gate_reason ~ '; Echo=' ~ _echo_score ~ '/10 (< ' ~ runtime.echo_min_score ~ ')' }}"
-      - set: _storage_used, value: "{{ storage_metrics.taverna_saves.count | default(0) }}"
-      - set: _storage_max, value: "{{ storage.auto_name_policy.max_files }}"
-      - set: _storage_remaining, value: "{{ (_storage_max|int) - (_storage_used|int) }}"
+          - set: _gate_reason
+            value: "{{ _gate_reason ~ '; Echo=' ~ _echo_score ~ '/10 (< ' ~ runtime.echo_min_score ~ ')' }}"
+      - set: _storage_used
+        value: "{{ storage_metrics.taverna_saves.count | default(0) }}"
+      - set: _storage_max
+        value: "{{ storage.auto_name_policy.max_files }}"
+      - set: _storage_remaining
+        value: "{{ (_storage_max|int) - (_storage_used|int) }}"
       - if: "{{ not _allow_dump }}"
         then:
-          - set: _blocked, value: true
-          - set: _gate_reason, value: "{{ _gate_reason ~ '; Dump disabilitato (ALLOW_MODULE_DUMP=false)' }}"
+          - set: _blocked
+            value: true
+          - set: _gate_reason
+            value: "{{ _gate_reason ~ '; Dump disabilitato (ALLOW_MODULE_DUMP=false)' }}"
           - output: "{{ _dump_warning }}"
           - output: "{{ _dump_marker }}"
       - if: "{{ _blocked }}"
         then:
-          - set: logs.export_gate.last_failure, value: "{{ _gate_reason }}"
+          - set: logs.export_gate.last_failure
+            value: "{{ _gate_reason }}"
           - output: "⛔ Export bloccato: {{ _gate_reason }}."
-          - output: "➡️ CTA: riesegui /self_check finché QA=OK, poi /grade (ripeti) o /refine_npc se Echo < {{runtime.echo_min_score}}; in sandbox puoi disattivare Echo con /echo off. Solo quando QA=OK+Echo ≥ soglia prova /npc_export o /save_npc, dopo aver eventualmente riallineato la chat con /check_conversation."
+          - output: "➡️ CTA: riesegui /self_check finché QA=OK, poi /grade (ripeti) se Echo < {{runtime.echo_min_score}}; in sandbox puoi disattivare Echo con /echo off. Solo quando QA=OK+Echo ≥ soglia prova /npc_export o /save_npc, dopo aver eventualmente riallineato la chat con /check_conversation."
           - output: "🛠️ Remediation: assicurati che Canvas+Ledger siano OK, porta Echo ≥ {{runtime.echo_min_score}} o disattiva il gate (solo sandbox) e ripeti /self_check + /grade prima di esportare o salvare."
           - goto_state: READY
         else:
@@ -1343,13 +1457,20 @@ commands:
     when: feature_flags.hub_board=='on'
     description: "Mostra path storage, auto_name_policy e quota residua per taverna_saves."
     action:
-      - set: _path, value: "{{ storage.path }}"
-      - set: _pattern, value: "{{ storage.auto_name_policy.pattern }}"
-      - set: _max, value: "{{ storage.auto_name_policy.max_files }}"
-      - set: _overflow, value: "{{ storage.auto_name_policy.on_overflow }}"
-      - set: _used, value: "{{ storage_metrics.taverna_saves.count | default(0) }}"
-      - set: _remaining, value: "{{ (_max|int) - (_used|int) }}"
-      - set: _allow_dump, value: "{{ env.ALLOW_MODULE_DUMP or runtime.allow_module_dump or false }}"
+      - set: _path
+        value: "{{ storage.path }}"
+      - set: _pattern
+        value: "{{ storage.auto_name_policy.pattern }}"
+      - set: _max
+        value: "{{ storage.auto_name_policy.max_files }}"
+      - set: _overflow
+        value: "{{ storage.auto_name_policy.on_overflow }}"
+      - set: _used
+        value: "{{ storage_metrics.taverna_saves.count | default(0) }}"
+      - set: _remaining
+        value: "{{ (_max|int) - (_used|int) }}"
+      - set: _allow_dump
+        value: "{{ env.ALLOW_MODULE_DUMP or runtime.allow_module_dump or false }}"
       - output: "📦 Storage taverna_saves → path={{_path}}, auto_name={{_pattern}} (max {{_max}}, overflow={{_overflow}}). Occupati {{_used}}/{{_max}}, residui {{ [_remaining,0] | max }}."
       - if: "{{ not _allow_dump }}"
         then:
@@ -1450,7 +1571,9 @@ commands:
       rate_limit: "${ledger_storage.rate_limit}"
     action:
       - { call: Ledger.validate_entry, with: { entry: "{{params}}" }, return_as: LV }
-      - if: "{{ not LV.ok }}": { error: E-LEDGER-REQ }
+      - if: "{{ not LV.ok }}"
+        then:
+          - error: E-LEDGER-REQ
       - { call: Ledger.append_entry, with: { storage_path: "${ledger_storage.path}", entry: "{{params}}" }, return_as: LS }
       - { append: tavern_state.ledger, value: "{{ params }}" }
       - { output: "Ledger aggiornato ({{params.type}}): {{params.text}}." }
@@ -1461,9 +1584,12 @@ commands:
     validators:
       - { type: path_exists, target: "module://taverna_saves/", on_fail: E-LEDGER-IO }
     action:
-      - set: _fmt, value: "{{ arg(0) or 'md' }}"
-      - set: _allow_dump, value: "{{ env.ALLOW_MODULE_DUMP or runtime.allow_module_dump or false }}"
-      - set: _dump_marker, value: "{{ policies.exposure_guard.dump_policy.marker }}"
+      - set: _fmt
+        value: "{{ arg(0) or 'md' }}"
+      - set: _allow_dump
+        value: "{{ env.ALLOW_MODULE_DUMP or runtime.allow_module_dump or false }}"
+      - set: _dump_marker
+        value: "{{ policies.exposure_guard.dump_policy.marker }}"
       - if: "{{ _fmt in ['md','txt'] and not _allow_dump }}"
         then:
           - output: "⚠️ Output parziale (ALLOW_MODULE_DUMP=false). Contenuti sensibili rimossi; usa export controllati (md/pdf/json) o abilita il flag su whitelist."
@@ -1487,7 +1613,7 @@ commands:
     when: feature_flags.minmax_builder==on
     description: "Applica una patch strutturata alla build corrente (stat/equip/note)."
     preconditions: { use_guard: "minmax_contract", on_fail: E-MINMAX-REQ }
-    params: [statistiche?, equipaggiamento?, note_varie?]
+    params: ["statistiche?", "equipaggiamento?", "note_varie?"]
     action:
       - { call: MinMax.apply_update_build, with: { npc: "{{current_npc}}", patch: "{{params}}" }, return_as: NEW }
       - { set: current_npc, value: "{{NEW}}" }
@@ -1495,18 +1621,19 @@ commands:
 
   /add_item:
     description: "Aggiunge un oggetto all’equipaggiamento (e opz. al Ledger)."
-    params: [oggetto, gp?]
+    params: [oggetto, "gp?"]
     action:
       - { set: current_npc.equipment, value: "{{ (current_npc.equipment or []) + [oggetto] }}" }
       - { set: current_npc.equipaggiamento, value: "{{ (current_npc.equipaggiamento or []) + [oggetto] }}" }
-      - if: "{{ feature_flags.adventurer_ledger==on and gp is defined }}":
+      - if: "{{ feature_flags.adventurer_ledger==on and gp is defined }}"
+        then:
           - { route: "/ledger_log type=purchase text='{{oggetto}}' gp_delta={{gp|int*(-1)}}", passthrough: true }
       - { output: "Oggetto aggiunto: {{oggetto}}." }
 
   /set_currency:
     when: feature_flags.adventurer_ledger==on
     description: "Imposta monete correnti (pp/gp/sp/cp)."
-    params: [pp?, gp?, sp?, cp?]
+    params: ["pp?", "gp?", "sp?", "cp?"]
     action:
       - { set: current_npc.currency, value: { pp: "{{pp|default(0)}}", gp: "{{gp|default(0)}}", sp: "{{sp|default(0)}}", cp: "{{cp|default(0)}}" } }
       - { output: "Valute aggiornate." }
@@ -1514,7 +1641,7 @@ commands:
   /add_level:
     when: feature_flags.minmax_builder==on
     description: "Aggiunge un livello con note/feat opzionali."
-    params: [livello, privilegi?, talento?]
+    params: [livello, "privilegi?", "talento?"]
     action:
       - { set: current_npc.livello, value: "{{ livello }}" }
       - { append: current_npc.progressione, value: { livello: "{{livello}}", talento: "{{talento}}", note: "{{privilegi}}" } }
@@ -1524,10 +1651,15 @@ commands:
     description: "Aggiunge incantesimi noti/preparati (livello specificato)."
     params: [livello_magia, incantesimi]
     action:
-      - set: _lvl, value: "{{ int(livello_magia or 0) }}"
-      - if: "{{ _lvl < 0 or _lvl > 9 }}": { error: "⚠️ Livello magia non valido (0–9)." }
-      - set: current_npc.magia, value: "{{ current_npc.magia or {} }}"
-      - set: current_npc.magia[_lvl], value: "{{ (current_npc.magia.get(_lvl, []) if current_npc.magia else []) + incantesimi }}"
+      - set: _lvl
+        value: "{{ int(livello_magia or 0) }}"
+      - if: "{{ _lvl < 0 or _lvl > 9 }}"
+        then:
+          - error: "⚠️ Livello magia non valido (0–9)."
+      - set: current_npc.magia
+        value: "{{ current_npc.magia or {} }}"
+      - set: current_npc.magia[_lvl]
+        value: "{{ (current_npc.magia.get(_lvl, []) if current_npc.magia else []) + incantesimi }}"
       - output: "Incantesimi aggiunti a livello {{_lvl}}."
 
   # ---- Toggle rapidi ----
@@ -1545,7 +1677,8 @@ commands:
     validators:
       - { type: regex, target: "arg(0)", pattern: "^(on|off|auto)$", on_fail: "⚠️ Usa on/off/auto." }
     action:
-      - set: runtime.pfs_mode, value: "{{ args_raw }}"
+      - set: runtime.pfs_mode
+        value: "{{ args_raw }}"
       - output: "🧭 PFS mode: {{runtime.pfs_mode}}"
 
   /set_abp <on|off>:
@@ -1553,7 +1686,8 @@ commands:
     validators:
       - { type: regex, target: "arg(0)", pattern: "^(on|off)$", on_fail: "⚠️ Usa on/off." }
     action:
-      - set: runtime.abp_mode, value: "{{ args_raw }}"
+      - set: runtime.abp_mode
+        value: "{{ args_raw }}"
       - output: "💎 ABP: {{runtime.abp_mode}}"
 
   /set_eitr <on|off>:
@@ -1561,7 +1695,8 @@ commands:
     validators:
       - { type: regex, target: "arg(0)", pattern: "^(on|off)$", on_fail: "⚠️ Usa on/off." }
     action:
-      - set: runtime.eitr_mode, value: "{{ args_raw }}"
+      - set: runtime.eitr_mode
+        value: "{{ args_raw }}"
       - output: "🧩 EitR: {{runtime.eitr_mode}}"
 
 # ---------------------------------
@@ -1682,7 +1817,7 @@ synthesis_rules:
     martial:           ["STR","DEX","CON","WIS","INT","CHA"]
     finesse:           ["DEX","STR","CON","WIS","INT","CHA"]
     caster_prepared:   ["INT","CON","DEX","WIS","CHA","STR"]
-    caster_spontaneous:["CHA","CON","DEX","WIS","INT","STR"]
+    caster_spontaneous: ["CHA","CON","DEX","WIS","INT","STR"]
   role_archetypes:
     striker:
       examples: ["Rogue", "Slayer", "Ranger"]
@@ -1898,10 +2033,14 @@ policies_and_guards:
 interop:
   can_delegate: ["Ruling Expert","Explain","MinMax Builder","Archivist"]
   delegate_rules:
-    - if: "query.contains_any(['RAW','RAI','PFS','ruling','regola'])" to: "Ruling Expert"
-    - if: "query.is_didactic_how_why"                           to: "Explain"
-    - if: "query.contains_any(['ottimizza','DPR','nova','rating'])" to: "MinMax Builder"
-    - if: "query.is_lore_only"                                   to: "Archivist"
+    - if: "query.contains_any(['RAW','RAI','PFS','ruling','regola'])"
+      to: "Ruling Expert"
+    - if: "query.is_didactic_how_why"
+      to: "Explain"
+    - if: "query.contains_any(['ottimizza','DPR','nova','rating'])"
+      to: "MinMax Builder"
+    - if: "query.is_lore_only"
+      to: "Archivist"
 
 # ---------------------------------
 # 13) QA Checklists / Digests / Usage
@@ -2008,7 +2147,7 @@ acceptance_tests:
       - "/echo on"
       - "/npc_auto striker 3"
       - "/grade"
-    expected: "Report qualità mostra score 0–10; se <8.8, messaggio di refine; se ≥8.8, OK."
+    expected: "Report qualità mostra score 0–10; se <8.5, messaggio di refine; se ≥8.5, OK."
 
 contract_tests:
   run_on_module_load: true
@@ -2060,9 +2199,9 @@ hub_defaults:
 
 bridges:
   to_encounter:
-    rule: "Quando una quest ha scene con scontri, proponi: /encounter_new apl=<L> env=<bioma> style=<stile> e poi /scale."
+    rule: "Quando una quest ha scene con scontri, proponi il bridge a Encounter_Designer: /start_encounter average_level=<L> party_size=<N>, poi /set_environment biome=<bioma> e /auto_balance."
   to_loot:
-    rule: "Alla chiusura di quest/bounty proponi: /loot_by_cr cr=<X> party=<N> o /wbl_party."
+    rule: "Alla chiusura di quest/bounty proponi il bridge a Adventurer Ledger: /roll_loot CR=<X> oppure /wbl_check_card per il controllo WBL del party."
 
 extractor:
   template_name: extraction_v1
@@ -2085,7 +2224,7 @@ extractor:
 
 prompt_templates:
   extraction_v1:
-    source: "asset://bundled_assets/Extraction_Playbook.md"
+    source: "bundled_assets.Extraction_Playbook.md (inline in questo modulo)"
 
 bundled_assets:
   Extraction_Playbook.md: |
@@ -2138,52 +2277,52 @@ encounter_presets:
     terrain_features: ["copertura leggera/media","visibilità variabile","difficile su sottobosco"]
     tactics_opening: ["imboscata da altezze","fuoco concentrato ai flank"]
     encounter_style: "imboscata"
-    suggest: "/encounter_new apl={{APL}} env=foresta style=imboscata"
+    suggest: "/start_encounter average_level={{APL}} → /set_environment biome=foresta → /auto_balance"
   - key: palude
     terrain_features: ["fango difficile","acqua bassa","pericoli naturali"]
     tactics_opening: ["kiting","trappole lente"]
     encounter_style: "logoramento"
-    suggest: "/encounter_new apl={{APL}} env=palude style=assalto"
+    suggest: "/start_encounter average_level={{APL}} → /set_environment biome=palude → /auto_balance"
   - key: deserto
     terrain_features: ["scoperto","calore","tempeste di sabbia"]
     tactics_opening: ["harass a distanza","uso di dune"]
     encounter_style: "assalto a distanza"
-    suggest: "/encounter_new apl={{APL}} env=deserto style=assalto"
+    suggest: "/start_encounter average_level={{APL}} → /set_environment biome=deserto → /auto_balance"
   - key: montagna
     terrain_features: ["dislivelli","precipizi","coperture rocciose"]
     tactics_opening: ["attacco dall'alto","spinta/sbilanciamento"]
     encounter_style: "difesa in quota"
-    suggest: "/encounter_new apl={{APL}} env=montagna style=difesa"
+    suggest: "/start_encounter average_level={{APL}} → /set_environment biome=montagna → /auto_balance"
   - key: tundra
     terrain_features: ["freddo intenso","terreno scivoloso","vento forte"]
     tactics_opening: ["controllo mobilità","resistenza"]
     encounter_style: "resistenza"
-    suggest: "/encounter_new apl={{APL}} env=tundra style=assalto"
+    suggest: "/start_encounter average_level={{APL}} → /set_environment biome=tundra → /auto_balance"
   - key: urbano_stretti
     terrain_features: ["vicoli","coperture dure","LoS rotte"]
     tactics_opening: ["pincer","blocco vie di fuga"]
     encounter_style: "caccia urbana"
-    suggest: "/encounter_new apl={{APL}} env=urbano style=imboscata"
+    suggest: "/start_encounter average_level={{APL}} → /set_environment biome=urbano → /auto_balance"
   - key: urbano_tetti
     terrain_features: ["salti","dislivelli","LoS lunghe"]
     tactics_opening: ["cecchinaggio","inseguimenti parkour"]
     encounter_style: "assalto coordinato"
-    suggest: "/encounter_new apl={{APL}} env=urbano style=assalto"
+    suggest: "/start_encounter average_level={{APL}} → /set_environment biome=urbano → /auto_balance"
   - key: caverne
     terrain_features: ["passaggi stretti","buio","eco"]
     tactics_opening: ["imbuto","difesa punto stretto"]
     encounter_style: "difesa/imboscata"
-    suggest: "/encounter_new apl={{APL}} env=caverne style=difesa"
+    suggest: "/start_encounter average_level={{APL}} → /set_environment biome=caverne → /auto_balance"
   - key: rovine
     terrain_features: ["coperture","crolli","pericoli"]
     tactics_opening: ["trappole","aggiramenti"]
     encounter_style: "imboscata/assalto"
-    suggest: "/encounter_new apl={{APL}} env=rovine style=imboscata"
+    suggest: "/start_encounter average_level={{APL}} → /set_environment biome=rovine → /auto_balance"
   - key: nave
     terrain_features: ["ponti stretti","scivoloso","rischio in acqua"]
     tactics_opening: ["boarding","taglio corde/vele"]
     encounter_style: "assalto ravvicinato"
-    suggest: "/encounter_new apl={{APL}} env=nave style=assalto"
+    suggest: "/start_encounter average_level={{APL}} → /set_environment biome=nave → /auto_balance"
 
 hub_storage:
   path: "module://tavern_hub.json"
@@ -2907,15 +3046,6 @@ diagnostics_tools:
   - name: /self_check
     description: "QA vincoli, contract canvas/minmax/ledger e MDA."
     output_example: "QA=OK | Canvas=OK | MinMax=OK | Ledger=OK | MDA=PASS"
-  - name: /show_flow_map
-    description: "Mappa ASCII del flusso (quiz/auto/export/hub)."
-    example_output: |
-      ┌──────────┐
-      │  /start  │
-      └──┬───────┘
-         ▼
-      [Quiz] → [Synthesis] → [Ready] → [Export]
-         └→ [Hub: Quest/Rumor/Bounty/Factions/Shops/Events]
 
 status:
   command: "/status"

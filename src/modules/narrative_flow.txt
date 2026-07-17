@@ -404,7 +404,7 @@ commands:
     params: [want, need, lie, ghost, flaw, change_signal]
     action:
       - set: story_state.protagonists[0].arc
-        value: {want:"{{want}}", need:"{{need}}", lie:"{{lie}}", ghost:"{{ghost}}", flaw:"{{flaw}}", change_signal:"{{change_signal}}"}
+        value: {want: "{{want}}", need: "{{need}}", lie: "{{lie}}", ghost: "{{ghost}}", flaw: "{{flaw}}", change_signal: "{{change_signal}}"}
       - output: "🎯 Arco aggiornato (W/N/L/G/Flaw/Signal)."
   /theme:
     description: "Definisci tema/i portante/i"
@@ -418,14 +418,14 @@ commands:
     params: [label, tipo, rule]
     action:
       - append: motif_registry.items
-        value: {id:"{{ now() }}", label:"{{label}}", tipo:"{{tipo}}", rule:"{{rule or 'default'}}"}
+        value: {id: "{{ now() }}", label: "{{label}}", tipo: "{{tipo}}", rule: "{{rule or 'default'}}"}
       - output: "📌 Motif registrato: {{label}}."
   /register_chekhov:
     description: "Alias rapido per oggetto di Chekhov"
     params: [label]
     action:
       - command: /motif_add
-        with: {label:"{{label}}", tipo:"oggetto", rule:"recall<=3"}
+        with: {label: "{{label}}", tipo: "oggetto", rule: "recall<=3"}
   /plot_curve:
     description: "Mostra curva Tensione/Emozione per atti/scena"
     action:

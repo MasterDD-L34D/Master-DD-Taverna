@@ -755,4 +755,4 @@ changelog:
       - "Migrazione completa dei binding a .txt (tutti i moduli)."
       - "Guidelines/workflow aggiornati a TXT."
       - "Sigilli: delega al runner esterno; blocco slim, PFS-safe."
-      - "Router/QA/Diagnostics mantenuti integri (parità con versione YAML)."}]}
+      - "Router/QA/Diagnostics mantenuti integri (parità con versione YAML)."

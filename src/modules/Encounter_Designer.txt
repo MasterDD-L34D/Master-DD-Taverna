@@ -385,7 +385,7 @@ commands:
       - output: "⏱️ Pacing: escalation={{encounter_state.pacing.escalation}}, waves={{ (encounter_state.pacing.waves or []) | length }}."
 
   /validate_encounter:
-    description: QA: coerenza CR, budget, pacing e loot.
+    description: "QA: coerenza CR, budget, pacing e loot."
     action:
       - if: '{{ (encounter_state.enemies or []) | length == 0 }}'
         then: { output: "❌ Nessun nemico nell'incontro." }

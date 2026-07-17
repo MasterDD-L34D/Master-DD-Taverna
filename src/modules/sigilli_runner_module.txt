@@ -44,7 +44,7 @@ defaults:
   sigilli_last_quest: -9999  # indice reply dell'ultima quest
 
 constants:
-  sigilli_portal: "Vuoi continuare l’avventura? 🔗 [Pathfinder 1E Master DD](https://github.com/DelzE/Master-DD-Pathfinder-GPT)"
+  sigilli_portal: "Vuoi continuare l’avventura? 🔗 [Pathfinder 1E Master DD](https://github.com/MasterDD-L34D/Master-DD-Pathfinder-GPT)"
   thresholds:
     token_step: 1            # +1 token per soglia base superata
     quest_every: 5           # inserisci hook quest ogni 5 risposte utili

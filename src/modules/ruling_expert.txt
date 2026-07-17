@@ -85,9 +85,12 @@ rule_tags:
 interop:
   can_delegate: [Archivist, Explain, MinMax Builder]
   delegate_rules:
-    - if: "query.is_lore_only"                 to: "Archivist"
-    - if: "query.is_didactic_how_why"          to: "Explain"
-    - if: "query.contains_any(['ottimizza','DPR','nova','rating','simula'])" to: "MinMax Builder"
+    - if: "query.is_lore_only"
+      to: "Archivist"
+    - if: "query.is_didactic_how_why"
+      to: "Explain"
+    - if: "query.contains_any(['ottimizza','DPR','nova','rating','simula'])"
+      to: "MinMax Builder"
 
 runtime:
   pfs_mode: auto
@@ -225,7 +228,7 @@ helpers:
       return True
 
 commands:
-  - {name: /ruling,              description: "Giudizio di regola", params: [topic, scope?, pfs?, output_mode?, speed?]}
+  - {name: /ruling,              description: "Giudizio di regola", params: [topic, "scope?", "pfs?", "output_mode?", "speed?"]}
   - {name: /compare_raw_rai,     description: "RAW vs RAI affiancati", params: [topic]}
   - {name: /pfs_check,           description: "Differenze/limiti PFS", params: [topic]}
   - {name: /errata_check,        description: "Errata/FAQ pertinenti", params: [topic]}
@@ -355,7 +358,7 @@ flow:
     - step: check_pfs
       description: Override/limitazioni PFS (🧭) con season awareness.
     - step: analyze_case
-      description: Stacking/numero: calcoli digit-by-digit (arithmetic_guard), esempi numerici, edge PFS.
+      description: "Stacking/numero: calcoli digit-by-digit (arithmetic_guard), esempi numerici, edge PFS."
       checks:
         arithmetic_guard: true
         edge_cases: true

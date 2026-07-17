@@ -170,6 +170,8 @@ data_structures:
       legami: []
       ganci: []
       flavor: ''
+      arc: ''
+      themes: []
     difetti: []
     statistiche:
       Forza: 16
@@ -476,30 +478,30 @@ helpers:
       if r.get('pfs_active'):
         return '🧭 PFS'
       return '❗ House Rule' if hr else '✅ RAW-Summarized'
-    rules_status_text:
-      params: []
-      logic: |
-        r = build_state.get('rules',{}) or {}
-        parts = []
-        parts.append("PFS ON" if r.get('pfs_active') else "PFS OFF")
-        parts.append("ABP ON" if r.get('abp_active') else "ABP OFF")
-        parts.append("EitR ON" if r.get('eitr_active') else "EitR OFF")
-        return " • ".join(parts)
-    minmax_export_filename:
-      params:
-        - fmt
-      logic: |
-        import re
-        fmt = (fmt or 'pdf').lower()
-        name = build_state.get('nome') or 'Build'
-        slug = re.sub(r'[^A-Za-z0-9_-]+','_', name).strip('_') or 'Build'
-        ext = 'xlsx' if fmt == 'excel' else fmt
-        return f"MinMax_{slug}.{ext}"
-    style_hint:
-      params:
-        - style
-      logic: >
-        s = (style or "").strip().lower()
+  rules_status_text:
+    params: []
+    logic: |
+      r = build_state.get('rules',{}) or {}
+      parts = []
+      parts.append("PFS ON" if r.get('pfs_active') else "PFS OFF")
+      parts.append("ABP ON" if r.get('abp_active') else "ABP OFF")
+      parts.append("EitR ON" if r.get('eitr_active') else "EitR OFF")
+      return " • ".join(parts)
+  minmax_export_filename:
+    params:
+      - fmt
+    logic: |
+      import re
+      fmt = (fmt or 'pdf').lower()
+      name = build_state.get('nome') or 'Build'
+      slug = re.sub(r'[^A-Za-z0-9_-]+','_', name).strip('_') or 'Build'
+      ext = 'xlsx' if fmt == 'excel' else fmt
+      return f"MinMax_{slug}.{ext}"
+  style_hint:
+    params:
+      - style
+    logic: >
+      s = (style or "").strip().lower()
 
       if s == "timmy":  return "Preferisci esplosioni: privilegia combo Nova,
       danno ad area e moltiplicatori."
@@ -850,22 +852,24 @@ commands:
             abp_active: false
             eitr_active: false
           profile:
-            'allineamento:""': null
-            'divinita:""': null
-            'taglia:"Medium"': null
-            'eta:""': null
-            'sesso:""': null
-            'altezza:""': null
-            'peso:""': null
-            'xp:0': null
+            allineamento: ''
+            divinita: ''
+            taglia: Medium
+            eta: ''
+            sesso: ''
+            altezza: ''
+            peso: ''
+            xp: 0
             lingue: []
-            'punti_eroe:0': null
+            punti_eroe: 0
           roleplay:
-            'psico_top3:""': null
-            'storia_breve:""': null
+            psico_top3: ''
+            storia_breve: ''
             legami: []
             ganci: []
-            'flavor:""': null
+            flavor: ''
+            arc: ''
+            themes: []
           difetti: []
           statistiche:
             Forza: 16
@@ -902,24 +906,24 @@ commands:
               skills_by_name: {}
               languages_extra: []
               carrying_capacity:
-                'light:""': null
-                'medium:""': null
-                'heavy:""': null
-                'lift:""': null
-                'drag:""': null
+                light: null
+                medium: null
+                heavy: null
+                lift: null
+                drag: null
           magia:
             slots_per_day: {}
             cd_by_level: {}
             spell_list: {}
           equipaggiamento: []
           equipment_summary:
-            'peso_totale_lb:0': null
-            'carico:""': null
+            peso_totale_lb: 0
+            carico: ''
             currency:
-              'pp:0': null
-              'gp:0': null
-              'sp:0': null
-              'cp:0': null
+              pp: 0
+              gp: 0
+              sp: 0
+              cp: 0
           tratti: []
           progressione: []
           note_progressione: []
@@ -1390,17 +1394,17 @@ commands:
                       link:"{{result.link}}" descrizione:"{{result.summary}}"
                       tipo:"{{result.source_type}}" level:"{{local.level}}"
                       badge:"{{local.badge}}"
-            - set: build_state.fonti_meta
-              value: '{{sort_meta_by_level(build_state.fonti_meta)}}'
+          - set: build_state.fonti_meta
+            value: '{{sort_meta_by_level(build_state.fonti_meta)}}'
 
-            - if: '{{ any_meta_source() }}'
-              then:
-                - output: |
-                    {{ meta_governance_banner() }}
+          - if: '{{ any_meta_source() }}'
+            then:
+              - output: |
+                  {{ meta_governance_banner() }}
 
-            - call: meta_cache_set
-              with:
-                classe: '{{local.classe}}'
+          - call: meta_cache_set
+            with:
+              classe: '{{local.classe}}'
               patterns: '{{meta_reference.search_patterns}}'
               results: '{{build_state.fonti_meta}}'
             return_as: _cached_ok
@@ -1737,9 +1741,9 @@ commands:
     description: "Importa arco e temi dal modulo Narrativa"
     params: [pg_id, arc, themes]
     action:
-      - set: build.characters[{{pg_id}}].narrative.arc
+      - set: build_state.roleplay.arc
         value: "{{arc}}"
-      - set: build.characters[{{pg_id}}].narrative.themes
+      - set: build_state.roleplay.themes
         value: "{{themes}}"
       - output: "📥 Arc/Temi importati per PG {{pg_id}}."
 
@@ -1958,7 +1962,7 @@ steps:
         - 'Esegui /qa_check; se blocchi, suggerisci rollback/fork'
       cta:
         primary:
-          text: Esporta la build (file MinMax_<nome>.pdf — QA richiesto: fonti OK, PFS senza HR; naming allineata a Encounter_Designer)
+          text: 'Esporta la build (file MinMax_<nome>.pdf — QA richiesto: fonti OK, PFS senza HR; naming allineata a Encounter_Designer)'
           command: /export_build pdf
         alternatives:
           - when_unmet: 'true'
@@ -2001,7 +2005,7 @@ steps:
         - qa_templates.gates.export_requires
       cta:
         primary:
-          text: Esporta (MinMax_<nome>.pdf/.xlsx, MinMax_<nome>.json) e passa alle varianti — QA: fonti OK + PFS senza HR
+          text: 'Esporta (MinMax_<nome>.pdf/.xlsx, MinMax_<nome>.json) e passa alle varianti — QA: fonti OK + PFS senza HR'
           command: /export_build pdf
         alternatives:
           - when_unmet: '!qa_templates.gates.export_requires'
@@ -2071,7 +2075,7 @@ steps:
         text: Registra il Meta Rating
         command: /run_mda MinMax
   - id: 14
-    step_badge: "\U0001F9D1\U0001F3FB\U200D\U0001F4BB"
+    step_badge: "\U0001F9D1\U0001F3FB\u200D\U0001F4BB"
     name: Companion
     progress_pct: 130
     goal: Configurare companion/famiglio collegato alla build.

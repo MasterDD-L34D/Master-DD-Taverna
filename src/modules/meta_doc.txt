@@ -109,7 +109,6 @@ data_structures:
     META:
       - { title: "The Gear Guide", file: "asset://The Gear Guide.pdf", kind: "META" }
       - { title: "Items Master List", file: "asset://Items Master List.pdf", kind: "META" }
-      - { title: "Useful Items V1.1", file: "asset://Pathfinder Useful Items List V1.1.pdf", kind: "META" }
       - { title: "Ultimate Crafter Guide", file: "asset://Ultimate Crafter Guide.pdf", kind: "META" }
 
 # --- HELPERS ---------------------------------------------------------------

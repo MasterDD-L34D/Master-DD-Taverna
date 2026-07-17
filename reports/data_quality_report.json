@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-16T23:44:35.715991+00:00",
+  "generated_at": "2026-07-17T21:40:46.795480+00:00",
   "tables": {
     "build_index": {
       "name": "build_index",
@@ -103,7 +103,25 @@
       "out_of_domain": {
         "status": []
       },
-      "referential_issues": {},
+      "referential_issues": {
+        "missing_files": [
+          "src\\data\\modules\\Encounter_Designer.txt",
+          "src\\data\\modules\\Taverna_NPC.txt",
+          "src\\data\\modules\\adventurer_ledger.txt",
+          "src\\data\\modules\\archivist.txt",
+          "src\\data\\modules\\base_profile.txt",
+          "src\\data\\modules\\explain_methods.txt",
+          "src\\data\\modules\\knowledge_pack.md",
+          "src\\data\\modules\\meta_doc.txt",
+          "src\\data\\modules\\minmax_builder.txt",
+          "src\\data\\modules\\narrative_flow.txt",
+          "src\\data\\modules\\preload_all_modules.txt",
+          "src\\data\\modules\\ruling_expert.txt",
+          "src\\data\\modules\\scheda_pg_markdown_template.md",
+          "src\\data\\modules\\sigilli_runner_module.txt",
+          "src\\data\\modules\\tavern_hub.json"
+        ]
+      },
       "coverage_gaps": []
     },
     "reference_catalog": {

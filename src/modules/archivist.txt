@@ -338,37 +338,37 @@ ui_texts:
 # ───────────────────────────────── COMANDI (interni)
 commands:
   # Lore
-  - {name: /lore, description: "Voce enciclopedica", params: [topic, output_mode?, speed?, spoiler?]}
-  - {name: /timeline, description: "Timeline (AR) con fonti", params: [scope, span?, anchor_ar?, spoiler?]}
-  - {name: /deity, description: "Scheda divinità", params: [name, depth?]}
-  - {name: /region, description: "Scheda regione/paese", params: [name, depth?]}
-  - {name: /city, description: "Scheda città", params: [name, depth?]}
-  - {name: /faction, description: "Scheda fazione", params: [name, depth?]}
-  - {name: /person, description: "PNG storico/figura", params: [name, depth?]}
-  - {name: /plane, description: "Scheda piano/cosmologia", params: [name, depth?]}
-  - {name: /artifact, description: "Scheda artefatto (lore-level)", params: [name, depth?]}
+  - {name: /lore, description: "Voce enciclopedica", params: [topic, "output_mode?", "speed?", "spoiler?"]}
+  - {name: /timeline, description: "Timeline (AR) con fonti", params: [scope, "span?", "anchor_ar?", "spoiler?"]}
+  - {name: /deity, description: "Scheda divinità", params: [name, "depth?"]}
+  - {name: /region, description: "Scheda regione/paese", params: [name, "depth?"]}
+  - {name: /city, description: "Scheda città", params: [name, "depth?"]}
+  - {name: /faction, description: "Scheda fazione", params: [name, "depth?"]}
+  - {name: /person, description: "PNG storico/figura", params: [name, "depth?"]}
+  - {name: /plane, description: "Scheda piano/cosmologia", params: [name, "depth?"]}
+  - {name: /artifact, description: "Scheda artefatto (lore-level)", params: [name, "depth?"]}
   - {name: /pfs_lore_diff, description: "Differenze 🧭 PFS-Lore vs canone", params: [topic]}
-  - {name: /source, description: "Fonti usate (alias)", params: [topic?]}
+  - {name: /source, description: "Fonti usate (alias)", params: ["topic?"]}
   - {name: /list_sources, description: "Elenco fonti primarie/secondarie", params: [topic]}
   # Campaign (interno)
-  - {name: /campaign_new, description: "Crea campagna e SX00 (dashboard).", params: [titolo, tema, tono, livelli, sessioni, luogo_principale, vincoli?]}
-  - {name: /av_generate, description: "Genera moduli AVxx consecutivi.", params: [count_or_range, focus?]}
-  - {name: /nc_create, description: "Crea scheda NCxx (solo lore).", params: [nome, tipo, allineamento, obiettivi, risorse, segreti?]}
-  - {name: /sx_table, description: "Crea scheda SXxx.", params: [scopo, ambiente, stagione?, complessità?]}
+  - {name: /campaign_new, description: "Crea campagna e SX00 (dashboard).", params: [titolo, tema, tono, livelli, sessioni, luogo_principale, "vincoli?"]}
+  - {name: /av_generate, description: "Genera moduli AVxx consecutivi.", params: [count_or_range, "focus?"]}
+  - {name: /nc_create, description: "Crea scheda NCxx (solo lore).", params: [nome, tipo, allineamento, obiettivi, risorse, "segreti?"]}
+  - {name: /sx_table, description: "Crea scheda SXxx.", params: [scopo, ambiente, "stagione?", "complessità?"]}
   - {name: /sx00_dashboard, description: "(Re)genera/aggiorna SX00.", params: [azione]}
   - {name: /sx10_balance_check, description: "Verifica bilanciamento tematico.", params: [scope]}
   - {name: /rel_update, description: "Aggiorna relazione tra NC/PNG/fazioni.", params: [from, to, tipo_cambio, motivo]}
   - {name: /export, description: "Esporta AV/NC/SX (MD/Obsidian/PDF/VTT-ready).", params: [codes, format]}
   - {name: /status, description: "Snapshot stato/SX00."}
   # VTT (interno)
-  - {name: /vtt_map, description: "Genera mappa gridless top-down.", params: [theme, features?, complexity?, mood?, size?, n_variants?]}
-  - {name: /vtt_random, description: "Mappa casuale per tema.", params: [theme, size?]}
-  - {name: /vtt_custom, description: "Da descrizione dettagliata.", params: [description, size?, mood?, complexity?]}
+  - {name: /vtt_map, description: "Genera mappa gridless top-down.", params: [theme, "features?", "complexity?", "mood?", "size?", "n_variants?"]}
+  - {name: /vtt_random, description: "Mappa casuale per tema.", params: [theme, "size?"]}
+  - {name: /vtt_custom, description: "Da descrizione dettagliata.", params: [description, "size?", "mood?", "complexity?"]}
   - {name: /vtt_attach_to, description: "Collega mappa a AVxx/SXxx e aggiorna SX00.", params: [map_id, target_code]}
   - {name: /vtt_hazards, description: "Pericoli coerenti (ghiaccio/lava/fango).", params: [map_id, region, hazard_type]}
   - {name: /vtt_features, description: "Elementi dinamici (casse/ostacoli/passaggi).", params: [map_id, items]}
   - {name: /vtt_lighting, description: "Preset luci (day/night/dusk/eerie/surreal).", params: [map_id, style]}
-  - {name: /vtt_scale, description: "Scala token/griglia (note GM).", params: [map_id, token_scale_hint, dpi_hint?]}
+  - {name: /vtt_scale, description: "Scala token/griglia (note GM).", params: [map_id, token_scale_hint, "dpi_hint?"]}
   - {name: /vtt_variants, description: "Fino a 4 varianti.", params: [map_id, n_variants]}
   - {name: /vtt_export_notes, description: "Note Foundry/Roll20.", params: [map_id, format]}
   - {name: /vtt_preset_save, description: "Salva preset.", params: [name]}
@@ -382,7 +382,7 @@ commands:
   - {name: /vtt_texture_depth, description: "Dettaglio micro-texture.", params: [map_id, surface_type]}
   - {name: /vtt_balance_open, description: "Bilancia spazi aperti/corridoi.", params: [map_id, goal]}
   - {name: /vtt_export_map, description: "Esporta immagine (png/webp).", params: [map_id, format]}
-  - {name: /vtt_export_bundle, description: "ZIP: immagine+note+metadata.", params: [map_id, formats, include_notes?]}
+  - {name: /vtt_export_bundle, description: "ZIP: immagine+note+metadata.", params: [map_id, formats, "include_notes?"]}
 
 export_guardrails:
   allow_module_dump_flag: "{{ env.ALLOW_MODULE_DUMP or runtime.allow_module_dump or false }}"
