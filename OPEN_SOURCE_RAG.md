@@ -8,7 +8,7 @@ Questo documento descrive il layer **RAG (Retrieval-Augmented Generation)** aggi
   - `store.py`: vector store persistente basato su numpy (embeddings + chunks JSON).
   - `indexer.py`: chunking di moduli e catalogo reference + embedding.
   - `retriever.py`: ricerca semantica top-k.
-  - `generator.py`: generazione risposta via Ollama, API OpenAI-compatibile o mock offline.
+  - `generator.py`: generazione risposta via Ollama (endpoint nativo o OpenAI-compatible), API OpenAI-compatibile o mock offline.
   - `router.py`: endpoint FastAPI `/rag/search` e `/rag/ask`.
 - `tools/index_rag.py` — script per costruire l'indice.
 - `tests/test_rag.py` — test unitari e di integrazione endpoint.
@@ -123,7 +123,23 @@ curl -X POST http://localhost:8000/rag/ask \
   -d '{"query": "cosa fa Power Attack?", "top_k": 5}'
 ```
 
-### Domanda-risposta con API OpenAI-compatibile
+### Domanda-risposta con Ollama (endpoint OpenAI-compatible)
+
+Ollama espone anche un endpoint compatibile con OpenAI su `/v1/chat/completions`. Questo permette di usare il formato chat completions e parametri aggiuntivi (es. `temperature`) senza API key:
+
+```bash
+export RAG_LLM_PROVIDER="ollama-openai"
+export OLLAMA_MODEL="qwen2.5-coder:7b"
+
+curl -X POST http://localhost:8000/rag/ask \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: la-tua-chiave" \
+  -d '{"query": "cosa fa Power Attack?", "top_k": 5}'
+```
+
+Lo stesso provider funziona con altri backend locali OpenAI-compatible (es. LM Studio su `http://localhost:1234/v1` o `llama.cpp` server) impostando `OLLAMA_BASE_URL` all'URL del backend.
+
+### Domanda-risposta con API OpenAI-compatibile (cloud)
 
 ```bash
 export RAG_LLM_PROVIDER="openai"
@@ -143,9 +159,9 @@ curl -X POST http://localhost:8000/rag/ask \
 |---|---|---|
 | `RAG_EMBEDDING_MODEL` | `paraphrase-multilingual-MiniLM-L12-v2` | Modello sentence-transformers per embeddings |
 | `RAG_STORE_DIR` | `src/data/vector_store` | Directory dell'indice |
-| `RAG_LLM_PROVIDER` | `mock` | `mock`, `ollama`, `openai` |
-| `OLLAMA_BASE_URL` | `http://localhost:11434` | URL Ollama |
-| `OLLAMA_MODEL` | `llama3.1` | Modello Ollama (testato anche `qwen2.5-coder:7b`) |
+| `RAG_LLM_PROVIDER` | `mock` | `mock`, `ollama`, `ollama-openai`, `openai` |
+| `OLLAMA_BASE_URL` | `http://localhost:11434` | URL Ollama (o altro backend OpenAI-compatible locale) |
+| `OLLAMA_MODEL` | `qwen2.5-coder:7b` | Modello Ollama (testato `qwen2.5-coder:7b`) |
 | `OPENAI_API_KEY` | — | API key per provider OpenAI-compatibile |
 | `OPENAI_BASE_URL` | `https://api.openai.com/v1` | Base URL API |
 | `OPENAI_MODEL` | `gpt-3.5-turbo` | Modello remoto |
@@ -196,7 +212,7 @@ In alternativa, per avviare solo il frontend da questa cartella:
 
 Si apre il browser su `http://localhost:8501`. Supporta:
 
-- provider `mock`, `ollama`, `openai` con fallback automatico su `mock`
+- provider `mock`, `ollama`, `ollama-openai`, `openai` con fallback automatico su `mock`
 - indicatori di stato per API e Ollama
 - scelta del numero di chunk
 - visualizzazione delle fonti recuperate

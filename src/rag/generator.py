@@ -21,7 +21,7 @@ class MockProvider:
 
 
 class OllamaProvider:
-    def __init__(self, base_url: str = "http://localhost:11434", model: str = "llama3.1"):
+    def __init__(self, base_url: str = "http://localhost:11434", model: str = "qwen2.5-coder:7b"):
         self.base_url = base_url.rstrip("/")
         self.model = model
 
@@ -71,6 +71,23 @@ class OpenAIProvider:
             return f"[Errore API OpenAI-compatibile: {exc}]"
 
 
+class OllamaOpenAIProvider(OpenAIProvider):
+    """OpenAI-compatible endpoint served by a local Ollama instance.
+
+    Ollama exposes ``/v1/chat/completions`` without requiring an API key.
+    This provider reuses ``OpenAIProvider`` but defaults to the local Ollama
+    URL and allows empty API keys.
+    """
+
+    def __init__(
+        self,
+        base_url: str = "http://localhost:11434/v1",
+        model: str = "qwen2.5-coder:7b",
+        api_key: str | None = None,
+    ):
+        super().__init__(api_key=api_key or "ollama", base_url=base_url, model=model)
+
+
 def get_provider(
     provider: str | None = None,
     *,
@@ -79,12 +96,17 @@ def get_provider(
     openai_base_url: str | None = None,
     openai_model: str | None = None,
     openai_api_key: str | None = None,
-) -> MockProvider | OllamaProvider | OpenAIProvider:
+) -> MockProvider | OllamaProvider | OpenAIProvider | OllamaOpenAIProvider:
     name = (provider or os.getenv("RAG_LLM_PROVIDER", "mock")).lower()
     if name == "ollama":
         return OllamaProvider(
             base_url=ollama_base_url or os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
-            model=ollama_model or os.getenv("OLLAMA_MODEL", "llama3.1"),
+            model=ollama_model or os.getenv("OLLAMA_MODEL", "qwen2.5-coder:7b"),
+        )
+    if name == "ollama-openai":
+        return OllamaOpenAIProvider(
+            base_url=(ollama_base_url or os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")).rstrip("/") + "/v1",
+            model=ollama_model or os.getenv("OLLAMA_MODEL", "qwen2.5-coder:7b"),
         )
     if name in ("openai", "openai-compatible"):
         return OpenAIProvider(

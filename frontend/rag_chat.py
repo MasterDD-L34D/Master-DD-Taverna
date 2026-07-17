@@ -85,13 +85,29 @@ def main():
         st.divider()
         st.header("Configurazione LLM")
 
-        providers = ["mock", "ollama", "openai"]
+        providers = ["mock", "ollama", "ollama-openai", "openai"]
         default_provider = "ollama" if ollama_available else "mock"
         provider = st.selectbox("Provider", providers, index=providers.index(default_provider))
 
         top_k = st.slider("Chunk da recuperare", min_value=1, max_value=10, value=5)
 
         if provider == "ollama":
+            st.text_input(
+                "Ollama URL",
+                value=get_env_default("OLLAMA_BASE_URL", "http://localhost:11434"),
+                key="ollama_url",
+            )
+            st.text_input(
+                "Modello",
+                value=get_env_default("OLLAMA_MODEL", "qwen2.5-coder:7b"),
+                key="ollama_model",
+            )
+            if st.button("Testa connessione Ollama"):
+                if ollama_is_running(st.session_state.ollama_url + "/api/tags"):
+                    st.success("Ollama raggiungibile!")
+                else:
+                    st.error("Ollama non raggiungibile. Verifica che sia avviato.")
+        elif provider == "ollama-openai":
             st.text_input(
                 "Ollama URL",
                 value=get_env_default("OLLAMA_BASE_URL", "http://localhost:11434"),
@@ -123,8 +139,9 @@ def main():
         st.divider()
         st.caption(
             "**mock**: offline, restituisce solo i chunk.\n"
-            "**ollama**: LLM locale (richiede Ollama).\n"
-            "**openai**: API compatibile OpenAI."
+            "**ollama**: LLM locale via endpoint nativo /api/generate (richiede Ollama).\n"
+            "**ollama-openai**: LLM locale via endpoint OpenAI-compatible /v1/chat/completions (richiede Ollama).\n"
+            "**openai**: API compatibile OpenAI (cloud o altri backend compatibili)."
         )
 
     if "messages" not in st.session_state:
@@ -171,7 +188,7 @@ def main():
 
     with st.spinner("Generazione risposta..."):
         provider_kwargs = {}
-        if provider == "ollama":
+        if provider in ("ollama", "ollama-openai"):
             provider_kwargs["ollama_base_url"] = st.session_state.get("ollama_url", "http://localhost:11434")
             provider_kwargs["ollama_model"] = st.session_state.get("ollama_model", "qwen2.5-coder:7b")
         elif provider == "openai":

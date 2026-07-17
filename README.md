@@ -435,7 +435,7 @@ Cosa è incluso:
 - Vector store persistente in `src/data/vector_store/` (numpy + JSON).
 - Script di indicizzazione: `tools/index_rag.py`.
 - Endpoint FastAPI: `POST /rag/search`, `POST /rag/ask`, `POST /rag/build`.
-- Provider LLM: `mock` (offline), `ollama`, `openai`.
+- Provider LLM: `mock` (offline), `ollama` (endpoint nativo), `ollama-openai` (endpoint OpenAI-compatible locale), `openai` (API compatibile OpenAI/cloud).
 - Frontend web di chat: `frontend/rag_chat.py` (Streamlit).
 - Build agent per generare schede PF1E via RAG: `src/agents/builder.py` + CLI `tools/build_agent.py`.
 

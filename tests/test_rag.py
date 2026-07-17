@@ -1,5 +1,6 @@
 """Test del layer RAG."""
 import os
+import sys
 import tempfile
 from pathlib import Path
 
@@ -7,9 +8,11 @@ import numpy as np
 import pytest
 from fastapi.testclient import TestClient
 
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+
 from src.app import app
 from src.config import settings
-from src.rag.generator import MockProvider, get_provider
+from src.rag.generator import MockProvider, OllamaOpenAIProvider, OllamaProvider, get_provider
 from src.rag.indexer import index_modules
 from src.rag.retriever import Retriever
 from src.rag.store import VectorStore
@@ -94,6 +97,27 @@ def test_get_provider(monkeypatch):
     assert isinstance(get_provider("mock"), MockProvider)
     # non crasha senza env
     assert isinstance(get_provider(), MockProvider)
+
+
+def test_get_provider_ollama():
+    p = get_provider("ollama")
+    assert isinstance(p, OllamaProvider)
+    assert p.model == "qwen2.5-coder:7b"
+
+
+def test_get_provider_ollama_openai():
+    p = get_provider("ollama-openai")
+    assert isinstance(p, OllamaOpenAIProvider)
+    assert p.model == "qwen2.5-coder:7b"
+    assert p.base_url.endswith("/v1")
+    # Ollama OpenAI-compatible does not require a real API key
+    assert p.api_key is not None
+
+
+def test_ollama_openai_provider_uses_local_url():
+    p = OllamaOpenAIProvider(base_url="http://ollama.local:11434/v1", model="mistral")
+    assert p.base_url == "http://ollama.local:11434/v1"
+    assert p.model == "mistral"
 
 
 @pytest.mark.skipif(
