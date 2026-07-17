@@ -337,7 +337,8 @@ async def build_stub(
     return JSONResponse(response_payload)
 
 
-@app.api_route("/modules/{name:path}", methods=["GET", "POST"])
+@app.get("/modules/{name:path}")
+@app.post("/modules/{name:path}")
 async def get_module_content(
     name: str,
     mode: str = Query(default="extended"),

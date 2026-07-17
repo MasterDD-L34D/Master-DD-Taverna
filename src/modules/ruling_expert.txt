@@ -314,7 +314,7 @@ commands:
       - output: "🔒 Strict citations: {{ 'ON' if runtime.require_citation_strict else 'OFF' }}"
 
 minmax_builder_stub_fields:
-  description: "Mappa del payload JSON restituito da GET /modules/minmax_builder.txt?mode=stub (o stub=true) per QA/integrazione con il builder."
+  description: "Mappa del payload JSON restituito da POST /build/stub (endpoint canonico; legacy: GET /modules/minmax_builder.txt?mode=stub o stub=true) per QA/integrazione con il builder."
   fields:
     build_state: "Metadati di avanzamento della build (mode, razza/classe, archetipi scelti/scartati, step corrente/totale, etichette step, statistics) usati per orientare rulings, decidere il contesto (es. progressione multiclasse) e applicare gating PFS/Additional Resources."
     sheet: "Scheda sintetica con statistiche_chiave, slot incantesimi, progressione e inventario (item, carichi, bonus tipizzati): base per esempi numerici, check stacking, controlli di legalità e per popolare le sezioni RAW/PFS con numeri verificabili."
