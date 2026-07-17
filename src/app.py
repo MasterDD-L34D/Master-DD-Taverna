@@ -94,6 +94,14 @@ DIRECTORY_STATUS = Gauge(
 REQUIRED_MODULE_FILES = [
     "base_profile.txt",
     "minmax_builder.txt",
+    "Taverna_NPC.txt",
+    "Encounter_Designer.txt",
+    "adventurer_ledger.txt",
+    "ruling_expert.txt",
+    "explain_methods.txt",
+    "archivist.txt",
+    "narrative_flow.txt",
+    "scheda_pg_markdown_template.md",
 ]
 
 
@@ -271,17 +279,22 @@ async def get_taverna_saves_quota(
     return _taverna_saves_metrics(TAVERNA_SAVES_DIR)
 
 
-@app.get("/storage_meta")
-async def storage_meta(_: None = Depends(require_api_key)) -> Dict[str, object]:
-    """Expose storage metadata with quota, max_files and auto-naming policy."""
+@app.get("/taverna_storage_meta")
+async def taverna_storage_meta(_: None = Depends(require_api_key)) -> Dict[str, object]:
+    """Expose taverna_saves metadata with quota, max_files and auto-naming policy."""
 
     return _taverna_saves_metadata(TAVERNA_SAVES_DIR)
 
 
+@app.get("/storage_meta")
+async def storage_meta(_: None = Depends(require_api_key)) -> Dict[str, object]:
+    """Alias legacy per /taverna_storage_meta."""
+
+    return await taverna_storage_meta(_)
+
+
 TEXT_SUFFIXES = {".txt", ".md"}
 PROTECTED_DUMP_MODULES = {"ruling_expert.txt"}
-STRICT_TRUNCATION_MODULES = {"adventurer_ledger.txt", "narrative_flow.txt"}
-LEDGER_TEXT_MODULES = {"adventurer_ledger.txt"}
 
 
 def _media_type_for_path(path: Path) -> str:
@@ -1259,18 +1272,16 @@ async def get_module_content(
         raise HTTPException(status_code=404, detail="Module not found")
     media_type = _media_type_for_path(path)
     is_text = path.suffix.lower() in TEXT_SUFFIXES
-    is_ledger_text = path.name in LEDGER_TEXT_MODULES
 
     allow_full_dump = settings.allow_module_dump and (
         path.name not in PROTECTED_DUMP_MODULES
         or path.name in settings.module_dump_whitelist
     )
 
-    if (not is_text or is_ledger_text) and not allow_full_dump:
+    # I file non testuali richiedono ALLOW_MODULE_DUMP=true (e non protetti) per
+    # essere scaricati; i moduli testuali vengono sempre serviti, al piu' troncati.
+    if not is_text and not allow_full_dump:
         raise HTTPException(status_code=403, detail="Module download not allowed")
-
-    if not is_text and allow_full_dump:
-        return FileResponse(path, media_type=media_type, filename=path.name)
 
     if allow_full_dump:
         return FileResponse(path, media_type=media_type, filename=path.name)
@@ -1278,23 +1289,12 @@ async def get_module_content(
     max_chars = 4000
 
     total_size = path.stat().st_size
-    strict_truncation = (not settings.allow_module_dump) or (
-        path.name in STRICT_TRUNCATION_MODULES
-    )
+    with path.open("r", encoding="utf-8", errors="ignore") as source:
+        chunk = source.read(max_chars + 1)
 
-    if strict_truncation:
-        served_chunk = ""
-        is_truncated = True
-        truncated_size = 0
-    else:
-        with path.open("r", encoding="utf-8", errors="ignore") as source:
-            chunk = source.read(max_chars + 1)
-
-        served_chunk = chunk[:max_chars]
-        # Anche con ALLOW_MODULE_DUMP=false serviamo un estratto iniziale, mantenendo
-        # l'header di parzialità per indicare il troncamento forzato.
-        is_truncated = (not settings.allow_module_dump) or len(chunk) > max_chars
-        truncated_size = len(served_chunk.encode("utf-8", errors="ignore"))
+    served_chunk = chunk[:max_chars]
+    is_truncated = len(chunk) > max_chars
+    truncated_size = len(served_chunk.encode("utf-8", errors="ignore"))
     remaining = max(total_size - truncated_size, 0)
     original_length = total_size
 

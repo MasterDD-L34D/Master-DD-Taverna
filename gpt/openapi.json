@@ -367,10 +367,35 @@
                 }
             }
         },
+        "/taverna_storage_meta": {
+            "get": {
+                "operationId": "getTavernaStorageMeta",
+                "summary": "Metadati storage taverna_saves",
+                "description": "Restituisce metadati, quota e policy della directory taverna_saves.",
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Metadati storage taverna_saves",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/storage_meta": {
             "get": {
                 "operationId": "getStorageMeta",
-                "summary": "Metadati storage globale",
+                "summary": "Alias legacy per /taverna_storage_meta",
+                "description": "Mantiene la compatibilità con le azioni GPT esistenti.",
                 "security": [
                     {
                         "ApiKeyAuth": []

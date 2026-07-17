@@ -194,7 +194,8 @@ def test_minmax_builder_returns_file_content_by_default(client, auth_headers):
     assert response.status_code == 206
     assert response.headers["content-type"].startswith("text/plain")
     assert "[contenuto troncato" in response.text
-    assert response.headers["X-Content-Served-Bytes"] == "0"
+    served = int(response.headers["X-Content-Served-Bytes"])
+    assert 0 < served <= 4200
 
 
 def test_minmax_builder_stub_is_opt_in(client, auth_headers):
@@ -338,7 +339,8 @@ def test_text_module_truncated_when_dump_disabled(
         assert response.headers["X-Truncation-Limit-Chars"] == "4000"
         assert "[contenuto troncato" in response.text
         assert "x-truncated=true" in response.text
-        assert response.headers["X-Content-Served-Bytes"] == "0"
+        served = int(response.headers["X-Content-Served-Bytes"])
+        assert 0 < served <= 4000
     finally:
         large_module.unlink(missing_ok=True)
 
@@ -361,9 +363,10 @@ def test_narrative_flow_exposes_truncation_headers(
             value.strip() for value in response.headers["x-original-length"].split(",")
         }
         assert str(expected_length) in length_header_values
-        assert response.headers["X-Content-Served-Bytes"] == "0"
+        served = int(response.headers["X-Content-Served-Bytes"])
+        assert 0 < served <= 4200
         assert "[contenuto troncato" in response.text
-        assert original.splitlines()[0] not in response.text
+        assert original.splitlines()[0] in response.text
     finally:
         target.write_text(original, encoding="utf-8")
 
@@ -394,7 +397,7 @@ def test_ruling_expert_truncated_when_dump_enabled_without_whitelist(
         settings.module_dump_whitelist = original_whitelist
 
 
-def test_adventurer_ledger_blocked_when_dump_disabled(
+def test_adventurer_ledger_truncated_when_dump_disabled(
     client, auth_headers, disable_module_dump
 ):
     target = MODULES_DIR / "adventurer_ledger.txt"
@@ -402,9 +405,11 @@ def test_adventurer_ledger_blocked_when_dump_disabled(
 
     response = client.get("/modules/adventurer_ledger.txt", headers=auth_headers)
 
-    assert response.status_code == 403
-    assert response.json()["detail"] == "Module download not allowed"
-    assert expected_header not in response.text
+    assert response.status_code == 206
+    assert response.headers["X-Content-Partial"] == "true"
+    assert expected_header in response.text
+    served = int(response.headers["X-Content-Served-Bytes"])
+    assert 0 < served <= 4200
 
 
 def test_ruling_expert_full_dump_requires_whitelist(client, auth_headers):
@@ -736,8 +741,8 @@ def test_preload_bundle_protected_and_partial(client, auth_headers):
 
     assert response.status_code == 206
     assert response.headers["X-Content-Partial"] == "true"
-    assert response.headers["X-Content-Served-Bytes"] == "0"
-    assert response.headers["X-Content-Truncated"] == "true"
+    served = int(response.headers["X-Content-Served-Bytes"])
+    assert 0 < served <= 4200
 
 
 def test_preload_bundle_lists_core_modules(client, auth_headers, enable_module_dump):
@@ -1041,7 +1046,10 @@ def test_validate_directories_reports_missing_required_files(monkeypatch, tmp_pa
     modules_dir.mkdir()
     data_dir.mkdir()
 
-    (modules_dir / app_module.REQUIRED_MODULE_FILES[0]).write_text("placeholder")
+    # Crea tutti i file richiesti tranne il secondo
+    for name in app_module.REQUIRED_MODULE_FILES:
+        if name != app_module.REQUIRED_MODULE_FILES[1]:
+            (modules_dir / name).write_text("placeholder")
 
     monkeypatch.setattr(app_module, "MODULES_DIR", modules_dir)
     monkeypatch.setattr(app_module, "DATA_DIR", data_dir)

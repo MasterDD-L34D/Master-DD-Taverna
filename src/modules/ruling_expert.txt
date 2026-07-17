@@ -51,19 +51,25 @@ constraints:
       # END SOURCE_GOVERNANCE_V1
 
 web_policy:
-  must_browse: true
+  must_browse: false
   domains_preferred: ["aonprd.com","paizo.com"]
   fallback_domains: ["d20pfsrd.com"]
   timeout_seconds: 20
   permalink_policy: "Usa i permalink AoN (Search/FeatDisplay/SpellDisplay/SkillDisplay). Se AoN non risponde, passa a d20pfsrd solo come mirror di backup e avvisa nel testo."
   offline_mode:
-    enabled: false
-    disclaimer: "Offline non supportato: per citazioni serve accesso ad AoN/Paizo."
+    enabled: true
+    local_index: "data/reference/ogl/"
+    disclaimer: "In modalità offline, ancorare le citazioni RAW al catalogo reference locale in data/reference/ogl/ (feats.json, spells.json, items.json, classes.json, races.json, archetypes.json). Se il testo RAW non è disponibile offline, marca il verdetto come NON VERIFICABILE."
 
-# (CSV rimosso) — nessun data_sources/local index
+# Catalogo reference locale per RAW anchoring offline
+data_sources:
+  local_index:
+    path: "data/reference/ogl/"
+    catalogs: ["feats", "spells", "items", "classes", "races", "archetypes"]
+    note: "Usare per STEP 0 quando non è disponibile la connessione ad AoN/Paizo."
 
 source_hierarchy:
-  priority: ["AoN (ufficiale)", "Paizo Book/Page", "Paizo FAQ/Errata/Blog", "PFS", "d20pfsrd (fallback)"]
+  priority: ["AoN (ufficiale)", "Paizo Book/Page", "Paizo FAQ/Errata/Blog", "PFS", "Catalogo reference locale", "d20pfsrd (fallback)"]
   override_rules:
     - "Errata più recenti prevalgono"
     - "FAQ/Developer posts chiariscono dove RAW è ambiguo (📘 RAI)"
