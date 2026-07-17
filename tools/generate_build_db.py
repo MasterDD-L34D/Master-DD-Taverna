@@ -169,7 +169,7 @@ DEFAULT_SPEC_FILE = (
 )
 AUTH_BACKOFF_SECONDS = int(os.environ.get("AUTH_BACKOFF_SECONDS", "60"))
 BUILD_AUDIT_PATH = Path("data/audit/build_events.jsonl")
-MODULE_ENDPOINT = "/modules/minmax_builder.txt"
+MODULE_ENDPOINT = "/build/stub"
 MODULE_DUMP_ENDPOINT = "/modules/{name}"
 MODULE_META_ENDPOINT = "/modules/{name}/meta"
 MODULE_LIST_ENDPOINT = "/modules"
@@ -1182,13 +1182,18 @@ _local_modules_cache: dict[tuple[str, ...], Mapping[str, str]] = {}
 
 
 def _load_local_modules(module_names: Sequence[str]) -> Mapping[str, str]:
+    """Load module contents from the canonical source directory.
+
+    ``--modules-output-dir`` (default ``src/data/modules``) is an output
+    directory used by the harvest/build pipeline. The canonical source of
+    truth for local modules is ``src/modules``.
+    """
     key = tuple(module_names)
     cached = _local_modules_cache.get(key)
     if cached is not None:
         return cached
 
     candidates = [
-        Path("src/data/modules"),
         Path("src/modules"),
         Path("modules"),
     ]

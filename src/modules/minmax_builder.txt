@@ -3,7 +3,7 @@ version: 5
 last_updated: 2025-08-20T00:00:00.000Z
 inherits_from: base_profile.txt
 type: minmax
-file_binding: src/modules/minmax_builder.txt # Riferimento interno; accedi via API protetta (GET /modules/minmax_builder.txt con x-api-key)
+file_binding: module://minmax_builder # Riferimento interno; accedi via API protetta (GET /modules/minmax_builder.txt con x-api-key)
 
 compatibility_notes:
   kernel_router: true

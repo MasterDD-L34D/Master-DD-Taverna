@@ -10,7 +10,7 @@ from fastapi import FastAPI, HTTPException, Query, Response
 
 ROOT = Path(__file__).resolve().parent.parent
 BUILDS_DIR = ROOT / "src" / "data" / "builds"
-MODULES_DIR = ROOT / "src" / "data" / "modules"
+MODULES_DIR = ROOT / "src" / "modules"
 MODULE_INDEX = ROOT / "src" / "data" / "module_index.json"
 
 app = FastAPI(title="Mock Builder API", version="0.1.0")

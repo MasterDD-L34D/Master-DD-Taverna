@@ -397,7 +397,7 @@ async def _run_core_harvest(
     def handler(request: httpx.Request) -> httpx.Response:
         if request.url.path == "/health":
             return httpx.Response(200, json={"status": "ok"})
-        if request.url.path == "/modules/minmax_builder.txt":
+        if request.url.path == "/build/stub":
             return httpx.Response(200, json=sample_payload)
         if request.url.path == "/ruling":
             return httpx.Response(
@@ -514,7 +514,7 @@ def test_run_harvest_t1_filter_selects_best_variant(tmp_path, monkeypatch):
     def handler(request: httpx.Request) -> httpx.Response:
         if request.url.path == "/health":
             return httpx.Response(200, json={"status": "ok"})
-        if request.url.path == "/modules/minmax_builder.txt":
+        if request.url.path == "/build/stub":
             call_no = handler.calls
             handler.calls += 1
             meta_tier = "T1" if call_no == 1 else "T2"
@@ -601,7 +601,7 @@ def test_run_harvest_t1_filter_errors_without_tier(tmp_path, monkeypatch):
     def handler(request: httpx.Request) -> httpx.Response:
         if request.url.path == "/health":
             return httpx.Response(200, json={"status": "ok"})
-        if request.url.path == "/modules/minmax_builder.txt":
+        if request.url.path == "/build/stub":
             payload = copy.deepcopy(base_payload)
             payload["benchmark"]["meta_tier"] = "T2"
             payload["benchmark"]["ruling_badge"] = "validated"
@@ -683,7 +683,7 @@ async def _run_incomplete_harvest(tmp_path, monkeypatch):
     def handler(request: httpx.Request) -> httpx.Response:
         if request.url.path == "/health":
             return httpx.Response(200, json={"status": "ok"})
-        if request.url.path == "/modules/minmax_builder.txt":
+        if request.url.path == "/build/stub":
             return httpx.Response(200, json=incomplete_payload)
         if request.url.path == "/ruling":
             return httpx.Response(
@@ -754,7 +754,7 @@ def test_run_harvest_suggests_combos(tmp_path, monkeypatch):
     def handler(request: httpx.Request) -> httpx.Response:
         if request.url.path == "/health":
             return httpx.Response(200, json={"status": "ok"})
-        if request.url.path == "/modules/minmax_builder.txt":
+        if request.url.path == "/build/stub":
             body = json.loads(request.content.decode()) if request.content else {}
             payload = copy.deepcopy(base_payload)
             payload.setdefault("benchmark", {})["meta_tier"] = "T2"

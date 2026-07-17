@@ -73,6 +73,86 @@
                 }
             }
         },
+        "/build/stub": {
+            "post": {
+                "operationId": "buildStub",
+                "summary": "Genera uno stub deterministico per il MinMax Builder",
+                "description": "Restituisce un payload JSON stub per la costruzione di un personaggio. Equivalente allo stub precedentemente richiesto tramite /modules/minmax_builder.txt?mode=stub.",
+                "parameters": [
+                    {
+                        "name": "mode",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "default": "extended"
+                        },
+                        "description": "Modalita' builder (core/extended)"
+                    },
+                    {
+                        "name": "class",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Classe del personaggio"
+                    },
+                    {
+                        "name": "race",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Razza del personaggio"
+                    },
+                    {
+                        "name": "archetype",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Archetipo del personaggio"
+                    },
+                    {
+                        "name": "level",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "Livello del personaggio"
+                    }
+                ],
+                "requestBody": {
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Payload JSON stub",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Errore interno durante la generazione dello stub"
+                    }
+                }
+            }
+        },
         "/modules/{name}": {
             "get": {
                 "operationId": "getModuleContent",

@@ -62,14 +62,14 @@ constraints:
 # 2) Dependencies / Feature Flags / Art & Image
 # ---------------------------------
 dependencies:
-  character_sheet_template: "src/modules/scheda_pg_markdown_template.md"
+  character_sheet_template: "module://scheda_pg_markdown_template.md"
   can_hand_off_to_minmax: true
-  minmax_builder_playbook: "src/modules/minmax_builder.txt"
-  adventurer_ledger_schema: "src/modules/adventurer_ledger.txt"
-  archivist_profile: "src/modules/archivist.txt"
-  ruling_expert_profile: "src/modules/ruling_expert.txt"
-  explain_methods_profile: "src/modules/explain_methods.txt"
-  base_profile: "src/modules/base_profile.txt"
+  minmax_builder_playbook: "module://minmax_builder.txt"
+  adventurer_ledger_schema: "module://adventurer_ledger.txt"
+  archivist_profile: "module://archivist.txt"
+  ruling_expert_profile: "module://ruling_expert.txt"
+  explain_methods_profile: "module://explain_methods.txt"
+  base_profile: "module://base_profile.txt"
 
 health_checks:
   on_start:
@@ -134,7 +134,7 @@ health_checks:
           outcome: FAIL
           disable:
             feature_flags: [save_load, qa_guard]
-          guidance: "Ripristina src/modules/scheda_pg_markdown_template.md dal repository principale."
+          guidance: "Ripristina module://scheda_pg_markdown_template.md dal repository principale."
       - name: "MinMax Builder Playbook"
         path: "${dependencies.minmax_builder_playbook}"
         scope: dependency
@@ -142,7 +142,7 @@ health_checks:
           outcome: FAIL
           disable:
             feature_flags: [minmax_builder]
-          guidance: "Reinserisci src/modules/minmax_builder.txt per riattivare l'hand-off."
+          guidance: "Reinserisci module://minmax_builder.txt per riattivare l'hand-off."
       - name: "Adventurer Ledger schema"
         path: "${dependencies.adventurer_ledger_schema}"
         scope: dependency
@@ -150,7 +150,7 @@ health_checks:
           outcome: FAIL
           disable:
             feature_flags: [adventurer_ledger]
-          guidance: "Ripristina src/modules/adventurer_ledger.txt per riattivare il registro economico."
+          guidance: "Ripristina module://adventurer_ledger.txt per riattivare il registro economico."
       - name: "Archivist profile"
         path: "${dependencies.archivist_profile}"
         scope: dependency
@@ -158,7 +158,7 @@ health_checks:
           outcome: FAIL
           disable:
             feature_flags: [archivist]
-          guidance: "Aggiungi src/modules/archivist.txt per abilitare handoff storico-lore."
+          guidance: "Aggiungi module://archivist.txt per abilitare handoff storico-lore."
       - name: "Ruling Expert profile"
         path: "${dependencies.ruling_expert_profile}"
         scope: dependency
@@ -166,7 +166,7 @@ health_checks:
           outcome: FAIL
           disable:
             feature_flags: [ruling_expert, qa_guard]
-          guidance: "Reinserisci src/modules/ruling_expert.txt per controlli RAW/RAI."
+          guidance: "Reinserisci module://ruling_expert.txt per controlli RAW/RAI."
       - name: "Explain Methods profile"
         path: "${dependencies.explain_methods_profile}"
         scope: dependency
@@ -174,7 +174,7 @@ health_checks:
           outcome: FAIL
           disable:
             feature_flags: [explain_methods]
-          guidance: "Copia src/modules/explain_methods.txt se vuoi la modalità didattica."
+          guidance: "Copia module://explain_methods.txt se vuoi la modalità didattica."
       - name: "Profilo base"
         path: "${dependencies.base_profile}"
         scope: dependency
@@ -182,15 +182,15 @@ health_checks:
           outcome: FAIL
           disable:
             feature_flags: [hub_board, extractor, save_load, qa_guard, core_profile]
-          guidance: "Scarica src/modules/base_profile.txt (profilo condiviso) per riattivare le funzioni core."
+          guidance: "Scarica module://base_profile.txt (profilo condiviso) per riattivare le funzioni core."
 
 assets:
-  gear_guide_pdf: "src/data/The Gear Guide.pdf"
-  crafter_guide_pdf: "src/data/Ultimate Crafter Guide.pdf"
-  items_master_list_pdf: "src/data/Items Master List.pdf"
-  homebrewery_formatting_pdf: "src/data/Homebrewery Formatting Guide (V3) - The Homebrewery.pdf"
-  pfs_pregens_zip: "src/data/pfs_pregens.zip"
-  record_sheets_zip: "src/data/record_sheets.zip"
+  gear_guide_pdf: "asset://The Gear Guide.pdf"
+  crafter_guide_pdf: "asset://Ultimate Crafter Guide.pdf"
+  items_master_list_pdf: "asset://Items Master List.pdf"
+  homebrewery_formatting_pdf: "asset://Homebrewery Formatting Guide (V3) - The Homebrewery.pdf"
+  pfs_pregens_zip: "asset://pfs_pregens.zip"
+  record_sheets_zip: "asset://record_sheets.zip"
 
 knowledge_packs:
   gear: "${assets.gear_guide_pdf}"
@@ -376,7 +376,7 @@ tavern_state:
       suggested: {}
 
 storage:
-  path: "src/modules/taverna_saves/"
+  path: "module://taverna_saves/"
   ensure_dir: true
   file_naming: "{name}.json"
   schema_minimum:
@@ -394,8 +394,8 @@ storage:
     on_overflow: "delete_oldest"
 
 ledger_storage:
-  path: "src/modules/tavern_hub.json"
-  schema_ref: "src/modules/adventurer_ledger.txt"
+  path: "module://tavern_hub.json"
+  schema_ref: "module://adventurer_ledger.txt"
   rate_limit: { max_ops_per_minute: 8, on_violation: E-RATE-LIMIT }
 
 # ---------------------------------
@@ -1361,14 +1361,14 @@ commands:
     when: feature_flags.hub_board=='on'
     description: "Salva lo stato dell’Hub."
     validators:
-      - { type: path_exists, target: "src/modules/taverna_saves/", on_fail: E-SAVE-IO }
+      - { type: path_exists, target: "module://taverna_saves/", on_fail: E-SAVE-IO }
     rate_limit: { max_ops_per_minute: 8, on_violation: E-RATE-LIMIT }
 
   /load_hub:
     when: feature_flags.hub_board=='on'
     description: "Carica stato Hub da disco."
     validators:
-      - { type: file_exists, target: "src/modules/tavern_hub.json", on_fail: E-NOT-FOUND }
+      - { type: file_exists, target: "module://tavern_hub.json", on_fail: E-NOT-FOUND }
     rate_limit: { max_ops_per_minute: 8, on_violation: E-RATE-LIMIT }
     notes:
       - "Valida ogni file caricato con hub_storage.validation.schema_min: se fallisce logga WARN con nome file e passa al successivo."
@@ -1459,7 +1459,7 @@ commands:
     when: feature_flags.adventurer_ledger==on
     description: "Esporta il Ledger di campagna."
     validators:
-      - { type: path_exists, target: "src/modules/taverna_saves/", on_fail: E-LEDGER-IO }
+      - { type: path_exists, target: "module://taverna_saves/", on_fail: E-LEDGER-IO }
     action:
       - set: _fmt, value: "{{ arg(0) or 'md' }}"
       - set: _allow_dump, value: "{{ env.ALLOW_MODULE_DUMP or runtime.allow_module_dump or false }}"
@@ -1705,7 +1705,7 @@ synthesis_rules:
 # 9) Export (sheet + canvas)
 # ---------------------------------
 export:
-  default_template: "src/modules/scheda_pg_markdown_template.md"
+  default_template: "module://scheda_pg_markdown_template.md"
   outputs: [vtt, txt, md, pdf, canvas]
   fields_minimum:
     - "nome, razza, classe/livelli, allineamento"
@@ -2085,7 +2085,7 @@ extractor:
 
 prompt_templates:
   extraction_v1:
-    source: "bundled_assets/Extraction_Playbook.md"
+    source: "asset://bundled_assets/Extraction_Playbook.md"
 
 bundled_assets:
   Extraction_Playbook.md: |
@@ -2186,7 +2186,7 @@ encounter_presets:
     suggest: "/encounter_new apl={{APL}} env=nave style=assalto"
 
 hub_storage:
-  path: "src/modules/tavern_hub.json"
+  path: "module://tavern_hub.json"
   ensure_file_if_missing: "[]"
   persist_on: ["quest_board","bounty_board","factions","shop_setup","events"]
   max_snapshots: 50
@@ -2214,7 +2214,7 @@ hub_storage:
         notes: []
     on_error:
       mode: warn_and_skip
-      quarantine_dir: "src/modules/quarantine/"
+      quarantine_dir: "module://quarantine/"
       move_to_quarantine: true
       log_prefix: "[storage.validation]"
 

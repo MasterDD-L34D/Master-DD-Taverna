@@ -205,7 +205,7 @@ citare solo se AoN è irraggiungibile):
   from datetime import datetime, timezone
   from pathlib import Path
 
-  modules_dir = Path("src/data/modules")
+  modules_dir = Path("src/modules")
   manifest_path = Path("data/reference/manifest.json")
   manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 
@@ -258,7 +258,7 @@ citare solo se AoN è irraggiungibile):
   )
   PY
   ```
-- Il comando aggiorna `generated_at`, sincronizza `reference_catalog` con i file versionati e mantiene il piano dei moduli coerente con le risorse presenti in `src/data/modules`.
+- Il comando aggiorna `generated_at`, sincronizza `reference_catalog` con i file versionati e mantiene il piano dei moduli coerente con le risorse presenti in `src/modules`. `src/data/modules/` resta la directory di output per i dump scaricati da `generate_build_db.py`.
 
 ### Flag CLI per validazione catalogo e combo T1
 

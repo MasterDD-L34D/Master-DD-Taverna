@@ -58,13 +58,13 @@ web_policy:
   permalink_policy: "Usa i permalink AoN (Search/FeatDisplay/SpellDisplay/SkillDisplay). Se AoN non risponde, passa a d20pfsrd solo come mirror di backup e avvisa nel testo."
   offline_mode:
     enabled: true
-    local_index: "data/reference/ogl/"
-    disclaimer: "In modalità offline, ancorare le citazioni RAW al catalogo reference locale in data/reference/ogl/ (feats.json, spells.json, items.json, classes.json, races.json, archetypes.json). Se il testo RAW non è disponibile offline, marca il verdetto come NON VERIFICABILE."
+    local_index: "reference://ogl/"
+    disclaimer: "In modalità offline, ancorare le citazioni RAW al catalogo reference locale in reference://ogl/ (feats.json, spells.json, items.json, classes.json, races.json, archetypes.json). Se il testo RAW non è disponibile offline, marca il verdetto come NON VERIFICABILE."
 
 # Catalogo reference locale per RAW anchoring offline
 data_sources:
   local_index:
-    path: "data/reference/ogl/"
+    path: "reference://ogl/"
     catalogs: ["feats", "spells", "items", "classes", "races", "archetypes"]
     note: "Usare per STEP 0 quando non è disponibile la connessione ad AoN/Paizo."
 

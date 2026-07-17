@@ -134,15 +134,15 @@ errors:
   echo_gate_fail: "⛔ Qualità sotto soglia 8.8. Posso proporti la versione raffinata [OK] o consegnare una [WIP] con fix suggeriti."
 
 modes:
-  - { name: "Archivist", description: "Lore ufficiale (tono accademico)", tone: "archivist", file_binding: "src/modules/archivist.txt" }
-  - { name: "Ruling Expert", description: "Ruling RAW/RAI/PFS con citazioni", tone: "default", file_binding: "src/modules/ruling_expert.txt" }
-  - { name: "Taverna NPC", description: "PG/PNG (quiz, automatico, party) — rail Echo opzionale", tone: "narrative", file_binding: "src/modules/Taverna_NPC.txt" }
-  - { name: "Narrativa", description: "Ambientazioni e storie", tone: "narrative", file_binding: "src/modules/narrative_flow.txt" }
-  - { name: "Explain", description: "6 metodi (ELI5→tecnico)", tone: "default", file_binding: "src/modules/explain_methods.txt" }
-  - { name: "MinMax Builder", description: "Build ottimizzate (MinMax v5.0)", tone: "default", file_binding: "src/modules/minmax_builder.txt" }
-  - { name: "Encounter Designer", description: "Scontri CR/XP, terreno, tattiche", tone: "default", file_binding: "src/modules/Encounter_Designer.txt" }
-  - { name: "Libro Mastro dell'Avventuriero", description: "Tesori coerenti, WBL, PFS-safe", tone: "default", file_binding: "src/modules/adventurer_ledger.txt" }
-  - { name: "Documentazione", description: "Manuale e glossario", tone: "default", file_binding: "src/modules/meta_doc.txt" }
+  - { name: "Archivist", description: "Lore ufficiale (tono accademico)", tone: "archivist", file_binding: "module://archivist" }
+  - { name: "Ruling Expert", description: "Ruling RAW/RAI/PFS con citazioni", tone: "default", file_binding: "module://ruling_expert" }
+  - { name: "Taverna NPC", description: "PG/PNG (quiz, automatico, party) — rail Echo opzionale", tone: "narrative", file_binding: "module://Taverna_NPC" }
+  - { name: "Narrativa", description: "Ambientazioni e storie", tone: "narrative", file_binding: "module://narrative_flow" }
+  - { name: "Explain", description: "6 metodi (ELI5→tecnico)", tone: "default", file_binding: "module://explain_methods" }
+  - { name: "MinMax Builder", description: "Build ottimizzate (MinMax v5.0)", tone: "default", file_binding: "module://minmax_builder" }
+  - { name: "Encounter Designer", description: "Scontri CR/XP, terreno, tattiche", tone: "default", file_binding: "module://Encounter_Designer" }
+  - { name: "Libro Mastro dell'Avventuriero", description: "Tesori coerenti, WBL, PFS-safe", tone: "default", file_binding: "module://adventurer_ledger" }
+  - { name: "Documentazione", description: "Manuale e glossario", tone: "default", file_binding: "module://meta_doc" }
 
 # ─────────────────────────────────────────
 # ROUTER — Stringente+ (hard‑gate) con segmentazione e preload silente
@@ -331,7 +331,7 @@ orchestration:
     - name: Preload_Warmup
       enabled: true
       actions:
-        - { read_file: "src/modules/preload_all_modules.txt", optional: true }
+        - { read_file: "module://preload_all_modules", optional: true }
         - { cache_terms: "from_last_read_lines" }
     - name: Ingest
       actions: [ { hash_receipt: merkle }, { pii_scan: light } ]
@@ -556,11 +556,11 @@ minmax_flow:
   exports: ["markdown_sheet","vtt_json","excel_csv"]
 
 export_templates:
-  markdown_sheet: { path: "templates/sheet_md.j2", notes: "Nomi PF in EN; righe guida tradotte." }
-  vtt_json: { path: "templates/roll20_npc.json.j2" }
-  excel_csv: { path: "templates/sheet_flat.csv.j2" }
-  quality_report_json: { path: "templates/quality_report.json.j2", notes: "Score + breakdown + miglioramenti" }
-  portrait_prompt_txt: { path: "templates/portrait_prompt.txt.j2", notes: "Prompt conforme a image_policy" }
+  markdown_sheet: { path: "template://sheet_md.j2", notes: "Nomi PF in EN; righe guida tradotte." }
+  vtt_json: { path: "template://roll20_npc.json.j2" }
+  excel_csv: { path: "template://sheet_flat.csv.j2" }
+  quality_report_json: { path: "template://quality_report.json.j2", notes: "Score + breakdown + miglioramenti" }
+  portrait_prompt_txt: { path: "template://portrait_prompt.txt.j2", notes: "Prompt conforme a image_policy" }
 
 ap_spoiler_index:
   items: ["Sandpoint (Varisia)","Korvosa (Curse of the Crimson Throne)","Kaer Maga (Varisia)","Magnimar (Varisia)","Mendev / Worldwound (Wrath of the Righteous)","Kingmaker (Stolen Lands)","Skull & Shackles (The Shackles)"]
@@ -721,7 +721,7 @@ changelog:
   - version: "3.7-kernel (Router Stringente+ + Warmup reale + browse reset)"
     date: "2025-09-06T00:00:00.000Z"
     items:
-      - "Preload_Warmup: lettura 'src/modules/preload_all_modules.txt' (o GET /modules/preload_all_modules) e cache terminologica, invocato una sola volta da pre_routing."
+      - "Preload_Warmup: lettura 'module://preload_all_modules' (o GET /modules/preload_all_modules.txt) e cache terminologica, invocato una sola volta da pre_routing."
       - "Bundle preload_all_modules.txt disponibile su disco e servibile via API key per warmup offline dei moduli core."
       - "Preload silente: regola iniziale con 'continue: true' (nessun routing/output); rimosso il mode 'Preload Trigger'."
       - "Router: priorità aggiornata [RULING, EXPLAIN, ARCHIVIST, MINMAX, ENCOUNTER, TAVERNA, LEDGER, DOCUMENTAZIONE, NARRATIVA]."

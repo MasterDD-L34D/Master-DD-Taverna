@@ -16,8 +16,9 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 
 import src.app as app_module
 import src.auth_backoff as auth_backoff_module
-from src.app import app
+from src.app import REQUIRED_MODULE_FILES, app
 from src.config import MODULES_DIR, DATA_DIR, settings
+from src.utils.module_resolver import resolve_module_uri
 from tools.generate_build_db import schema_for_mode, validate_with_schema
 
 
@@ -239,6 +240,45 @@ def test_minmax_builder_stub_payload_matches_schema(client, auth_headers):
         schema_filename,
         payload,
         "test_minmax_builder_stub",
+        strict=True,
+    )
+
+
+def test_build_stub_endpoint_returns_json(client, auth_headers):
+    response = client.post("/build/stub", headers=auth_headers)
+    assert response.status_code == 200
+    assert response.headers["content-type"].startswith("application/json")
+    payload = response.json()
+    assert payload["build_state"]["mode"] in {"core", "extended"}
+    assert payload["sheet"]["classi"][0]["nome"] == "Unknown"
+
+
+def test_build_stub_endpoint_with_params(client, auth_headers):
+    response = client.post(
+        "/build/stub?class=wizard&race=Elf&archetype=evoker&level=5&mode=extended",
+        headers=auth_headers,
+    )
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["class"] == "wizard"
+    assert payload["build_state"]["race"] == "Elf"
+    assert payload["build_state"]["archetype"] == "evoker"
+    assert payload["build_state"]["step_total"] == 16
+
+
+def test_build_stub_endpoint_payload_matches_schema(client, auth_headers):
+    response = client.post(
+        "/build/stub?class=rogue&archetype=cutpurse&level=3",
+        headers=auth_headers,
+    )
+    assert response.status_code == 200
+    payload = response.json()
+
+    schema_filename = schema_for_mode(payload.get("mode", ""))
+    validate_with_schema(
+        schema_filename,
+        payload,
+        "test_build_stub_endpoint",
         strict=True,
     )
 
@@ -750,28 +790,45 @@ def test_preload_bundle_lists_core_modules(client, auth_headers, enable_module_d
 
     assert response.status_code == 200
 
-    module_paths = {
+    module_uris = {
         line.lstrip("- ").strip()
         for line in response.text.splitlines()
         if line.startswith("-")
     }
-    expected_paths = {
-        "src/modules/archivist.txt",
-        "src/modules/ruling_expert.txt",
-        "src/modules/Taverna_NPC.txt",
-        "src/modules/narrative_flow.txt",
-        "src/modules/explain_methods.txt",
-        "src/modules/minmax_builder.txt",
-        "src/modules/Encounter_Designer.txt",
-        "src/modules/adventurer_ledger.txt",
-        "src/modules/meta_doc.txt",
+    expected_uris = {
+        "module://archivist",
+        "module://ruling_expert",
+        "module://Taverna_NPC",
+        "module://narrative_flow",
+        "module://explain_methods",
+        "module://minmax_builder",
+        "module://Encounter_Designer",
+        "module://adventurer_ledger",
+        "module://meta_doc",
     }
 
-    assert module_paths == expected_paths
-    for path_str in module_paths:
-        binding_path = Path(path_str)
+    assert module_uris == expected_uris
+    for uri in module_uris:
+        binding_path = resolve_module_uri(uri)
+        assert binding_path is not None
         assert binding_path.is_file()
-        assert (MODULES_DIR / binding_path.name).is_file()
+
+
+def test_module_uri_bindings_resolve(client, auth_headers, enable_module_dump):
+    """All logical URIs embedded in canonical modules must resolve to existing files."""
+    from src.utils.module_resolver import MODULE_URI_PATTERN
+
+    unresolved = []
+    for module_name in REQUIRED_MODULE_FILES:
+        response = client.get(f"/modules/{module_name}", headers=auth_headers)
+        assert response.status_code in (200, 206)
+        for match in MODULE_URI_PATTERN.finditer(response.text):
+            uri = f"{match.group(1)}://{match.group(2)}"
+            resolved = resolve_module_uri(uri)
+            if resolved is None or not resolved.is_file():
+                unresolved.append((module_name, uri, str(resolved) if resolved else None))
+
+    assert not unresolved, f"Unresolved URIs: {unresolved}"
 
 
 def test_knowledge_requires_api_key(client):

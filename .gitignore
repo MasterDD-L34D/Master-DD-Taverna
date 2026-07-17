@@ -16,6 +16,12 @@ data/audit/build_events.jsonl
 .cache/
 src/data/vector_store/
 
+# Generated module dumps (canonical source is src/modules/)
+src/data/modules/*.txt
+src/data/modules/*.md
+src/data/modules/*.json
+src/data/modules/strict/
+
 # Product Identity: mai committare
 data/reference/pi_local_only/*
 !data/reference/pi_local_only/.gitkeep
