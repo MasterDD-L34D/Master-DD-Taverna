@@ -4,7 +4,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.pc.engine import apply_abilities
+from src.pc.engine import apply_abilities, build_character
 from src.pc.models import CharacterDraft
 
 
@@ -63,3 +63,31 @@ def test_invalid_score_range():
     sheet2 = apply_abilities(_draft(abilities={"str": 13, "dex": 12, "con": 13,
                                               "int": 10, "wis": 14}))
     assert sheet2["errors"]
+
+
+# Set point-buy valido (15/15): str 15 dopo il bonus razziale +2.
+_OK_ABILS = {"str": 13, "dex": 12, "con": 13, "int": 10, "wis": 14, "cha": 12}
+
+
+def test_fighter_lv1_combat_basics():
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str",
+                                   skills={"Climb": 1, "Perception": 1}))
+    assert sheet["errors"] == []
+    assert sheet["hp"] == 12  # d10 max + Con mod 1 (13) + favored hp 1
+    assert sheet["saves"] == {"fort": 3, "ref": 1, "will": 2}  # base 2/0/0 + Con1/Dex1/Wis2
+    assert sheet["bab"] == 1
+    assert sheet["initiative"] == 1  # Dex 12 -> +1
+
+
+def test_skill_points_and_totals():
+    # Fighter 2 + Int 0 + Human 1 = 3 ranks max; 4 ranks -> errore
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str",
+                                   skills={"Climb": 1, "Perception": 1, "Survival": 1,
+                                           "Intimidate": 1}))
+    assert any("skill" in e.lower() for e in sheet["errors"])
+    # 3 ranks ok: Climb di classe (+3), Perception NON di classe Fighter
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str",
+                                   skills={"Climb": 1, "Perception": 1, "Survival": 1}))
+    assert sheet["errors"] == []
+    assert sheet["skills"]["Climb"]["total"] == 1 + 2 + 3  # rank1 + Str mod 2 (15) + class 3
+    assert sheet["skills"]["Perception"]["total"] == 1 + 2  # rank1 + Wis mod 2 (no class bonus)
