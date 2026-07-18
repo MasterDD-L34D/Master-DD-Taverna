@@ -855,6 +855,51 @@ def extract_prerequisites(description):
     return [clean(p) for p in raw.split(",") if clean(p)]
 
 
+def split_prereq_string(text):
+    """'Str 13, base attack bonus +1' -> ['Str 13', 'base attack bonus +1'].
+
+    Split su virgola + clean; scarta '—'/'-'/segmenti vuoti. Una virgola
+    dentro parentesi NON spezza: un segmento con '(' non bilanciata e'
+    concatenato al successivo finche' il buffer non torna bilanciato."""
+    parts, buf = [], ""
+    for seg in text.split(","):
+        buf = f"{buf},{seg}" if buf else seg
+        if buf.count("(") <= buf.count(")"):
+            parts.append(buf)
+            buf = ""
+    if buf:
+        parts.append(buf)
+    return [clean(p) for p in parts if clean(p) and clean(p) not in ("—", "-")]
+
+
+def parse_feats_index(html):
+    """Indice gigante Feats.aspx: tabella(e) Name | Prerequisite | Description
+    con TUTTI i talenti. Ritorna {normalize_name(nome): prereq_string} (solo
+    righe con prerequisito non vuoto/'—'; in caso di duplicati vince la prima
+    occorrenza). I marcatori finali del nome ('*' combat, '⊤' mastery...) sono
+    rimossi prima di normalizzare."""
+    from tools.enrich_reference import normalize_name
+
+    soup = BeautifulSoup(html, "html.parser")
+    lookup = {}
+    for table in soup.find_all("table"):
+        rows = table_rows(table)
+        if not rows or "Name" not in rows[0]:
+            continue
+        prereq_header = next((h for h in rows[0] if h.startswith("Prerequisite")), None)
+        if prereq_header is None:
+            continue
+        for row in rows:
+            name = re.sub(r"[^A-Za-z0-9]+$", "", row.get("Name", ""))
+            prereq = clean(row.get(prereq_header, ""))
+            if not name or prereq in ("", "—", "-"):
+                continue
+            key = normalize_name(name)
+            if key and key not in lookup:
+                lookup[key] = prereq
+    return lookup
+
+
 def _feat_card_prereq_lookup():
     """Lookup offline nome -> prerequisiti dal dataset PFRPG_Feat_card in cache
     locale (.cache/enrichment, la stessa fonte OGL da cui le descriptions di
@@ -895,42 +940,63 @@ def _feat_card_prereq_lookup():
 
 
 def enrich_feats(write=False):
-    """Riempie prerequisites vuoti in feats.json da fonti locali OFFLINE:
-    prima il parsing delle descriptions (extract_prerequisites), poi la cache
-    PFRPG_Feat_card (_feat_card_prereq_lookup). NON sovrascrive prerequisiti
-    gia' presenti ne' l'header (fonte d20PFSRD invariata: nessun dato esterno
-    aggiunto). Report di copertura a video.
+    """Riempie prerequisites vuoti in feats.json da tre fonti, in ordine:
+    1. parsing delle descriptions locali (extract_prerequisites);
+    2. cache locale PFRPG_Feat_card (_feat_card_prereq_lookup);
+    3. indice AoN Feats.aspx (parse_feats_index: UNA pagina, ~2s, poi cache
+       su disco) — la fonte di copertura principale.
+    NON sovrascrive prerequisiti gia' presenti ne' l'header (fonte d20PFSRD
+    invariata: nessun dato esterno aggiunto). Report di copertura a video
+    (filled = descriptions+feat-card, filled_index = indice AoN).
 
-    NOTA copertura: le descriptions arricchite non includono la riga
+    NOTA copertura: le descriptions locali non includono la riga
     'Prerequisite(s):' e la cache feat-card copre quasi solo talenti i cui
-    prerequisiti sono gia' compilati: il riempimento reale e' dell'ordine
-    delle unita', non delle centinaia stimate in pianificazione. Per la
-    copertura piena serve una fonte online (es. import FeatDisplay da AoN):
-    fuori scope per un builder offline."""
+    prerequisiti sono gia' compilati: i passaggi 1-2 riempiono dell'ordine
+    delle unita'. Il grosso della copertura viene dall'indice AoN; i vuoti
+    residui sono talenti genuinamente senza prerequisiti o non matchati.
+    I prerequisiti dell'indice con Product Identity (divinita'/luoghi
+    Golarion, Pathfinder Society) sono scartati fail-closed (entry lasciata
+    vuota, conteggiata in skipped_pi): stesso criterio dei filtri PI di
+    traits/equipment."""
     path = OGL_DIR / "feats.json"
     with open(path, encoding="utf-8") as f:
         catalog = json.load(f)
-    card_lookup = card_key = None
-    filled = already = no_info = 0
+    card_lookup = card_key = index_lookup = None
+    filled = filled_index = already = no_info = skipped_pi = 0
     for entry in catalog["entries"]:
         if entry.get("prerequisites"):
             already += 1
             continue
         found = extract_prerequisites(entry.get("description", ""))
+        source = "desc"
         if not found:
-            # Fallback lazy: la cache feat-card si carica solo se una
-            # description non basta (e solo se la cache esiste su disco).
+            # Fallback lazy: cache feat-card e indice AoN si caricano solo se
+            # una description non basta (e la cache feat-card solo se esiste).
             if card_lookup is None:
                 from tools.enrich_reference import normalize_name
                 card_lookup, card_key = _feat_card_prereq_lookup(), normalize_name
             found = card_lookup.get(card_key(entry.get("name", "")), [])
+            source = "card"
+        if not found:
+            if index_lookup is None:
+                index_lookup = parse_feats_index(fetch(BASE + "Feats.aspx"))
+            found = split_prereq_string(index_lookup.get(card_key(entry.get("name", "")), ""))
+            source = "index"
+        if found and source == "index" and any(_find_pi(p) for p in found):
+            skipped_pi += 1
+            found = []
         if found:
             entry["prerequisites"] = found
-            filled += 1
+            if source == "index":
+                filled_index += 1
+            else:
+                filled += 1
         else:
             no_info += 1
-    print(f"feats: gia' presenti {already}, riempiti {filled}, senza info {no_info}")
-    assert already + filled + no_info == len(catalog["entries"])
+    print(f"feats: gia' presenti {already}, riempiti {filled}, "
+          f"da indice AoN {filled_index}, senza info {no_info} "
+          f"(di cui saltati per PI {skipped_pi})")
+    assert already + filled + filled_index + no_info == len(catalog["entries"])
     if write:
         write_catalog(path, catalog["entries"],
                       license_text=catalog.get("_license", LICENSE),

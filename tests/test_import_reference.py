@@ -262,3 +262,27 @@ def test_parse_traits_comma_source():
     assert entries[0]["source"] == "Sargava, the Lost Colony"
     assert entries[0]["source_id"].startswith("sargava_the_lost_colony:")
     print("OK: traits comma source")
+
+
+from tools.import_reference import parse_feats_index, split_prereq_string
+
+FEATS_INDEX_HTML = """
+<html><body><table>
+<tr><th>Name</th><th>Prerequisite</th><th>Description</th></tr>
+<tr><td>Power Attack*</td><td>Str 13, base attack bonus +1</td><td>You hit harder.</td></tr>
+<tr><td>Nimble Moves⊤</td><td>Dex 13, dodge, Mobility</td><td>Move 5 ft.</td></tr>
+</table></body></html>
+"""
+
+
+def test_parse_feats_index():
+    lookup = parse_feats_index(FEATS_INDEX_HTML)
+    assert lookup["powerattack"] == "Str 13, base attack bonus +1"
+    assert lookup["nimblemoves"] == "Dex 13, dodge, Mobility"
+
+
+def test_split_prereq_string():
+    assert split_prereq_string("Str 13, base attack bonus +1") == ["Str 13", "base attack bonus +1"]
+    assert split_prereq_string("Int 13, Spell Focus (illusion), wizard level 3rd") == ["Int 13", "Spell Focus (illusion)", "wizard level 3rd"]
+    assert split_prereq_string("") == []
+    print("OK: feats index + split")
