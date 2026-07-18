@@ -50,3 +50,4 @@ python launch.py start    # API :8000 + frontend :8501 + browser
 - `sessione-2026-07-16/HANDOFF_ATTIVO.md` — stato di lavorazione corrente (leggere per primo)
 - `sessione-2026-07-16/AVVIO_PROSSIMA_SESSIONE.md` — punto di ripresa e troubleshooting
 - `OPEN_SOURCE_RAG.md` — guida RAG e provider LLM
+- `docs/IMPORT_PLAYBOOK.md` — metodo consolidato per import di cataloghi OGL da fonti web (leggere prima di qualunque nuovo import dati)
