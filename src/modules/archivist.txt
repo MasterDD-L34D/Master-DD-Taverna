@@ -640,6 +640,10 @@ status_example:
 
 # ───────────────────────────────── CHANGELOG
 changelog:
+  - version: 3.7.1
+    date: 2026-07-18
+    notes: >
+      • Catalogo OGL esteso: elenchi kind aggiornati ai 10 cataloghi locali (abilities, races, classes, skills, traits, equipment, feats, spells, items, archetypes) in offline_mode e aon_policy.
   - version: 3.7.0
     date: 2026-07-18
     notes: >

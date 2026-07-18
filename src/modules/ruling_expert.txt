@@ -59,7 +59,7 @@ web_policy:
   offline_mode:
     enabled: true
     local_index: "reference://ogl/"
-    disclaimer: "In modalità offline, ancorare le citazioni RAW al catalogo reference locale in reference://ogl/ (abilities.json, races.json, classes.json, skills.json, traits.json, equipment.json, feats.json, spells.json, items.json, archetypes.json). Se il testo RAW non è disponibile offline, marca il verdetto come NON VERIFICABILE."
+    disclaimer: "In modalità offline, ancorare le citazioni RAW al catalogo reference locale in reference://ogl/ (abilities.json, races.json, classes.json, skills.json, traits.json, equipment_mundane.json, feats.json, spells.json, items.json, archetypes.json). Se il testo RAW non è disponibile offline, marca il verdetto come NON VERIFICABILE."
 
 # Catalogo reference locale per RAW anchoring offline
 data_sources:

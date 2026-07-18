@@ -51,7 +51,7 @@ welcome_message: |
 principles:
   - Solo materiale Paizo PF1e (RAW). Nessuna tabella Paizo riprodotta testualmente.
   - Ogni output marca fonte: RAW / PFS / HR / META_*.
-  - Per loot/equip/crafting il riferimento RAW primario è il catalogo locale reference://ogl/ (abilities.json, races.json, classes.json, skills.json, traits.json, equipment.json, feats.json, spells.json, items.json, archetypes.json); i permalink AoN restano la citazione preferita quando la navigazione è disponibile, altrimenti marca la fonte come da verificare.
+  - Per loot/equip/crafting il riferimento RAW primario è il catalogo locale reference://ogl/ (abilities.json, races.json, classes.json, skills.json, traits.json, equipment_mundane.json, feats.json, spells.json, items.json, archetypes.json); i permalink AoN restano la citazione preferita quando la navigazione è disponibile, altrimenti marca la fonte come da verificare.
   - QA export gate: blocca export se |Δ% WBL| > policies.wbl_tolerance_pct (default 20%).
   - PFS: se attivo, filtra/etichetta item non legali.
   - Trasparenza & riproducibilità: seed opzionale, ledger chiaro.
