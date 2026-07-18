@@ -159,6 +159,10 @@
           ],
           "minLength": 1,
           "description": "Revisore (umano o processo) che ha approvato la voce"
+        },
+        "mechanics": {
+          "type": "object",
+          "description": "Dati meccanici strutturati dell'elemento (es. hd, progression, class_skills, ability_mods)"
         }
       }
     }

@@ -76,6 +76,54 @@
       "last_verified": "2026-07-16"
     },
     {
+      "file": "ogl/abilities.json",
+      "kind": "abilities",
+      "source": "Archives of Nethys (PRD)",
+      "license": "OGL-1.0a",
+      "is_ogc": true,
+      "is_pi": false,
+      "cup_allowed": false,
+      "entries": 16,
+      "notes": "Point-buy costs e campaign budgets (Generating Ability Scores).",
+      "last_verified": "2026-07-18"
+    },
+    {
+      "file": "ogl/skills.json",
+      "kind": "skills",
+      "source": "Archives of Nethys (PRD)",
+      "license": "OGL-1.0a",
+      "is_ogc": true,
+      "is_pi": false,
+      "cup_allowed": false,
+      "entries": 35,
+      "notes": "Skill con caratteristica, flags e cross-ref class skills.",
+      "last_verified": "2026-07-18"
+    },
+    {
+      "file": "ogl/traits.json",
+      "kind": "traits",
+      "source": "Archives of Nethys (PRD)",
+      "license": "OGL-1.0a",
+      "is_ogc": true,
+      "is_pi": false,
+      "cup_allowed": false,
+      "entries": 470,
+      "notes": "Tratti Basic (Combat/Faith/Magic/Social) + Equipment; categorie PI escluse by design; 80 entry PI rimosse (reports/pi_removed_traits.txt).",
+      "last_verified": "2026-07-18"
+    },
+    {
+      "file": "ogl/equipment_mundane.json",
+      "kind": "equipment",
+      "source": "Archives of Nethys (PRD)",
+      "license": "OGL-1.0a",
+      "is_ogc": true,
+      "is_pi": false,
+      "cup_allowed": false,
+      "entries": 790,
+      "notes": "Armi/armature/gear mundane con costi/pesi/danni strutturati; source per-voce dalle pagine dettaglio.",
+      "last_verified": "2026-07-18"
+    },
+    {
       "file": "pi_local_only/monsters_local.json",
       "kind": "monsters",
       "source": "PathfinderMonsterDatabase / Archives of Nethys",
@@ -84,7 +132,7 @@
       "is_pi": false,
       "cup_allowed": false,
       "local_only": true,
-      "entries": 0,
+      "entries": 199,
       "notes": "Mostri/NPC importati localmente da PathfinderMonsterDatabase. NON redistribuire. Usa tools/import_monsters.py e indicizza con tools/index_rag.py --include-local.",
       "last_verified": "2026-07-16"
     }
@@ -113,6 +161,22 @@
     "archetypes": {
       "path": "ogl/archetypes.json",
       "entries": 15
+    },
+    "abilities": {
+      "path": "ogl/abilities.json",
+      "entries": 16
+    },
+    "skills": {
+      "path": "ogl/skills.json",
+      "entries": 35
+    },
+    "traits": {
+      "path": "ogl/traits.json",
+      "entries": 470
+    },
+    "equipment": {
+      "path": "ogl/equipment_mundane.json",
+      "entries": 790
     }
   }
 }

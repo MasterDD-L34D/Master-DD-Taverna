@@ -2745,7 +2745,7 @@
     {
       "name": "Shatter Defenses",
       "source": "Advanced Player's Guide",
-      "source_id": "APG",
+      "source_id": "advanced_player_s_guide:shatter_defenses",
       "prerequisites": [
         "Dazzling Display",
         "Weapon Focus",
@@ -4732,7 +4732,7 @@
     {
       "name": "Extra Hex",
       "source": "Advanced Player's Guide",
-      "source_id": "APG",
+      "source_id": "advanced_player_s_guide:extra_hex",
       "prerequisites": [
         "Hex class feature"
       ],
@@ -4952,7 +4952,7 @@
     {
       "name": "Furious Focus",
       "source": "Advanced Player's Guide",
-      "source_id": "APG",
+      "source_id": "advanced_player_s_guide:furious_focus",
       "prerequisites": [
         "Strength 13",
         "Power Attack",
@@ -5611,7 +5611,7 @@
     {
       "name": "Lingering Performance",
       "source": "Advanced Player's Guide",
-      "source_id": "APG",
+      "source_id": "advanced_player_s_guide:lingering_performance",
       "prerequisites": [
         "Bardic performance class feature"
       ],
@@ -6123,7 +6123,7 @@
     {
       "name": "Raging Vitality",
       "source": "Ultimate Combat",
-      "source_id": "UC",
+      "source_id": "ultimate_combat:raging_vitality",
       "prerequisites": [
         "Constitution 13",
         "rage class feature"
@@ -7632,7 +7632,7 @@
     {
       "name": "Coordinated Charge",
       "source": "Ultimate Combat",
-      "source_id": "UC",
+      "source_id": "ultimate_combat:coordinated_charge",
       "prerequisites": [
         "Dexterity 13",
         "Combat Reflexes"
@@ -7656,7 +7656,7 @@
     {
       "name": "Crane Riposte",
       "source": "Ultimate Combat",
-      "source_id": "UC",
+      "source_id": "ultimate_combat:crane_riposte",
       "prerequisites": [
         "Dexterity 15",
         "Crane Wing",
@@ -7681,7 +7681,7 @@
     {
       "name": "Crane Style",
       "source": "Ultimate Combat",
-      "source_id": "UC",
+      "source_id": "ultimate_combat:crane_style",
       "prerequisites": [
         "Dexterity 13",
         "Improved Unarmed Strike",
@@ -7708,7 +7708,7 @@
     {
       "name": "Crane Wing",
       "source": "Ultimate Combat",
-      "source_id": "UC",
+      "source_id": "ultimate_combat:crane_wing",
       "prerequisites": [
         "Dexterity 15",
         "Crane Style",
@@ -8507,7 +8507,7 @@
     {
       "name": "Dragon Ferocity",
       "source": "Ultimate Combat",
-      "source_id": "UC",
+      "source_id": "ultimate_combat:dragon_ferocity",
       "prerequisites": [
         "Improved Unarmed Strike",
         "Dragon Style",
@@ -8558,7 +8558,7 @@
     {
       "name": "Dragon Style",
       "source": "Ultimate Combat",
-      "source_id": "UC",
+      "source_id": "ultimate_combat:dragon_style",
       "prerequisites": [
         "Improved Unarmed Strike",
         "Strength 15",
@@ -12187,7 +12187,7 @@
     {
       "name": "Tiger Claws",
       "source": "Ultimate Combat",
-      "source_id": "UC",
+      "source_id": "ultimate_combat:tiger_claws",
       "prerequisites": [
         "Tiger Style",
         "Improved Unarmed Strike",
@@ -12236,7 +12236,7 @@
     {
       "name": "Tiger Style",
       "source": "Ultimate Combat",
-      "source_id": "UC",
+      "source_id": "ultimate_combat:tiger_style",
       "prerequisites": [
         "Dexterity 13",
         "Wisdom 13",
@@ -56657,7 +56657,7 @@
     {
       "name": "Bomb Focus",
       "source": "Advanced Player's Guide",
-      "source_id": "APG",
+      "source_id": "advanced_player_s_guide:bomb_focus",
       "prerequisites": [
         "Alchemist"
       ],
@@ -56803,7 +56803,7 @@
     {
       "name": "Fencing Grace (Rapier)",
       "source": "Advanced Class Guide",
-      "source_id": "ACG",
+      "source_id": "advanced_class_guide:fencing_grace_rapier",
       "prerequisites": [
         "Dexterity 13",
         "Weapon Finesse",
@@ -56947,7 +56947,7 @@
     {
       "name": "Superstition",
       "source": "Advanced Player's Guide",
-      "source_id": "APG",
+      "source_id": "advanced_player_s_guide:superstition",
       "prerequisites": [
         "rage class feature"
       ],
@@ -56967,7 +56967,7 @@
     {
       "name": "Come and Get Me",
       "source": "Advanced Player's Guide",
-      "source_id": "APG",
+      "source_id": "advanced_player_s_guide:come_and_get_me",
       "prerequisites": [
         "rage class feature",
         "Barbarian level 12",
@@ -57046,7 +57046,7 @@
     {
       "name": "Slashing Grace (Longsword)",
       "source": "Advanced Class Guide",
-      "source_id": "ACG",
+      "source_id": "advanced_class_guide:slashing_grace_longsword",
       "prerequisites": [
         "Dexterity 13",
         "Weapon Finesse",
@@ -57235,7 +57235,7 @@
     {
       "name": "Armonia Letale (Sound Striker)",
       "source": "Advanced Player's Guide",
-      "source_id": "APG",
+      "source_id": "advanced_player_s_guide:armonia_letale_sound_striker",
       "prerequisites": [
         "Bardic performance class feature",
         "Sound Striker archetype",
@@ -57258,7 +57258,7 @@
     {
       "name": "Scacciare Sogni (Sandman)",
       "source": "Advanced Player's Guide",
-      "source_id": "APG",
+      "source_id": "advanced_player_s_guide:scacciare_sogni_sandman",
       "prerequisites": [
         "Bardic performance class feature",
         "Sandman archetype",
