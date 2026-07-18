@@ -314,11 +314,23 @@ def parse_class(html, class_name):
                      "ref": _to_bonus(row.get("Ref Save", "")),
                      "will": _to_bonus(row.get("Will Save", "")),
                      "special": [clean(s) for s in row.get("Special", "").split(",") if clean(s)]}
-            spells = {k: v for k, v in row.items()
-                      if k not in ("Level", "Base Attack Bonus", "Fort Save", "Ref Save",
-                                   "Will Save", "Special") and v and v not in ("-", "—")}
+            spells = {}
+            extra = {}
+            for k, v in row.items():
+                if k in ("Level", "Base Attack Bonus", "Fort Save", "Ref Save",
+                         "Will Save", "Special") or not v or v in ("-", "—"):
+                    continue
+                # spells_per_day solo per colonne-cerchio (0-9); le altre
+                # colonne di classe (Monk: Unarmed Damage, AC Bonus...) vanno
+                # in extra_progression, non sono slot incantesimi.
+                if re.match(r"^(0|[1-9](?:st|nd|rd|th))$", k):
+                    spells[k] = v
+                else:
+                    extra[k] = v
             if spells:
                 entry["spells_per_day"] = spells
+            if extra:
+                entry["extra_progression"] = extra
             mech["progression"].append(entry)
     desc = (f"{class_name}: HD {mech['hd']}, skill points {mech['skill_points_per_level']}+Int. "
             f"Class skills: {', '.join(mech['class_skills'][:8])}. "

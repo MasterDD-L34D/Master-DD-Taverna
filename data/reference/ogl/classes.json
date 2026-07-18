@@ -1783,7 +1783,7 @@
               "stunning fist",
               "unarmed strike"
             ],
-            "spells_per_day": {
+            "extra_progression": {
               "Flurry of Blows Attack Bonus": "-1/-1",
               "Unarmed Damage": "1d6",
               "AC Bonus": "+0",
@@ -1800,7 +1800,7 @@
               "Bonus feat",
               "evasion"
             ],
-            "spells_per_day": {
+            "extra_progression": {
               "Flurry of Blows Attack Bonus": "+0/+0",
               "Unarmed Damage": "1d6",
               "AC Bonus": "+0",
@@ -1818,7 +1818,7 @@
               "maneuver training",
               "still mind"
             ],
-            "spells_per_day": {
+            "extra_progression": {
               "Flurry of Blows Attack Bonus": "+1/+1",
               "Unarmed Damage": "1d6",
               "AC Bonus": "+0",
@@ -1835,7 +1835,7 @@
               "Ki pool (magic)",
               "slow fall 20 ft."
             ],
-            "spells_per_day": {
+            "extra_progression": {
               "Flurry of Blows Attack Bonus": "+2/+2",
               "Unarmed Damage": "1d8",
               "AC Bonus": "+1",
@@ -1852,7 +1852,7 @@
               "High jump",
               "purity of body"
             ],
-            "spells_per_day": {
+            "extra_progression": {
               "Flurry of Blows Attack Bonus": "+3/+3",
               "Unarmed Damage": "1d8",
               "AC Bonus": "+1",
@@ -1869,7 +1869,7 @@
               "Bonus feat",
               "slow fall 30 ft."
             ],
-            "spells_per_day": {
+            "extra_progression": {
               "Flurry of Blows Attack Bonus": "+4/+4/-1",
               "Unarmed Damage": "1d8",
               "AC Bonus": "+1",
@@ -1886,7 +1886,7 @@
               "Ki pool (cold iron/silver)",
               "wholeness of body"
             ],
-            "spells_per_day": {
+            "extra_progression": {
               "Flurry of Blows Attack Bonus": "+5/+5/+0",
               "Unarmed Damage": "1d8",
               "AC Bonus": "+1",
@@ -1902,7 +1902,7 @@
             "special": [
               "Slow fall 40 ft."
             ],
-            "spells_per_day": {
+            "extra_progression": {
               "Flurry of Blows Attack Bonus": "+6/+6/+1/+1",
               "Unarmed Damage": "1d10",
               "AC Bonus": "+2",
@@ -1918,7 +1918,7 @@
             "special": [
               "Improved evasion"
             ],
-            "spells_per_day": {
+            "extra_progression": {
               "Flurry of Blows Attack Bonus": "+7/+7/+2/+2",
               "Unarmed Damage": "1d10",
               "AC Bonus": "+2",
@@ -1936,7 +1936,7 @@
               "ki pool (lawful)",
               "slow fall 50 ft."
             ],
-            "spells_per_day": {
+            "extra_progression": {
               "Flurry of Blows Attack Bonus": "+8/+8/+3/+3",
               "Unarmed Damage": "1d10",
               "AC Bonus": "+2",
@@ -1952,7 +1952,7 @@
             "special": [
               "Diamond body"
             ],
-            "spells_per_day": {
+            "extra_progression": {
               "Flurry of Blows Attack Bonus": "+9/+9/+4/+4/-1",
               "Unarmed Damage": "1d10",
               "AC Bonus": "+2",
@@ -1969,7 +1969,7 @@
               "Abundant step",
               "slow fall 60 ft."
             ],
-            "spells_per_day": {
+            "extra_progression": {
               "Flurry of Blows Attack Bonus": "+10/+10/+5/+5/+0",
               "Unarmed Damage": "2d6",
               "AC Bonus": "+3",
@@ -1985,7 +1985,7 @@
             "special": [
               "Diamond soul"
             ],
-            "spells_per_day": {
+            "extra_progression": {
               "Flurry of Blows Attack Bonus": "+11/+11/+6/+6/+1",
               "Unarmed Damage": "2d6",
               "AC Bonus": "+3",
@@ -2002,7 +2002,7 @@
               "Bonus feat",
               "slow fall 70 ft."
             ],
-            "spells_per_day": {
+            "extra_progression": {
               "Flurry of Blows Attack Bonus": "+12/+12/+7/+7/+2",
               "Unarmed Damage": "2d6",
               "AC Bonus": "+3",
@@ -2018,7 +2018,7 @@
             "special": [
               "Quivering palm"
             ],
-            "spells_per_day": {
+            "extra_progression": {
               "Flurry of Blows Attack Bonus": "+13/+13/+8/+8/+3/+3",
               "Unarmed Damage": "2d6",
               "AC Bonus": "+3",
@@ -2035,7 +2035,7 @@
               "Ki pool (adamantine)",
               "slow fall 80 ft."
             ],
-            "spells_per_day": {
+            "extra_progression": {
               "Flurry of Blows Attack Bonus": "+14/+14/+9/+9/+4/+4/-1",
               "Unarmed Damage": "2d8",
               "AC Bonus": "+4",
@@ -2052,7 +2052,7 @@
               "Timeless body",
               "tongue of the sun and moon"
             ],
-            "spells_per_day": {
+            "extra_progression": {
               "Flurry of Blows Attack Bonus": "+15/+15/+10/+10/+5/+5/+0",
               "Unarmed Damage": "2d8",
               "AC Bonus": "+4",
@@ -2069,7 +2069,7 @@
               "Bonus feat",
               "slow fall 90 ft."
             ],
-            "spells_per_day": {
+            "extra_progression": {
               "Flurry of Blows Attack Bonus": "+16/+16/+11/+11/+6/+6/+1",
               "Unarmed Damage": "2d8",
               "AC Bonus": "+4",
@@ -2085,7 +2085,7 @@
             "special": [
               "Empty body"
             ],
-            "spells_per_day": {
+            "extra_progression": {
               "Flurry of Blows Attack Bonus": "+17/+17/+12/+12/+7/+7/+2",
               "Unarmed Damage": "2d8",
               "AC Bonus": "+4",
@@ -2102,7 +2102,7 @@
               "Perfect self",
               "slow fall any distance"
             ],
-            "spells_per_day": {
+            "extra_progression": {
               "Flurry of Blows Attack Bonus": "+18/+18/+13/+13/+8/+8/+3",
               "Unarmed Damage": "2d10",
               "AC Bonus": "+5",

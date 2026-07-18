@@ -84,9 +84,10 @@ CLASS_HTML = """
 <h3>Class Skills</h3>
 <p>The barbarian's class skills are Acrobatics (Dex), Climb (Str), Intimidate (Cha), and Perception (Wis).</p>
 <p><b>Skill Points per Level</b>: 4 + Int modifier.</p>
-<table><tr><th>Level</th><th>Base Attack Bonus</th><th>Fort Save</th><th>Ref Save</th><th>Will Save</th><th>Special</th></tr>
-<tr><td>1st</td><td>+1</td><td>+2</td><td>+0</td><td>+0</td><td>Fast movement, rage</td></tr>
-<tr><td>2nd</td><td>+2</td><td>+3</td><td>+0</td><td>+0</td><td>Rage power, uncanny dodge</td></tr></table>
+<table><tr><th>Level</th><th>Base Attack Bonus</th><th>Fort Save</th><th>Ref Save</th><th>Will Save</th><th>Special</th><th>0</th><th>1st</th><th>Unarmed Damage</th></tr>
+<tr><td colspan="6"></td><td colspan="2"><b>Spells Per Day</b></td></tr>
+<tr><td>1st</td><td>+1</td><td>+2</td><td>+0</td><td>+0</td><td>Fast movement, rage</td><td>3</td><td>1</td><td>1d6</td></tr>
+<tr><td>2nd</td><td>+2</td><td>+3</td><td>+0</td><td>+0</td><td>Rage power, uncanny dodge</td><td>4</td><td>2</td><td>1d6</td></tr></table>
 </body></html>
 """
 
@@ -100,6 +101,9 @@ def test_parse_class():
     lvl1 = mech["progression"][0]
     assert lvl1["level"] == 1 and lvl1["bab"] == 1 and lvl1["fort"] == 2 and lvl1["ref"] == 0
     assert "rage" in lvl1["special"]
+    assert lvl1["spells_per_day"] == {"0": "3", "1st": "1"}
+    assert "Unarmed Damage" in lvl1.get("extra_progression", {})
+    assert "Unarmed Damage" not in lvl1.get("spells_per_day", {})
     assert mech["progression"][1]["level"] == 2
     assert entry["source_id"] == "pfrpg_core:barbarian"
     print("OK: parse_class fixture")
