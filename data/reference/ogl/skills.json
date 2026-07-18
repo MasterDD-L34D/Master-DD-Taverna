@@ -1,0 +1,990 @@
+{
+  "_license": "Open Game Content under OGL 1.0a. See LICENSE-OGL.txt and COPYRIGHT_NOTICE.txt.",
+  "_source": "Pathfinder RPG Reference Document © 2011 Paizo Publishing, LLC; Archives of Nethys (aonprd.com).",
+  "entries": [
+    {
+      "name": "Acrobatics",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:acrobatics",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "dex",
+        "acp"
+      ],
+      "references": [
+        "AoN: Acrobatics (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Acrobatics"
+      ],
+      "description": "Acrobatics (DEX): skill con armor check penalty.",
+      "mechanics": {
+        "key_ability": "dex",
+        "trained_only": false,
+        "armor_check_penalty": true,
+        "class_skills_of": [
+          "Barbarian",
+          "Bard",
+          "Monk",
+          "Rogue"
+        ]
+      }
+    },
+    {
+      "name": "Appraise",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:appraise",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "int"
+      ],
+      "references": [
+        "AoN: Appraise (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Appraise"
+      ],
+      "description": "Appraise (INT): skill.",
+      "mechanics": {
+        "key_ability": "int",
+        "trained_only": false,
+        "armor_check_penalty": false,
+        "class_skills_of": [
+          "Bard",
+          "Cleric",
+          "Rogue",
+          "Sorcerer",
+          "Wizard"
+        ]
+      }
+    },
+    {
+      "name": "Bluff",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:bluff",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "cha"
+      ],
+      "references": [
+        "AoN: Bluff (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Bluff"
+      ],
+      "description": "Bluff (CHA): skill.",
+      "mechanics": {
+        "key_ability": "cha",
+        "trained_only": false,
+        "armor_check_penalty": false,
+        "class_skills_of": [
+          "Bard",
+          "Rogue",
+          "Sorcerer"
+        ]
+      }
+    },
+    {
+      "name": "Climb",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:climb",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "str",
+        "acp"
+      ],
+      "references": [
+        "AoN: Climb (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Climb"
+      ],
+      "description": "Climb (STR): skill con armor check penalty.",
+      "mechanics": {
+        "key_ability": "str",
+        "trained_only": false,
+        "armor_check_penalty": true,
+        "class_skills_of": [
+          "Barbarian",
+          "Bard",
+          "Druid",
+          "Fighter",
+          "Monk",
+          "Ranger",
+          "Rogue",
+          "Magus"
+        ]
+      }
+    },
+    {
+      "name": "Craft",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:craft",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "int"
+      ],
+      "references": [
+        "AoN: Craft (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Craft"
+      ],
+      "description": "Craft (INT): skill.",
+      "mechanics": {
+        "key_ability": "int",
+        "trained_only": false,
+        "armor_check_penalty": false,
+        "class_skills_of": [
+          "Barbarian",
+          "Bard",
+          "Cleric",
+          "Druid",
+          "Fighter",
+          "Monk",
+          "Paladin",
+          "Ranger",
+          "Rogue",
+          "Sorcerer",
+          "Wizard",
+          "Magus"
+        ]
+      }
+    },
+    {
+      "name": "Diplomacy",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:diplomacy",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "cha"
+      ],
+      "references": [
+        "AoN: Diplomacy (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Diplomacy"
+      ],
+      "description": "Diplomacy (CHA): skill.",
+      "mechanics": {
+        "key_ability": "cha",
+        "trained_only": false,
+        "armor_check_penalty": false,
+        "class_skills_of": [
+          "Bard",
+          "Cleric",
+          "Paladin",
+          "Rogue"
+        ]
+      }
+    },
+    {
+      "name": "Disable Device",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:disable_device",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "dex",
+        "trained-only",
+        "acp"
+      ],
+      "references": [
+        "AoN: Disable Device (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Disable%20Device"
+      ],
+      "description": "Disable Device (DEX): skill trained only con armor check penalty.",
+      "mechanics": {
+        "key_ability": "dex",
+        "trained_only": true,
+        "armor_check_penalty": true,
+        "class_skills_of": [
+          "Rogue"
+        ]
+      }
+    },
+    {
+      "name": "Disguise",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:disguise",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "cha"
+      ],
+      "references": [
+        "AoN: Disguise (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Disguise"
+      ],
+      "description": "Disguise (CHA): skill.",
+      "mechanics": {
+        "key_ability": "cha",
+        "trained_only": false,
+        "armor_check_penalty": false,
+        "class_skills_of": [
+          "Bard",
+          "Rogue"
+        ]
+      }
+    },
+    {
+      "name": "Escape Artist",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:escape_artist",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "dex",
+        "acp"
+      ],
+      "references": [
+        "AoN: Escape Artist (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Escape%20Artist"
+      ],
+      "description": "Escape Artist (DEX): skill con armor check penalty.",
+      "mechanics": {
+        "key_ability": "dex",
+        "trained_only": false,
+        "armor_check_penalty": true,
+        "class_skills_of": [
+          "Bard",
+          "Monk",
+          "Rogue"
+        ]
+      }
+    },
+    {
+      "name": "Fly",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:fly",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "dex",
+        "acp"
+      ],
+      "references": [
+        "AoN: Fly (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Fly"
+      ],
+      "description": "Fly (DEX): skill con armor check penalty.",
+      "mechanics": {
+        "key_ability": "dex",
+        "trained_only": false,
+        "armor_check_penalty": true,
+        "class_skills_of": [
+          "Druid",
+          "Sorcerer",
+          "Wizard",
+          "Magus"
+        ]
+      }
+    },
+    {
+      "name": "Handle Animal",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:handle_animal",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "cha",
+        "trained-only"
+      ],
+      "references": [
+        "AoN: Handle Animal (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Handle%20Animal"
+      ],
+      "description": "Handle Animal (CHA): skill trained only.",
+      "mechanics": {
+        "key_ability": "cha",
+        "trained_only": true,
+        "armor_check_penalty": false,
+        "class_skills_of": [
+          "Barbarian",
+          "Druid",
+          "Fighter",
+          "Paladin",
+          "Ranger"
+        ]
+      }
+    },
+    {
+      "name": "Heal",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:heal",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "wis"
+      ],
+      "references": [
+        "AoN: Heal (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Heal"
+      ],
+      "description": "Heal (WIS): skill.",
+      "mechanics": {
+        "key_ability": "wis",
+        "trained_only": false,
+        "armor_check_penalty": false,
+        "class_skills_of": [
+          "Cleric",
+          "Druid",
+          "Paladin",
+          "Ranger"
+        ]
+      }
+    },
+    {
+      "name": "Intimidate",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:intimidate",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "cha"
+      ],
+      "references": [
+        "AoN: Intimidate (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Intimidate"
+      ],
+      "description": "Intimidate (CHA): skill.",
+      "mechanics": {
+        "key_ability": "cha",
+        "trained_only": false,
+        "armor_check_penalty": false,
+        "class_skills_of": [
+          "Barbarian",
+          "Bard",
+          "Fighter",
+          "Monk",
+          "Ranger",
+          "Rogue",
+          "Sorcerer",
+          "Magus"
+        ]
+      }
+    },
+    {
+      "name": "Knowledge (Arcana)",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:knowledge_arcana",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "int",
+        "trained-only"
+      ],
+      "references": [
+        "AoN: Knowledge (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Knowledge"
+      ],
+      "description": "Knowledge (Arcana) (INT): skill trained only (campo di Knowledge).",
+      "mechanics": {
+        "key_ability": "int",
+        "trained_only": true,
+        "armor_check_penalty": false,
+        "class_skills_of": []
+      }
+    },
+    {
+      "name": "Knowledge (Dungeoneering)",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:knowledge_dungeoneering",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "int",
+        "trained-only"
+      ],
+      "references": [
+        "AoN: Knowledge (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Knowledge"
+      ],
+      "description": "Knowledge (Dungeoneering) (INT): skill trained only (campo di Knowledge).",
+      "mechanics": {
+        "key_ability": "int",
+        "trained_only": true,
+        "armor_check_penalty": false,
+        "class_skills_of": []
+      }
+    },
+    {
+      "name": "Knowledge (Engineering)",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:knowledge_engineering",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "int",
+        "trained-only"
+      ],
+      "references": [
+        "AoN: Knowledge (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Knowledge"
+      ],
+      "description": "Knowledge (Engineering) (INT): skill trained only (campo di Knowledge).",
+      "mechanics": {
+        "key_ability": "int",
+        "trained_only": true,
+        "armor_check_penalty": false,
+        "class_skills_of": []
+      }
+    },
+    {
+      "name": "Knowledge (Geography)",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:knowledge_geography",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "int",
+        "trained-only"
+      ],
+      "references": [
+        "AoN: Knowledge (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Knowledge"
+      ],
+      "description": "Knowledge (Geography) (INT): skill trained only (campo di Knowledge).",
+      "mechanics": {
+        "key_ability": "int",
+        "trained_only": true,
+        "armor_check_penalty": false,
+        "class_skills_of": []
+      }
+    },
+    {
+      "name": "Knowledge (History)",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:knowledge_history",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "int",
+        "trained-only"
+      ],
+      "references": [
+        "AoN: Knowledge (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Knowledge"
+      ],
+      "description": "Knowledge (History) (INT): skill trained only (campo di Knowledge).",
+      "mechanics": {
+        "key_ability": "int",
+        "trained_only": true,
+        "armor_check_penalty": false,
+        "class_skills_of": []
+      }
+    },
+    {
+      "name": "Knowledge (Local)",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:knowledge_local",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "int",
+        "trained-only"
+      ],
+      "references": [
+        "AoN: Knowledge (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Knowledge"
+      ],
+      "description": "Knowledge (Local) (INT): skill trained only (campo di Knowledge).",
+      "mechanics": {
+        "key_ability": "int",
+        "trained_only": true,
+        "armor_check_penalty": false,
+        "class_skills_of": []
+      }
+    },
+    {
+      "name": "Knowledge (Nature)",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:knowledge_nature",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "int",
+        "trained-only"
+      ],
+      "references": [
+        "AoN: Knowledge (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Knowledge"
+      ],
+      "description": "Knowledge (Nature) (INT): skill trained only (campo di Knowledge).",
+      "mechanics": {
+        "key_ability": "int",
+        "trained_only": true,
+        "armor_check_penalty": false,
+        "class_skills_of": []
+      }
+    },
+    {
+      "name": "Knowledge (Nobility)",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:knowledge_nobility",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "int",
+        "trained-only"
+      ],
+      "references": [
+        "AoN: Knowledge (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Knowledge"
+      ],
+      "description": "Knowledge (Nobility) (INT): skill trained only (campo di Knowledge).",
+      "mechanics": {
+        "key_ability": "int",
+        "trained_only": true,
+        "armor_check_penalty": false,
+        "class_skills_of": []
+      }
+    },
+    {
+      "name": "Knowledge (Planes)",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:knowledge_planes",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "int",
+        "trained-only"
+      ],
+      "references": [
+        "AoN: Knowledge (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Knowledge"
+      ],
+      "description": "Knowledge (Planes) (INT): skill trained only (campo di Knowledge).",
+      "mechanics": {
+        "key_ability": "int",
+        "trained_only": true,
+        "armor_check_penalty": false,
+        "class_skills_of": []
+      }
+    },
+    {
+      "name": "Knowledge (Religion)",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:knowledge_religion",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "int",
+        "trained-only"
+      ],
+      "references": [
+        "AoN: Knowledge (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Knowledge"
+      ],
+      "description": "Knowledge (Religion) (INT): skill trained only (campo di Knowledge).",
+      "mechanics": {
+        "key_ability": "int",
+        "trained_only": true,
+        "armor_check_penalty": false,
+        "class_skills_of": []
+      }
+    },
+    {
+      "name": "Linguistics",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:linguistics",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "int",
+        "trained-only"
+      ],
+      "references": [
+        "AoN: Linguistics (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Linguistics"
+      ],
+      "description": "Linguistics (INT): skill trained only.",
+      "mechanics": {
+        "key_ability": "int",
+        "trained_only": true,
+        "armor_check_penalty": false,
+        "class_skills_of": [
+          "Bard",
+          "Cleric",
+          "Rogue",
+          "Wizard"
+        ]
+      }
+    },
+    {
+      "name": "Perception",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:perception",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "wis"
+      ],
+      "references": [
+        "AoN: Perception (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Perception"
+      ],
+      "description": "Perception (WIS): skill.",
+      "mechanics": {
+        "key_ability": "wis",
+        "trained_only": false,
+        "armor_check_penalty": false,
+        "class_skills_of": [
+          "Barbarian",
+          "Bard",
+          "Druid",
+          "Monk",
+          "Ranger",
+          "Rogue"
+        ]
+      }
+    },
+    {
+      "name": "Perform",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:perform",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "cha"
+      ],
+      "references": [
+        "AoN: Perform (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Perform"
+      ],
+      "description": "Perform (CHA): skill.",
+      "mechanics": {
+        "key_ability": "cha",
+        "trained_only": false,
+        "armor_check_penalty": false,
+        "class_skills_of": [
+          "Bard",
+          "Monk",
+          "Rogue"
+        ]
+      }
+    },
+    {
+      "name": "Profession",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:profession",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "wis",
+        "trained-only"
+      ],
+      "references": [
+        "AoN: Profession (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Profession"
+      ],
+      "description": "Profession (WIS): skill trained only.",
+      "mechanics": {
+        "key_ability": "wis",
+        "trained_only": true,
+        "armor_check_penalty": false,
+        "class_skills_of": [
+          "Bard",
+          "Cleric",
+          "Druid",
+          "Fighter",
+          "Monk",
+          "Paladin",
+          "Ranger",
+          "Rogue",
+          "Sorcerer",
+          "Wizard",
+          "Magus"
+        ]
+      }
+    },
+    {
+      "name": "Ride",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:ride",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "dex",
+        "acp"
+      ],
+      "references": [
+        "AoN: Ride (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Ride"
+      ],
+      "description": "Ride (DEX): skill con armor check penalty.",
+      "mechanics": {
+        "key_ability": "dex",
+        "trained_only": false,
+        "armor_check_penalty": true,
+        "class_skills_of": [
+          "Barbarian",
+          "Druid",
+          "Fighter",
+          "Monk",
+          "Paladin",
+          "Ranger",
+          "Magus"
+        ]
+      }
+    },
+    {
+      "name": "Sense Motive",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:sense_motive",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "wis"
+      ],
+      "references": [
+        "AoN: Sense Motive (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Sense%20Motive"
+      ],
+      "description": "Sense Motive (WIS): skill.",
+      "mechanics": {
+        "key_ability": "wis",
+        "trained_only": false,
+        "armor_check_penalty": false,
+        "class_skills_of": [
+          "Bard",
+          "Cleric",
+          "Monk",
+          "Paladin",
+          "Rogue"
+        ]
+      }
+    },
+    {
+      "name": "Sleight of Hand",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:sleight_of_hand",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "dex",
+        "trained-only",
+        "acp"
+      ],
+      "references": [
+        "AoN: Sleight of Hand (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Sleight%20of%20Hand"
+      ],
+      "description": "Sleight of Hand (DEX): skill trained only con armor check penalty.",
+      "mechanics": {
+        "key_ability": "dex",
+        "trained_only": true,
+        "armor_check_penalty": true,
+        "class_skills_of": [
+          "Bard",
+          "Rogue"
+        ]
+      }
+    },
+    {
+      "name": "Spellcraft",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:spellcraft",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "int",
+        "trained-only"
+      ],
+      "references": [
+        "AoN: Spellcraft (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Spellcraft"
+      ],
+      "description": "Spellcraft (INT): skill trained only.",
+      "mechanics": {
+        "key_ability": "int",
+        "trained_only": true,
+        "armor_check_penalty": false,
+        "class_skills_of": [
+          "Bard",
+          "Cleric",
+          "Druid",
+          "Paladin",
+          "Ranger",
+          "Sorcerer",
+          "Wizard",
+          "Magus"
+        ]
+      }
+    },
+    {
+      "name": "Stealth",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:stealth",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "dex",
+        "acp"
+      ],
+      "references": [
+        "AoN: Stealth (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Stealth"
+      ],
+      "description": "Stealth (DEX): skill con armor check penalty.",
+      "mechanics": {
+        "key_ability": "dex",
+        "trained_only": false,
+        "armor_check_penalty": true,
+        "class_skills_of": [
+          "Bard",
+          "Monk",
+          "Ranger",
+          "Rogue"
+        ]
+      }
+    },
+    {
+      "name": "Survival",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:survival",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "wis"
+      ],
+      "references": [
+        "AoN: Survival (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Survival"
+      ],
+      "description": "Survival (WIS): skill.",
+      "mechanics": {
+        "key_ability": "wis",
+        "trained_only": false,
+        "armor_check_penalty": false,
+        "class_skills_of": [
+          "Barbarian",
+          "Druid",
+          "Fighter",
+          "Ranger"
+        ]
+      }
+    },
+    {
+      "name": "Swim",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:swim",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "str",
+        "acp"
+      ],
+      "references": [
+        "AoN: Swim (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Swim"
+      ],
+      "description": "Swim (STR): skill con armor check penalty.",
+      "mechanics": {
+        "key_ability": "str",
+        "trained_only": false,
+        "armor_check_penalty": true,
+        "class_skills_of": [
+          "Barbarian",
+          "Druid",
+          "Fighter",
+          "Monk",
+          "Ranger",
+          "Rogue",
+          "Magus"
+        ]
+      }
+    },
+    {
+      "name": "Use Magic Device",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:use_magic_device",
+      "prerequisites": [],
+      "tags": [
+        "skill",
+        "cha",
+        "trained-only"
+      ],
+      "references": [
+        "AoN: Use Magic Device (Skills)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Skills.aspx?ItemName=Use%20Magic%20Device"
+      ],
+      "description": "Use Magic Device (CHA): skill trained only.",
+      "mechanics": {
+        "key_ability": "cha",
+        "trained_only": true,
+        "armor_check_penalty": false,
+        "class_skills_of": [
+          "Bard",
+          "Rogue",
+          "Sorcerer",
+          "Magus"
+        ]
+      }
+    }
+  ]
+}

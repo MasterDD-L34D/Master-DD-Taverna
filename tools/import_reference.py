@@ -384,7 +384,108 @@ def build_abilities(write=False):
         print(f"report: {len(entries)} entry (write=False, nessuna scrittura)")
 
 
-DOMAINS = {"abilities": build_abilities, "races": build_races, "classes": build_classes}
+SKILL_NAMES = ["Acrobatics", "Appraise", "Bluff", "Climb", "Craft", "Diplomacy",
+               "Disable Device", "Disguise", "Escape Artist", "Fly", "Handle Animal",
+               "Heal", "Intimidate", "Knowledge (Arcana)", "Knowledge (Dungeoneering)",
+               "Knowledge (Engineering)", "Knowledge (Geography)", "Knowledge (History)",
+               "Knowledge (Local)", "Knowledge (Nature)", "Knowledge (Nobility)",
+               "Knowledge (Planes)", "Knowledge (Religion)", "Linguistics", "Perception",
+               "Perform", "Profession", "Ride", "Sense Motive", "Sleight of Hand",
+               "Spellcraft", "Stealth", "Survival", "Swim", "Use Magic Device"]
+
+
+def SKILL_HEADER_RE(header):
+    """'Disable Device (Int; Trained Only)' -> (name, key_ability, trained_only, acp)."""
+    m = re.match(r"^(.+?)\s*\(([^)]+)\)", header)
+    if not m:
+        return header, None, False, False
+    name = clean(m.group(1))
+    parts = [clean(p) for p in m.group(2).split(";")]
+    key = parts[0].lower()[:3] if parts and re.match(r"^(Str|Dex|Con|Int|Wis|Cha)$", parts[0]) else None
+    trained = any("Trained Only" in p for p in parts[1:])
+    acp = any("Armor Check Penalty" in p for p in parts[1:])
+    return name, key, trained, acp
+
+
+def parse_skill(html, skill_name):
+    """Pagina skill singola: header con caratteristica/flags nel titolo.
+
+    La pagina reale AoN ha un h2 di navigazione con l'elenco di tutte le skill
+    ('Acrobatics | Appraise | ...'): il match sul nome non basta, si accetta
+    solo il primo heading da cui esce una caratteristica valida."""
+    soup = BeautifulSoup(html, "html.parser")
+    header = ""
+    for tag in soup.find_all(["h1", "h2", "h3"]):
+        if skill_name.lower() not in tag.get_text().lower():
+            continue
+        candidate = clean(tag.get_text())
+        if SKILL_HEADER_RE(candidate)[1]:
+            header = candidate
+            break
+    header = header or skill_name
+    name, key, trained, acp = SKILL_HEADER_RE(header)
+    assert key, f"{skill_name}: caratteristica non parsata da {header!r}"
+    return {
+        "name": name,
+        "source": "PFRPG Core",
+        "source_id": source_id("pfrpg_core", name),
+        "prerequisites": [],
+        "tags": ["skill", key] + (["trained-only"] if trained else []) + (["acp"] if acp else []),
+        "references": [f"AoN: {name} (Skills)"],
+        "reference_urls": [BASE + f"Skills.aspx?ItemName={name.replace(' ', '%20')}"],
+        "description": (f"{name} ({key.upper()}): skill{' trained only' if trained else ''}"
+                        f"{' con armor check penalty' if acp else ''}."),
+        "mechanics": {"key_ability": key, "trained_only": trained,
+                      "armor_check_penalty": acp, "class_skills_of": []},
+    }
+
+
+def build_skills(write=False):
+    """Crea skills.json; poi popola mechanics.class_skills_of incrociando
+    classes.json v2 (mechanics.class_skills di ogni classe).
+
+    AoN 1e non ha pagine per le Knowledge specifiche (404 mascherata: pagina
+    senza heading skill): per quelle entry si usano le meccaniche della pagina
+    generica 'Knowledge', mantenendo il nome specifico."""
+    entries = []
+    knowledge_html = None
+    for skill in SKILL_NAMES:
+        url = BASE + f"Skills.aspx?ItemName={skill.replace(' ', '%20')}"
+        try:
+            entries.append(parse_skill(fetch(url), skill))
+            continue
+        except AssertionError:
+            if not skill.startswith("Knowledge"):
+                raise
+        if knowledge_html is None:
+            knowledge_html = fetch(BASE + "Skills.aspx?ItemName=Knowledge")
+        entry = parse_skill(knowledge_html, "Knowledge")
+        mech = entry["mechanics"]
+        print(f"nota: {skill}: pagina specifica assente su AoN, meccaniche da 'Knowledge' generica")
+        entry["name"] = skill
+        entry["source_id"] = source_id("pfrpg_core", skill)
+        entry["references"] = ["AoN: Knowledge (Skills)"]
+        entry["reference_urls"] = [BASE + "Skills.aspx?ItemName=Knowledge"]
+        entry["description"] = (f"{skill} ({mech['key_ability'].upper()}): skill"
+                                f"{' trained only' if mech['trained_only'] else ''}"
+                                f"{' con armor check penalty' if mech['armor_check_penalty'] else ''}"
+                                f" (campo di Knowledge).")
+        entries.append(entry)
+    classes_path = OGL_DIR / "classes.json"
+    with open(classes_path, encoding="utf-8") as f:
+        classes = json.load(f)["entries"]
+    for entry in entries:
+        for cls in classes:
+            if entry["name"] in cls.get("mechanics", {}).get("class_skills", []):
+                entry["mechanics"]["class_skills_of"].append(cls["name"])
+    if write:
+        write_catalog(OGL_DIR / "skills.json", entries)
+    else:
+        print(f"report: {len(entries)} entry (write=False, nessuna scrittura)")
+
+
+DOMAINS = {"abilities": build_abilities, "races": build_races, "classes": build_classes,
+           "skills": build_skills}
 
 
 def main(argv=None):

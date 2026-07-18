@@ -4,7 +4,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from tools.import_reference import parse_abilities, parse_class, parse_race, source_id, slug
+from tools.import_reference import (SKILL_HEADER_RE, parse_abilities, parse_class,
+                                    parse_race, parse_skill, source_id, slug)
 
 ABILITIES_HTML = """
 <html><body>
@@ -107,3 +108,20 @@ def test_parse_class():
     assert mech["progression"][1]["level"] == 2
     assert entry["source_id"] == "pfrpg_core:barbarian"
     print("OK: parse_class fixture")
+
+
+def test_skill_header_regex():
+    name, key, trained, acp = SKILL_HEADER_RE("Disable Device (Int; Trained Only)")
+    assert (name, key, trained, acp) == ("Disable Device", "int", True, False)
+    name, key, trained, acp = SKILL_HEADER_RE("Acrobatics (Dex; Armor Check Penalty)")
+    assert (name, key, trained, acp) == ("Acrobatics", "dex", False, True)
+    name, key, trained, acp = SKILL_HEADER_RE("Perception (Wis)")
+    assert (name, key, trained, acp) == ("Perception", "wis", False, False)
+
+
+def test_parse_skill():
+    html = "<html><body><h2>Acrobatics (Dex; Armor Check Penalty)</h2><p>You can keep your balance.</p></body></html>"
+    entry = parse_skill(html, "Acrobatics")
+    assert entry["mechanics"] == {"key_ability": "dex", "trained_only": False,
+                                  "armor_check_penalty": True, "class_skills_of": []}
+    print("OK: parse_skill fixture")
