@@ -61,6 +61,15 @@ def test_manifest_counts():
         with open(OGL / fname, encoding="utf-8") as f:
             real = len(json.load(f)["entries"])
         assert files[kind]["entries"] == real, f"{kind}: manifest {files[kind]['entries']} != reale {real}"
+    # Parita' files{} -> catalogs[]: ogni kind tracciato in files{} deve
+    # esistere in catalogs[] con lo stesso count (chiude la staleness monsters).
+    # Direzione volutamente unilaterale: monsters e' solo in catalogs[]
+    # (local_only, non redistribuibile) e non va in files{} per design.
+    catalogs = {c["kind"]: c for c in manifest["catalogs"]}
+    for kind, info in files.items():
+        assert kind in catalogs, f"manifest.catalogs manca {kind}"
+        assert catalogs[kind]["entries"] == info["entries"], (
+            f"{kind}: catalogs {catalogs[kind]['entries']} != files {info['entries']}")
     catalogs_kinds = {c["kind"] for c in manifest["catalogs"]}
     for _, (kind, _) in NEW_KINDS.items():
         assert kind in catalogs_kinds, f"manifest.catalogs manca {kind}"
