@@ -11,7 +11,7 @@ import time
 import urllib.request
 from pathlib import Path
 
-CACHE_DIR = Path("data/reference/aon_cache")
+CACHE_DIR = Path(__file__).resolve().parents[1] / "data/reference/aon_cache"
 UA = {"User-Agent": "MasterDD-Taverna/1.0 (cataloghi OGL locali; uso personale)"}
 TIMEOUT = 30
 
