@@ -120,3 +120,37 @@ def test_favored_bonus_invalid():
     sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str",
                                    favored_class_bonus="HP"))
     assert any("favored" in e.lower() for e in sheet["errors"])
+
+
+# Prerequisiti reali (feats.json): Power Attack "Strength 13", Dodge "Dexterity 13",
+# Cleave "Strength 13" + "Power Attack", Combat Expertise "Intelligence 13",
+# Weapon Finesse nessuno, Combat Casting "Ability to cast spells" (non valutabile).
+def test_feat_count_and_prereqs():
+    # 3 feat per Human Fighter (1 base + 1 human + 1 fighter).
+    # Bonus razziale su Dex: Dex 14 (Dodge ok), Str 13 basta per Power Attack e Cleave.
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="dex",
+                                   skills={"Climb": 1, "Perception": 1, "Survival": 1},
+                                   feats=["Power Attack", "Dodge", "Cleave"]))
+    assert sheet["errors"] == [], sheet["errors"]
+    assert sheet["feats"] == ["Power Attack", "Dodge", "Cleave"]
+
+
+def test_feat_prereq_failures():
+    # Str 12 (<13): Power Attack e Cleave falliscono; e 4 feat su 3 consentiti.
+    d = _draft(abilities={"str": 12, "dex": 13, "con": 13, "int": 10, "wis": 14, "cha": 12},
+               race_bonus_ability="dex", skills={"Climb": 1, "Perception": 1, "Survival": 1},
+               feats=["Power Attack", "Dodge", "Cleave", "Weapon Finesse"])
+    sheet = build_character(d)
+    assert any("Power Attack" in e and "Str" in e for e in sheet["errors"])
+    assert any("feat" in e.lower() and "3" in e for e in sheet["errors"])
+
+
+def test_unverifiable_prereq_is_warning():
+    # Int 14 (13+1 razziale su Str): Combat Expertise (Int 13) passa.
+    # Combat Casting richiede "Ability to cast spells": forma non valutabile -> warning.
+    abils = {"str": 13, "dex": 12, "con": 13, "int": 14, "wis": 12, "cha": 10}  # 15/15
+    sheet = build_character(_draft(abilities=abils, race_bonus_ability="str",
+                                   skills={"Climb": 1, "Perception": 1, "Survival": 1},
+                                   feats=["Combat Expertise", "Combat Casting"]))
+    assert sheet["errors"] == [], sheet["errors"]
+    assert any("Combat Casting" in w and "non valutabile" in w for w in sheet["warnings"])

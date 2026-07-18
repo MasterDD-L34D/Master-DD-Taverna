@@ -3,6 +3,50 @@ from src.pc import catalogs
 
 ABILS = ("str", "dex", "con", "int", "wis", "cha")
 
+FEAT_BONUS_CLASSES = {"Fighter"}
+
+
+def _check_prereq(prereq, ctx):
+    """Valuta un prerequisito testuale. Ritorna (ok, nota)."""
+    import re
+    text = prereq.rstrip(".")
+    m = re.match(r"^(Str|Dex|Con|Int|Wis|Cha)\w*\s+(\d+)$", text, re.I)
+    if m:
+        ab = m.group(1)[:3].lower()
+        need = int(m.group(2))
+        return ctx["abilities"][ab] >= need, f"richiede {m.group(1)} {need}"
+    m = re.match(r"^base attack bonus \+(\d+)$", text, re.I)
+    if m:
+        return ctx["bab"] >= int(m.group(1)), f"richiede BAB +{m.group(1)}"
+    if catalogs.find_feat(text) is not None:
+        return text in ctx["feats"], f"richiede il talento {text}"
+    if re.search(r"level\s+\d+(st|nd|rd|th)", text, re.I):
+        return False, f"richiede livello di classe superiore al 1 ({text})"
+    if "proficien" in text.lower():
+        return True, f"proficiency: {text} (assunta da classe)"
+    if re.search(r"rank", text, re.I):
+        return True, f"skill rank: {text} (verificata a mano)"
+    return True, f"forma prerequisito non valutabile: {text}"  # warning, non errore
+
+
+def validate_feats(draft, sheet):
+    """Conta talenti consentiti e valuta i prerequisiti noti."""
+    ctx = {"abilities": dict(sheet["abilities"]), "bab": sheet["bab"], "feats": list(draft.feats)}
+    allowed = 1 + (1 if draft.race == "Human" else 0) + (1 if draft.class_ in FEAT_BONUS_CLASSES else 0)
+    if len(draft.feats) > allowed:
+        sheet["errors"].append(f"feat: {len(draft.feats)} selezionati su {allowed} consentiti al lv1")
+    for name in draft.feats:
+        feat = catalogs.find_feat(name)
+        if feat is None:
+            sheet["errors"].append(f"talento sconosciuto: {name}")
+            continue
+        for prereq in feat.get("prerequisites", []):
+            ok, note = _check_prereq(prereq, ctx)
+            if not ok:
+                sheet["errors"].append(f"{name}: prerequisito non soddisfatto ({note})")
+            elif "non valutabile" in note:
+                sheet["warnings"].append(f"{name}: {note}")
+
 
 def ability_mod(score):
     return (score - 10) // 2
@@ -99,4 +143,6 @@ def build_character(draft):
         out[name] = {"ranks": ranks, "ability": key,
                      "total": ranks + mods[key] + class_bonus, "class_skill": is_class_skill}
     sheet["skills"] = out
+    validate_feats(draft, sheet)
+    sheet["feats"] = list(draft.feats)
     return sheet
