@@ -1,0 +1,358 @@
+{
+  "_license": "Open Game Content under OGL 1.0a. See LICENSE-OGL.txt and COPYRIGHT_NOTICE.txt.",
+  "_source": "Pathfinder RPG Reference Document © 2011 Paizo Publishing, LLC; Archives of Nethys (aonprd.com).",
+  "entries": [
+    {
+      "name": "Score 7",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:score_7",
+      "prerequisites": [],
+      "tags": [
+        "ability",
+        "point-buy"
+      ],
+      "references": [
+        "AoN: Generating Ability Scores"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Rules.aspx?Name=Generating%20Ability%20Scores&Category=Getting%20Started"
+      ],
+      "description": "Point-buy: il punteggio di caratteristica 7 costa -4 punti.",
+      "mechanics": {
+        "kind": "ability_cost",
+        "score": 7,
+        "cost": -4
+      }
+    },
+    {
+      "name": "Score 8",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:score_8",
+      "prerequisites": [],
+      "tags": [
+        "ability",
+        "point-buy"
+      ],
+      "references": [
+        "AoN: Generating Ability Scores"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Rules.aspx?Name=Generating%20Ability%20Scores&Category=Getting%20Started"
+      ],
+      "description": "Point-buy: il punteggio di caratteristica 8 costa -2 punti.",
+      "mechanics": {
+        "kind": "ability_cost",
+        "score": 8,
+        "cost": -2
+      }
+    },
+    {
+      "name": "Score 9",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:score_9",
+      "prerequisites": [],
+      "tags": [
+        "ability",
+        "point-buy"
+      ],
+      "references": [
+        "AoN: Generating Ability Scores"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Rules.aspx?Name=Generating%20Ability%20Scores&Category=Getting%20Started"
+      ],
+      "description": "Point-buy: il punteggio di caratteristica 9 costa -1 punti.",
+      "mechanics": {
+        "kind": "ability_cost",
+        "score": 9,
+        "cost": -1
+      }
+    },
+    {
+      "name": "Score 10",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:score_10",
+      "prerequisites": [],
+      "tags": [
+        "ability",
+        "point-buy"
+      ],
+      "references": [
+        "AoN: Generating Ability Scores"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Rules.aspx?Name=Generating%20Ability%20Scores&Category=Getting%20Started"
+      ],
+      "description": "Point-buy: il punteggio di caratteristica 10 costa 0 punti.",
+      "mechanics": {
+        "kind": "ability_cost",
+        "score": 10,
+        "cost": 0
+      }
+    },
+    {
+      "name": "Score 11",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:score_11",
+      "prerequisites": [],
+      "tags": [
+        "ability",
+        "point-buy"
+      ],
+      "references": [
+        "AoN: Generating Ability Scores"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Rules.aspx?Name=Generating%20Ability%20Scores&Category=Getting%20Started"
+      ],
+      "description": "Point-buy: il punteggio di caratteristica 11 costa 1 punti.",
+      "mechanics": {
+        "kind": "ability_cost",
+        "score": 11,
+        "cost": 1
+      }
+    },
+    {
+      "name": "Score 12",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:score_12",
+      "prerequisites": [],
+      "tags": [
+        "ability",
+        "point-buy"
+      ],
+      "references": [
+        "AoN: Generating Ability Scores"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Rules.aspx?Name=Generating%20Ability%20Scores&Category=Getting%20Started"
+      ],
+      "description": "Point-buy: il punteggio di caratteristica 12 costa 2 punti.",
+      "mechanics": {
+        "kind": "ability_cost",
+        "score": 12,
+        "cost": 2
+      }
+    },
+    {
+      "name": "Score 13",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:score_13",
+      "prerequisites": [],
+      "tags": [
+        "ability",
+        "point-buy"
+      ],
+      "references": [
+        "AoN: Generating Ability Scores"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Rules.aspx?Name=Generating%20Ability%20Scores&Category=Getting%20Started"
+      ],
+      "description": "Point-buy: il punteggio di caratteristica 13 costa 3 punti.",
+      "mechanics": {
+        "kind": "ability_cost",
+        "score": 13,
+        "cost": 3
+      }
+    },
+    {
+      "name": "Score 14",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:score_14",
+      "prerequisites": [],
+      "tags": [
+        "ability",
+        "point-buy"
+      ],
+      "references": [
+        "AoN: Generating Ability Scores"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Rules.aspx?Name=Generating%20Ability%20Scores&Category=Getting%20Started"
+      ],
+      "description": "Point-buy: il punteggio di caratteristica 14 costa 5 punti.",
+      "mechanics": {
+        "kind": "ability_cost",
+        "score": 14,
+        "cost": 5
+      }
+    },
+    {
+      "name": "Score 15",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:score_15",
+      "prerequisites": [],
+      "tags": [
+        "ability",
+        "point-buy"
+      ],
+      "references": [
+        "AoN: Generating Ability Scores"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Rules.aspx?Name=Generating%20Ability%20Scores&Category=Getting%20Started"
+      ],
+      "description": "Point-buy: il punteggio di caratteristica 15 costa 7 punti.",
+      "mechanics": {
+        "kind": "ability_cost",
+        "score": 15,
+        "cost": 7
+      }
+    },
+    {
+      "name": "Score 16",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:score_16",
+      "prerequisites": [],
+      "tags": [
+        "ability",
+        "point-buy"
+      ],
+      "references": [
+        "AoN: Generating Ability Scores"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Rules.aspx?Name=Generating%20Ability%20Scores&Category=Getting%20Started"
+      ],
+      "description": "Point-buy: il punteggio di caratteristica 16 costa 10 punti.",
+      "mechanics": {
+        "kind": "ability_cost",
+        "score": 16,
+        "cost": 10
+      }
+    },
+    {
+      "name": "Score 17",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:score_17",
+      "prerequisites": [],
+      "tags": [
+        "ability",
+        "point-buy"
+      ],
+      "references": [
+        "AoN: Generating Ability Scores"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Rules.aspx?Name=Generating%20Ability%20Scores&Category=Getting%20Started"
+      ],
+      "description": "Point-buy: il punteggio di caratteristica 17 costa 13 punti.",
+      "mechanics": {
+        "kind": "ability_cost",
+        "score": 17,
+        "cost": 13
+      }
+    },
+    {
+      "name": "Score 18",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:score_18",
+      "prerequisites": [],
+      "tags": [
+        "ability",
+        "point-buy"
+      ],
+      "references": [
+        "AoN: Generating Ability Scores"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Rules.aspx?Name=Generating%20Ability%20Scores&Category=Getting%20Started"
+      ],
+      "description": "Point-buy: il punteggio di caratteristica 18 costa 17 punti.",
+      "mechanics": {
+        "kind": "ability_cost",
+        "score": 18,
+        "cost": 17
+      }
+    },
+    {
+      "name": "Low Fantasy",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:low_fantasy",
+      "prerequisites": [],
+      "tags": [
+        "ability",
+        "point-buy",
+        "campaign"
+      ],
+      "references": [
+        "AoN: Generating Ability Scores"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Rules.aspx?Name=Generating%20Ability%20Scores&Category=Getting%20Started"
+      ],
+      "description": "Point-buy: la campagna Low Fantasy assegna 10 punti.",
+      "mechanics": {
+        "kind": "campaign_budget",
+        "points": 10
+      }
+    },
+    {
+      "name": "Standard Fantasy",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:standard_fantasy",
+      "prerequisites": [],
+      "tags": [
+        "ability",
+        "point-buy",
+        "campaign"
+      ],
+      "references": [
+        "AoN: Generating Ability Scores"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Rules.aspx?Name=Generating%20Ability%20Scores&Category=Getting%20Started"
+      ],
+      "description": "Point-buy: la campagna Standard Fantasy assegna 15 punti.",
+      "mechanics": {
+        "kind": "campaign_budget",
+        "points": 15
+      }
+    },
+    {
+      "name": "High Fantasy",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:high_fantasy",
+      "prerequisites": [],
+      "tags": [
+        "ability",
+        "point-buy",
+        "campaign"
+      ],
+      "references": [
+        "AoN: Generating Ability Scores"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Rules.aspx?Name=Generating%20Ability%20Scores&Category=Getting%20Started"
+      ],
+      "description": "Point-buy: la campagna High Fantasy assegna 20 punti.",
+      "mechanics": {
+        "kind": "campaign_budget",
+        "points": 20
+      }
+    },
+    {
+      "name": "Epic Fantasy",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:epic_fantasy",
+      "prerequisites": [],
+      "tags": [
+        "ability",
+        "point-buy",
+        "campaign"
+      ],
+      "references": [
+        "AoN: Generating Ability Scores"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/Rules.aspx?Name=Generating%20Ability%20Scores&Category=Getting%20Started"
+      ],
+      "description": "Point-buy: la campagna Epic Fantasy assegna 25 punti.",
+      "mechanics": {
+        "kind": "campaign_budget",
+        "points": 25
+      }
+    }
+  ]
+}
