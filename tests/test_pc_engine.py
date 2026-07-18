@@ -154,3 +154,17 @@ def test_unverifiable_prereq_is_warning():
                                    feats=["Combat Expertise", "Combat Casting"]))
     assert sheet["errors"] == [], sheet["errors"]
     assert any("Combat Casting" in w and "non valutabile" in w for w in sheet["warnings"])
+
+
+def test_class_level_prereq_threshold():
+    # Spell Focus richiede "caster level 1st": un Wizard lv1 lo soddisfa.
+    # NB: per cambiare classe serve _wizard_draft (o "class" come chiave):
+    # class_="Wizard" passato a _draft verrebbe sovrascritto da from_dict.
+    sheet = build_character(_wizard_draft(skills={"Spellcraft": 1, "Knowledge (Arcana)": 1},
+                                          feats=["Spell Focus"]))
+    assert sheet["errors"] == [], sheet["errors"]
+    # Weapon Specialization richiede "fighter level 4th" (+ Weapon Focus...): fallisce al lv1.
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str",
+                                   skills={"Climb": 1, "Perception": 1, "Survival": 1},
+                                   feats=["Weapon Specialization"]))
+    assert any("Weapon Specialization" in e for e in sheet["errors"])

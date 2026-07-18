@@ -20,8 +20,10 @@ def _check_prereq(prereq, ctx):
         return ctx["bab"] >= int(m.group(1)), f"richiede BAB +{m.group(1)}"
     if catalogs.find_feat(text) is not None:
         return text in ctx["feats"], f"richiede il talento {text}"
-    if re.search(r"level\s+\d+(st|nd|rd|th)", text, re.I):
-        return False, f"richiede livello di classe superiore al 1 ({text})"
+    m = re.search(r"level\s+(\d+)(?:st|nd|rd|th)", text, re.I)
+    if m:
+        needed = int(m.group(1))
+        return needed <= 1, f"richiede livello {needed} (personaggio lv1)"
     if "proficien" in text.lower():
         return True, f"proficiency: {text} (assunta da classe)"
     if re.search(r"rank", text, re.I):
