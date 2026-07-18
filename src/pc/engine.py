@@ -71,10 +71,15 @@ def ability_mod(score):
     return (score - 10) // 2
 
 
-def _parse_gp(text):
-    """'15 gp' -> 15; '1,500 gp' -> 1500."""
-    m = re.search(r"(\d[\d,]*)\s*gp", str(text or ""))
-    return int(m.group(1).replace(",", "")) if m else 0
+def _parse_cost(text):
+    """'15 gp' -> 15 (int); '5 sp' -> 0.5; '1 cp' -> 0.01 (float, 2 decimali)."""
+    m = re.search(r"(\d[\d,]*)\s*(gp|sp|cp)", str(text or ""))
+    if not m:
+        return 0
+    value = int(m.group(1).replace(",", ""))
+    if m.group(2) == "gp":
+        return value
+    return round(value / (10 if m.group(2) == "sp" else 100), 2)
 
 
 def _parse_bonus(text):
@@ -83,15 +88,26 @@ def _parse_bonus(text):
     return int(m.group(1)) if m else 0
 
 
+def _range_ft(text):
+    """'60 ft.' -> 60; None/'' -> 0."""
+    m = re.search(r"(\d+)\s*ft", str(text or ""))
+    return int(m.group(1)) if m else 0
+
+
 def apply_equipment(draft, sheet):
-    """Valida gli acquisti contro la ricchezza iniziale e calcola CA/attacchi."""
+    """Valida gli acquisti contro la ricchezza iniziale e calcola CA/attacchi.
+
+    Limitazione nota: classificazione ranged per euristica sulla gittata
+    (ranged solo se range >= 30 ft) — armi da tiro con gittata < 30 ft
+    classificate melee; le armi da lancio (Dagger, Club, Shortspear...)
+    restano correttamente melee."""
     cls = catalogs.get_class(draft.class_)
     wealth_text = cls["mechanics"].get("starting_wealth", "")
     if "average" in wealth_text:
         m = re.search(r"average\s+([\d,]+)\s*gp", wealth_text)
         wealth = int(m.group(1).replace(",", "")) if m else 0
     else:
-        wealth = _parse_gp(wealth_text)
+        wealth = _parse_cost(wealth_text)
     spent = 0
     items = []
     for name in draft.equipment:
@@ -99,36 +115,53 @@ def apply_equipment(draft, sheet):
         if item is None:
             sheet["errors"].append(f"equipaggiamento sconosciuto: {name}")
             continue
-        cost = _parse_gp(item["mechanics"].get("cost"))
+        cost = _parse_cost(item["mechanics"].get("cost"))
         spent += cost
         items.append({"name": name, "cost": cost, "mechanics": item["mechanics"],
                       "tags": item.get("tags", [])})
+    spent = round(spent, 2)
     if spent > wealth:
-        sheet["errors"].append(f"wealth: spesi {spent} gp oltre la ricchezza iniziale {wealth} gp")
-    sheet["gold_remaining"] = wealth - spent
+        sheet["errors"].append(
+            f"wealth: spesi {spent:.2f} gp oltre la ricchezza iniziale {wealth:.2f} gp")
+    sheet["gold_remaining"] = round(wealth - spent, 2)
     sheet["equipment"] = items
     mods = {ab: ability_mod(sc) for ab, sc in sheet["abilities"].items()}
-    armor = shield = max_dex = None
+    armors = []
+    shield = 0
+    caps = []
     for it in items:
         m = it["mechanics"]
         bonus = _parse_bonus(m.get("armor_bonus"))
+        md = m.get("maximum_dex_bonus") or m.get("max_dex_bonus")
         if "shield" in it["tags"]:
-            shield = (shield or 0) + bonus
+            shield += bonus
+            if md:
+                caps.append(_parse_bonus(md))
         elif bonus:
-            armor = (armor or 0) + bonus
-            md = m.get("maximum_dex_bonus") or m.get("max_dex_bonus")
-            max_dex = _parse_bonus(md) if md else max_dex
+            armors.append((bonus, _parse_bonus(md) if md else None))
+    armor = 0
+    if len(armors) > 1:
+        sheet["errors"].append("indossabili piu' armature: usa la migliore")
+    if armors:
+        best = max(armors, key=lambda a: a[0])
+        armor = best[0]
+        if best[1] is not None:
+            caps.append(best[1])
+    max_dex = min(caps) if caps else None
     dex = min(mods["dex"], max_dex) if max_dex is not None else mods["dex"]
-    sheet["ac"] = 10 + (armor or 0) + (shield or 0) + dex
+    sheet["ac"] = 10 + armor + shield + dex
     attacks = []
     for it in items:
         if "weapon" not in it["tags"]:
             continue
         m = it["mechanics"]
-        is_ranged = bool(m.get("range"))
+        is_ranged = _range_ft(m.get("range")) >= 30
         mod = mods["dex"] if is_ranged else mods["str"]
+        dmg = m.get("dmg_m", "-")
+        if not is_ranged and mod != 0:
+            dmg = f"{dmg}{'+' if mod > 0 else ''}{mod}"
         attacks.append({"weapon": it["name"], "bonus": sheet["bab"] + mod,
-                        "damage": f"{m.get('dmg_m', '-')}{'+' + str(mod) if mod > 0 and not is_ranged else ''}",
+                        "damage": dmg,
                         "critical": m.get("critical"), "range": m.get("range")})
     sheet["attacks"] = attacks
 

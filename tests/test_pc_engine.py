@@ -234,3 +234,52 @@ def test_equipment_over_wealth_and_unknown():
     sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str", skills={"Climb": 1},
                                    equipment=["Spada Inesistente"]))
     assert any("Spada Inesistente" in e for e in sheet["errors"])
+
+
+# Euristica gittata: ranged solo se range >= 30 ft; le armi da lancio
+# (Dagger 10 ft., Shortspear 20 ft., Club 10 ft.) restano melee.
+def test_thrown_weapon_is_melee():
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str",
+                                   skills={"Climb": 1}, equipment=["Dagger"]))
+    assert sheet["errors"] == [], sheet["errors"]
+    dagger = [a for a in sheet["attacks"] if a["weapon"] == "Dagger"][0]
+    assert dagger["bonus"] == 3  # bab 1 + Str mod +2 (str 15), non Dex
+    assert dagger["damage"] == "1d4+2"
+
+
+def test_ranged_weapon():
+    # Shortbow range 60 ft. -> ranged: Dex al tiro, niente mod al danno.
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str",
+                                   skills={"Climb": 1}, equipment=["Shortbow"]))
+    assert sheet["errors"] == [], sheet["errors"]
+    bow = [a for a in sheet["attacks"] if a["weapon"] == "Shortbow"][0]
+    assert bow["bonus"] == 2  # bab 1 + Dex mod +1 (Dex 12)
+    assert bow["damage"] == "1d6"
+
+
+def test_cp_sp_costs():
+    # Torch 1 cp = 0.01 gp, Animal glue 5 sp = 0.5 gp: totale 0.51.
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str",
+                                   skills={"Climb": 1},
+                                   equipment=["Torch", "Animal glue"]))
+    assert sheet["errors"] == [], sheet["errors"]
+    costs = {it["name"]: it["cost"] for it in sheet["equipment"]}
+    assert costs["Torch"] == 0.01
+    assert costs["Animal glue"] == 0.5
+    assert sheet["gold_remaining"] == 174.49
+
+
+def test_max_dex_cap():
+    # Dex 14 (12+2 razziale) -> mod +2, ma Full plate cappato a +1.
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="dex",
+                                   skills={"Climb": 1}, equipment=["Full plate"]))
+    assert sheet["ac"] == 20  # 10 + 9 + 1 (cappato)
+
+
+def test_multiple_armors_error():
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str",
+                                   skills={"Climb": 1},
+                                   equipment=["Chain shirt", "Full plate"]))
+    assert any("indossabili" in e and "migliore" in e for e in sheet["errors"])
+    # solo la migliore (Full plate +9, max dex +1) conta per la CA
+    assert sheet["ac"] == 20  # 10 + 9 + Dex mod 1 (Dex 12, cappato a +1)
