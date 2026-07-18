@@ -6,8 +6,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tools.import_reference import (SKILL_HEADER_RE, _class_skill_matches,
                                     parse_abilities, parse_class,
-                                    parse_equipment_table, parse_race,
-                                    parse_skill, source_id, slug)
+                                    parse_equipment_table, parse_item_source,
+                                    parse_race, parse_skill, source_id, slug)
 
 ABILITIES_HTML = """
 <html><body>
@@ -141,8 +141,9 @@ def test_class_skill_matches():
 WEAPONS_HTML = """
 <html><body><table>
 <tr><th>Name</th><th>Cost</th><th>Dmg (S)</th><th>Dmg (M)</th><th>Critical</th><th>Range</th><th>Weight</th><th>Type</th><th>Special</th></tr>
-<tr><td>Longsword</td><td>15 gp</td><td>1d6</td><td>1d8</td><td>19-20/x2</td><td>-</td><td>4 lbs.</td><td>S</td><td>-</td></tr>
+<tr><td><a href="EquipmentWeaponsDisplay.aspx?ItemName=Longsword">Longsword</a></td><td>15 gp</td><td>1d6</td><td>1d8</td><td>19-20/x2</td><td>-</td><td>4 lbs.</td><td>S</td><td>-</td></tr>
 <tr><td>Shortbow</td><td>30 gp</td><td>1d4</td><td>1d6</td><td>x3</td><td>60 ft.</td><td>2 lbs.</td><td>P</td><td>-</td></tr>
+<tr><td><a href="EquipmentWeaponsDisplay.aspx?ItemName=Battle aspergillum">Battle aspergillum</a></td><td>5 gp</td><td>1d4</td><td>1d6</td><td>x2</td><td>-</td><td>4 lbs.</td><td>B</td><td>monk</td></tr>
 </table></body></html>
 """
 
@@ -155,5 +156,24 @@ def test_parse_equipment_table():
     assert ls["mechanics"]["critical"] == "19-20/x2"
     assert ls["mechanics"]["weight"] == "4 lbs."
     assert ls["tags"] == ["equipment", "weapon", "simple"]
+    # Detail URL dal link nel nome; senza link fallback al generico.
+    assert ls["reference_urls"] == [
+        "https://aonprd.com/EquipmentWeaponsDisplay.aspx?ItemName=Longsword",
+        "https://aonprd.com/Equipment.aspx"]
+    assert entries[1]["reference_urls"] == ["https://aonprd.com/Equipment.aspx"]
     assert entries[1]["mechanics"]["range"] == "60 ft."
+    # Spazi negli href AoN: URL-encode nel detail URL.
+    assert entries[2]["reference_urls"][0] == (
+        "https://aonprd.com/EquipmentWeaponsDisplay.aspx?ItemName=Battle%20aspergillum")
     print("OK: parse_equipment_table fixture")
+
+
+def test_parse_item_source():
+    html = "<html><body><h2>Klar</h2><p>Source Ultimate Equipment pg. 24</p></body></html>"
+    assert parse_item_source(html) == "Ultimate Equipment"
+    html2 = "<html><body><p>Source PRPG Core Rulebook pg. 141</p></body></html>"
+    assert parse_item_source(html2) == "PFRPG Core"
+    # Piu' fonti: si preferisce il Core Rulebook (le altre sono ristampe).
+    html3 = "<html><body><p>Source Ultimate Equipment pg. 18, PRPG Core Rulebook pg. 142</p></body></html>"
+    assert parse_item_source(html3) == "PFRPG Core"
+    print("OK: parse_item_source fixture")

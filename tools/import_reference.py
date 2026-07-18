@@ -14,6 +14,7 @@ import json
 import re
 import sys
 from pathlib import Path
+from urllib.parse import quote, urljoin
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -538,17 +539,24 @@ def parse_equipment_table(html, kind, group):
 
     Le pagine weapon hanno piu' tabelle (es. Simple Unarmed, Light Melee...):
     si accumulano le righe di tutte quelle con header 'Name' (il gear usa
-    'Item'). Le celle '-'/vuote diventano None."""
+    'Item'). Le celle '-'/vuote diventano None. Se la cella nome ha un link,
+    il suo URL di dettaglio (assoluto) e' il primo di reference_urls."""
     soup = BeautifulSoup(html, "html.parser")
     entries = []
     for table in soup.find_all("table"):
         trs = table.find_all("tr")
         if not trs:
             continue
-        headers = [clean(c.get_text()) for c in trs[0].find_all(["th", "td"])]
-        if "Name" not in headers and "Item" not in headers:
+        headers = [_cell_text(c) for c in trs[0].find_all(["th", "td"])]
+        name_idx = next((headers.index(k) for k in ("Name", "Item") if k in headers), None)
+        if name_idx is None:
             continue
-        for row in table_rows(table):
+        for tr in trs[1:]:
+            cells = tr.find_all(["th", "td"])
+            texts = [_cell_text(c) for c in cells]
+            if len(texts) != len(headers) or not any(texts):
+                continue
+            row = dict(zip(headers, texts))
             name = row.pop("Name", "") or row.pop("Item", "")
             if not name:
                 continue
@@ -560,6 +568,12 @@ def parse_equipment_table(html, kind, group):
                 desc_parts.append(f"danno {mech['dmg_m']}")
             if mech.get("weight"):
                 desc_parts.append(f"peso {mech['weight']}")
+            urls = [BASE + "Equipment.aspx"]
+            link = cells[name_idx].find("a", href=True)
+            if link:
+                # href AoN con spazi letterali ('ItemName=Battle aspergillum'):
+                # quote li rende URL validi senza ri-encodare quelli gia' ok.
+                urls.insert(0, quote(urljoin(BASE, link["href"]), safe=":/?=&()%';,+%"))
             entries.append({
                 "name": name,
                 "source": "PFRPG Core",
@@ -567,25 +581,70 @@ def parse_equipment_table(html, kind, group):
                 "prerequisites": [],
                 "tags": ["equipment", kind, group],
                 "references": [f"AoN: Equipment ({kind} {group})"],
-                "reference_urls": [BASE + "Equipment.aspx"],
+                "reference_urls": urls,
                 "description": ", ".join(desc_parts).rstrip(".") + ".",
                 "mechanics": mech,
             })
     return entries
 
 
+# Alias libro AoN -> etichetta fonte dei cataloghi (es. il dettaglio Core
+# riporta 'PRPG Core Rulebook', il catalogo usa 'PFRPG Core').
+SOURCE_ALIASES = {"PRPG Core Rulebook": "PFRPG Core"}
+
+
+def parse_item_source(html):
+    """Pagina di dettaglio item AoN -> libro fonte.
+
+    La riga 'Source' puo' elencare piu' manuali ('Source Ultimate Equipment
+    pg. 18, PRPG Core Rulebook pg. 142'): si preferisce 'PRPG Core Rulebook'
+    (se l'item e' nel Core le altre sono ristampe), altrimenti la prima
+    fonte elencata. Ritorna None se il pattern non e' presente."""
+    text = clean(BeautifulSoup(html, "html.parser").get_text(" "))
+    m = re.search(r"Source\s+(.+?)\s+pg\.?", text)
+    if not m:
+        return None
+    books = [clean(b) for b in re.findall(r"([^,]+?)\s+pg\.?\s*\d+", text[m.start(1):])]
+    if not books:
+        return None
+    for book in books:
+        if book in SOURCE_ALIASES:
+            return SOURCE_ALIASES[book]
+    return books[0]
+
+
 def build_equipment(write=False):
     """Crea equipment_mundane.json dalle tabelle equipment AoN (armi per
-    proficiency, armature per categoria, gear da avventura)."""
+    proficiency, armature per categoria, gear da avventura).
+
+    La fonte di ogni voce e' attribuita dalla sua pagina di dettaglio (le
+    tabelle aggregate non la espongono): ~800 fetch da 2s ~= 30 min al primo
+    run; la cache su disco rende i rilanci incrementali (idempotente)."""
     entries = []
     for page, kind, group in EQUIPMENT_PAGES:
         entries.extend(parse_equipment_table(fetch(BASE + page), kind, group))
-    pi = [e["name"] for e in entries if e["name"] in PI_EQUIPMENT]
-    if pi:
-        entries = [e for e in entries if e["name"] not in PI_EQUIPMENT]
-        print(f"nota: filtrate {len(pi)} entry PI: {', '.join(pi)}")
-    # Stesso oggetto in piu' tabelle (es. Klar weapon+shield, Shovel in due
-    # tabelle gear): source_id univoco nel catalogo, vince la prima occorrenza.
+    total = len(entries)
+    found, missing = 0, []
+    for i, e in enumerate(entries, 1):
+        if i % 100 == 0:
+            print(f"fetch detail {i}/{total}")
+        detail = e["reference_urls"][0]
+        if detail == BASE + "Equipment.aspx":
+            missing.append(e["name"])
+            print(f"warning: nessun link di dettaglio per {e['name']}")
+            continue
+        book = parse_item_source(fetch(detail))
+        if book:
+            e["source"] = book
+            e["source_id"] = source_id(slug(book), e["name"])
+            found += 1
+        else:
+            missing.append(e["name"])
+            print(f"warning: fonte non trovata per {e['name']}")
+    print(f"attribuzione: {found}/{total} fonti da pagine dettaglio, "
+          f"{len(missing)} fallback 'PFRPG Core'")
+    # Stesso oggetto in piu' tabelle (es. Klar weapon+shield): source_id
+    # univoco nel catalogo, vince la prima occorrenza.
     seen, unique = set(), []
     for e in entries:
         if e["source_id"] in seen:
@@ -594,6 +653,10 @@ def build_equipment(write=False):
         seen.add(e["source_id"])
         unique.append(e)
     entries = unique
+    pi = [e["name"] for e in entries if e["name"] in PI_EQUIPMENT]
+    if pi:
+        entries = [e for e in entries if e["name"] not in PI_EQUIPMENT]
+        print(f"nota: filtrate {len(pi)} entry PI: {', '.join(pi)}")
     assert len(entries) >= 150, f"equipment: attese >=150 entry, trovate {len(entries)}"
     if write:
         write_catalog(OGL_DIR / "equipment_mundane.json", entries)
