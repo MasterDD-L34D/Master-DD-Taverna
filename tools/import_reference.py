@@ -129,14 +129,15 @@ def _parse_ability_mods(text):
 
 def _racial_traits_bolds(soup):
     """<b> del blocco tratti base: dal heading '*Racial Traits' al prossimo
-    heading (h1/h2/h3). Fallback: tutti i <b> del documento (fixture semplici)."""
+    heading (h1/h2/h3). Fallback fail-closed: se nessun heading corrisponde,
+    lista vuota (su markup inatteso NON si ingoiano subrazze/alternate = PI)."""
     header = None
     for h in soup.find_all(["h1", "h2", "h3"]):
         if "racial traits" in clean(h.get_text()).lower():
             header = h
             break
     if header is None:
-        return soup.find_all("b")
+        return []
     bolds = []
     for sib in header.next_siblings:
         if getattr(sib, "name", None) in ("h1", "h2", "h3"):
@@ -238,6 +239,129 @@ def build_races(write=False):
         print(f"report: {len(catalog['entries'])} entry (write=False, nessuna scrittura)")
 
 
+CLASSES_CORE = ["Barbarian", "Bard", "Cleric", "Druid", "Fighter", "Monk",
+                "Paladin", "Ranger", "Rogue", "Sorcerer", "Wizard", "Magus"]
+
+
+def _to_bonus(text):
+    """'+3' -> 3, '+0' -> 0, '+6/+1' -> 6 (primo attacco), '-' -> None."""
+    m = re.match(r"^\+(\d+)", text)
+    return int(m.group(1)) if m else None
+
+
+def _parse_level(label):
+    """'1st' -> 1, '2nd' -> 2, '3rd' -> 3, '4th' -> 4."""
+    m = re.match(r"(\d+)", label)
+    return int(m.group(1)) if m else None
+
+
+def _header_index(table):
+    """(indice, headers) del <tr> con gli header di colonna della tabella di
+    progressione (contiene 'Level' + 'Base Attack Bonus'). Le tabelle caster
+    hanno una riga di gruppo ('Spells Per Day' con colspan) sopra gli header;
+    i wrapper di layout annidano la tabella: celle dirette, non ricorsive."""
+    for idx, tr in enumerate(table.find_all("tr", recursive=False)[:3]):
+        headers = [clean(c.get_text()) for c in tr.find_all(["th", "td"], recursive=False)]
+        if "Level" in headers and "Base Attack Bonus" in headers:
+            return idx, headers
+    return None, []
+
+
+def parse_class(html, class_name):
+    """Pagina ClassDisplay: HD, wealth, class skills, skill points, tabella progressione."""
+    soup = BeautifulSoup(html, "html.parser")
+    mech = {"hd": None, "starting_wealth": None, "class_skills": [],
+            "skill_points_per_level": None, "proficiencies": None, "progression": []}
+    text = clean(soup.get_text(" ")).replace("×", "x")
+    hd = re.search(r"Hit Die\D{0,3}(d\d+)", text)
+    if hd:
+        mech["hd"] = hd.group(1)
+    wealth = re.search(r"Starting Wealth\D{0,3}([\ddx ]+ gp(?:\s*\(average [\d,]+ gp\.?\))?)", text)
+    if wealth:
+        mech["starting_wealth"] = wealth.group(1).strip()
+    sp = re.search(r"Skill (?:Points|Ranks) (?:per|at Each) (?:Level|lvl)\D{0,3}(\d+)", text, re.I)
+    if sp:
+        mech["skill_points_per_level"] = int(sp.group(1))
+    skills_match = re.search(r"class skills (?:are|of [^:]+:)\s*([^.]+)\.", text, re.I)
+    if skills_match:
+        mech["class_skills"] = [clean(re.sub(r"\s*\([A-Z][a-z]{2}\)$", "", re.sub(r"^and\s+", "", s.strip())))
+                                for s in skills_match.group(1).split(",")]
+    prof = re.search(r"Weapon and Armor Proficien\w+\s*:?\s*([^.]+)\.", text, re.I)
+    if prof:
+        mech["proficiencies"] = clean(prof.group(1))
+    # La pagina puo' contenere altre tabelle (layout, Spells Known): seleziona
+    # per header (celle dirette: i wrapper di layout annidano la tabella
+    # progressione e con find_all ricorsivo matcherebbero per primi).
+    table, header_idx, headers = None, None, []
+    for candidate in soup.find_all("table"):
+        idx, found = _header_index(candidate)
+        if idx is not None:
+            table, header_idx, headers = candidate, idx, found
+            break
+    if table:
+        trs = table.find_all("tr", recursive=False)
+        for tr in trs[header_idx + 1:]:
+            cells = [clean(c.get_text()) for c in tr.find_all(["th", "td"], recursive=False)]
+            if len(cells) != len(headers) or not any(cells):
+                continue
+            row = dict(zip(headers, cells))
+            lvl = _parse_level(row.get("Level", ""))
+            if not lvl:
+                continue
+            entry = {"level": lvl,
+                     "bab": _to_bonus(row.get("Base Attack Bonus", "")),
+                     "fort": _to_bonus(row.get("Fort Save", "")),
+                     "ref": _to_bonus(row.get("Ref Save", "")),
+                     "will": _to_bonus(row.get("Will Save", "")),
+                     "special": [clean(s) for s in row.get("Special", "").split(",") if clean(s)]}
+            spells = {k: v for k, v in row.items()
+                      if k not in ("Level", "Base Attack Bonus", "Fort Save", "Ref Save",
+                                   "Will Save", "Special") and v and v not in ("-", "—")}
+            if spells:
+                entry["spells_per_day"] = spells
+            mech["progression"].append(entry)
+    desc = (f"{class_name}: HD {mech['hd']}, skill points {mech['skill_points_per_level']}+Int. "
+            f"Class skills: {', '.join(mech['class_skills'][:8])}. "
+            f"Progressione su {len(mech['progression'])} livelli.")
+    return {
+        "name": class_name,
+        "source": "PFRPG Core" if class_name != "Magus" else "Ultimate Magic",
+        "source_id": source_id("pfrpg_core", class_name),
+        "prerequisites": [],
+        "tags": ["class", "core" if class_name != "Magus" else "base"],
+        "references": [f"AoN: {class_name} (Classes)"],
+        "reference_urls": [BASE + f"ClassDisplay.aspx?ItemName={class_name}"],
+        "description": desc,
+        "mechanics": mech,
+    }
+
+
+def build_classes(write=False):
+    """Merge in place su classes.json preservando i campi curati e l'header."""
+    path = OGL_DIR / "classes.json"
+    with open(path, encoding="utf-8") as f:
+        catalog = json.load(f)
+    source_text = catalog.get("_source", SOURCE)
+    if "aonprd" not in source_text:
+        source_text = source_text.rstrip(".") + "; Archives of Nethys (aonprd.com)."
+    by_name = {e["name"]: e for e in catalog["entries"]}
+    for cls in CLASSES_CORE:
+        url = BASE + f"ClassDisplay.aspx?ItemName={cls}"
+        parsed = parse_class(fetch(url), cls)
+        assert len(parsed["mechanics"]["progression"]) == 20, (
+            f"{cls}: attesi 20 livelli, trovati {len(parsed['mechanics']['progression'])}")
+        assert parsed["mechanics"]["hd"], f"{cls}: HD non parsato"
+        if cls in by_name:
+            by_name[cls].update(parsed)
+        else:
+            catalog["entries"].append(parsed)
+    if write:
+        write_catalog(path, catalog["entries"],
+                      license_text=catalog.get("_license", LICENSE), source_text=source_text)
+    else:
+        print(f"report: {len(catalog['entries'])} entry (write=False, nessuna scrittura)")
+
+
 def build_abilities(write=False):
     url = BASE + "Rules.aspx?Name=Generating%20Ability%20Scores&Category=Getting%20Started"
     entries = parse_abilities(fetch(url))
@@ -248,7 +372,7 @@ def build_abilities(write=False):
         print(f"report: {len(entries)} entry (write=False, nessuna scrittura)")
 
 
-DOMAINS = {"abilities": build_abilities, "races": build_races}
+DOMAINS = {"abilities": build_abilities, "races": build_races, "classes": build_classes}
 
 
 def main(argv=None):

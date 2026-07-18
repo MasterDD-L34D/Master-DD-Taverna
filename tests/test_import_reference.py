@@ -4,7 +4,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from tools.import_reference import parse_abilities, parse_race, source_id, slug
+from tools.import_reference import parse_abilities, parse_class, parse_race, source_id, slug
 
 ABILITIES_HTML = """
 <html><body>
@@ -67,3 +67,39 @@ def test_parse_race_any_bonus():
     entry = parse_race(html, "Human")
     assert entry["mechanics"]["ability_mods"] == {"any": 2}
     print("OK: parse_race any-bonus")
+
+
+def test_race_scoping_fail_closed():
+    html = "<html><body><h1>Subraces</h1><p><b>Deep Delver</b>: text</p></body></html>"
+    entry = parse_race(html, "Dwarf")
+    assert entry["mechanics"]["traits"] == []
+    print("OK: race scoping fail-closed")
+
+
+CLASS_HTML = """
+<html><body>
+<h2>Barbarian</h2>
+<p><b>Hit Die</b>: d12.</p>
+<p><b>Starting Wealth</b>: 3d6 x 10 gp (average 105 gp).</p>
+<h3>Class Skills</h3>
+<p>The barbarian's class skills are Acrobatics (Dex), Climb (Str), Intimidate (Cha), and Perception (Wis).</p>
+<p><b>Skill Points per Level</b>: 4 + Int modifier.</p>
+<table><tr><th>Level</th><th>Base Attack Bonus</th><th>Fort Save</th><th>Ref Save</th><th>Will Save</th><th>Special</th></tr>
+<tr><td>1st</td><td>+1</td><td>+2</td><td>+0</td><td>+0</td><td>Fast movement, rage</td></tr>
+<tr><td>2nd</td><td>+2</td><td>+3</td><td>+0</td><td>+0</td><td>Rage power, uncanny dodge</td></tr></table>
+</body></html>
+"""
+
+
+def test_parse_class():
+    entry = parse_class(CLASS_HTML, "Barbarian")
+    mech = entry["mechanics"]
+    assert mech["hd"] == "d12"
+    assert mech["skill_points_per_level"] == 4
+    assert "Acrobatics" in mech["class_skills"] and "Perception" in mech["class_skills"]
+    lvl1 = mech["progression"][0]
+    assert lvl1["level"] == 1 and lvl1["bab"] == 1 and lvl1["fort"] == 2 and lvl1["ref"] == 0
+    assert "rage" in lvl1["special"]
+    assert mech["progression"][1]["level"] == 2
+    assert entry["source_id"] == "pfrpg_core:barbarian"
+    print("OK: parse_class fixture")
