@@ -67,6 +67,24 @@ def validate_feats(draft, sheet):
                 sheet["warnings"].append(f"{name}: {note}")
 
 
+def validate_traits(draft, sheet):
+    if len(draft.traits) > 2:
+        sheet["errors"].append(f"tratti: {len(draft.traits)} selezionati, max 2")
+    seen = set()
+    out = []
+    for name in draft.traits:
+        trait = catalogs.find_trait(name)
+        if trait is None:
+            sheet["errors"].append(f"tratto sconosciuto: {name}")
+            continue
+        cat = trait["mechanics"].get("category")
+        if cat in seen:
+            sheet["errors"].append(f"tratti: due tratti della stessa categoria ({cat})")
+        seen.add(cat)
+        out.append(name)
+    sheet["traits"] = out
+
+
 def ability_mod(score):
     return (score - 10) // 2
 
@@ -260,4 +278,33 @@ def build_character(draft):
     validate_feats(draft, sheet)
     sheet["feats"] = list(draft.feats)
     apply_equipment(draft, sheet)
+    validate_traits(draft, sheet)
     return sheet
+
+
+def render_markdown(sheet):
+    """Scheda testuale compatta della build lv1."""
+    mods = {ab: ability_mod(sc) for ab, sc in sheet["abilities"].items()}
+    lines = [f"# {sheet['name']}",
+             f"{sheet['race']} {sheet['class']} 1 — PF: {sheet['hp']} — CA: {sheet['ac']} — Iniziativa: {'+' if sheet['initiative'] >= 0 else ''}{sheet['initiative']}",
+             "",
+             "**Caratteristiche**: " + ", ".join(
+                 f"{ab.upper()} {sc} ({'+' if mods[ab] >= 0 else ''}{mods[ab]})"
+                 for ab, sc in sheet["abilities"].items()),
+             f"**TS**: Tempra {'+' if sheet['saves']['fort'] >= 0 else ''}{sheet['saves']['fort']}, "
+             f"Riflessi {'+' if sheet['saves']['ref'] >= 0 else ''}{sheet['saves']['ref']}, "
+             f"Volonta' {'+' if sheet['saves']['will'] >= 0 else ''}{sheet['saves']['will']} — BAB +{sheet['bab']}"]
+    if sheet.get("attacks"):
+        lines.append("**Attacchi**: " + "; ".join(f"{a['weapon']} +{a['bonus']} ({a['damage']})" for a in sheet["attacks"]))
+    if sheet.get("skills"):
+        lines.append("**Skill**: " + ", ".join(f"{n} +{s['total']}" for n, s in sheet["skills"].items()))
+    if sheet.get("feats"):
+        lines.append("**Talenti**: " + ", ".join(sheet["feats"]))
+    if sheet.get("traits"):
+        lines.append("**Tratti**: " + ", ".join(sheet["traits"]))
+    if sheet.get("equipment"):
+        lines.append(f"**Equip** (oro restante {sheet.get('gold_remaining', 0)} gp): "
+                     + ", ".join(i["name"] for i in sheet["equipment"]))
+    if sheet.get("warnings"):
+        lines.append("_Note_: " + " | ".join(sheet["warnings"]))
+    return "\n".join(lines) + "\n"

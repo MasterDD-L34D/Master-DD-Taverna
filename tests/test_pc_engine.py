@@ -4,7 +4,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.pc.engine import apply_abilities, build_character
+from src.pc.engine import apply_abilities, build_character, render_markdown
 from src.pc.models import CharacterDraft
 
 
@@ -283,3 +283,27 @@ def test_multiple_armors_error():
     assert any("indossabili" in e and "migliore" in e for e in sheet["errors"])
     # solo la migliore (Full plate +9, max dex +1) conta per la CA
     assert sheet["ac"] == 20  # 10 + 9 + Dex mod 1 (Dex 12, cappato a +1)
+
+
+def test_traits_validation():
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str",
+                                   skills={"Climb": 1, "Perception": 1, "Survival": 1},
+                                   traits=["Reactionary", "Indomitable Faith"]))
+    assert sheet["errors"] == []
+    assert sheet["traits"] == ["Reactionary", "Indomitable Faith"]
+    # 2 stessa categoria -> errore; 3 tratti -> errore
+    bad = _draft(abilities=dict(_OK_ABILS), race_bonus_ability="str",
+                 skills={"Climb": 1, "Perception": 1, "Survival": 1},
+                 traits=["Reactionary", "Indomitable Faith", "Armor Expert"])
+    sheet = build_character(bad)
+    assert any("tratt" in e.lower() for e in sheet["errors"])
+
+
+def test_markdown_render():
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str",
+                                   skills={"Climb": 1, "Perception": 1, "Survival": 1},
+                                   feats=["Power Attack", "Dodge", "Cleave"],
+                                   traits=["Reactionary", "Indomitable Faith"],
+                                   equipment=["Longsword", "Chain shirt"]))
+    md = render_markdown(sheet)
+    assert "# T" in md and "PF: 12" in md and "Longsword" in md and "Power Attack" in md
