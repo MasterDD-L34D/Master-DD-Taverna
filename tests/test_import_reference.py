@@ -214,3 +214,29 @@ def test_parse_traits_strips_suggested_characters():
     assert "Iomedaeans" not in entries[0]["description"]
     assert "Diplomacy" in entries[0]["description"]
     print("OK: traits strip suggested characters")
+
+
+def test_trait_pi_supplement():
+    from tools.import_reference import _trait_pi_hits
+    entry = {"name": "Acadamae Neophyte", "description": "You studied at the Acadamae of Korvosa.",
+             "prerequisites": [], "source": "Ultimate Campaign"}
+    assert _trait_pi_hits(entry)
+    clean_entry = {"name": "Reactionary", "description": "+2 trait bonus on initiative checks.",
+                   "prerequisites": [], "source": "Ultimate Campaign"}
+    assert not _trait_pi_hits(clean_entry)
+    society = {"name": "Pathfinder's Focus", "description": "+1 on saves.",
+               "prerequisites": [], "source": "Pathfinder Society Primer"}
+    assert _trait_pi_hits(society)
+    print("OK: trait PI supplement")
+
+
+def test_parse_traits_comma_source():
+    html = ("<html><body>"
+            "<h3><a href=\"TraitDisplay.aspx?ItemName=Hill+Fighter\">Hill Fighter</a></h3>"
+            "<p><b>Source</b> Sargava, the Lost Colony pg. 12</p>"
+            "<p>You gain a +1 trait bonus on attacks from higher ground.</p>"
+            "</body></html>")
+    entries = parse_traits(html, "Basic (Combat)")
+    assert entries[0]["source"] == "Sargava, the Lost Colony"
+    assert entries[0]["source_id"].startswith("sargava_the_lost_colony:")
+    print("OK: traits comma source")

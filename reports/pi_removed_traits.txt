@@ -1,14 +1,28 @@
 Absalom Bouncer [Basic (Combat)]: Absalom
+Acadamae Neophyte [Basic (Magic)]: Acadamae, Korvosa
+Acolyte of Apocrypha [Basic (Faith)]: Inner Sea
+Ambush Training [Basic (Combat)]: Pathfinder Society
 Amiable Briber [Basic (Social)]: Absalom
+Aspect of the Quah [Basic (Faith)]: Shoanti
 Avid Reader [Basic (Social)]: Pathfinder Society
 Beast of the Society [Basic (Magic)]: Pathfinder Society
 Berserker of the Society [Basic (Combat)]: Pathfinder Society
 Blackjacket Weapon Flair [Basic (Combat)]: Druma
 Blade of the Society [Basic (Combat)]: Pathfinder Society
+Bountiful Herb-Lore [Basic (Magic)]: Cassomir
 Brastlewark Businessman [Basic (Social)]: Cheliax
+Chelish Sympathizer [Basic (Social)]: Chelish, Inner Sea, Thrune
 Chosen of Iomedae [Basic (Faith)]: Iomedae
+Clever Wordplay [Basic (Social)]: Pathfinder Society
+Coherent Rage [Basic (Combat)]: Ulfen
+Collector [Basic (Social)]: Chelish
 Debauchery Defier [Basic (Social)]: Taldor
 Defender of the Society [Basic (Combat)]: Pathfinder Society
+Demon Slayer [Basic (Combat)]: Mendev
+Demon Smiter [Basic (Combat)]: Mendev
+Dragon-Hunted [Basic (Social)]: Shackles
+Dusk Market Bribery [Basic (Social)]: Westcrown
+Ecumenical [Basic (Social)]: Magnimar
 Eldritch Smith [Basic (Magic)]: Torag
 Elemental Apprentice [Basic (Combat)]: Golarion, Sodden Lands
 Exalted of the Society [Basic (Faith)]: Absalom, Pathfinder Society
@@ -16,16 +30,47 @@ Eye for the Wondrous [Basic (Magic)]: Katapesh
 Founders' Heritage [Basic (Social)]: Absalom
 Greater Adept of the Society [Basic (Magic)]: Pathfinder Society
 Havoc of the Society [Basic (Magic)]: Pathfinder Society
+Hellknight Ancestry [Basic (Social)]: Hellknight
+Hellknight Devotion [Basic (Combat)]: Hellknight
+Hellknight Initiate [Basic (Combat)]: Hellknight
+Hellknight Inquisitor [Basic (Faith)]: Hellknight
 Honored Fist of the Society [Basic (Combat)]: Pathfinder Society
 Infernal Colleague [Basic (Social)]: Cheliax
 Inhabitant of Illusion [Basic (Magic)]: Kyonin
+Insistent Benefactor [Basic (Magic)]: Pathfinder Society
 Internal Compass [Basic (Magic)]: Pharasma
+Jinx Eater [Basic (Magic)]: Shackles
+Keleshite Princess [Basic (Social)]: Qadiran
+King in Waiting [Basic (Social)]: Linnorm
+Lastwall Defender [Basic (Combat)]: Lastwall
+Lost Nobility [Basic (Social)]: Chelish, Thrune
+Lucid Dreamer [Basic (Magic)]: Varisian
 Maestro of the Society [Basic (Social)]: Absalom, Golarion, Pathfinder Society
+Master Messenger [Basic (Social)]: Riddleport
 Merciful Scimitar [Basic (Combat)]: Sarenrae
+Mock Gladiator [Basic (Social)]: Magnimar
+Muscle of the Society [Basic (Combat)]: Pathfinder Society
+Natural Ritualist [Basic (Faith)]: Shoanti
+Necrotic Aura [Basic (Faith)]: Whispering Way
+Noble Savage [Basic (Social)]: Ulfen
 Numerian Fluid Indulger [Basic (Social)]: Numeria
 Pact Servant [Basic (Faith)]: Asmodeus
+Pathfinder's Focus [Basic (Magic)]: Pathfinder Society
+Performer's Surprise [Basic (Combat)]: Varisian
+Promising [Basic (Combat)]: Eagle Knight
+Questing Hellknight [Basic (Social)]: Hellknight
+Red Mantis Bleeding [Basic (Combat)]: Mediogalti, Red Mantis
+Relic-Proof [Basic (Social)]: Pathfinder Society
+Rider's Bond [Basic (Combat)]: Lastwall
 Scarred by Space Pirates [Basic (Combat)]: Golarion
 Seafaring Reputation [Basic (Social)]: Absalom
+Shadow Trained [Basic (Combat)]: Nidal
 Siege Defender [Basic (Combat)]: Absalom
+Slave Runner [Basic (Social)]: Chelish
+St. Clydwell's Ward [Basic (Faith)]: Mendev
 Stalwart of the Society [Basic (Faith)]: Golarion, Pathfinder Society
+Tar-Baphon's Whisper [Basic (Magic)]: Tar-Baphon, Whispering Way
+Tarnished Halls Runner [Basic (Combat)]: Technic League
+Thunder and Fang Performer [Basic (Combat)]: Shoanti
 Tracker of the Society [Basic (Combat)]: Pathfinder Society
+Two-World Magic [Basic (Magic)]: Chelish, Mwangi

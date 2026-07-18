@@ -733,9 +733,11 @@ def parse_traits(html, category):
         for line in _trait_body_lines(header):
             src = re.match(r"^Source\s+(.+)$", line)
             if src and source is None:
-                # 'Libro pg. N' (anche multi-fonte: si prende il primo).
-                books = re.findall(r"([^,]+?)\s+pg\.?\s*\d+", src.group(1))
-                source = clean(books[0]) if books else clean(src.group(1))
+                # Primo libro = prefisso fino al primo 'pg. N': la virgola puo'
+                # far parte del titolo ('Sargava, the Lost Colony pg. 12');
+                # in multi-fonte ('A pg. 5, B pg. 62') si prende il primo.
+                book = re.match(r"^(.+?)\s+pg\.?\s*\d+", src.group(1))
+                source = clean(book.group(1)) if book else clean(src.group(1))
                 continue
             r = re.match(r"^Requirement\(s\)\s*(.+)$", line)
             if r and req is None:
@@ -759,13 +761,42 @@ def parse_traits(html, category):
     return entries
 
 
+# Supplemento PI Golarion specifico per i tratti (toponimi/etnie/fazioni/
+# forme aggettivali non coperte da legal_filter.PI_WORDS). NON aggiungerle a
+# PI_WORDS: impatterebbe i cataloghi gia' committati (triage separato futuro).
+TRAITS_PI_SUPPLEMENT = frozenset({
+    "Korvosa", "Magnimar", "Riddleport", "Lastwall", "Mendev", "Nidal",
+    "Westcrown", "Cassomir", "Sargava", "Thrune", "Mwangi", "Shackles",
+    "Linnorm", "Kelesh", "Ulfen", "Shoanti", "Varisian", "Chelish", "Taldan",
+    "Qadiran", "Inner Sea", "Hellknight", "Red Mantis", "Whispering Way",
+    "Technic League", "Eagle Knight", "Tar-Baphon", "Acadamae", "Mediogalti",
+})
+
+_TRAITS_PI_SUPPLEMENT_RES = {
+    term: re.compile(rf"\b{re.escape(term)}\b", re.IGNORECASE)
+    for term in TRAITS_PI_SUPPLEMENT
+}
+
+
 def _trait_pi_hits(entry):
-    """Occorrenze PI (legal_filter._find_pi) in name/description/prerequisites
-    del tratto. Le categorie Basic includono tratti da Player Companion con PI
-    Golarion ('Absalom Bouncer', tratti 'of the Society', divinita'/luoghi nei
-    requisiti Faith): filtrati dal builder, come PI_EQUIPMENT per equipment."""
+    """Occorrenze PI in name/description/prerequisites del tratto.
+
+    Tre fonti di match: legal_filter._find_pi (PI_WORDS + PI_PHRASES), i
+    termini TRAITS_PI_SUPPLEMENT (word boundary, case-insensitive) e il campo
+    source che contiene 'Pathfinder Society' (es. 'Pathfinder Society
+    Primer'). Filtrati dal builder, come PI_EQUIPMENT per equipment."""
     texts = [entry["name"], entry["description"], *entry["prerequisites"]]
-    return [hit for text in texts for hit in _find_pi(text)]
+    hits = [hit for text in texts for hit in _find_pi(text)]
+    for text in texts:
+        for term, pattern in _TRAITS_PI_SUPPLEMENT_RES.items():
+            m = pattern.search(text)
+            if m:
+                hits.append({"type": "word", "term": term,
+                             "context": text[max(0, m.start() - 30):m.end() + 30]})
+    if "pathfinder society" in entry.get("source", "").lower():
+        hits.append({"type": "phrase", "term": "Pathfinder Society",
+                     "context": entry["source"]})
+    return hits
 
 
 def build_traits(write=False):
