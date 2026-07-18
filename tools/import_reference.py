@@ -843,8 +843,103 @@ def build_traits(write=False):
         print(f"report: {len(entries)} entry (write=False, nessuna scrittura)")
 
 
+def extract_prerequisites(description):
+    """Estrae i prerequisiti da una description testuale (riga 'Prerequisite(s): ...').
+    Ritorna lista di stringhe (split su virgola), [] se assenti."""
+    m = re.search(r"Prerequisites?:\s*(.+?)(?:\.\s*(?:\n|$)|\.$)", description, re.S)
+    if not m:
+        return []
+    raw = clean(m.group(1))
+    if not raw or raw.lower() == "none":
+        return []
+    return [clean(p) for p in raw.split(",") if clean(p)]
+
+
+def _feat_card_prereq_lookup():
+    """Lookup offline nome -> prerequisiti dal dataset PFRPG_Feat_card in cache
+    locale (.cache/enrichment, la stessa fonte OGL da cui le descriptions di
+    feats.json sono state arricchite: nessun dato esterno aggiunto, nessuna
+    fetch di rete).
+
+    Le descriptions attuali di feats.json NON contengono la riga
+    'Prerequisite(s):' (il dataset separa i prerequisiti in una property
+    dedicata): questa cache e' l'unica fonte offline che li conserva.
+    Cache assente o incompleta -> lookup parziale/vuoto, mai errore."""
+    from tools.enrich_reference import normalize_name, parse_feat_card
+
+    cache_dir = Path(__file__).resolve().parents[1] / ".cache" / "enrichment"
+    lookup = {}
+    for path in sorted(cache_dir.glob("*PFRPG_Feat_card*.cache")):
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        if not isinstance(data, list):
+            continue
+        for entry in data:
+            name = entry.get("title", "")
+            if not name:
+                continue
+            contents = entry.get("contents", [])
+            # Le carte Mythic riusano il titolo del talento base (subtitle
+            # 'Mythic', prerequisito il talento stesso): il catalogo non ha
+            # entry '(Mythic)' omonime, quindi matcherebbero il talento base
+            # con prerequisiti sbagliati. Saltate.
+            if any(line.strip().lower() == "subtitle | mythic" for line in contents):
+                continue
+            text = parse_feat_card(contents).get("prerequisites_text", "")
+            key = normalize_name(name)
+            if text and key not in lookup:
+                lookup[key] = [clean(p) for p in text.split(",") if clean(p)]
+    return lookup
+
+
+def enrich_feats(write=False):
+    """Riempie prerequisites vuoti in feats.json da fonti locali OFFLINE:
+    prima il parsing delle descriptions (extract_prerequisites), poi la cache
+    PFRPG_Feat_card (_feat_card_prereq_lookup). NON sovrascrive prerequisiti
+    gia' presenti ne' l'header (fonte d20PFSRD invariata: nessun dato esterno
+    aggiunto). Report di copertura a video.
+
+    NOTA copertura: le descriptions arricchite non includono la riga
+    'Prerequisite(s):' e la cache feat-card copre quasi solo talenti i cui
+    prerequisiti sono gia' compilati: il riempimento reale e' dell'ordine
+    delle unita', non delle centinaia stimate in pianificazione. Per la
+    copertura piena serve una fonte online (es. import FeatDisplay da AoN):
+    fuori scope per un builder offline."""
+    path = OGL_DIR / "feats.json"
+    with open(path, encoding="utf-8") as f:
+        catalog = json.load(f)
+    card_lookup = card_key = None
+    filled = already = no_info = 0
+    for entry in catalog["entries"]:
+        if entry.get("prerequisites"):
+            already += 1
+            continue
+        found = extract_prerequisites(entry.get("description", ""))
+        if not found:
+            # Fallback lazy: la cache feat-card si carica solo se una
+            # description non basta (e solo se la cache esiste su disco).
+            if card_lookup is None:
+                from tools.enrich_reference import normalize_name
+                card_lookup, card_key = _feat_card_prereq_lookup(), normalize_name
+            found = card_lookup.get(card_key(entry.get("name", "")), [])
+        if found:
+            entry["prerequisites"] = found
+            filled += 1
+        else:
+            no_info += 1
+    print(f"feats: gia' presenti {already}, riempiti {filled}, senza info {no_info}")
+    assert already + filled + no_info == len(catalog["entries"])
+    if write:
+        write_catalog(path, catalog["entries"],
+                      license_text=catalog.get("_license", LICENSE),
+                      source_text=catalog.get("_source", SOURCE))
+
+
 DOMAINS = {"abilities": build_abilities, "races": build_races, "classes": build_classes,
-           "skills": build_skills, "equipment": build_equipment, "traits": build_traits}
+           "skills": build_skills, "equipment": build_equipment, "traits": build_traits,
+           "feats": enrich_feats}
 
 
 def main(argv=None):

@@ -9,6 +9,17 @@ from tools.import_reference import (SKILL_HEADER_RE, _class_skill_matches,
                                     parse_equipment_table, parse_item_source,
                                     parse_race, parse_skill, parse_traits,
                                     source_id, slug)
+from tools.import_reference import extract_prerequisites
+
+
+def test_extract_prerequisites():
+    d1 = "You increase the damage of your attacks.\n\nPrerequisites: Str 13, base attack bonus +1.\n\nBenefit: You can choose to take a -1 penalty."
+    assert extract_prerequisites(d1) == ["Str 13", "base attack bonus +1"]
+    d2 = "Benefit: You gain a +2 bonus.\n\nNormal: Without this feat, nothing."
+    assert extract_prerequisites(d2) == []
+    d3 = "Prerequisite: Dex 15, Nimble Moves, base attack bonus +7.\n\nBenefit: X."
+    assert extract_prerequisites(d3) == ["Dex 15", "Nimble Moves", "base attack bonus +7"]
+    print("OK: extract_prerequisites fixture")
 
 ABILITIES_HTML = """
 <html><body>
