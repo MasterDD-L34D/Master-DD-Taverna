@@ -18,6 +18,7 @@ def load(kind):
         return json.load(f)["entries"]
 
 
+@functools.lru_cache(maxsize=None)
 def _by_name(kind):
     return {e["name"]: e for e in load(kind)}
 
