@@ -556,11 +556,11 @@ minmax_flow:
   exports: ["markdown_sheet","vtt_json","excel_csv"]
 
 export_templates:
-  markdown_sheet: { path: "template://sheet_md.j2", notes: "Nomi PF in EN; righe guida tradotte." }
-  vtt_json: { path: "template://roll20_npc.json.j2" }
-  excel_csv: { path: "template://sheet_flat.csv.j2" }
-  quality_report_json: { path: "template://quality_report.json.j2", notes: "Score + breakdown + miglioramenti" }
-  portrait_prompt_txt: { path: "template://portrait_prompt.txt.j2", notes: "Prompt conforme a image_policy" }
+  markdown_sheet: { path: "module://scheda_pg_markdown_template.md", notes: "Nomi PF in EN; righe guida tradotte. Template reale incluso nel repo." }
+  vtt_json: { path: "external://roll20_npc.json.j2", notes: "Template esterno, non bundled nel repo (ex template://)." }
+  excel_csv: { path: "external://sheet_flat.csv.j2", notes: "Template esterno, non bundled nel repo (ex template://)." }
+  quality_report_json: { path: "external://quality_report.json.j2", notes: "Score + breakdown + miglioramenti. Template esterno, non bundled (ex template://)." }
+  portrait_prompt_txt: { path: "external://portrait_prompt.txt.j2", notes: "Prompt conforme a image_policy. Template esterno, non bundled (ex template://)." }
 
 ap_spoiler_index:
   items: ["Sandpoint (Varisia)","Korvosa (Curse of the Crimson Throne)","Kaer Maga (Varisia)","Magnimar (Varisia)","Mendev / Worldwound (Wrath of the Righteous)","Kingmaker (Stolen Lands)","Skull & Shackles (The Shackles)"]

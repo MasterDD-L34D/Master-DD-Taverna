@@ -1,6 +1,6 @@
 # Checklist PR
 
-Il workflow di QA compila e spunta automaticamente i controlli in base ai risultati dei test: se il job fallisce, controlla i [log del QA workflow](https://github.com/MasterDD-L34D/Master-DD-Pathfinder-GPT/actions/workflows/pr-checklist.yml) e ripeti la verifica.
+Il workflow di QA compila e spunta automaticamente i controlli in base ai risultati dei test: se il job fallisce, controlla i [log del QA workflow](https://github.com/MasterDD-L34D/Master-DD-Taverna/actions/workflows/pr-checklist.yml) e ripeti la verifica.
 
 ### Come funziona l'autocompilazione
 - Esegui o rilancia i test richiesti; il workflow inserirà automaticamente i risultati e spunterà i controlli.

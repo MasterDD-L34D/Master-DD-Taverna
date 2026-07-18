@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verifica automatica del lavoro su Master-DD-Pathfinder-GPT."""
+"""Verifica automatica del lavoro su Master-DD-Taverna."""
 import json
 import os
 import subprocess
@@ -178,7 +178,7 @@ def main():
     check_rag_index()
     check_rag_endpoints()
     check_build_endpoint()
-    print("\n=== VERIFICA Master-DD-Pathfinder-GPT: TUTTO OK ===")
+    print("\n=== VERIFICA Master-DD-Taverna: TUTTO OK ===")
 
 
 if __name__ == "__main__":

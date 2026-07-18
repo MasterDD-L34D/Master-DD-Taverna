@@ -62,7 +62,7 @@ python launch.py start
 Su Windows puoi anche fare doppio click su `start.bat` (o `start.ps1`).
 
 Il launcher:
-- crea/usa i venv di `npc-profiler` e `Master-DD-Pathfinder-GPT`;
+- crea/usa i venv di `npc-profiler` e `Master-DD-Taverna`;
 - rileva automaticamente Ollama su `localhost:11434` e, se presente, imposta `RAG_LLM_PROVIDER=ollama`;
 - costruisce l'indice RAG alla prima esecuzione se manca;
 - apre il browser su `http://localhost:8501`.

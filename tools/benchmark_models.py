@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Benchmark modelli Ollama per il RAG di Master-DD-Pathfinder-GPT.
+"""Benchmark modelli Ollama per il RAG di Master-DD-Taverna.
 
 Misura tempi di risposta e qualita' delle risposte per diverse query
 usando lo stesso indice RAG ma modelli LLM diversi.
