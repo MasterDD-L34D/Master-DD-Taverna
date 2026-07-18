@@ -89,6 +89,11 @@ def ability_mod(score):
     return (score - 10) // 2
 
 
+def _signed(n):
+    """'+3' per valori >= 0, '-2' altrimenti."""
+    return f"{'+' if n >= 0 else ''}{n}"
+
+
 def _parse_cost(text):
     """'15 gp' -> 15 (int); '5 sp' -> 0.5; '1 cp' -> 0.01 (float, 2 decimali)."""
     m = re.search(r"(\d[\d,]*)\s*(gp|sp|cp)", str(text or ""))
@@ -284,26 +289,28 @@ def build_character(draft):
 
 def render_markdown(sheet):
     """Scheda testuale compatta della build lv1."""
+    if sheet.get("errors"):
+        return "# Errori di validazione\n" + "\n".join(sheet["errors"]) + "\n"
     mods = {ab: ability_mod(sc) for ab, sc in sheet["abilities"].items()}
     lines = [f"# {sheet['name']}",
-             f"{sheet['race']} {sheet['class']} 1 — PF: {sheet['hp']} — CA: {sheet['ac']} — Iniziativa: {'+' if sheet['initiative'] >= 0 else ''}{sheet['initiative']}",
+             f"{sheet['race']} {sheet['class']} 1 — PF: {sheet['hp']} — CA: {sheet['ac']} — Iniziativa: {_signed(sheet['initiative'])}",
              "",
              "**Caratteristiche**: " + ", ".join(
-                 f"{ab.upper()} {sc} ({'+' if mods[ab] >= 0 else ''}{mods[ab]})"
+                 f"{ab.upper()} {sc} ({_signed(mods[ab])})"
                  for ab, sc in sheet["abilities"].items()),
-             f"**TS**: Tempra {'+' if sheet['saves']['fort'] >= 0 else ''}{sheet['saves']['fort']}, "
-             f"Riflessi {'+' if sheet['saves']['ref'] >= 0 else ''}{sheet['saves']['ref']}, "
-             f"Volonta' {'+' if sheet['saves']['will'] >= 0 else ''}{sheet['saves']['will']} — BAB +{sheet['bab']}"]
+             f"**TS**: Tempra {_signed(sheet['saves']['fort'])}, "
+             f"Riflessi {_signed(sheet['saves']['ref'])}, "
+             f"Volonta' {_signed(sheet['saves']['will'])} — BAB +{sheet['bab']}"]
     if sheet.get("attacks"):
-        lines.append("**Attacchi**: " + "; ".join(f"{a['weapon']} +{a['bonus']} ({a['damage']})" for a in sheet["attacks"]))
+        lines.append("**Attacchi**: " + "; ".join(f"{a['weapon']} {_signed(a['bonus'])} ({a['damage']})" for a in sheet["attacks"]))
     if sheet.get("skills"):
-        lines.append("**Skill**: " + ", ".join(f"{n} +{s['total']}" for n, s in sheet["skills"].items()))
+        lines.append("**Skill**: " + ", ".join(f"{n} {_signed(s['total'])}" for n, s in sheet["skills"].items()))
     if sheet.get("feats"):
         lines.append("**Talenti**: " + ", ".join(sheet["feats"]))
     if sheet.get("traits"):
         lines.append("**Tratti**: " + ", ".join(sheet["traits"]))
     if sheet.get("equipment"):
-        lines.append(f"**Equip** (oro restante {sheet.get('gold_remaining', 0)} gp): "
+        lines.append(f"**Equip** (oro restante {sheet.get('gold_remaining', 0):.2f} gp): "
                      + ", ".join(i["name"] for i in sheet["equipment"]))
     if sheet.get("warnings"):
         lines.append("_Note_: " + " | ".join(sheet["warnings"]))

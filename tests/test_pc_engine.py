@@ -297,13 +297,37 @@ def test_traits_validation():
                  traits=["Reactionary", "Indomitable Faith", "Armor Expert"])
     sheet = build_character(bad)
     assert any("tratt" in e.lower() for e in sheet["errors"])
+    # (a) 2 tratti della stessa categoria (entrambi Basic (Combat)) -> errore dedicato
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str",
+                                   skills={"Climb": 1, "Perception": 1, "Survival": 1},
+                                   traits=["Reactionary", "Armor Expert"]))
+    assert any("stessa categoria" in e for e in sheet["errors"])
+    # (b) tratto sconosciuto -> errore dedicato
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str",
+                                   skills={"Climb": 1, "Perception": 1, "Survival": 1},
+                                   traits=["Non Esiste"]))
+    assert any("tratto sconosciuto" in e for e in sheet["errors"])
 
 
 def test_markdown_render():
-    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str",
+    # Bonus razziale su Dex (14): Dodge (Dex 13) passa e la scheda resta senza errori,
+    # altrimenti la guard di render_markdown restituirebbe la pagina errori.
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="dex",
                                    skills={"Climb": 1, "Perception": 1, "Survival": 1},
                                    feats=["Power Attack", "Dodge", "Cleave"],
                                    traits=["Reactionary", "Indomitable Faith"],
                                    equipment=["Longsword", "Chain shirt"]))
     md = render_markdown(sheet)
     assert "# T" in md and "PF: 12" in md and "Longsword" in md and "Power Attack" in md
+
+
+def test_render_signed_negative():
+    # str 7 -> mod -2; attacco Longsword = BAB 1 - 2 = -1: segno singolo, mai "+-".
+    # Point-buy: 7(-4) 14(5) 14(5) 10(0) 12(2) 13(3) = 11 <= 15.
+    abils = {"str": 7, "dex": 14, "con": 14, "int": 10, "wis": 12, "cha": 13}
+    sheet = build_character(_draft(abilities=abils, race_bonus_ability="dex",
+                                   skills={"Climb": 1}, equipment=["Longsword"]))
+    assert sheet["errors"] == [], sheet["errors"]
+    md = render_markdown(sheet)
+    assert "+-" not in md
+    assert "Longsword -1 (1d8-2)" in md
