@@ -770,6 +770,7 @@ TRAITS_PI_SUPPLEMENT = frozenset({
     "Linnorm", "Kelesh", "Ulfen", "Shoanti", "Varisian", "Chelish", "Taldan",
     "Qadiran", "Inner Sea", "Hellknight", "Red Mantis", "Whispering Way",
     "Technic League", "Eagle Knight", "Tar-Baphon", "Acadamae", "Mediogalti",
+    "Sargavan", "Garundi", "Vudrani",
 })
 
 _TRAITS_PI_SUPPLEMENT_RES = {

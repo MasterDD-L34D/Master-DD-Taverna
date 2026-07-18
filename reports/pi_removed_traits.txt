@@ -34,12 +34,14 @@ Hellknight Ancestry [Basic (Social)]: Hellknight
 Hellknight Devotion [Basic (Combat)]: Hellknight
 Hellknight Initiate [Basic (Combat)]: Hellknight
 Hellknight Inquisitor [Basic (Faith)]: Hellknight
+Hill Fighter [Basic (Combat)]: Sargavan
 Honored Fist of the Society [Basic (Combat)]: Pathfinder Society
 Infernal Colleague [Basic (Social)]: Cheliax
 Inhabitant of Illusion [Basic (Magic)]: Kyonin
 Insistent Benefactor [Basic (Magic)]: Pathfinder Society
 Internal Compass [Basic (Magic)]: Pharasma
 Jinx Eater [Basic (Magic)]: Shackles
+Jungle Fighter [Basic (Combat)]: Sargavan
 Keleshite Princess [Basic (Social)]: Qadiran
 King in Waiting [Basic (Social)]: Linnorm
 Lastwall Defender [Basic (Combat)]: Lastwall
@@ -54,6 +56,7 @@ Natural Ritualist [Basic (Faith)]: Shoanti
 Necrotic Aura [Basic (Faith)]: Whispering Way
 Noble Savage [Basic (Social)]: Ulfen
 Numerian Fluid Indulger [Basic (Social)]: Numeria
+Obari Veteran [Basic (Combat)]: Garundi, Vudrani
 Pact Servant [Basic (Faith)]: Asmodeus
 Pathfinder's Focus [Basic (Magic)]: Pathfinder Society
 Performer's Surprise [Basic (Combat)]: Varisian
@@ -62,6 +65,7 @@ Questing Hellknight [Basic (Social)]: Hellknight
 Red Mantis Bleeding [Basic (Combat)]: Mediogalti, Red Mantis
 Relic-Proof [Basic (Social)]: Pathfinder Society
 Rider's Bond [Basic (Combat)]: Lastwall
+River Fighter [Basic (Combat)]: Sargavan
 Scarred by Space Pirates [Basic (Combat)]: Golarion
 Seafaring Reputation [Basic (Social)]: Absalom
 Shadow Trained [Basic (Combat)]: Nidal
@@ -73,4 +77,4 @@ Tar-Baphon's Whisper [Basic (Magic)]: Tar-Baphon, Whispering Way
 Tarnished Halls Runner [Basic (Combat)]: Technic League
 Thunder and Fang Performer [Basic (Combat)]: Shoanti
 Tracker of the Society [Basic (Combat)]: Pathfinder Society
-Two-World Magic [Basic (Magic)]: Chelish, Mwangi
+Two-World Magic [Basic (Magic)]: Chelish, Mwangi, Sargavan

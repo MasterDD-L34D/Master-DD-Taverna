@@ -230,6 +230,17 @@ def test_trait_pi_supplement():
     print("OK: trait PI supplement")
 
 
+def test_trait_pi_supplement_demonyms():
+    from tools.import_reference import _trait_pi_hits
+    prereq = {"name": "Hill Fighter", "description": "+1 trait bonus on attacks.",
+              "prerequisites": ["Sargavan"], "source": "Sargava, the Lost Colony"}
+    assert _trait_pi_hits(prereq)
+    desc = {"name": "Obari Veteran", "description": "Garundi and Vudrani traditions.",
+            "prerequisites": [], "source": "Ultimate Campaign"}
+    assert _trait_pi_hits(desc)
+    print("OK: trait PI supplement demonyms")
+
+
 def test_parse_traits_comma_source():
     html = ("<html><body>"
             "<h3><a href=\"TraitDisplay.aspx?ItemName=Hill+Fighter\">Hill Fighter</a></h3>"

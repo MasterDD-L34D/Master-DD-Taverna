@@ -1025,28 +1025,6 @@
       }
     },
     {
-      "name": "Hill Fighter",
-      "source": "Sargava, the Lost Colony",
-      "source_id": "sargava_the_lost_colony:hill_fighter",
-      "prerequisites": [
-        "Sargavan"
-      ],
-      "tags": [
-        "trait",
-        "basic_combat"
-      ],
-      "references": [
-        "AoN: Traits (Basic (Combat))"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/TraitDisplay.aspx?ItemName=Hill%20Fighter"
-      ],
-      "description": "You are used to fighting in hilly environments ( Pathfinder RPG Core Rulebook 427–428). You may run or charge downhill on a steep slope (moving up to your base speed) without making an Acrobatics check to avoid stumbling—but if you travel farther than this distance, the normal rules for steep slopes apply.",
-      "mechanics": {
-        "category": "Basic (Combat)"
-      }
-    },
-    {
       "name": "Holdout",
       "source": "Quests and Campaigns",
       "source_id": "quests_and_campaigns:holdout",
@@ -1202,28 +1180,6 @@
         "https://aonprd.com/TraitDisplay.aspx?ItemName=Jacket%20Training"
       ],
       "description": "You can treat an armored coat UE as light armor. This choice must be made when you don the armor, and can’t be changed until you remove and redon the armor. You must still be proficient in wearing medium armor to avoid adding the armor’s check penalty on all attack rolls and skill checks that involve moving.",
-      "mechanics": {
-        "category": "Basic (Combat)"
-      }
-    },
-    {
-      "name": "Jungle Fighter",
-      "source": "Sargava, the Lost Colony",
-      "source_id": "sargava_the_lost_colony:jungle_fighter",
-      "prerequisites": [
-        "Sargavan"
-      ],
-      "tags": [
-        "trait",
-        "basic_combat"
-      ],
-      "references": [
-        "AoN: Traits (Basic (Combat))"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/TraitDisplay.aspx?ItemName=Jungle%20Fighter"
-      ],
-      "description": "You are sure-footed in jungle environments, and your speed may not be reduced to less than 10 feet by difficult terrain in jungles (meaning you may take a 5-foot step in difficult terrain and not provoke an attack of opportunity).",
       "mechanics": {
         "category": "Basic (Combat)"
       }
@@ -1469,26 +1425,6 @@
       }
     },
     {
-      "name": "Obari Veteran",
-      "source": "Merchant's Manifest",
-      "source_id": "merchant_s_manifest:obari_veteran",
-      "prerequisites": [],
-      "tags": [
-        "trait",
-        "basic_combat"
-      ],
-      "references": [
-        "AoN: Traits (Basic (Combat))"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/TraitDisplay.aspx?ItemName=Obari%20Veteran"
-      ],
-      "description": "You’ve spent years aboard ships traveling the lucrative Obari Crossing, transporting Garundi and Vudrani goods. You gain +1 bonus on Profession (sailor) checks, and Profession (sailor) is a class skill for you. You also gain a +1 trait bonus on weapon damage rolls against creatures with the aquatic subtype.",
-      "mechanics": {
-        "category": "Basic (Combat)"
-      }
-    },
-    {
       "name": "Ogre Avoidance",
       "source": "People of the Wastes",
       "source_id": "people_of_the_wastes:ogre_avoidance",
@@ -1706,28 +1642,6 @@
         "https://aonprd.com/TraitDisplay.aspx?ItemName=Resolve%20of%20the%20Rejected"
       ],
       "description": "Some disagree with your choice to wield a firearm, and their scorn has only hardened your resolve in battle. You gain a +1 trait bonus on all saving throws against charm and compulsion effects. Also, once per day when you succeed at a saving throw against such an effect, you regain 1 grit point.",
-      "mechanics": {
-        "category": "Basic (Combat)"
-      }
-    },
-    {
-      "name": "River Fighter",
-      "source": "Sargava, the Lost Colony",
-      "source_id": "sargava_the_lost_colony:river_fighter",
-      "prerequisites": [
-        "Sargavan"
-      ],
-      "tags": [
-        "trait",
-        "basic_combat"
-      ],
-      "references": [
-        "AoN: Traits (Basic (Combat))"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/TraitDisplay.aspx?ItemName=River%20Fighter"
-      ],
-      "description": "You are used to fighting while swimming. You may swim downstream or cross-current as a charge if you make your Swim DC by 5 or more.",
       "mechanics": {
         "category": "Basic (Combat)"
       }
