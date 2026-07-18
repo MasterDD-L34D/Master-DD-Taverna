@@ -1128,7 +1128,7 @@ commands:
         return_as: EX
       - output: "✍️ Explain: {{EX.payload}}"
 
-  /npc_portrait [descrizione_opz] ["stile?"]:
+  /npc_portrait [descrizione_opz] [stile?]:
     when: feature_flags.portraits=='on'
     params: ["descrizione_opz?", "stile?"]
     description: "Genera prompt immagine del ritratto (dichiara stile; PFS-safe)."

@@ -741,7 +741,7 @@ registration:
 
 data_sources:
   include:
-    - core: "Pathfinder Master DD - Istruzioni Operative Core"
+    - core: "Master-DD-Taverna - Istruzioni Operative Core"
     - modules_active: ["*"]
     - glossary_local: true
     - assets: ["*.md","*.txt","*.json","*Homebrewery*V3*.pdf"]
@@ -771,7 +771,7 @@ appendices:
 manual_generator:
   enabled: true
   sections:
-    - {id: intro, title: "Cos'è Pathfinder Master DD", from: core.description}
+    - {id: intro, title: "Cos'è Master-DD-Taverna", from: core.description}
     - {id: modes, title: "Modalità & Comandi", from: core.modes + core.commands_registry}
     - {id: workflows, title: "Flussi tipici", synthesize_from: ["Core.auto_detection","Module_*.commands"]}
     - {id: files, title: "File & Dipendenze", from: core.required_files + core.module_file_map}

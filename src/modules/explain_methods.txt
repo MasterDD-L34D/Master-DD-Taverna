@@ -21,7 +21,7 @@ exports:
     payload_md_example: "# {topic} — {method}\nDiagramma ASCII + passi guidati\nMDA:explain_export"
 
 description: >
-  Modalità di spiegazione multi-metodo per Pathfinder Master DD – Hybrid Core.
+  Modalità di spiegazione multi-metodo per Master-DD-Taverna – Hybrid Core.
   Unisce rubriche didattiche, RAW-gate, kit ASCII, quiz di verifica e deleghe automatiche
   verso Ruling/Archivist/MinMax. Include speed modes (/fast, /full), policy citazioni
   a scalini, header di conferma, pipeline QA/MDA e diagnostica.
