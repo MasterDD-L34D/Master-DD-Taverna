@@ -1,14 +1,15 @@
 """Motore deterministico di creazione PG lv1 (nessun LLM)."""
+import re
+
 from src.pc import catalogs
 
 ABILS = ("str", "dex", "con", "int", "wis", "cha")
 
-FEAT_BONUS_CLASSES = {"Fighter"}
+FEAT_BONUS_CLASSES = {"Fighter", "Monk"}
 
 
 def _check_prereq(prereq, ctx):
     """Valuta un prerequisito testuale. Ritorna (ok, nota)."""
-    import re
     text = prereq.rstrip(".")
     m = re.match(r"^(Str|Dex|Con|Int|Wis|Cha)\w*\s+(\d+)$", text, re.I)
     if m:
@@ -18,22 +19,38 @@ def _check_prereq(prereq, ctx):
     m = re.match(r"^base attack bonus \+(\d+)$", text, re.I)
     if m:
         return ctx["bab"] >= int(m.group(1)), f"richiede BAB +{m.group(1)}"
-    if catalogs.find_feat(text) is not None:
-        return text in ctx["feats"], f"richiede il talento {text}"
+    base = re.sub(r"\s*\([^)]*\)\s*$", "", text)
+    for candidate in (text, base):
+        if catalogs.find_feat(candidate) is not None:
+            return candidate in ctx["feats"], f"richiede il talento {text}"
     m = re.search(r"level\s+(\d+)(?:st|nd|rd|th)", text, re.I)
+    if m:
+        needed = int(m.group(1))
+        return needed <= 1, f"richiede livello {needed} (personaggio lv1)"
+    m = re.search(r"(\d+)(?:st|nd|rd|th)-level", text, re.I)
     if m:
         needed = int(m.group(1))
         return needed <= 1, f"richiede livello {needed} (personaggio lv1)"
     if "proficien" in text.lower():
         return True, f"proficiency: {text} (assunta da classe)"
+    m = re.search(r"(\d+)\s+ranks?", text, re.I)
+    if m:
+        n = int(m.group(1))
+        if n > 1:
+            return False, f"richiede {n} ranks (personaggio lv1) ({text})"
+        skill_ref = re.sub(r"\s*\d+\s+ranks?.*$", "", text, flags=re.I).strip(" ,;")
+        if skill_ref and skill_ref not in ctx.get("skills", {}):
+            return False, f"richiede 1 rank in {skill_ref} (non presente nel draft)"
+        return True, f"1 rank: {text}"
     if re.search(r"rank", text, re.I):
-        return True, f"skill rank: {text} (verificata a mano)"
+        return True, f"skill rank: {text} (forma non verificabile, accettata al lv1)"
     return True, f"forma prerequisito non valutabile: {text}"  # warning, non errore
 
 
 def validate_feats(draft, sheet):
     """Conta talenti consentiti e valuta i prerequisiti noti."""
-    ctx = {"abilities": dict(sheet["abilities"]), "bab": sheet["bab"], "feats": list(draft.feats)}
+    ctx = {"abilities": dict(sheet["abilities"]), "bab": sheet["bab"],
+           "feats": list(draft.feats), "skills": sheet.get("skills", {})}
     allowed = 1 + (1 if draft.race == "Human" else 0) + (1 if draft.class_ in FEAT_BONUS_CLASSES else 0)
     if len(draft.feats) > allowed:
         sheet["errors"].append(f"feat: {len(draft.feats)} selezionati su {allowed} consentiti al lv1")

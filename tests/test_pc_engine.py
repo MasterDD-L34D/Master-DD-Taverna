@@ -168,3 +168,44 @@ def test_class_level_prereq_threshold():
                                    skills={"Climb": 1, "Perception": 1, "Survival": 1},
                                    feats=["Weapon Specialization"]))
     assert any("Weapon Specialization" in e for e in sheet["errors"])
+
+
+def test_skill_rank_prereq():
+    # Mounted Combat richiede "Ride 1 rank": senza Ride nel draft -> errore.
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str",
+                                   skills={"Climb": 1, "Perception": 1, "Survival": 1},
+                                   feats=["Mounted Combat"]))
+    assert any("Mounted Combat" in e and "Ride" in e for e in sheet["errors"])
+    # Con Ride 1 rank -> prerequisito soddisfatto.
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str",
+                                   skills={"Ride": 1, "Climb": 1, "Perception": 1},
+                                   feats=["Mounted Combat"]))
+    assert sheet["errors"] == [], sheet["errors"]
+
+
+def test_ranks_above_one_fail():
+    # Back to Back richiede "Perception 3 ranks": impossibile al lv1 -> errore.
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str",
+                                   skills={"Climb": 1, "Perception": 1, "Survival": 1},
+                                   feats=["Back to Back"]))
+    assert any("Back to Back" in e and "3 ranks" in e for e in sheet["errors"])
+
+
+def test_monk_bonus_feats():
+    # Monk lv1 ha "Bonus feat" (classes.json): 1 base + 1 Human + 1 Monk = 3 talenti.
+    # NB: Dodge escluso perche' richiede Dex 13 (con bonus razziale su Wis resta 12);
+    # Combat Reflexes / Improved Unarmed Strike / Weapon Finesse non hanno prerequisiti.
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="wis",
+                                   **{"class": "Monk"},
+                                   skills={"Climb": 1, "Perception": 1},
+                                   feats=["Combat Reflexes", "Improved Unarmed Strike",
+                                          "Weapon Finesse"]))
+    assert sheet["errors"] == [], sheet["errors"]
+
+
+def test_chain_missing():
+    # Cleave richiede il talento Power Attack: non selezionato -> errore che lo menziona.
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str",
+                                   skills={"Climb": 1, "Perception": 1, "Survival": 1},
+                                   feats=["Cleave"]))
+    assert any("Cleave" in e and "Power Attack" in e for e in sheet["errors"])
