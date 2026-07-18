@@ -1,28 +1,22 @@
 {
   "_license": "Open Game Content under OGL 1.0a. See LICENSE-OGL.txt and COPYRIGHT_NOTICE.txt.",
-  "_source": "Pathfinder RPG Reference Document © 2011 Paizo Publishing, LLC; d20PFSRD.",
+  "_source": "Pathfinder RPG Reference Document © 2011 Paizo Publishing, LLC; d20PFSRD; Archives of Nethys (aonprd.com).",
   "entries": [
     {
       "name": "Dwarf",
-      "source": "Pathfinder SRD",
+      "source": "PFRPG Core",
       "source_id": "pfrpg_core:dwarf",
       "prerequisites": [],
       "tags": [
-        "core",
-        "darkvision",
-        "dwarf",
-        "hardy",
-        "pathfinder 1e",
         "race",
-        "razza",
-        "slow and steady",
-        "stonecunning"
+        "core",
+        "medium"
       ],
       "references": [
-        "d20PFSRD: Dwarf"
+        "AoN: Dwarf (Races)"
       ],
       "reference_urls": [
-        "https://www.d20pfsrd.com/races/core-races/dwarf/"
+        "https://aonprd.com/RacesDisplay.aspx?ItemName=Dwarf"
       ],
       "category": "other",
       "edition": "1E",
@@ -30,29 +24,81 @@
       "notes": "Taglia Medium, velocità 6 m (non ridotta da armatura/carico). +2 Costituzione, +2 Saggezza, -2 Carisma. Darkvision 18 m. Defensive Training: +4 dodge bonus alla CA contro creature di taglia Large o superiore. Greed: +2 a Appraise su oggetti di pietra/metallo. Hatred: +1 attacco contro orc e goblinoidi. Hardy: +2 a TS contro veleni, incantesimi e SLAs. Slow and Steady: velocità base 6 m non ridotta da armatura o carico pesante. Stability: +4 bonus a CMD contro bull rush e trip se sta in piedi a terra. Stonecunning: +2 a Perception per individuare pietra lavorata insolita; cerca come a riposo. Weapon Familiarity: dwarven urgrosch e waraxe trattate come armi marziali. Lingue: Common, Dwarven; bonus: Giant, Gnome, Goblin, Orc, Terran, Undercommon.",
       "status": "approved",
       "validation_status": "passed",
-      "reviewed_by": "swarm-classes-races-2026-07-16"
+      "reviewed_by": "swarm-classes-races-2026-07-16",
+      "description": "Dwarf: modificatori {'con': 2, 'wis': 2, 'cha': -2}, taglia Medium, velocita' 20 ft. Tratti razziali: Darkvision; Defensive Training; Greed; Hatred; Hardy; Stability; Stonecunning; Weapon Familiarity.",
+      "mechanics": {
+        "ability_mods": {
+          "con": 2,
+          "wis": 2,
+          "cha": -2
+        },
+        "size": "Medium",
+        "speed": 20,
+        "traits": [
+          {
+            "name": "Darkvision",
+            "text": "Dwarves can see in the dark up to 60 feet."
+          },
+          {
+            "name": "Defensive Training",
+            "text": "Dwarves get a +4 dodge bonus to their AC against monsters of the giant subtype."
+          },
+          {
+            "name": "Greed",
+            "text": "Dwarves receive a +2 racial bonus on Appraise checks made to determine the price of nonmagical goods that contain precious metals or gemstones."
+          },
+          {
+            "name": "Hatred",
+            "text": "Dwarves receive a +1 bonus on attack rolls against humanoid creatures of the orc and goblinoid subtypes because of their special training against these hated foes."
+          },
+          {
+            "name": "Hardy",
+            "text": "Dwarves receive a +2 racial bonus on saving throws against poison, spells, and spell-like abilities."
+          },
+          {
+            "name": "Stability",
+            "text": "Dwarves receive a +4 racial bonus to their Combat Maneuver Defense when resisting a bull rush or trip attempt while standing on the ground."
+          },
+          {
+            "name": "Stonecunning",
+            "text": "Dwarves receive a +2 bonus on Perception checks to potentially notice unusual stonework, such as traps and hidden doors located in stone walls or floors. They receive a check to notice any such features that they pass within 10 feet of, whether or not they are actively looking."
+          },
+          {
+            "name": "Weapon Familiarity",
+            "text": "Dwarves are prof icient with battleaxes, heavy picks, and warhammers, and treat any weapon with the word “dwarven” in its name as a martial weapon."
+          }
+        ],
+        "languages": {
+          "auto": [
+            "Common",
+            "Dwarven"
+          ],
+          "bonus": [
+            "Giant",
+            "Gnome",
+            "Goblin",
+            "Orc",
+            "Terran",
+            "Undercommon"
+          ]
+        }
+      }
     },
     {
       "name": "Elf",
-      "source": "Pathfinder SRD",
+      "source": "PFRPG Core",
       "source_id": "pfrpg_core:elf",
       "prerequisites": [],
       "tags": [
-        "core",
-        "elf",
-        "elven immunities",
-        "keen senses",
-        "low-light vision",
-        "pathfinder 1e",
         "race",
-        "razza",
-        "weapon familiarity"
+        "core",
+        "medium"
       ],
       "references": [
-        "d20PFSRD: Elf"
+        "AoN: Elf (Races)"
       ],
       "reference_urls": [
-        "https://www.d20pfsrd.com/races/core-races/elf/"
+        "https://aonprd.com/RacesDisplay.aspx?ItemName=Elf"
       ],
       "category": "other",
       "edition": "1E",
@@ -60,30 +106,70 @@
       "notes": "Taglia Medium, velocità 9 m. +2 Destrezza, +2 Intelligenza, -2 Costituzione. Low-light vision. Elven Immunities: immunità a sleep magic e +2 a TS enchantment. Keen Senses: +2 a Perception. Elven Magic: +2 a Spellcraft per identificare proprietà magiche; +1 al CL per superare SR. Weapon Familiarity: longbows, composite longbows, longswords, rapiers, shortbows, composite shortbows trattate come armi marziali. Lingue: Common, Elven; bonus: Celestial, Draconic, Gnoll, Gnome, Goblin, Orc, Sylvan.",
       "status": "approved",
       "validation_status": "passed",
-      "reviewed_by": "swarm-classes-races-2026-07-16"
+      "reviewed_by": "swarm-classes-races-2026-07-16",
+      "description": "Elf: modificatori {'dex': 2, 'int': 2, 'con': -2}, taglia Medium, velocita' 30 ft. Tratti razziali: Low-Light Vision; Elven Immunities; Elven Magic; Keen Senses; Weapon Familiarity.",
+      "mechanics": {
+        "ability_mods": {
+          "dex": 2,
+          "int": 2,
+          "con": -2
+        },
+        "size": "Medium",
+        "speed": 30,
+        "traits": [
+          {
+            "name": "Low-Light Vision",
+            "text": "Elves can see twice as far as humans in conditions of dim light."
+          },
+          {
+            "name": "Elven Immunities",
+            "text": "Elves are immune to magic sleep effects and get a +2 racial bonus on saving throws against enchantment spells and effects."
+          },
+          {
+            "name": "Elven Magic",
+            "text": "Elves receive a +2 racial bonus on caster level checks made to overcome spell resistance. In addition, elves receive a +2 racial bonus on Spellcraft checks made to identify the properties of magic items."
+          },
+          {
+            "name": "Keen Senses",
+            "text": "Elves receive a +2 racial bonus on Perception checks."
+          },
+          {
+            "name": "Weapon Familiarity",
+            "text": "Elves are proficient with longbows (including composite longbows), longswords, rapiers, and shortbows (including composite shortbows), and treat any weapon with the word “elven” in its name as a martial weapon."
+          }
+        ],
+        "languages": {
+          "auto": [
+            "Common",
+            "Elven"
+          ],
+          "bonus": [
+            "Celestial",
+            "Draconic",
+            "Gnoll",
+            "Gnome",
+            "Goblin",
+            "Orc",
+            "Sylvan"
+          ]
+        }
+      }
     },
     {
       "name": "Gnome",
-      "source": "Pathfinder SRD",
+      "source": "PFRPG Core",
       "source_id": "pfrpg_core:gnome",
       "prerequisites": [],
       "tags": [
-        "core",
-        "gnome",
-        "gnome magic",
-        "illusion resistance",
-        "keen senses",
-        "low-light vision",
-        "pathfinder 1e",
         "race",
-        "razza",
+        "core",
         "small"
       ],
       "references": [
-        "d20PFSRD: Gnome"
+        "AoN: Gnome (Races)"
       ],
       "reference_urls": [
-        "https://www.d20pfsrd.com/races/core-races/gnome/"
+        "https://aonprd.com/RacesDisplay.aspx?ItemName=Gnome"
       ],
       "category": "other",
       "edition": "1E",
@@ -91,29 +177,82 @@
       "notes": "Taglia Small (+1 CA, +1 attacco, -1 CMB/CMD, +4 Stealth), velocità 6 m. +2 Costituzione, +2 Carisma, -2 Forza. Low-light vision. Defensive Training: +4 dodge bonus alla CA contro creature di tipo giant. Gnome Magic: +1 al DC degli incantesimi di illusione; 1/giorno dancing lights, ghost sound, prestidigitation (CL pari al livello del personaggio). Hatred: +1 attacco contro creature di tipo reptilian e goblinoid. Illusion Resistance: +2 a TS contro illusion school. Keen Senses: +2 a Perception. Obsessive: +2 a un'abilità craft o profession scelta. Weapon Familiarity: gnome hooked hammer trattata come arma marziale. Lingue: Common, Gnome, Sylvan; bonus: Draconic, Dwarven, Elven, Giant, Goblin, Orc.",
       "status": "approved",
       "validation_status": "passed",
-      "reviewed_by": "swarm-classes-races-2026-07-16"
+      "reviewed_by": "swarm-classes-races-2026-07-16",
+      "description": "Gnome: modificatori {'con': 2, 'cha': 2, 'str': -2}, taglia Small, velocita' 20 ft. Tratti razziali: Low-Light Vision; Defensive Training; Gnome Magic; Hatred; Illusion Resistance; Keen Senses; Obsessive; Weapon Familiarity.",
+      "mechanics": {
+        "ability_mods": {
+          "con": 2,
+          "cha": 2,
+          "str": -2
+        },
+        "size": "Small",
+        "speed": 20,
+        "traits": [
+          {
+            "name": "Low-Light Vision",
+            "text": "Gnomes can see twice as far as humans in conditions of dim light."
+          },
+          {
+            "name": "Defensive Training",
+            "text": "Gnomes get a +4 dodge bonus to their AC against monsters of the giant type."
+          },
+          {
+            "name": "Gnome Magic",
+            "text": "Gnomes add 1 to the DCs of any saving throws to resist illusion spells that they cast. Gnomes with a Charisma of 11 or higher also gain the following spell-like abilities: 1/day—dancing lights, ghost sound, prestidigitation, and speak with animals. The caster level for these effects is equal to the gnome’s character level. The DC for these spells is equal to 10 + the spell’s level + the gnome’s Charisma modifier."
+          },
+          {
+            "name": "Hatred",
+            "text": "Gnomes receive a +1 bonus on attack rolls against humanoid creatures of the reptilian and goblinoid subtypes because of their special training against these hated foes."
+          },
+          {
+            "name": "Illusion Resistance",
+            "text": "Gnomes get a +2 racial bonus on saving throws against illusion spells or effects."
+          },
+          {
+            "name": "Keen Senses",
+            "text": "Gnomes receive a +2 racial bonus on Perception checks."
+          },
+          {
+            "name": "Obsessive",
+            "text": "Gnomes receive a +2 racial bonus on a Craft or Profession skill of their choice."
+          },
+          {
+            "name": "Weapon Familiarity",
+            "text": "Gnomes treat any weapon with the word “gnome” in its name as a martial weapon."
+          }
+        ],
+        "languages": {
+          "auto": [
+            "Common",
+            "Gnome",
+            "Sylvan"
+          ],
+          "bonus": [
+            "Draconic",
+            "Dwarven",
+            "Elven",
+            "Giant",
+            "Goblin",
+            "Orc"
+          ]
+        }
+      }
     },
     {
       "name": "Half-Elf",
-      "source": "Pathfinder SRD",
+      "source": "PFRPG Core",
       "source_id": "pfrpg_core:half_elf",
       "prerequisites": [],
       "tags": [
-        "adaptability",
-        "core",
-        "elf blood",
-        "half-elf",
-        "low-light vision",
-        "multitalented",
-        "pathfinder 1e",
         "race",
-        "razza"
+        "core",
+        "medium"
       ],
       "references": [
-        "d20PFSRD: Half-Elf"
+        "AoN: Half-Elf (Races)"
       ],
       "reference_urls": [
-        "https://www.d20pfsrd.com/races/core-races/half-elf/"
+        "https://aonprd.com/RacesDisplay.aspx?ItemName=Half-Elf"
       ],
       "category": "other",
       "edition": "1E",
@@ -121,29 +260,64 @@
       "notes": "Taglia Medium, velocità 9 m. +2 a una statistica a scelta. Low-light vision. Adaptability: riceve Skill Focus come bonus feat al 1° livello. Elf Blood: conta come elfo e umano per effetti legati alla razza. Elven Immunities: immunità a sleep magic e +2 a TS enchantment. Keen Senses: +2 a Perception. Multitalented: possiede due favored class. Lingue: Common, Elven; bonus: qualsiasi (tranne linguaggi segreti).",
       "status": "approved",
       "validation_status": "passed",
-      "reviewed_by": "swarm-classes-races-2026-07-16"
+      "reviewed_by": "swarm-classes-races-2026-07-16",
+      "description": "Half-Elf: modificatori {'any': 2}, taglia Medium, velocita' 30 ft. Tratti razziali: Low-Light Vision; Adaptability; Elf Blood; Elven Immunities; Keen Senses; Multitalented.",
+      "mechanics": {
+        "ability_mods": {
+          "any": 2
+        },
+        "size": "Medium",
+        "speed": 30,
+        "traits": [
+          {
+            "name": "Low-Light Vision",
+            "text": "Half-elves can see twice as far as humans in conditions of dim light."
+          },
+          {
+            "name": "Adaptability",
+            "text": "Half-elves receive Skill Focus as a bonus feat at 1st level."
+          },
+          {
+            "name": "Elf Blood",
+            "text": "Half-elves count as both elves and humans for any effect related to race."
+          },
+          {
+            "name": "Elven Immunities",
+            "text": "Half-elves are immune to magic sleep effects and get a +2 racial bonus on saving throws against enchantment spells and effects."
+          },
+          {
+            "name": "Keen Senses",
+            "text": "Half-elves receive a +2 racial bonus on Perception checks."
+          },
+          {
+            "name": "Multitalented",
+            "text": "Half-elves choose two favored classes at 1st level and gain 1 additional hit point or skill point whenever they take a level in either one of those classes."
+          }
+        ],
+        "languages": {
+          "auto": [
+            "Common",
+            "Elven"
+          ],
+          "bonus": []
+        }
+      }
     },
     {
       "name": "Half-Orc",
-      "source": "Pathfinder SRD",
+      "source": "PFRPG Core",
       "source_id": "pfrpg_core:half_orc",
       "prerequisites": [],
       "tags": [
-        "core",
-        "darkvision",
-        "half-orc",
-        "intimidating",
-        "orc blood",
-        "pathfinder 1e",
         "race",
-        "razza",
-        "weapon familiarity"
+        "core",
+        "medium"
       ],
       "references": [
-        "d20PFSRD: Half-Orc"
+        "AoN: Half-Orc (Races)"
       ],
       "reference_urls": [
-        "https://www.d20pfsrd.com/races/core-races/half-orc/"
+        "https://aonprd.com/RacesDisplay.aspx?ItemName=Half-Orc"
       ],
       "category": "other",
       "edition": "1E",
@@ -151,30 +325,66 @@
       "notes": "Taglia Medium, velocità 9 m. +2 a una statistica a scelta. Darkvision 18 m. Intimidating: +2 a Intimidate. Orc Blood: conta come orco e umano per effetti legati alla razza. Orc Ferocity: 1/giorno, quando portato a 0 PF o inferiore, può agire per un round come se avesse 1 PF. Weapon Familiarity: orc double axe e falchion trattate come armi marziali; greataxe come arma semplice. Lingue: Common, Orc; bonus: Abyssal, Draconic, Giant, Gnoll, Goblin.",
       "status": "approved",
       "validation_status": "passed",
-      "reviewed_by": "swarm-classes-races-2026-07-16"
+      "reviewed_by": "swarm-classes-races-2026-07-16",
+      "description": "Half-Orc: modificatori {'any': 2}, taglia Medium, velocita' 30 ft. Tratti razziali: Darkvision; Intimidating; Orc Blood; Orc Ferocity; Weapon Familiarity.",
+      "mechanics": {
+        "ability_mods": {
+          "any": 2
+        },
+        "size": "Medium",
+        "speed": 30,
+        "traits": [
+          {
+            "name": "Darkvision",
+            "text": "Half-orcs can see in the dark up to 60 feet."
+          },
+          {
+            "name": "Intimidating",
+            "text": "Half-orcs receive a +2 racial bonus on Intimidate checks because of their fearsome nature."
+          },
+          {
+            "name": "Orc Blood",
+            "text": "Half-orcs count as both humans and orcs for any effect related to race."
+          },
+          {
+            "name": "Orc Ferocity",
+            "text": "Once per day, when a half-orc is brought below 0 hit points but not killed, he can fight on for 1 more round as if disabled. At the end of his next turn, unless brought to 1 or more hit points, he immediately falls unconscious and begins dying."
+          },
+          {
+            "name": "Weapon Familiarity",
+            "text": "Half-orcs are proficient with greataxes and falchions, and treat any weapon with the word “orc” in its name as a martial weapon."
+          }
+        ],
+        "languages": {
+          "auto": [
+            "Common",
+            "Orc"
+          ],
+          "bonus": [
+            "Abyssal",
+            "Draconic",
+            "Giant",
+            "Gnoll",
+            "Goblin"
+          ]
+        }
+      }
     },
     {
       "name": "Halfling",
-      "source": "Pathfinder SRD",
+      "source": "PFRPG Core",
       "source_id": "pfrpg_core:halfling",
       "prerequisites": [],
       "tags": [
-        "core",
-        "fearless",
-        "halfling",
-        "halfling luck",
-        "keen senses",
-        "pathfinder 1e",
         "race",
-        "razza",
-        "small",
-        "sure-footed"
+        "core",
+        "small"
       ],
       "references": [
-        "d20PFSRD: Halfling"
+        "AoN: Halfling (Races)"
       ],
       "reference_urls": [
-        "https://www.d20pfsrd.com/races/core-races/halfling/"
+        "https://aonprd.com/RacesDisplay.aspx?ItemName=Halfling"
       ],
       "category": "other",
       "edition": "1E",
@@ -182,27 +392,67 @@
       "notes": "Taglia Small (+1 CA, +1 attacco, -1 CMB/CMD, +4 Stealth), velocità 6 m. +2 Destrezza, +2 Carisma, -2 Forza. Fearless: +2 morale a TS contro paura. Halfling Luck: +1 a tutti i TS. Keen Senses: +2 a Perception. Sure-Footed: +2 a Acrobatics e Climb. Weapon Familiarity: sling e halfling sling staff trattate come armi da guerra. Lingue: Common, Halfling; bonus: Dwarven, Elven, Gnome, Goblin.",
       "status": "approved",
       "validation_status": "passed",
-      "reviewed_by": "swarm-classes-races-2026-07-16"
+      "reviewed_by": "swarm-classes-races-2026-07-16",
+      "description": "Halfling: modificatori {'dex': 2, 'cha': 2, 'str': -2}, taglia Small, velocita' 20 ft. Tratti razziali: Fearless; Halfling Luck; Keen Senses; Sure-Footed; Weapon Familiarity.",
+      "mechanics": {
+        "ability_mods": {
+          "dex": 2,
+          "cha": 2,
+          "str": -2
+        },
+        "size": "Small",
+        "speed": 20,
+        "traits": [
+          {
+            "name": "Fearless",
+            "text": "Halflings receive a +2 racial bonus on all saving throws against fear. This bonus stacks with the bonus granted by halfling luck."
+          },
+          {
+            "name": "Halfling Luck",
+            "text": "Halflings receive a +1 racial bonus on all saving throws."
+          },
+          {
+            "name": "Keen Senses",
+            "text": "Halflings receive a +2 racial bonus on Perception checks."
+          },
+          {
+            "name": "Sure-Footed",
+            "text": "Halflings receive a +2 racial bonus on Acrobatics and Climb checks."
+          },
+          {
+            "name": "Weapon Familiarity",
+            "text": "Halflings are proficient with slings and treat any weapon with the word “halfling” in its name as a martial weapon."
+          }
+        ],
+        "languages": {
+          "auto": [
+            "Common",
+            "Halfling"
+          ],
+          "bonus": [
+            "Dwarven",
+            "Elven",
+            "Gnome",
+            "Goblin"
+          ]
+        }
+      }
     },
     {
       "name": "Human",
-      "source": "Pathfinder SRD",
+      "source": "PFRPG Core",
       "source_id": "pfrpg_core:human",
       "prerequisites": [],
       "tags": [
-        "bonus feat",
-        "core",
-        "human",
-        "pathfinder 1e",
         "race",
-        "razza",
-        "skilled"
+        "core",
+        "medium"
       ],
       "references": [
-        "d20PFSRD: Human"
+        "AoN: Human (Races)"
       ],
       "reference_urls": [
-        "https://www.d20pfsrd.com/races/core-races/human/"
+        "https://aonprd.com/RacesDisplay.aspx?ItemName=Human"
       ],
       "category": "other",
       "edition": "1E",
@@ -210,7 +460,32 @@
       "notes": "Taglia Medium, velocità 9 m. +2 a una statistica a scelta. Bonus Feat: un extra feat al 1° livello. Skilled: +1 punto abilità extra per livello. Lingue: Common; bonus: qualsiasi (tranne linguaggi segreti). Favored Class: bonus extra +1 HP o +1 punto abilità per livello nella favored class.",
       "status": "approved",
       "validation_status": "passed",
-      "reviewed_by": "swarm-classes-races-2026-07-16"
+      "reviewed_by": "swarm-classes-races-2026-07-16",
+      "description": "Human: modificatori {'any': 2}, taglia Medium, velocita' 30 ft. Tratti razziali: Bonus Feat; Skilled.",
+      "mechanics": {
+        "ability_mods": {
+          "any": 2
+        },
+        "size": "Medium",
+        "speed": 30,
+        "traits": [
+          {
+            "name": "Bonus Feat",
+            "text": "Humans select one extra feat at 1st level."
+          },
+          {
+            "name": "Skilled",
+            "text": "Humans gain 1 additional skill rank at 1st level and 1 additional rank whenever they gain a level."
+          }
+        ],
+        "languages": {
+          "auto": [
+            "Common",
+            "their ethnic language"
+          ],
+          "bonus": []
+        }
+      }
     }
   ]
 }

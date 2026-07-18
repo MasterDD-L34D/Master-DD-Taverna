@@ -107,6 +107,137 @@ def parse_abilities(html):
     return entries
 
 
+RACES_CORE = ["Dwarf", "Elf", "Gnome", "Half-Elf", "Half-Orc", "Halfling", "Human"]
+ABILITY_KEYS = {"strength": "str", "dexterity": "dex", "constitution": "con",
+                "intelligence": "int", "wisdom": "wis", "charisma": "cha"}
+
+
+def _parse_ability_mods(text):
+    """'+2 Constitution, +2 Wisdom, -2 Charisma' -> {'con': 2, 'wis': 2, 'cha': -2}.
+    '+2 to one ability score (your choice)' -> {'any': 2}."""
+    # AoN usa l'en-dash nei modificatori negativi ("–2 Charisma"): normalizza.
+    text = text.replace("–", "-")
+    mods = {}
+    for value, ability in re.findall(r"([+-]\d+)\s+([A-Za-z]+)", text):
+        key = ABILITY_KEYS.get(ability.lower())
+        if key:
+            mods[key] = int(value)
+    if not mods and "to one ability" in text.lower():
+        mods = {"any": 2}
+    return mods
+
+
+def _racial_traits_bolds(soup):
+    """<b> del blocco tratti base: dal heading '*Racial Traits' al prossimo
+    heading (h1/h2/h3). Fallback: tutti i <b> del documento (fixture semplici)."""
+    header = None
+    for h in soup.find_all(["h1", "h2", "h3"]):
+        if "racial traits" in clean(h.get_text()).lower():
+            header = h
+            break
+    if header is None:
+        return soup.find_all("b")
+    bolds = []
+    for sib in header.next_siblings:
+        if getattr(sib, "name", None) in ("h1", "h2", "h3"):
+            break
+        if getattr(sib, "name", None) == "b":
+            bolds.append(sib)
+        elif hasattr(sib, "find_all"):
+            bolds.extend(sib.find_all("b"))
+    return bolds
+
+
+def _bold_detail(bold, label):
+    """Testo che segue il label bold.
+
+    Markup reale AoN (flat): <b>Label</b>: testo fino a <br/> -> dai sibling.
+    Markup a paragrafi (fixture): <p><b>Label</b>: testo</p> -> dal parent."""
+    parts = []
+    for sib in bold.next_siblings:
+        if getattr(sib, "name", None) in ("br", "b"):
+            break
+        parts.append(sib.get_text() if hasattr(sib, "get_text") else str(sib))
+    text = clean("".join(parts))
+    if text:
+        return clean(text.lstrip(" :"))
+    parent_text = clean(bold.parent.get_text()) if bold.parent else label
+    if parent_text.startswith(label):
+        return clean(parent_text[len(label):].lstrip(" :"))
+    return ""
+
+
+def parse_race(html, race_name):
+    """Pagina RacesDisplay: sezione 'Racial Traits' con righe bold-led.
+
+    SOLO tratti base CRB (OGC): subrazze/alternate/favored options NON parse
+    (PI Golarion)."""
+    soup = BeautifulSoup(html, "html.parser")
+    mech = {"ability_mods": {}, "size": None, "speed": None, "traits": [],
+            "languages": {"auto": [], "bonus": []}}
+    for bold in _racial_traits_bolds(soup):
+        # I label bold reali possono chiudere con i due punti ("Darkvision:").
+        label = clean(bold.get_text()).rstrip(":").strip()
+        detail = _bold_detail(bold, label)
+        if re.match(r"^[+-]\d+\s", label):
+            mech["ability_mods"] = _parse_ability_mods(label)
+        elif label in ("Medium", "Small"):
+            mech["size"] = label
+        elif label in ("Slow and Steady", "Slow Speed") or label.startswith("Normal Speed"):
+            m = re.search(r"(\d+)\s+feet", detail)
+            if m:
+                mech["speed"] = int(m.group(1))
+        elif label == "Languages":
+            langs = re.search(r"speaking\s+([^.]+)", detail)
+            if langs:
+                mech["languages"]["auto"] = [clean(x) for x in re.split(r",| and ", langs.group(1)) if clean(x)]
+            bonus = re.search(r"choose from\s+([^.]+)", detail)
+            if bonus:
+                bonus_text = re.sub(r"^the following( languages)?:\s*", "", clean(bonus.group(1)))
+                mech["languages"]["bonus"] = [clean(x) for x in re.split(r",| and ", bonus_text) if clean(x)]
+        elif label and label[0].isupper() and detail:
+            mech["traits"].append({"name": label, "text": detail})
+    traits_desc = "; ".join(t["name"] for t in mech["traits"])
+    return {
+        "name": race_name,
+        "source": "PFRPG Core",
+        "source_id": source_id("pfrpg_core", race_name),
+        "prerequisites": [],
+        "tags": ["race", "core", mech["size"].lower() if mech["size"] else "race"],
+        "references": [f"AoN: {race_name} (Races)"],
+        "reference_urls": [BASE + f"RacesDisplay.aspx?ItemName={race_name.replace(' ', '%20')}"],
+        "description": (f"{race_name}: modificatori {mech['ability_mods']}, taglia {mech['size']}, "
+                        f"velocita' {mech['speed']} ft. Tratti razziali: {traits_desc}."),
+        "mechanics": mech,
+    }
+
+
+def build_races(write=False):
+    """Merge in place: aggiorna le entry esistenti di races.json preservando
+    i campi curati (notes, status, reviewed_by, short_description) e l'header
+    (alla fonte originale si aggiunge AoN)."""
+    path = OGL_DIR / "races.json"
+    with open(path, encoding="utf-8") as f:
+        catalog = json.load(f)
+    source_text = catalog.get("_source", SOURCE)
+    if "aonprd" not in source_text:
+        source_text = source_text.rstrip(".") + "; Archives of Nethys (aonprd.com)."
+    by_name = {e["name"]: e for e in catalog["entries"]}
+    for race in RACES_CORE:
+        url = BASE + f"RacesDisplay.aspx?ItemName={race.replace(' ', '%20')}"
+        parsed = parse_race(fetch(url), race)
+        assert parsed["mechanics"]["ability_mods"], f"{race}: ability_mods non parsati"
+        if race in by_name:
+            by_name[race].update(parsed)
+        else:
+            catalog["entries"].append(parsed)
+    if write:
+        write_catalog(path, catalog["entries"],
+                      license_text=catalog.get("_license", LICENSE), source_text=source_text)
+    else:
+        print(f"report: {len(catalog['entries'])} entry (write=False, nessuna scrittura)")
+
+
 def build_abilities(write=False):
     url = BASE + "Rules.aspx?Name=Generating%20Ability%20Scores&Category=Getting%20Started"
     entries = parse_abilities(fetch(url))
@@ -117,7 +248,7 @@ def build_abilities(write=False):
         print(f"report: {len(entries)} entry (write=False, nessuna scrittura)")
 
 
-DOMAINS = {"abilities": build_abilities}
+DOMAINS = {"abilities": build_abilities, "races": build_races}
 
 
 def main(argv=None):
