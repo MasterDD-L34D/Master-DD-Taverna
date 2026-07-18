@@ -43,15 +43,23 @@ def clean(text):
     return " ".join(text.split())
 
 
+def _cell_text(cell):
+    """Testo normalizzato di una cella, senza i <sup> (footnote marker AoN:
+    '2 lbs.<sup>1</sup>' -> '2 lbs.')."""
+    for sup in cell.find_all("sup"):
+        sup.decompose()
+    return clean(cell.get_text())
+
+
 def table_rows(table):
     """<table> -> lista di dict {header: cella} (header dal primo <tr>)."""
     rows = table.find_all("tr")
     if not rows:
         return []
-    headers = [clean(c.get_text()) for c in rows[0].find_all(["th", "td"])]
+    headers = [_cell_text(c) for c in rows[0].find_all(["th", "td"])]
     out = []
     for row in rows[1:]:
-        cells = [clean(c.get_text()) for c in row.find_all(["th", "td"])]
+        cells = [_cell_text(c) for c in row.find_all(["th", "td"])]
         if len(cells) == len(headers) and any(cells):
             out.append(dict(zip(headers, cells)))
     return out
@@ -497,8 +505,104 @@ def build_skills(write=False):
         print(f"report: {len(entries)} entry (write=False, nessuna scrittura)")
 
 
+EQUIPMENT_PAGES = [
+    ("EquipmentWeapons.aspx?Proficiency=Simple", "weapon", "simple"),
+    ("EquipmentWeapons.aspx?Proficiency=Martial", "weapon", "martial"),
+    ("EquipmentWeapons.aspx?Proficiency=Exotic", "weapon", "exotic"),
+    ("EquipmentArmor.aspx?Category=Light", "armor", "light"),
+    ("EquipmentArmor.aspx?Category=Medium", "armor", "medium"),
+    ("EquipmentArmor.aspx?Category=Heavy", "armor", "heavy"),
+    ("EquipmentArmor.aspx?Category=Shield", "armor", "shield"),
+    ("EquipmentMisc.aspx?Category=AdventuringGear", "gear", "adventuring"),
+]
+
+# Nomi equipment con Product Identity Golarion-specifica: filtrati dal builder
+# (non coperti da legal_filter.PI_WORDS: 'Aldori', 'Kasatha', 'Shoanti',
+# 'Varisian' non matchano le word boundary di 'Varisia' ecc.).
+PI_EQUIPMENT = {
+    "Aldori dueling sword",
+    "Kasatha spinal sword",
+    "Shoanti bolas",
+    "Varisian dancing scarves",
+    "Varisian idol",
+}
+
+
+def _mech_key(header):
+    """Header tabella -> chiave mechanics snake_case ('Dmg (M)' -> 'dmg_m')."""
+    return slug(re.sub(r"[()]", "", header).replace(" ", "_"))
+
+
+def parse_equipment_table(html, kind, group):
+    """Tabelle equipment AoN -> entry con mechanics dai header della tabella.
+
+    Le pagine weapon hanno piu' tabelle (es. Simple Unarmed, Light Melee...):
+    si accumulano le righe di tutte quelle con header 'Name' (il gear usa
+    'Item'). Le celle '-'/vuote diventano None."""
+    soup = BeautifulSoup(html, "html.parser")
+    entries = []
+    for table in soup.find_all("table"):
+        trs = table.find_all("tr")
+        if not trs:
+            continue
+        headers = [clean(c.get_text()) for c in trs[0].find_all(["th", "td"])]
+        if "Name" not in headers and "Item" not in headers:
+            continue
+        for row in table_rows(table):
+            name = row.pop("Name", "") or row.pop("Item", "")
+            if not name:
+                continue
+            mech = {_mech_key(k): (None if v in ("-", "", "—") else v) for k, v in row.items()}
+            desc_parts = [f"{name} ({kind}, {group})"]
+            if mech.get("cost"):
+                desc_parts.append(f"costo {mech['cost']}")
+            if mech.get("dmg_m"):
+                desc_parts.append(f"danno {mech['dmg_m']}")
+            if mech.get("weight"):
+                desc_parts.append(f"peso {mech['weight']}")
+            entries.append({
+                "name": name,
+                "source": "PFRPG Core",
+                "source_id": source_id("pfrpg_core", name),
+                "prerequisites": [],
+                "tags": ["equipment", kind, group],
+                "references": [f"AoN: Equipment ({kind} {group})"],
+                "reference_urls": [BASE + "Equipment.aspx"],
+                "description": ", ".join(desc_parts).rstrip(".") + ".",
+                "mechanics": mech,
+            })
+    return entries
+
+
+def build_equipment(write=False):
+    """Crea equipment_mundane.json dalle tabelle equipment AoN (armi per
+    proficiency, armature per categoria, gear da avventura)."""
+    entries = []
+    for page, kind, group in EQUIPMENT_PAGES:
+        entries.extend(parse_equipment_table(fetch(BASE + page), kind, group))
+    pi = [e["name"] for e in entries if e["name"] in PI_EQUIPMENT]
+    if pi:
+        entries = [e for e in entries if e["name"] not in PI_EQUIPMENT]
+        print(f"nota: filtrate {len(pi)} entry PI: {', '.join(pi)}")
+    # Stesso oggetto in piu' tabelle (es. Klar weapon+shield, Shovel in due
+    # tabelle gear): source_id univoco nel catalogo, vince la prima occorrenza.
+    seen, unique = set(), []
+    for e in entries:
+        if e["source_id"] in seen:
+            print(f"nota: duplicato scartato {e['source_id']} ({'/'.join(e['tags'][1:])})")
+            continue
+        seen.add(e["source_id"])
+        unique.append(e)
+    entries = unique
+    assert len(entries) >= 150, f"equipment: attese >=150 entry, trovate {len(entries)}"
+    if write:
+        write_catalog(OGL_DIR / "equipment_mundane.json", entries)
+    else:
+        print(f"report: {len(entries)} entry (write=False, nessuna scrittura)")
+
+
 DOMAINS = {"abilities": build_abilities, "races": build_races, "classes": build_classes,
-           "skills": build_skills}
+           "skills": build_skills, "equipment": build_equipment}
 
 
 def main(argv=None):
