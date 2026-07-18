@@ -47,14 +47,48 @@ def _check_prereq(prereq, ctx):
     return True, f"forma prerequisito non valutabile: {text}"  # warning, non errore
 
 
+def _norm_feat_name(name):
+    """Normalizza per match case-insensitive: minuscole, punteggiatura -> spazi."""
+    return re.sub(r"[^a-z0-9]+", " ", str(name).lower()).strip()
+
+
+# Alias tra capacita' di classe (classes.json special) e talenti feats.json
+# quando il nome non coincide esattamente (chiavi gia' normalizzate).
+SPECIAL_FEAT_ALIASES = {"unarmed strike": "Improved Unarmed Strike"}
+
+
+def _granted_feats(draft):
+    """Talenti concessi automaticamente dalla classe al lv1 (le voci special di
+    progression[0] che matchano un feat in feats.json, case-insensitive).
+    Non consumano slot e non richiedono prerequisiti."""
+    cls = catalogs.get_class(draft.class_)
+    if cls is None:
+        return []
+    index = {_norm_feat_name(f["name"]): f["name"] for f in catalogs.load("feats")}
+    granted = []
+    for special in cls["mechanics"]["progression"][0].get("special", []):
+        norm = _norm_feat_name(special)
+        feat_name = index.get(_norm_feat_name(SPECIAL_FEAT_ALIASES.get(norm, special)))
+        if feat_name and feat_name not in granted:
+            granted.append(feat_name)
+    return granted
+
+
 def validate_feats(draft, sheet):
-    """Conta talenti consentiti e valuta i prerequisiti noti."""
+    """Conta talenti consentiti e valuta i prerequisiti noti.
+
+    I talenti concessi automaticamente dalla classe al lv1 (es. Improved
+    Unarmed Strike e Stunning Fist per il Monk, Scribe Scroll per il Wizard)
+    NON contano nel tetto consentito e NON passano il check dei prerequisiti."""
+    granted = _granted_feats(draft)
+    granted_norm = {_norm_feat_name(g) for g in granted}
+    chosen = [f for f in draft.feats if _norm_feat_name(f) not in granted_norm]
     ctx = {"abilities": dict(sheet["abilities"]), "bab": sheet["bab"],
-           "feats": list(draft.feats), "skills": sheet.get("skills", {})}
+           "feats": chosen + granted, "skills": sheet.get("skills", {})}
     allowed = 1 + (1 if draft.race == "Human" else 0) + (1 if draft.class_ in FEAT_BONUS_CLASSES else 0)
-    if len(draft.feats) > allowed:
-        sheet["errors"].append(f"feat: {len(draft.feats)} selezionati su {allowed} consentiti al lv1")
-    for name in draft.feats:
+    if len(chosen) > allowed:
+        sheet["errors"].append(f"feat: {len(chosen)} selezionati su {allowed} consentiti al lv1")
+    for name in chosen:
         feat = catalogs.find_feat(name)
         if feat is None:
             sheet["errors"].append(f"talento sconosciuto: {name}")
@@ -65,6 +99,7 @@ def validate_feats(draft, sheet):
                 sheet["errors"].append(f"{name}: prerequisito non soddisfatto ({note})")
             elif "non valutabile" in note:
                 sheet["warnings"].append(f"{name}: {note}")
+    sheet["feats"] = granted + chosen
 
 
 def validate_traits(draft, sheet):
@@ -120,6 +155,9 @@ def _range_ft(text):
 def apply_equipment(draft, sheet):
     """Valida gli acquisti contro la ricchezza iniziale e calcola CA/attacchi.
 
+    Applica il bonus di taglia: creature Small (es. Halfling, Gnome) hanno
+    +1 alla CA e +1 a tutti i tiri per colpire.
+
     Limitazione nota: classificazione ranged per euristica sulla gittata
     (ranged solo se range >= 30 ft) — armi da tiro con gittata < 30 ft
     classificate melee; le armi da lancio (Dagger, Club, Shortspear...)
@@ -172,7 +210,9 @@ def apply_equipment(draft, sheet):
             caps.append(best[1])
     max_dex = min(caps) if caps else None
     dex = min(mods["dex"], max_dex) if max_dex is not None else mods["dex"]
-    sheet["ac"] = 10 + armor + shield + dex
+    race = catalogs.get_race(draft.race)
+    size_bonus = 1 if race and race["mechanics"].get("size") == "Small" else 0
+    sheet["ac"] = 10 + armor + shield + dex + size_bonus
     attacks = []
     for it in items:
         if "weapon" not in it["tags"]:
@@ -183,7 +223,7 @@ def apply_equipment(draft, sheet):
         dmg = m.get("dmg_m", "-")
         if not is_ranged and mod != 0:
             dmg = f"{dmg}{'+' if mod > 0 else ''}{mod}"
-        attacks.append({"weapon": it["name"], "bonus": sheet["bab"] + mod,
+        attacks.append({"weapon": it["name"], "bonus": sheet["bab"] + mod + size_bonus,
                         "damage": dmg,
                         "critical": m.get("critical"), "range": m.get("range")})
     sheet["attacks"] = attacks
@@ -191,11 +231,13 @@ def apply_equipment(draft, sheet):
 
 def apply_abilities(draft):
     """Valida point-buy e applica i modificatori razziali.
-    Ritorna dict con 'abilities' finali e 'errors'."""
+    Ritorna dict con 'abilities' finali, 'errors' e 'warnings'.
+    race_bonus_ability passato per una razza senza bonus a scelta -> warning."""
     errors = []
+    warnings = []
     if draft.method != "point-buy":
         errors.append(f"metodo non supportato: {draft.method} (solo point-buy)")
-        return {"abilities": {}, "errors": errors}
+        return {"abilities": {}, "errors": errors, "warnings": warnings}
     if set(draft.abilities) != set(ABILS):
         errors.append(f"abilities: attese {sorted(ABILS)}, ricevute {sorted(draft.abilities)}")
     for ab, score in draft.abilities.items():
@@ -206,15 +248,17 @@ def apply_abilities(draft):
     except KeyError:
         errors.append(f"campaign_type sconosciuto: {draft.campaign_type}")
     if errors:
-        return {"abilities": {}, "errors": errors}
+        return {"abilities": {}, "errors": errors, "warnings": warnings}
     spent = sum(catalogs.ability_cost(v) for v in draft.abilities.values())
     if spent > budget:
         errors.append(f"point-buy: {spent} punti spesi oltre il budget {budget} ({draft.campaign_type})")
     race = catalogs.get_race(draft.race)
     if race is None:
         errors.append(f"razza sconosciuta: {draft.race}")
-        return {"abilities": {}, "errors": errors}
+        return {"abilities": {}, "errors": errors, "warnings": warnings}
     mods = race["mechanics"].get("ability_mods", {})
+    if not mods.get("any") and draft.race_bonus_ability:
+        warnings.append(f"race_bonus_ability ignorato per {draft.race} (nessun bonus a scelta)")
     final = dict(draft.abilities)
     if mods.get("any"):
         if not draft.race_bonus_ability:
@@ -226,15 +270,18 @@ def apply_abilities(draft):
     for ab, bonus in mods.items():
         if ab != "any":
             final[ab] = final.get(ab, 10) + bonus
-    return {"abilities": final, "errors": errors}
+    return {"abilities": final, "errors": errors, "warnings": warnings}
 
 
 def build_character(draft):
     """Costruisce la scheda lv1 completa (abilities, classe, skill, talenti, equip).
-    Ritorna dict con errors (bloccanti) e warnings."""
+    Ritorna dict con errors (bloccanti) e warnings.
+
+    Limitazioni note: gli effetti meccanici dei talenti selezionati NON sono
+    applicati ai valori calcolati; solo validazione prerequisiti e conteggio."""
     abilities = apply_abilities(draft)
     errors = list(abilities["errors"])
-    warnings = []
+    warnings = list(abilities.get("warnings", []))
     final = abilities["abilities"]
     mods = {ab: ability_mod(sc) for ab, sc in final.items()} if final else {}
     cls = catalogs.get_class(draft.class_)
@@ -257,8 +304,9 @@ def build_character(draft):
                       "will": lvl1["will"] + mods["wis"]}
     sheet["bab"] = lvl1["bab"]
     sheet["initiative"] = mods["dex"]
-    # skill
-    budget = mech["skill_points_per_level"] + mods["int"] + (1 if draft.race == "Human" else 0)
+    # skill: il minimo RAW da classe+Int e' 1; i bonus Human/favored si sommano dopo
+    budget = max(mech["skill_points_per_level"] + mods["int"], 1)
+    budget += 1 if draft.race == "Human" else 0
     budget += 1 if draft.favored_class_bonus == "skill" else 0
     spent = sum(draft.skills.values())
     if spent > budget:
@@ -281,7 +329,6 @@ def build_character(draft):
                      "total": ranks + mods[key] + class_bonus, "class_skill": is_class_skill}
     sheet["skills"] = out
     validate_feats(draft, sheet)
-    sheet["feats"] = list(draft.feats)
     apply_equipment(draft, sheet)
     validate_traits(draft, sheet)
     return sheet

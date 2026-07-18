@@ -331,3 +331,88 @@ def test_render_signed_negative():
     md = render_markdown(sheet)
     assert "+-" not in md
     assert "Longsword -1 (1d8-2)" in md
+
+
+# --- Final review: taglia Small, floor budget skill, talenti concessi, warning razziali ---
+
+# Dati reali: Halfling size Small (mods dex+2/cha+2/str-2); Leather 10 gp armor +2
+# max dex +6; Short sword 10 gp dmg 1d6; Rogue lv1 bab 0, skill 8+Int.
+def test_small_size_bonus_to_ac_and_attacks():
+    # Halfling Rogue: taglia Small -> +1 CA e +1 ai tiri per colpire.
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race="Halfling",
+                                   race_bonus_ability="dex", **{"class": "Rogue"},
+                                   skills={"Stealth": 1, "Perception": 1,
+                                           "Disable Device": 1, "Acrobatics": 1},
+                                   feats=["Weapon Finesse"],
+                                   equipment=["Short sword", "Leather"]))
+    assert sheet["errors"] == [], sheet["errors"]
+    # Dex finale 14 (12+2) -> mod +2: CA = 10 + armor 2 + Dex 2 + taglia 1
+    assert sheet["ac"] == 15
+    sword = [a for a in sheet["attacks"] if a["weapon"] == "Short sword"][0]
+    assert sword["bonus"] == 1  # bab 0 + Str mod 0 (str finale 11) + taglia 1
+    assert sword["damage"] == "1d6"  # Str mod 0: nessun modificatore al danno
+
+
+def test_medium_size_no_bonus():
+    # Controllo: taglia Medium (Human) -> nessun bonus di taglia.
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str",
+                                   skills={"Climb": 1}, equipment=["Leather"]))
+    assert sheet["errors"] == [], sheet["errors"]
+    assert sheet["ac"] == 13  # 10 + armor 2 + Dex mod 1
+
+
+def test_skill_budget_floor_one():
+    # Int 7 -> mod -2: budget = max(2-2, 1) + 1 (Human) = 2 -> 2 skill senza errore.
+    # Point-buy: 14(5) 12(2) 14(5) 7(-4) 14(5) 12(2) = 15 <= 15.
+    abils = {"str": 14, "dex": 12, "con": 14, "int": 7, "wis": 14, "cha": 12}
+    sheet = build_character(_draft(abilities=abils, race_bonus_ability="str",
+                                   skills={"Climb": 1, "Perception": 1}))
+    assert sheet["errors"] == [], sheet["errors"]
+
+
+def test_class_granted_feats_monk():
+    # Monk lv1 (classes.json special): 'unarmed strike' -> Improved Unarmed Strike
+    # e 'stunning fist' concessi dalla classe: non consumano slot e saltano il check
+    # prerequisiti (Stunning Fist richiederebbe BAB +8, impossibile al lv1).
+    # Bonus razziale su Dex (14): Dodge (Dex 13) soddisfatto.
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="dex",
+                                   **{"class": "Monk"},
+                                   skills={"Climb": 1, "Perception": 1},
+                                   feats=["Dodge", "Weapon Finesse"]))
+    assert sheet["errors"] == [], sheet["errors"]
+    assert "Improved Unarmed Strike" in sheet["feats"]
+    assert "Stunning Fist" in sheet["feats"]
+    assert sheet["feats"].count("Improved Unarmed Strike") == 1
+    assert "Dodge" in sheet["feats"] and "Weapon Finesse" in sheet["feats"]
+
+
+def test_class_granted_feats_wizard():
+    # Wizard lv1: Scribe Scroll concesso dalla classe (nessun check prerequisiti).
+    # Dex 14 (bonus razziale): Dodge (Dex 13) soddisfatto.
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="dex",
+                                   **{"class": "Wizard"},
+                                   skills={"Spellcraft": 1, "Knowledge (Arcana)": 1},
+                                   feats=["Dodge"]))
+    assert sheet["errors"] == [], sheet["errors"]
+    assert "Scribe Scroll" in sheet["feats"]
+    assert "Dodge" in sheet["feats"]
+
+
+def test_granted_feat_not_double_counted():
+    # Un talento del draft gia' concesso dalla classe non consuma slot:
+    # Monk Human ha 3 slot; 4 feat nel draft ma Improved Unarmed Strike e' granted.
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="wis",
+                                   **{"class": "Monk"},
+                                   skills={"Climb": 1, "Perception": 1},
+                                   feats=["Improved Unarmed Strike", "Combat Reflexes",
+                                          "Weapon Finesse", "Power Attack"]))
+    assert sheet["errors"] == [], sheet["errors"]
+
+
+def test_race_bonus_ability_ignored_warning():
+    # Halfling non ha bonus a scelta: race_bonus_ability -> warning, non errore.
+    sheet = apply_abilities(_draft(abilities=dict(_OK_ABILS), race="Halfling",
+                                   race_bonus_ability="dex"))
+    assert sheet["errors"] == []
+    assert any("race_bonus_ability ignorato" in w for w in sheet["warnings"])
+    assert sheet["abilities"]["dex"] == 14  # +2 razziale fisso

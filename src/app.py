@@ -342,7 +342,11 @@ async def pc_build(
     draft: Dict = Body(...),
     _: None = Depends(require_api_key),
 ):
-    """Costruzione deterministica di un PG lv1 dai cataloghi OGL (nessun LLM)."""
+    """Costruzione deterministica di un PG lv1 dai cataloghi OGL (nessun LLM).
+
+    Limitazione nota: gli effetti meccanici dei talenti selezionati non
+    vengono applicati ai valori calcolati (solo validazione prerequisiti
+    e conteggio)."""
     from .pc.engine import build_character
     from .pc.models import CharacterDraft
 
