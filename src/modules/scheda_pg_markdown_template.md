@@ -1,5 +1,5 @@
 module_name: "Scheda PG Markdown Template"
-version: "1.1"
+version: "1.2"
 compatibility:
   - target: "other"
     version: "3.3"
@@ -10,7 +10,7 @@ compatibility:
 > **Meta payload (header):**
 > ```yaml
 > module: scheda_pg_markdown_template.md
-> version: "1.1"
+> version: "1.2"
 > compatibility:
 >   core_min: "3.3"
 >   integrates_with: ["MinMax Builder", "Adventurer Ledger", "Explain Methods", "Ruling Expert", "Hook VTT"]
@@ -51,7 +51,7 @@ compatibility:
 > **Esempio di payload (stub):**
 > ```yaml
 > module: scheda_pg_markdown_template.md
-> version: "1.1"
+> version: "1.2"
 > compatibility:
 >   core_min: "3.3"
 >   integrates_with: ["MinMax Builder", "Adventurer Ledger"]

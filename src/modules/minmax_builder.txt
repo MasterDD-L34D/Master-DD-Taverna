@@ -1,6 +1,6 @@
 module_name: MinMax Builder
-version: 5
-last_updated: 2025-08-20T00:00:00.000Z
+version: 5.1
+last_updated: 2026-07-18T00:00:00.000Z
 inherits_from: base_profile.txt
 type: minmax
 file_binding: module://minmax_builder # Riferimento interno; accedi via API protetta (GET /modules/minmax_builder.txt con x-api-key)
@@ -2250,7 +2250,7 @@ player_style_tags:
       description: 'Cerca build ingegnose, non convenzionali.'
     - name: Spike
       description: Punta all’efficienza massima per vincere.
-  gpt_behavior_adaptation:
+  behavior_adaptation:
     match_player_tag: true
     behavior_mods:
       Timmy:
@@ -2318,7 +2318,7 @@ stub_functions:
     input: dict
     output: boolean
     logic: return True
-  gpt_parse_and_validate:
+  parse_and_validate:
     description: Fallback parser
     input: string
     output: boolean
@@ -2348,7 +2348,7 @@ meta_tags:
   - '#TrapAvoided'
 notes:
   compatibility: >-
-    Compatibile con GPT Power Builder, YAML Module Builder e sistemi export
+    Compatibile con YAML Module Builder e sistemi export
     (PDF, Excel, JSON VTT).
   warnings: >-
     Le simulazioni dipendono da settaggi specifici e possono variare in presenza

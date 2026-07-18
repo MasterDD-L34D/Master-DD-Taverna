@@ -1,4 +1,4 @@
-# Master DD Pathfinder — RAG Open Source MVP
+# Master-DD-Taverna — RAG Open Source MVP
 
 Questo documento descrive il layer **RAG (Retrieval-Augmented Generation)** aggiunto al progetto per trasformare il bundle GPT in un sistema usabile con LLM open source/locali.
 

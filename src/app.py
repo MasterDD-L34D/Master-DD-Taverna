@@ -63,9 +63,9 @@ async def lifespan(_: FastAPI):
 router = APIRouter()
 
 app = FastAPI(
-    title="Pathfinder 1E Master DD Core API",
+    title="Master-DD-Taverna Core API",
     version="1.0.0",
-    description="API minimale per esporre i moduli del kernel Master DD a un GPT tramite Actions.",
+    description="API per esporre i moduli del kernel Master-DD-Taverna ai client (RAG locale; GPT Actions come integrazione legacy).",
     lifespan=lifespan,
 )
 

@@ -1,6 +1,6 @@
 module_name: Taverna NPC
-version: 3.5
-last_updated: 2025-09-04
+version: 3.6
+last_updated: 2026-07-18
 type: module
 
 description: >
@@ -1842,6 +1842,9 @@ synthesis_rules:
 export:
   default_template: "module://scheda_pg_markdown_template.md"
   outputs: [vtt, txt, md, pdf, canvas]
+  # LOCAL-FIRST: 'canvas' è una scheda dati strutturata esportata come testo (stub);
+  # nessuna generazione immagini integrata — image_prompt è testo per strumenti esterni.
+  canvas_policy: "Export canvas = scheda dati strutturata (stub locale); la generazione immagini non è integrata: image_prompt resta testo descrittivo per strumenti esterni."
   fields_minimum:
     - "nome, razza, classe/livelli, allineamento"
     - "stat, CA/CMD, TS, iniziativa, PF"

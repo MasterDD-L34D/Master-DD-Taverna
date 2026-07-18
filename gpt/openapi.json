@@ -1,9 +1,9 @@
 {
     "openapi": "3.1.0",
     "info": {
-        "title": "Pathfinder 1E Master DD Core API",
+        "title": "Master-DD-Taverna Core API",
         "version": "1.0.0",
-        "description": "API minimale per esporre i moduli e le risorse del kernel Master DD a un GPT tramite Actions."
+        "description": "API per esporre i moduli e le risorse del kernel Master-DD-Taverna a un GPT tramite Actions (integrazione legacy)."
     },
     "servers": [
         {

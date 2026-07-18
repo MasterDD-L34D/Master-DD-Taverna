@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Frontend Streamlit user-friendly per il RAG Master DD Pathfinder.
+"""Frontend Streamlit user-friendly per il RAG Master-DD-Taverna.
 
 Uso:
     .venv/Scripts/streamlit run frontend/rag_chat.py
@@ -60,8 +60,8 @@ def get_env_default(key: str, default: str) -> str:
 
 
 def main():
-    st.set_page_config(page_title="Master DD Pathfinder — RAG", layout="wide")
-    st.title("🎲 Master DD Pathfinder — Assistente RAG")
+    st.set_page_config(page_title="Master-DD-Taverna — RAG", layout="wide")
+    st.title("🎲 Master-DD-Taverna — Assistente RAG")
     st.markdown(
         "Fai domande su regole, talenti, incantesimi e build di Pathfinder 1E. "
         "Il sistema recupera il contesto dai moduli e dal catalogo reference e lo passa a un LLM."

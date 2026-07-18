@@ -1,1 +1,1 @@
-"""RAG layer per Master DD Pathfinder — retrieval su moduli e catalogo."""
+"""RAG layer per Master-DD-Taverna — retrieval su moduli e catalogo."""

@@ -1,6 +1,6 @@
-module_name: "Pathfinder Master DD - Base Profile"
-version: "3.7-kernel"   
-last_updated: "2025-09-05T12:00:00.000Z"
+module_name: "Master-DD-Taverna - Base Profile"
+version: "3.8-kernel"
+last_updated: "2026-07-18T00:00:00.000Z"
 visibility: "internal_only"
 type: "core_internal"
 
@@ -718,6 +718,12 @@ notes:
     - "Rinfresca dataset Sigilli nel runner per evitare ripetizioni."
 
 changelog:
+  - version: "3.8-kernel (Rebrand Master-DD-Taverna + retrieval local-first)"
+    date: "2026-07-18T00:00:00.000Z"
+    items:
+      - "Rebrand progetto in Master-DD-Taverna (ex Pathfinder Master DD / GPT-era)."
+      - "Retrieval local-first: i flag must_browse/prefer_browse dei delegati ora puntano al catalogo locale reference://ogl/ (lotto 2)."
+      - "Metadati version/last_updated allineati in tutti i moduli."
   - version: "3.7-kernel (Router Stringente+ + Warmup reale + browse reset)"
     date: "2025-09-06T00:00:00.000Z"
     items:

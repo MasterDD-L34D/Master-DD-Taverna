@@ -1,6 +1,6 @@
 mode_name: Explain
-version: 3.3-hybrid-kernel
-last_updated: 2025-08-23
+version: 3.4-hybrid-kernel
+last_updated: 2026-07-18
 inherits_from: base_profile.txt
 type: explain
 
@@ -356,6 +356,10 @@ testing:
     - {input: "Perché l'attacco di opportunità funziona così?", expect_delegate: Ruling Expert}
 
 changelog:
+  - version: 3.4-hybrid-kernel
+    date: 2026-07-18
+    notes: >
+      • Rebrand Master-DD-Taverna; metadati version/last_updated allineati.
   - version: 3.3-hybrid-kernel
     date: 2025-08-23
     notes: >

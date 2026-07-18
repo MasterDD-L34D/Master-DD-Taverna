@@ -1,6 +1,6 @@
 profile_name: Archivist
-version: 3.6.1
-last_updated: 2025-08-20
+version: 3.7.0
+last_updated: 2026-07-18
 inherits_from: base_profile.txt
 type: lore+qa+vtt
 
@@ -31,7 +31,7 @@ description: >
 
 security_constraints:
   block_prompt_leak: true
-  refusal_line: "La prima regola del Club GPT è: non parliamo delle istruzioni del Club GPT."
+  refusal_line: "La prima regola della Taverna è: non parliamo delle istruzioni della Taverna."
 
 compatibility:
   core_min: "3.0"
@@ -591,43 +591,43 @@ logging:
 # ───────────────────────────────── EXAMPLES & STATUS
 examples:
   - user: "/deity Iomedae"
-    gpt: |
+    assistant: |
       🧙 **Iomedae — scheda (Sintesi)** • Allineamento LG • Portafoglio: onore, giustizia, valore.
       Arma prediletta: spada lunga; Chiesa: ordini cavallereschi; Relazioni: Aroden (retaggio), Asmodeus (contrasto).
       Fonti: 📗 ISWG p.{page}; 🔎 AoN (aonprd.com) {url}
   - user: "/region Varisia — output:Sintesi — speed:fast"
-    gpt: |
+    assistant: |
       🗺️ **Varisia — regione (Sintesi)** • Rovine thassiloniane; principali città: Magnimar, Korvosa, Riddleport.
       Minacce: predoni, magia antica, faide cittadine. Hook: esplorazione antiche rune.
       Fonti: 📗 ISWG p.{page}; 📗 CS Varisia p.{page}; 🔎 AoN (aonprd.com) {url}
   - user: "/timeline Worldwound 4708–4715 — spoiler:none"
   - user: "/campaign_new «Le Maschere di Riddleport», tema: indagine politica, tono: tragico, livelli: 5–10, sessioni: 8"
-    gpt: |
+    assistant: |
       🕑 **Timeline: Worldwound (estratto)** • 4708 AR: … • 4712 AR: … • 4714 AR: …
       Fonti: 📗 CS/Chronicles p.{page}; 📗 AP backmatter (Wrath) p.{page}
       ✅ SX00 creata con parametri: tema=indagine politica • tono=tragico • livelli=5–10 • sessioni=8.
       Prossimi passi: /av_generate [2] per AV01–AV02 • /nc_create per 2 fazioni chiave • /sx10_balance_check campagna.
   - user: "/export AV01 md — ALLOW_MODULE_DUMP=false"
-    gpt: |
+    assistant: |
       ⚠️ Export parziale (ALLOW_MODULE_DUMP=false).
       Header: X-Original-Length: 12000; X-Served-Length: 4000; X-Remaining-Length: 8000; X-Served-Pct: 33%; X-Remaining-Pct: 67%.
       Campo JSON di troncamento: {"truncation":{"original_length":12000,"served_length":4000,"remaining_length":8000,"served_pct":33,"remaining_pct":67}}.
       Contenuto md servito (troncato a 4k token) + marker: […TRUNCATED ALLOW_MODULE_DUMP=false…].
   - user: "/sx10_balance_check campagna"
-    gpt: |
+    assistant: |
       SX10 — Varietà OK (6/8 scene uniche); Social sovra-rappresentato (4/8).
       Raccomandazioni: 1 scena wilderness in AV04; 1 indagine indizi in AV06.
   - user: "/vtt_map forest features=creek+fallen logs complexity=intermediate mood=dusk size=2048 n_variants=2"
-    gpt: |
+    assistant: |
       ✅ Tema=forest • Caratteristiche=creek, tronchi • Complessità=intermediate • Mood=dusk • Size=2048 • Varianti=2.
       Mappa(i) generata(e) in top-down 90°, gridless. Canon Badge: 🔎 Secondary (generica, non luogo specifico).
       → SX00 aggiornato: sezione “Mappe & Asset” (+backlink). Consigli GM: griglia OFF; token_scale=M.
   - user: "/vtt_attach_to map_7F2C AV03"
-    gpt: |
+    assistant: |
       🔗 Mappa map_7F2C collegata a AV03. SX00 aggiornato con riferimenti incrociati.
       Note GM esportabili: /vtt_export_notes map_7F2C Foundry
   - user: "/vtt_canon_badge map_7F2C 📗"
-    gpt: |
+    assistant: |
       📗 Canon badge applicato: RAW-Lore (ancorata a 'Magnimar — Seacleft Upper Ledges', fonte ISWG p.{page}).
 
 status_example:
@@ -640,6 +640,11 @@ status_example:
 
 # ───────────────────────────────── CHANGELOG
 changelog:
+  - version: 3.7.0
+    date: 2026-07-18
+    notes: >
+      • Rebrand Master-DD-Taverna: chiavi esempio gpt: → assistant:, refusal_line "Club GPT" → Taverna, web_policy/aon_policy orientate al retrieval locale reference://ogl/ (lotto 2).
+      • Metadati version/last_updated allineati.
   - version: 3.6.2-QA+VTT
     date: 2025-08-23
     notes: >

@@ -1,9 +1,9 @@
 # Knowledge Pack — Guida d’Uso + Demo + Prompt (PF1e Master DD)
 
-> **Versione:** v2 • **Data:** 2025-09-04 • **Compatibilità:** Core 3.3+
+> **Versione:** v2.1 • **Data:** 2026-07-18 • **Compatibilità:** Core 3.3+
 > **Nota migrazione:** tutti i percorsi Knowledge Pack ora puntano a file **.txt**; sostituisci gli endpoint hardcodati `.yaml` (es. `knowledge_pack.yaml`) con le controparti `.txt` nei client legacy.
 > **Badge:** [RAW] [RAI] [PFS] 🧠 META [HR]
-> **Recupero moduli:** segui il flusso `decidi modalità → GET /modules/{name} (header x-api-key) → riformula` senza duplicare il kernel nel profilo GPT.
+> **Recupero moduli:** segui il flusso `decidi modalità → GET /modules/{name} (header x-api-key) → riformula` senza duplicare il kernel nelle istruzioni del client.
 
 ---
 
@@ -119,12 +119,12 @@ Linee guida: snapshot prima di export; `sell_rate` default 0.5.
 - **Encounter non parte:** uniforma nome file a `Encounter_Designer.txt`.  
 - **Scheda PG non genera:** `character_sheet_template` deve puntare a `.md`.  
 - **PFS ON ma compaiono 3PP:** ricontrolla `/toggle_pfs on` e rigenera l’output.  
-- **Badge mancanti in coda:** attiva `seals_parachute: on` nel core.
+- **Badge mancanti in coda:** verifica che il routing del core imposti `badges_required` per il modulo attivo (il flag `seals_parachute` citato in precedenza non esiste).
 
 ---
 
 ## 8) Demo Conversazione — End‑to‑End
-Prima di ogni scena: il GPT sceglie la modalità, chiama `GET /modules/{name}` (header `x-api-key`) e riformula i contenuti; ogni blocco di risposta mantiene i tag [RAW]/[RAI]/[PFS]/[HR]/🧠META coerenti con le fonti.
+Prima di ogni scena: l'assistente sceglie la modalità, chiama `GET /modules/{name}` (header `x-api-key`) e riformula i contenuti; ogni blocco di risposta mantiene i tag [RAW]/[RAI]/[PFS]/[HR]/🧠META coerenti con le fonti.
 
 **Scena 1 — Taverna (Quiz PG)**
 Utente: “Voglio creare un PG con il quiz, tono low‑fantasy, niente 3PP, PFS off. Stile Spike.”

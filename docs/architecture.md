@@ -1,4 +1,4 @@
-# Architettura — Pathfinder 1E Master DD (Kernel + API)
+# Architettura — Master-DD-Taverna (Kernel + API)
 
 Questo progetto separa il **kernel** del tuo GPT (prompt lunghi, moduli, knowledge pack)
 dal **profilo GPT** vero e proprio.

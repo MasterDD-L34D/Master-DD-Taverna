@@ -1,6 +1,6 @@
 module_name: Ruling Expert
-version: 3.1-hybrid
-last_updated: 2025-08-20
+version: 3.2-hybrid
+last_updated: 2026-07-18
 inherits_from: base_profile.txt
 type: module
 
@@ -488,7 +488,7 @@ status_example:
 
 examples:
   - user: "/ruling Canny Defense"
-    gpt: |
+    assistant: |
       ✅ **RAW-Summarized — Canny Defense (Duellist)**  
       Aggiungi **INT** alla **CA** quando **senza armatura** e con **arma leggera/una mano**; **cap = livelli da Duellist**. Non si applica con armature.  
       📘 **RAI/FAQ:** confermato il **cap** legato ai livelli di classe.  
@@ -497,7 +497,7 @@ examples:
       🔗 **Fonti:** Core (AC & Class Features) | AoN: Duellist | FAQ (cap INT).  
       [Source: {book} p.{page} | AoN: {url} | FAQ: {url}]
   - user: "/clarify_feat Power Attack"
-    gpt: |
+    assistant: |
       🛡 **Power Attack — RAW-Summarized**  
       **Prereq:** STR 13, BAB +1. **Beneficio:** prendi –1 TxC per **+2 danni** (scala con BAB). **2-H:** +3; **arma leggera:** +1.  
       ✏️ **Esempio numerico (arithmetic_guard):**  
@@ -507,7 +507,7 @@ examples:
       ▶️ **Risultato:** ogni colpo infligge **+6** danni extra; applica –2 al TxC su tutte le iterazioni.  
       🔗 **Fonti:** Core Rulebook p.{page} | AoN: {url}
   - user: "/clarify_combat Casting Defensively"
-    gpt: |
+    assistant: |
       🎲 **Lanciare sulla difensiva — RAW**  
       **CD = 15 + 2×livello incantesimo.** Tiro: **d20 + livello incantatore + mod caratteristica + bonus** (es. Combat Casting +4).  
       ✏️ **Esempio:** incantesimo di **3°** → **CD 15 + 2×3 = 21**.  
@@ -517,20 +517,20 @@ examples:
       ❗ Fallire ⇒ incantesimo perso.  
       🔗 **Fonti:** Concentration | Core p.{page} | AoN: {url}
   - user: "/compare_raw_rai Shield (spell) vs shield (equipment)"
-    gpt: |
+    assistant: |
       ⚖️ **RAW vs RAI — Bonus di scudo**  
       ✅ **RAW:** *Shield* (spell) fornisce **bonus di scudo** alla CA; uno **scudo fisico** fornisce **bonus di scudo**. I **bonus di stesso tipo non si sommano**: si applica il più alto.  
       📘 **RAI/FAQ:** confermano l’intento di **non stacking** tra fonti dello stesso tipo di bonus.  
       ▶️ **Esito operativo:** se Shield (spell) dà +4 e lo scudo fisico dà +2, usa **+4**.  
       🔗 **Fonti:** Types of Bonuses | Core p.{page} | AoN: {url} | FAQ: {url}
   - user: "/find_conflict Mage Armor + Bracers of Armor"
-    gpt: |
+    assistant: |
       🚧 **Conflitto di bonus — RAW**  
       **Mage Armor** fornisce **bonus di armatura**; **Bracers of Armor** forniscono **bonus di armatura**. **Stesso tipo ⇒ non si sommano**.  
       ▶️ **Risoluzione:** applica il **più alto** tra i due.  
       🔗 **Fonti:** Armor Bonus & Stacking | Core p.{page} | AoN: {url}
   - user: "/ruling_decision Trip contro CMD con modificatori"
-    gpt: |
+    assistant: |
       🧮 **Decisione con numeri (arithmetic_guard)**  
       **CMB attaccante** = BAB + mod STR + taglia + altri.  
       **Esempio:** BAB +7, STR 18 ⇒ +4, taglia Media 0, Improved Trip +2 ⇒ **CMB = 7 + 4 + 0 + 2 = +13**.  
@@ -540,13 +540,13 @@ examples:
       ▶️ **Esito:** con **6+** riesci a Buttare a Terra; applica condizioni e AoO secondo RAW.  
       🔗 **Fonti:** Combat Maneuvers | Core p.{page} | AoN: {url}
   - user: "/pfs_check Tratti regionali X"
-    gpt: |
+    assistant: |
       🧭 **PFS — Legalità tratti**  
       **Regola:** la legalità dipende da **Additional Resources** / Guide PFS. Se il tratto **non è elencato** o è **limitato**, **non legale** salvo specifica boons.  
       ▶️ **Azione:** verifica la voce del volume e le **restrizioni** (campagne, fazioni, cronologia).  
       🔗 **Fonti:** PFS Guide / Additional Resources {url}
   - user: "/ruling Shield — disambiguate"
-    gpt: |
+    assistant: |
       ❓ **Termine ambiguo: "Shield"**  
       Procedo su **Shield (spell)** e mostro alternative:  
       1) **Shield (spell)** — bonus di scudo (RAW non stack con scudo fisico)  

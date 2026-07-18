@@ -1,11 +1,11 @@
 module_name: Documenti
-version: 1.6
-last_updated: 2025-08-23
+version: 1.7
+last_updated: 2026-07-18
 inherits_from: base_profile.txt
 type: module
 
 api_usage:
-  note: "Recupera questo modulo via API e non duplicare il kernel nel prompt GPT."
+  note: "Recupera questo modulo via API e non duplicare il kernel nelle istruzioni del client."
   flow: "Decidi la modalità → GET /modules/{name} con header x-api-key → riformula con badge RAW/RAI/PFS/HR/🧠META."
   sample_call: |
     curl -H "x-api-key: $API_KEY" http://localhost:8000/modules/meta_doc.txt
@@ -16,7 +16,7 @@ summary: >-
   (MinMax Builder, Taverna NPC, Encounter Designer, Adventurer Ledger, Archivist,
   Explain/Ruling). Fornisce blueprint pronti (Spec, README, Changelog, Release Notes,
   Knowledge Pack, Manuale Homebrewery), peer review simulata a 3 esperti e pacchetti ZIP finali, con esempi di export bloccati per outline/fonti mancanti e CTA Homebrewery per `/render_brew_example`.
-  Ogni consultazione deve seguire il flusso architettura (`decidi modalità → GET /modules/{name} con x-api-key → riformula`), senza duplicare il kernel nel prompt GPT e mantenendo i tag [RAW]/[RAI]/[PFS]/[HR]/🧠META nelle sezioni esempio.
+  Ogni consultazione deve seguire il flusso architettura (`decidi modalità → GET /modules/{name} con x-api-key → riformula`), senza duplicare il kernel nelle istruzioni del client e mantenendo i tag [RAW]/[RAI]/[PFS]/[HR]/🧠META nelle sezioni esempio.
 
 integrates_with:
   - MinMax Builder
@@ -96,7 +96,7 @@ data_structures:
       allow_canvas: true
       allow_brew: true
       zip_bundle:
-        root_name: "ProjectName_GPT"
+        root_name: "MasterDD_Taverna"
         tree:
           - "1_Instructions/"
           - "2_Prompt_Modulari/"
@@ -858,7 +858,7 @@ export:
 standard_briefing_template:
   title: "Briefing Modulo – Struttura Standard"
   description: >
-    Modello di briefing operativo per moduli GPT.
+    Modello di briefing operativo per i moduli.
     Definisce ruolo, competenze, obiettivi e formato output in modo coerente.
   content: |
     🎓 RUOLO:

@@ -1,4 +1,4 @@
-# API Usage — Pathfinder 1E Master DD
+# API Usage — Master-DD-Taverna
 
 Questa guida riassume come usare l'API FastAPI esposta dal progetto, con esempi di richieste e note sui limiti.
 

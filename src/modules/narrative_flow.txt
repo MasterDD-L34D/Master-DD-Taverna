@@ -1,6 +1,6 @@
 module_name: Narrativa
-version: 2.3
-last_updated: 2025-08-23
+version: 2.4
+last_updated: 2026-07-18
 inherits_from: base_profile.txt
 type: module
 
@@ -29,7 +29,7 @@ triggers:
   - "genera PNG narrativo"
 
 # ── Tools storici (compat)
-tools: [dall-e, memory, interactive_flow]
+tools: [memory, interactive_flow]
 
 # ── Router & Intent
 router_meta:

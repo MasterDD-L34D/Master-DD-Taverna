@@ -1,6 +1,6 @@
 module_name: Libro Mastro dell’Avventuriero
-version: 1.5
-last_updated: 2025-08-22
+version: 1.6
+last_updated: 2026-07-18
 inherits_from: base_profile.txt
 type: economy/loot/crafting
 
@@ -106,7 +106,7 @@ magic_item_creator:
     - name: Creative
       description: "Item tematico basato su prompt dell’utente, validato dopo la creazione."
     - name: VisualPrompt
-      description: "Output esclusivamente come prompt descrittivo (stile DALL·E)."
+      description: "Output esclusivamente come prompt descrittivo per generatore di immagini esterno."
   output_format:
     fields: [Nome, Aura, CL, Slot, Prezzo, Peso, Descrizione, Costruzione]
     costruzione_subfields: [Requisiti, Costo]
@@ -1822,4 +1822,10 @@ changelog:
       • Allineamento kernel: type → economy/loot/crafting, aggiunte sezioni provides/requires/exports.  
       • Aggiunte compatibility_notes per eredità router/meta/pfs/qa.  
       • Principi sincronizzati con badge/pfs_mode del kernel (righe [KERNEL]).
+
+  - version: 1.6
+    date: 2026-07-18
+    notes: >
+      • Rebrand Master-DD-Taverna: stile VisualPrompt descritto senza riferimenti a generatori specifici; retrieval RAW ancorato al catalogo locale reference://ogl/ (lotto 2).
+      • Metadati version/last_updated allineati.
 

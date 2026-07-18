@@ -1,10 +1,12 @@
-# Pathfinder 1E Master DD — Core Repo (API + Prompt Kit)
+# Master-DD-Taverna — Core Repo (API + Prompt Kit)
 
-Questo repository contiene il "cuore" del tuo GPT **Pathfinder 1E Master DD** in forma esterna:
+**Un Master per Pathfinder completo e modulare.**
+
+Questo repository contiene il "cuore" di **Master-DD-Taverna** (ex *Pathfinder 1E Master DD*, nato come GPT) in forma esterna:
 - tutti i moduli originali (`base_profile.txt`, `Taverna_NPC.txt`, `minmax_builder.txt`, ecc.)
-- una piccola API in Python (FastAPI) che espone i moduli al GPT tramite Actions
+- una piccola API in Python (FastAPI) che espone i moduli ai client (RAG locale; GPT Actions come integrazione legacy)
 - i file di supporto (knowledge pack, template scheda, guide PDF)
-- un prompt compatto da incollare nel builder dei GPT, che usa questa API invece di includere tutto il base_profile
+- un prompt compatto (integrazione legacy da incollare nel builder dei GPT), che usa questa API invece di includere tutto il base_profile
 
 ## Struttura
 
