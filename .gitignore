@@ -26,6 +26,9 @@ src/data/modules/strict/
 data/reference/pi_local_only/*
 !data/reference/pi_local_only/.gitkeep
 
+# Cache download aonprd (dump HTML grezzi, rigenerabili)
+data/reference/aon_cache/
+
 # Dati derivati grezzi non ancora classificati
 *.raw.json
 *.aondump.json
