@@ -8,6 +8,7 @@ from fastapi.testclient import TestClient
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src.app import app
+from src.config import settings
 
 VALID = {
     "name": "Seelah", "method": "point-buy", "campaign_type": "Standard Fantasy",
@@ -24,6 +25,17 @@ VALID = {
 def client():
     with TestClient(app) as test_client:
         yield test_client
+
+
+@pytest.fixture(autouse=True)
+def setup_api_key():
+    original = settings.api_key
+    original_allow_anonymous = settings.allow_anonymous
+    settings.api_key = "test-api-key"
+    settings.allow_anonymous = False
+    yield
+    settings.api_key = original
+    settings.allow_anonymous = original_allow_anonymous
 
 
 @pytest.fixture
