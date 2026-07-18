@@ -12,7 +12,10 @@ Uso:
 import argparse
 import json
 import re
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from bs4 import BeautifulSoup
 
@@ -43,6 +46,8 @@ def clean(text):
 def table_rows(table):
     """<table> -> lista di dict {header: cella} (header dal primo <tr>)."""
     rows = table.find_all("tr")
+    if not rows:
+        return []
     headers = [clean(c.get_text()) for c in rows[0].find_all(["th", "td"])]
     out = []
     for row in rows[1:]:
@@ -65,46 +70,51 @@ def write_catalog(path, entries, license_text=LICENSE, source_text=SOURCE):
 def parse_abilities(html):
     """Pagina 'Generating Ability Scores': tabella costi + budget campagna."""
     soup = BeautifulSoup(html, "html.parser")
-    tables = soup.find_all("table")
     entries = []
-    if len(tables) >= 1:
-        for row in table_rows(tables[0]):
-            if row.get("Score", "").isdigit():
-                name = f"Score {row['Score']}"
-                entries.append({
-                    "name": name,
-                    "source": "PFRPG Core",
-                    "source_id": source_id("pfrpg_core", name),
-                    "prerequisites": [],
-                    "tags": ["ability", "point-buy"],
-                    "references": ["AoN: Generating Ability Scores"],
-                    "reference_urls": [BASE + "Rules.aspx?Name=Generating%20Ability%20Scores&Category=Getting%20Started"],
-                    "description": f"Point-buy: il punteggio di caratteristica {row['Score']} costa {row['Points']} punti.",
-                    "mechanics": {"kind": "ability_cost", "score": int(row["Score"]), "cost": int(row["Points"])},
-                })
-    if len(tables) >= 2:
-        for row in table_rows(tables[1]):
-            name = row.get("Campaign Type", "")
-            if name and row.get("Points", "").lstrip("-").isdigit():
-                entries.append({
-                    "name": name,
-                    "source": "PFRPG Core",
-                    "source_id": source_id("pfrpg_core", name),
-                    "prerequisites": [],
-                    "tags": ["ability", "point-buy", "campaign"],
-                    "references": ["AoN: Generating Ability Scores"],
-                    "reference_urls": [BASE + "Rules.aspx?Name=Generating%20Ability%20Scores&Category=Getting%20Started"],
-                    "description": f"Point-buy: la campagna {name} assegna {row['Points']} punti.",
-                    "mechanics": {"kind": "campaign_budget", "points": int(row["Points"])},
-                })
+    for table in soup.find_all("table"):
+        trs = table.find_all("tr")
+        headers = [clean(c.get_text()) for c in trs[0].find_all(["th", "td"])] if trs else []
+        if "Score" in headers and "Points" in headers:
+            for row in table_rows(table):
+                if row.get("Score", "").isdigit():
+                    name = f"Score {row['Score']}"
+                    entries.append({
+                        "name": name,
+                        "source": "PFRPG Core",
+                        "source_id": source_id("pfrpg_core", name),
+                        "prerequisites": [],
+                        "tags": ["ability", "point-buy"],
+                        "references": ["AoN: Generating Ability Scores"],
+                        "reference_urls": [BASE + "Rules.aspx?Name=Generating%20Ability%20Scores&Category=Getting%20Started"],
+                        "description": f"Point-buy: il punteggio di caratteristica {row['Score']} costa {row['Points']} punti.",
+                        "mechanics": {"kind": "ability_cost", "score": int(row["Score"]), "cost": int(row["Points"])},
+                    })
+        elif "Campaign Type" in headers:
+            for row in table_rows(table):
+                name = row.get("Campaign Type", "")
+                if name and row.get("Points", "").lstrip("-").isdigit():
+                    entries.append({
+                        "name": name,
+                        "source": "PFRPG Core",
+                        "source_id": source_id("pfrpg_core", name),
+                        "prerequisites": [],
+                        "tags": ["ability", "point-buy", "campaign"],
+                        "references": ["AoN: Generating Ability Scores"],
+                        "reference_urls": [BASE + "Rules.aspx?Name=Generating%20Ability%20Scores&Category=Getting%20Started"],
+                        "description": f"Point-buy: la campagna {name} assegna {row['Points']} punti.",
+                        "mechanics": {"kind": "campaign_budget", "points": int(row["Points"])},
+                    })
     return entries
 
 
-def build_abilities():
+def build_abilities(write=False):
     url = BASE + "Rules.aspx?Name=Generating%20Ability%20Scores&Category=Getting%20Started"
     entries = parse_abilities(fetch(url))
     assert len(entries) >= 16, f"abilities: attese >=16 entry, trovate {len(entries)}"
-    write_catalog(OGL_DIR / "abilities.json", entries)
+    if write:
+        write_catalog(OGL_DIR / "abilities.json", entries)
+    else:
+        print(f"report: {len(entries)} entry (write=False, nessuna scrittura)")
 
 
 DOMAINS = {"abilities": build_abilities}
@@ -116,7 +126,7 @@ def main(argv=None):
     ap.add_argument("--write", action="store_true", help="scrivi il catalogo (default: solo report)")
     args = ap.parse_args(argv)
     print(f"domain: {args.domain} (write={args.write})")
-    DOMAINS[args.domain]()
+    DOMAINS[args.domain](write=args.write)
 
 
 if __name__ == "__main__":
