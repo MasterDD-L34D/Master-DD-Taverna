@@ -7,7 +7,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from tools.import_reference import (SKILL_HEADER_RE, _class_skill_matches,
                                     parse_abilities, parse_class,
                                     parse_equipment_table, parse_item_source,
-                                    parse_race, parse_skill, source_id, slug)
+                                    parse_race, parse_skill, parse_traits,
+                                    source_id, slug)
 
 ABILITIES_HTML = """
 <html><body>
@@ -177,3 +178,26 @@ def test_parse_item_source():
     html3 = "<html><body><p>Source Ultimate Equipment pg. 18, PRPG Core Rulebook pg. 142</p></body></html>"
     assert parse_item_source(html3) == "PFRPG Core"
     print("OK: parse_item_source fixture")
+
+
+TRAITS_HTML = """
+<html><body>
+<h3><a href="TraitDisplay.aspx?ItemName=Reactionary">Reactionary</a></h3>
+<p><b>Source</b> Ultimate Campaign pg. 63</p>
+<p>You were bullied as a child. You gain a +2 trait bonus on initiative checks.</p>
+<h3><a href="TraitDisplay.aspx?ItemName=Indomitable+Faith">Indomitable Faith</a></h3>
+<p><b>Source</b> Ultimate Campaign pg. 60</p>
+<p><b>Requirement(s)</b> None</p>
+<p>You gain a +1 trait bonus on Will saves.</p>
+</body></html>
+"""
+
+
+def test_parse_traits():
+    entries = parse_traits(TRAITS_HTML, "Basic (Combat)")
+    assert entries[0]["name"] == "Reactionary"
+    assert entries[0]["mechanics"]["category"] == "Basic (Combat)"
+    assert "initiative" in entries[0]["description"]
+    assert entries[1]["name"] == "Indomitable Faith"
+    assert len(entries) == 2
+    print("OK: parse_traits fixture")

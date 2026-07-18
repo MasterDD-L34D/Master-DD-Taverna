@@ -14,12 +14,13 @@ import json
 import re
 import sys
 from pathlib import Path
-from urllib.parse import quote, urljoin
+from urllib.parse import quote, unquote_plus, urljoin
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from bs4 import BeautifulSoup
 
+from tools.legal_filter import _find_pi
 from tools.reference_fetch import fetch
 
 OGL_DIR = Path(__file__).resolve().parents[1] / "data/reference/ogl"
@@ -664,8 +665,134 @@ def build_equipment(write=False):
         print(f"report: {len(entries)} entry (write=False, nessuna scrittura)")
 
 
+TRAIT_CATEGORIES = ["Basic (Combat)", "Basic (Faith)", "Basic (Magic)", "Basic (Social)", "Equipment"]
+
+
+def _trait_body_lines(header):
+    """Righe di testo fra l'header del tratto e il tratto successivo.
+
+    Markup reale AoN: <span ...><h2 class="title"><img/> Nome [<a>Link</a>]</h2>
+    <b>Source</b> <a><i>Libro pg. N</i></a><br/> [<b>Requirement(s)</b> ...<br/>]
+    descrizione<br/><br/></span> — i sibling dell'h2 dentro lo span, spezzati
+    sui <br/>. Markup fixture: <h3><a>Nome</a></h3><p>Source ...</p><p>desc</p>
+    — i <p> sibling fino al prossimo header. Stop al prossimo h1-h4 o alla
+    fine del contenitore."""
+    lines, current = [], []
+
+    def flush():
+        line = clean(" ".join(current))
+        if line:
+            lines.append(line)
+        current.clear()
+
+    for sib in header.next_siblings:
+        tag = getattr(sib, "name", None)
+        if tag in ("h1", "h2", "h3", "h4"):
+            break
+        if tag == "br":
+            flush()
+            continue
+        if tag == "p":
+            flush()
+            current.append(sib.get_text())
+            flush()
+            continue
+        current.append(sib.get_text() if hasattr(sib, "get_text") else str(sib))
+    flush()
+    return lines
+
+
+def parse_traits(html, category):
+    """Pagina Traits.aspx?Type=<category>: voci nome + source + requirement + beneficio.
+
+    I tratti sono individuati dai link 'TraitDisplay.aspx?ItemName=': il nome
+    canonico e' ItemName nell'href (il testo del link e' 'Link' nel markup
+    reale, il nome nel markup fixture)."""
+    soup = BeautifulSoup(html, "html.parser")
+    entries = []
+    seen_headers = set()
+    for link in soup.find_all("a", href=re.compile(r"TraitDisplay\.aspx\?ItemName=", re.I)):
+        header = link.find_parent(["h1", "h2", "h3", "h4"])
+        if header is None or id(header) in seen_headers:
+            continue
+        seen_headers.add(id(header))
+        m = re.search(r"ItemName=([^&]+)", link["href"])
+        if not m:
+            continue
+        name = clean(unquote_plus(m.group(1)))
+        if not name:
+            continue
+        source, req, desc_lines = None, None, []
+        for line in _trait_body_lines(header):
+            src = re.match(r"^Source\s+(.+)$", line)
+            if src and source is None:
+                # 'Libro pg. N' (anche multi-fonte: si prende il primo).
+                books = re.findall(r"([^,]+?)\s+pg\.?\s*\d+", src.group(1))
+                source = clean(books[0]) if books else clean(src.group(1))
+                continue
+            r = re.match(r"^Requirement\(s\)\s*(.+)$", line)
+            if r and req is None:
+                req = clean(r.group(1))
+                continue
+            desc_lines.append(line)
+        description = clean(" ".join(desc_lines))
+        if not description:
+            continue
+        entries.append({
+            "name": name,
+            "source": source or "Ultimate Campaign",
+            "source_id": source_id(slug(source) if source else "ultimate_campaign", name),
+            "prerequisites": [req] if req and req.lower() != "none" else [],
+            "tags": ["trait", slug(category)],
+            "references": [f"AoN: Traits ({category})"],
+            "reference_urls": [quote(urljoin(BASE, link["href"]), safe=":/?=&()%';,+%")],
+            "description": description,
+            "mechanics": {"category": category},
+        })
+    return entries
+
+
+def _trait_pi_hits(entry):
+    """Occorrenze PI (legal_filter._find_pi) in name/description/prerequisites
+    del tratto. Le categorie Basic includono tratti da Player Companion con PI
+    Golarion ('Absalom Bouncer', tratti 'of the Society', divinita'/luoghi nei
+    requisiti Faith): filtrati dal builder, come PI_EQUIPMENT per equipment."""
+    texts = [entry["name"], entry["description"], *entry["prerequisites"]]
+    return [hit for text in texts for hit in _find_pi(text)]
+
+
+def build_traits(write=False):
+    """SOLO categorie Basic UCa + Equipment (OGC). Campaign/Region/Religion/
+    Faction/Family/Race/Cosmic/Exemplar/Mount/Drawbacks: ESCLUSE (PI Golarion).
+    Le entry con PI residua in name/description/prerequisites (scansione
+    legal_filter._find_pi) sono rimosse e conteggiate."""
+    entries = []
+    for category in TRAIT_CATEGORIES:
+        url = BASE + f"Traits.aspx?Type={category.replace(' ', '%20')}"
+        entries.extend(parse_traits(fetch(url), category))
+    # Ristampe dello stesso tratto da fonti diverse: source_id univoco, vince
+    # la prima occorrenza.
+    seen, unique = set(), []
+    for e in entries:
+        if e["source_id"] in seen:
+            print(f"nota: duplicato scartato {e['source_id']}")
+            continue
+        seen.add(e["source_id"])
+        unique.append(e)
+    entries = unique
+    pi = {e["name"] for e in entries if _trait_pi_hits(e)}
+    if pi:
+        entries = [e for e in entries if e["name"] not in pi]
+        print(f"nota: filtrate {len(pi)} entry PI: {', '.join(sorted(pi))}")
+    assert len(entries) >= 60, f"traits: attese >=60 entry, trovate {len(entries)}"
+    if write:
+        write_catalog(OGL_DIR / "traits.json", entries)
+    else:
+        print(f"report: {len(entries)} entry (write=False, nessuna scrittura)")
+
+
 DOMAINS = {"abilities": build_abilities, "races": build_races, "classes": build_classes,
-           "skills": build_skills, "equipment": build_equipment}
+           "skills": build_skills, "equipment": build_equipment, "traits": build_traits}
 
 
 def main(argv=None):
