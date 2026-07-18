@@ -4,8 +4,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from tools.import_reference import (SKILL_HEADER_RE, parse_abilities, parse_class,
-                                    parse_race, parse_skill, source_id, slug)
+from tools.import_reference import (SKILL_HEADER_RE, _class_skill_matches,
+                                    parse_abilities, parse_class, parse_race,
+                                    parse_skill, source_id, slug)
 
 ABILITIES_HTML = """
 <html><body>
@@ -125,3 +126,12 @@ def test_parse_skill():
     assert entry["mechanics"] == {"key_ability": "dex", "trained_only": False,
                                   "armor_check_penalty": True, "class_skills_of": []}
     print("OK: parse_skill fixture")
+
+
+def test_class_skill_matches():
+    assert _class_skill_matches("Knowledge (Arcana)", "Knowledge (arcana)")
+    assert _class_skill_matches("Knowledge (Arcana)", "Knowledge (all)")
+    assert _class_skill_matches("Perception", "Perception")
+    assert not _class_skill_matches("Perception", "knowledge (all)")
+    assert not _class_skill_matches("Spellcraft", "Craft")
+    print("OK: class_skill_matches")

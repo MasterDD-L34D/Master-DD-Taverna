@@ -405,7 +405,13 @@
         "key_ability": "int",
         "trained_only": true,
         "armor_check_penalty": false,
-        "class_skills_of": []
+        "class_skills_of": [
+          "Bard",
+          "Cleric",
+          "Sorcerer",
+          "Wizard",
+          "Magus"
+        ]
       }
     },
     {
@@ -429,7 +435,14 @@
         "key_ability": "int",
         "trained_only": true,
         "armor_check_penalty": false,
-        "class_skills_of": []
+        "class_skills_of": [
+          "Bard",
+          "Fighter",
+          "Ranger",
+          "Rogue",
+          "Wizard",
+          "Magus"
+        ]
       }
     },
     {
@@ -453,7 +466,11 @@
         "key_ability": "int",
         "trained_only": true,
         "armor_check_penalty": false,
-        "class_skills_of": []
+        "class_skills_of": [
+          "Bard",
+          "Fighter",
+          "Wizard"
+        ]
       }
     },
     {
@@ -477,7 +494,12 @@
         "key_ability": "int",
         "trained_only": true,
         "armor_check_penalty": false,
-        "class_skills_of": []
+        "class_skills_of": [
+          "Bard",
+          "Druid",
+          "Ranger",
+          "Wizard"
+        ]
       }
     },
     {
@@ -501,7 +523,12 @@
         "key_ability": "int",
         "trained_only": true,
         "armor_check_penalty": false,
-        "class_skills_of": []
+        "class_skills_of": [
+          "Bard",
+          "Cleric",
+          "Monk",
+          "Wizard"
+        ]
       }
     },
     {
@@ -525,7 +552,11 @@
         "key_ability": "int",
         "trained_only": true,
         "armor_check_penalty": false,
-        "class_skills_of": []
+        "class_skills_of": [
+          "Bard",
+          "Rogue",
+          "Wizard"
+        ]
       }
     },
     {
@@ -549,7 +580,13 @@
         "key_ability": "int",
         "trained_only": true,
         "armor_check_penalty": false,
-        "class_skills_of": []
+        "class_skills_of": [
+          "Barbarian",
+          "Bard",
+          "Druid",
+          "Ranger",
+          "Wizard"
+        ]
       }
     },
     {
@@ -573,7 +610,12 @@
         "key_ability": "int",
         "trained_only": true,
         "armor_check_penalty": false,
-        "class_skills_of": []
+        "class_skills_of": [
+          "Bard",
+          "Cleric",
+          "Paladin",
+          "Wizard"
+        ]
       }
     },
     {
@@ -597,7 +639,12 @@
         "key_ability": "int",
         "trained_only": true,
         "armor_check_penalty": false,
-        "class_skills_of": []
+        "class_skills_of": [
+          "Bard",
+          "Cleric",
+          "Wizard",
+          "Magus"
+        ]
       }
     },
     {
@@ -621,7 +668,13 @@
         "key_ability": "int",
         "trained_only": true,
         "armor_check_penalty": false,
-        "class_skills_of": []
+        "class_skills_of": [
+          "Bard",
+          "Cleric",
+          "Monk",
+          "Paladin",
+          "Wizard"
+        ]
       }
     },
     {

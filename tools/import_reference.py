@@ -411,15 +411,17 @@ def parse_skill(html, skill_name):
     """Pagina skill singola: header con caratteristica/flags nel titolo.
 
     La pagina reale AoN ha un h2 di navigazione con l'elenco di tutte le skill
-    ('Acrobatics | Appraise | ...'): il match sul nome non basta, si accetta
-    solo il primo heading da cui esce una caratteristica valida."""
+    ('Acrobatics | Appraise | ...'): si accetta solo l'heading con nome esatto
+    (case-insensitive) da cui esce una caratteristica valida."""
     soup = BeautifulSoup(html, "html.parser")
     header = ""
     for tag in soup.find_all(["h1", "h2", "h3"]):
         if skill_name.lower() not in tag.get_text().lower():
             continue
         candidate = clean(tag.get_text())
-        if SKILL_HEADER_RE(candidate)[1]:
+        # Nome esatto (case-insensitive): evita match substring ("craft" in
+        # "spellcraft") e l'h2 di navigazione con l'elenco di tutte le skill.
+        if SKILL_HEADER_RE(candidate)[1] and SKILL_HEADER_RE(candidate)[0].lower() == skill_name.lower():
             header = candidate
             break
     header = header or skill_name
@@ -438,6 +440,16 @@ def parse_skill(html, skill_name):
         "mechanics": {"key_ability": key, "trained_only": trained,
                       "armor_check_penalty": acp, "class_skills_of": []},
     }
+
+
+def _class_skill_matches(skill_name, class_skill):
+    """Match skill del catalogo vs etichetta class_skills di classes.json.
+    Case-insensitive; 'Knowledge (all)' matcha ogni Knowledge specifica."""
+    s = skill_name.lower()
+    c = class_skill.lower()
+    if c == "knowledge (all)":
+        return s.startswith("knowledge (")
+    return s == c
 
 
 def build_skills(write=False):
@@ -476,7 +488,8 @@ def build_skills(write=False):
         classes = json.load(f)["entries"]
     for entry in entries:
         for cls in classes:
-            if entry["name"] in cls.get("mechanics", {}).get("class_skills", []):
+            if any(_class_skill_matches(entry["name"], cs)
+                   for cs in cls.get("mechanics", {}).get("class_skills", [])):
                 entry["mechanics"]["class_skills_of"].append(cls["name"])
     if write:
         write_catalog(OGL_DIR / "skills.json", entries)
