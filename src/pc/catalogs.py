@@ -41,6 +41,7 @@ def campaign_budget(name):
     raise KeyError(f"budget campagna non trovato: {name}")
 
 
+# NOTA: le entry restituite dai getter sono condivise (cache): non mutarle.
 def get_race(name):
     return _by_name("races").get(name)
 

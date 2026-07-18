@@ -15,7 +15,17 @@ def apply_abilities(draft):
     if draft.method != "point-buy":
         errors.append(f"metodo non supportato: {draft.method} (solo point-buy)")
         return {"abilities": {}, "errors": errors}
-    budget = catalogs.campaign_budget(draft.campaign_type)
+    if set(draft.abilities) != set(ABILS):
+        errors.append(f"abilities: attese {sorted(ABILS)}, ricevute {sorted(draft.abilities)}")
+    for ab, score in draft.abilities.items():
+        if not isinstance(score, int) or not 7 <= score <= 18:
+            errors.append(f"abilities[{ab}] non valida: {score!r} (atteso int 7..18)")
+    try:
+        budget = catalogs.campaign_budget(draft.campaign_type)
+    except KeyError:
+        errors.append(f"campaign_type sconosciuto: {draft.campaign_type}")
+    if errors:
+        return {"abilities": {}, "errors": errors}
     spent = sum(catalogs.ability_cost(v) for v in draft.abilities.values())
     if spent > budget:
         errors.append(f"point-buy: {spent} punti spesi oltre il budget {budget} ({draft.campaign_type})")
@@ -25,7 +35,7 @@ def apply_abilities(draft):
         return {"abilities": {}, "errors": errors}
     mods = race["mechanics"].get("ability_mods", {})
     final = dict(draft.abilities)
-    if mods == {"any": 2} or mods.get("any"):
+    if mods.get("any"):
         if not draft.race_bonus_ability:
             errors.append(f"race_bonus_ability obbligatorio per {draft.race}")
         elif draft.race_bonus_ability not in ABILS:

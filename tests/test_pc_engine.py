@@ -36,3 +36,30 @@ def test_over_budget_and_missing_any_choice():
     sheet2 = apply_abilities(_draft(abilities={"str": 13, "dex": 12, "con": 13,
                                               "int": 10, "wis": 14, "cha": 12}))
     assert any("race_bonus_ability" in e for e in sheet2["errors"])
+
+
+def test_dwarf_negative_mods():
+    sheet = apply_abilities(_draft(abilities={"str": 13, "dex": 12, "con": 13,
+                                             "int": 10, "wis": 14, "cha": 12},
+                                   race="Dwarf"))
+    assert sheet["errors"] == []
+    assert sheet["abilities"]["con"] == 15  # 13 + 2
+    assert sheet["abilities"]["wis"] == 16  # 14 + 2
+    assert sheet["abilities"]["cha"] == 10  # 12 - 2
+
+
+def test_half_orc_any_bonus():
+    sheet = apply_abilities(_draft(abilities={"str": 13, "dex": 12, "con": 13,
+                                             "int": 10, "wis": 14, "cha": 12},
+                                   race="Half-Orc", race_bonus_ability="con"))
+    assert sheet["errors"] == []
+    assert sheet["abilities"]["con"] == 15  # 13 + 2 any Half-Orc
+
+
+def test_invalid_score_range():
+    sheet = apply_abilities(_draft(abilities={"str": 19, "dex": 12, "con": 13,
+                                             "int": 10, "wis": 14, "cha": 12}))
+    assert sheet["errors"]
+    sheet2 = apply_abilities(_draft(abilities={"str": 13, "dex": 12, "con": 13,
+                                              "int": 10, "wis": 14}))
+    assert sheet2["errors"]
