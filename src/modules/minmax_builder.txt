@@ -86,6 +86,12 @@ constraints:
       # END SOURCE_GOVERNANCE_V1
 meta_reference:
   enabled: true
+  # LOCAL-FIRST: in questo sistema non esiste ricerca web live. Le fonti META
+  # elencate sotto sono consultate SOLO da documenti bundled (es. PDF in src/data)
+  # o da estratti forniti dall'utente; se il materiale META non è disponibile
+  # localmente, dichiaralo e proponi all'utente le query in search_patterns
+  # per reperirlo, invece di simulare una ricerca.
+  search_mode: bundled_or_user_provided
   banner_on_use: >-
     ℹ Fonti META attive: consigli da COMMUNITY/EXPERT — non RAW. Se PFS è
     attivo, HR/META restano fuori dall'export; per ruling vincolanti usa
@@ -124,6 +130,9 @@ meta_reference:
       type: Analisi/Commentary
       level: META_EXPERT
   search_patterns:
+    # Template di query per reperimento META assistito: il sistema non naviga.
+    # Uso: proporle all'utente per recuperare estratti, oppure applicarle come
+    # chiavi di match sui documenti META bundled disponibili in src/data.
     - pathfinder 1e <classe> build giantitp
     - zenith games <classe> build
     - reddit pathfinder 1e <classe> build

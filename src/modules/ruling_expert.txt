@@ -55,7 +55,7 @@ web_policy:
   domains_preferred: ["aonprd.com","paizo.com"]
   fallback_domains: ["d20pfsrd.com"]
   timeout_seconds: 20
-  permalink_policy: "Usa i permalink AoN (Search/FeatDisplay/SpellDisplay/SkillDisplay). Se AoN non risponde, passa a d20pfsrd solo come mirror di backup e avvisa nel testo."
+  permalink_policy: "Usa i permalink AoN (Search/FeatDisplay/SpellDisplay/SkillDisplay) quando la navigazione è disponibile; in modalità offline ancora le citazioni al catalogo locale reference://ogl/ e marca i riferimenti web come da verificare."
   offline_mode:
     enabled: true
     local_index: "reference://ogl/"
@@ -254,7 +254,7 @@ commands:
   - {name: /variation_guidance,  description: "Differenze base vs varianti (PFS/Unchained/HR)", params: [tema]}
   - {name: /cite_rule,           description: "Citazione precisa (≤25 parole)", params: [tema]}
   - {name: /source_audit,        description: "Audit delle fonti e dei tag applicati"}
-  - {name: /offline_check,       description: "Verifica stato offline (ora disabilitato)"}
+  - {name: /offline_check,       description: "Verifica stato offline e indice locale"}
   - {name: /cache_status,        description: "Stato cache (hit/miss/TTL)"}
   - {name: /ambiguity_probe,     description: "Probe di disambiguazione", params: [term]}
   - {name: /math_guard_test,     description: "Test di calcolo a passi", params: [expression]}
@@ -446,7 +446,7 @@ diagnostics_tools:
   - name: /offline_check
     description: "Stato offline."
     output_example: |
-      Offline: DISABLED — nessun indice locale; navigazione richiesta per citazioni.
+      Offline: ENABLED — indice locale reference://ogl/ attivo (feats, spells, items, classes, races, archetypes). Citazioni RAW ancorate al catalogo locale; se il testo RAW non è disponibile offline, il verdetto è marcato NON VERIFICABILE. Navigazione live opzionale.
   - name: /cache_status
     description: "Mostra cache attiva (chiavi→hit/miss, TTL)."
     output_example: |
@@ -483,7 +483,7 @@ status_example:
   command: "/status"
   output: |
     Ruling Expert • scope: RAW • PFS: auto (season: auto) • speed: balanced • output: Completo • dump: locked (ALLOW_MODULE_DUMP=false; whitelist: -)
-    Last sources: AoN:[…], Book/Page:[…], FAQ:[…] | Cache: hit yes/no | Offline: disabled
+    Last sources: AoN:[…], Book/Page:[…], FAQ:[…] | Cache: hit yes/no | Offline: enabled (reference://ogl/)
     👉 Azione richiesta: rispondi adesso con **/set_pfs_season 10-11** (o "auto") per confermare la stagione PFS prima di qualsiasi ruling.
 
 examples:

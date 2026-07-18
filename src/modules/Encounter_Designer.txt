@@ -35,7 +35,7 @@ principles:
 ruling_policy:
   summary: "Ordine di giurisdizione: ✅ RAW → 📘 RAI → 🧭 PFS → ❗ HR. Usa Ruling Expert per controversie o mancanza di fonti."
   pfs_gate: "Se party.rules.pfs_active = true, escludi ❗ HR e segnala contenuti non legali."
-  offline_disclaimer: "Offline non supportato: servono riferimenti a fonti Paizo/AoN."
+  offline_disclaimer: "Offline supportato: i riferimenti RAW sono ancorati al catalogo locale reference://ogl/ (feats, spells, items, classes, races, archetypes). Se una fonte non è disponibile offline, marca il contenuto come NON VERIFICABILE."
 
 modes:
   - {name: Encounter Builder, description: "Crea incontri da CR/XP target"}

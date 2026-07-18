@@ -590,18 +590,18 @@ _Nessuna tabella incantesimi disponibile._
     {% set ns.has_meta = true %}
   {% endif %}
 
-  {% if f.link and ('aonprd.com' in (f.link|lower) or 'paizo.com' in (f.link|lower) or 'archivesofnethys' in (f.link|lower)) %}
+  {% if f.link and ('aonprd.com' in (f.link|lower) or 'paizo.com' in (f.link|lower) or 'archivesofnethys' in (f.link|lower) or 'reference://' in (f.link|lower)) %}
     {% set ns.has_raw = true %}
   {% endif %}
 {% endfor %}
 
 {# 2) Detect RAW anchors in 'fonti' (stringhe o dict) #}
 {% for f in (fonti or []) %}
-  {% if f is string and ('aonprd.com' in (f|lower) or 'paizo.com' in (f|lower) or 'archivesofnethys' in (f|lower)) %}
+  {% if f is string and ('aonprd.com' in (f|lower) or 'paizo.com' in (f|lower) or 'archivesofnethys' in (f|lower) or 'reference://' in (f|lower)) %}
     {% set ns.has_raw = true %}
   {% elif f is mapping %}
     {% set _u = f.url or f.link or f.source_url %}
-    {% if _u and ('aonprd.com' in (_u|lower) or 'paizo.com' in (_u|lower) or 'archivesofnethys' in (_u|lower)) %}
+    {% if _u and ('aonprd.com' in (_u|lower) or 'paizo.com' in (_u|lower) or 'archivesofnethys' in (_u|lower) or 'reference://' in (_u|lower)) %}
       {% set ns.has_raw = true %}
     {% endif %}
   {% endif %}

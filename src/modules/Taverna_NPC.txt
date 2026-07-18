@@ -1453,9 +1453,9 @@ commands:
           - continue
       - output: "📤 (stub) Export Hub {{_fmt}} generato."
 
-  /storage_meta:
+  /taverna_storage_meta:
     when: feature_flags.hub_board=='on'
-    description: "Mostra path storage, auto_name_policy e quota residua per taverna_saves."
+    description: "Mostra path storage, auto_name_policy e quota residua per taverna_saves (nome canonico dell'endpoint; /storage_meta resta alias legacy)."
     action:
       - set: _path
         value: "{{ storage.path }}"

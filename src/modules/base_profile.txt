@@ -299,7 +299,7 @@ router:
           - set: [runtime.mode_attivo: "{{ route_to }}"]
       - if: "route_to == 'Archivist'"
         then:
-          - set: [runtime.prefer_browse: true]  # abilita browse preferenziale per Archivist
+          - set: [runtime.prefer_browse: true]  # abilita retrieval preferenziale per Archivist (catalogo locale, nessuna navigazione web)
       - if: "route_to == 'Ruling Expert'"
         then:
           - set: [runtime.must_browse: true, runtime.badges_required: true]
@@ -347,10 +347,10 @@ orchestration:
       for_modules:
         Ruling Expert:
           must_browse: true
-          domains_allowlist: ["aonprd.com","paizo.com"]
+          retrieval_scope: "reference://ogl/ (catalogo RAW locale; retrieval obbligatorio, nessuna navigazione web)"
         Archivist:
           prefer_browse: true
-          domains_preferred: ["paizo.com","aonprd.com"]
+          retrieval_scope: "reference://ogl/ + fonti lore primarie (retrieval preferenziale locale)"
         "*": { must_browse: false }
     - name: Generation
       style_micro:
