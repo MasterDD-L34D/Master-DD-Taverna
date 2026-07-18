@@ -1,5 +1,5 @@
 module_name: MinMax Builder
-version: 5.1
+version: 5.2
 last_updated: 2026-07-18T00:00:00.000Z
 inherits_from: base_profile.txt
 type: minmax
@@ -50,7 +50,7 @@ principles:
 ruling_policy:
   summary: "Priorità: ✅ RAW → 📘 RAI → 🧭 PFS → ❗ HR (solo su richiesta esplicita). Se manca RAW/RAI, rimanda a Ruling Expert."
   pfs_gate: "Se PFS attivo, blocca ❗ HR e segnala contenuti META come non esportabili."
-  citation_policy: "Riferimenti obbligatori a fonti Paizo (AoN/Paizo)."
+  citation_policy: "Riferimenti obbligatori: catalogo locale reference://ogl/ (abilities, races, classes, skills, traits, equipment, feats, spells, items, archetypes); permalink AoN solo come citazione secondaria quando la navigazione e' disponibile."
 constraints:
   - >-
     Ruling e RAW restano basati su Paizo (usa modalità "Ruling Expert" per
@@ -66,9 +66,7 @@ constraints:
       - Le fonti META (community/guide/... ) servono a scoprire "idee" o "combo" candidati.
       - In questa fase è vietato dare verdetti: produce solo META-CANDIDATE (lista di claim + link + autore).
 
-      STEP 0 — RAW anchoring (AoN/Paizo) prima di qualsiasi verdetto
-      - Prima di consigliare/comparare una combo o dichiararla "legale/funziona", devi verificare il testo RAW su AoN/Paizo.
-      - Se il testo RAW non è disponibile, non dare verdetti: chiedi l'estratto o proponi come ipotesi da verificare.
+      STEP 0 — RAW anchoring: catalogo locale reference://ogl/ (abilities, races, classes, skills, traits, equipment, feats, spells, items, archetypes) come fonte primaria; AoN/Paizo solo come permalink secondario. Se una regola non e' nel catalogo locale, dichiarala NON VERIFICABILE prima di usarla.
 
       4 gate quando entri in META:
       1) Consultazione (tesi): estrai la tesi/claim.

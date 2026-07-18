@@ -1,5 +1,5 @@
 module_name: Ruling Expert
-version: 3.2-hybrid
+version: 3.3-hybrid
 last_updated: 2026-07-18
 inherits_from: base_profile.txt
 type: module
@@ -59,13 +59,13 @@ web_policy:
   offline_mode:
     enabled: true
     local_index: "reference://ogl/"
-    disclaimer: "In modalità offline, ancorare le citazioni RAW al catalogo reference locale in reference://ogl/ (feats.json, spells.json, items.json, classes.json, races.json, archetypes.json). Se il testo RAW non è disponibile offline, marca il verdetto come NON VERIFICABILE."
+    disclaimer: "In modalità offline, ancorare le citazioni RAW al catalogo reference locale in reference://ogl/ (abilities.json, races.json, classes.json, skills.json, traits.json, equipment.json, feats.json, spells.json, items.json, archetypes.json). Se il testo RAW non è disponibile offline, marca il verdetto come NON VERIFICABILE."
 
 # Catalogo reference locale per RAW anchoring offline
 data_sources:
   local_index:
     path: "reference://ogl/"
-    catalogs: ["feats", "spells", "items", "classes", "races", "archetypes"]
+    catalogs: ["abilities", "races", "classes", "skills", "traits", "equipment", "feats", "spells", "items", "archetypes"]
     note: "Usare per STEP 0 quando non è disponibile la connessione ad AoN/Paizo."
 
 source_hierarchy:
@@ -446,7 +446,7 @@ diagnostics_tools:
   - name: /offline_check
     description: "Stato offline."
     output_example: |
-      Offline: ENABLED — indice locale reference://ogl/ attivo (feats, spells, items, classes, races, archetypes). Citazioni RAW ancorate al catalogo locale; se il testo RAW non è disponibile offline, il verdetto è marcato NON VERIFICABILE. Navigazione live opzionale.
+      Offline: ENABLED — indice locale reference://ogl/ attivo (abilities, races, classes, skills, traits, equipment, feats, spells, items, archetypes). Citazioni RAW ancorate al catalogo locale; se il testo RAW non è disponibile offline, il verdetto è marcato NON VERIFICABILE. Navigazione live opzionale.
   - name: /cache_status
     description: "Mostra cache attiva (chiavi→hit/miss, TTL)."
     output_example: |

@@ -1,5 +1,5 @@
 module_name: Encounter Designer
-version: 1.1
+version: 1.2
 last_updated: 2026-07-18
 inherits_from: base_profile.txt
 type: module
@@ -35,7 +35,7 @@ principles:
 ruling_policy:
   summary: "Ordine di giurisdizione: ✅ RAW → 📘 RAI → 🧭 PFS → ❗ HR. Usa Ruling Expert per controversie o mancanza di fonti."
   pfs_gate: "Se party.rules.pfs_active = true, escludi ❗ HR e segnala contenuti non legali."
-  offline_disclaimer: "Offline supportato: i riferimenti RAW sono ancorati al catalogo locale reference://ogl/ (feats, spells, items, classes, races, archetypes). Se una fonte non è disponibile offline, marca il contenuto come NON VERIFICABILE."
+  offline_disclaimer: "Offline supportato: i riferimenti RAW sono ancorati al catalogo locale reference://ogl/ (abilities, races, classes, skills, traits, equipment, feats, spells, items, archetypes). Per i nemici usa i 199 mostri locali in data/reference/pi_local_only/monsters_local.json (indicizzati nel RAG con --include-local) con statblock testuali; se una fonte non e' disponibile offline, marca il contenuto come NON VERIFICABILE."
 
 modes:
   - {name: Encounter Builder, description: "Crea incontri da CR/XP target"}

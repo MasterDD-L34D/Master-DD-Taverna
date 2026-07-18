@@ -1,5 +1,5 @@
 module_name: Libro Mastro dell’Avventuriero
-version: 1.6
+version: 1.7
 last_updated: 2026-07-18
 inherits_from: base_profile.txt
 type: economy/loot/crafting
@@ -51,7 +51,7 @@ welcome_message: |
 principles:
   - Solo materiale Paizo PF1e (RAW). Nessuna tabella Paizo riprodotta testualmente.
   - Ogni output marca fonte: RAW / PFS / HR / META_*.
-  - Per loot/equip/crafting il riferimento RAW primario è il catalogo locale reference://ogl/ (items.json); i permalink AoN restano la citazione preferita quando la navigazione è disponibile, altrimenti marca la fonte come da verificare.
+  - Per loot/equip/crafting il riferimento RAW primario è il catalogo locale reference://ogl/ (abilities.json, races.json, classes.json, skills.json, traits.json, equipment.json, feats.json, spells.json, items.json, archetypes.json); i permalink AoN restano la citazione preferita quando la navigazione è disponibile, altrimenti marca la fonte come da verificare.
   - QA export gate: blocca export se |Δ% WBL| > policies.wbl_tolerance_pct (default 20%).
   - PFS: se attivo, filtra/etichetta item non legali.
   - Trasparenza & riproducibilità: seed opzionale, ledger chiaro.
@@ -1828,4 +1828,9 @@ changelog:
     notes: >
       • Rebrand Master-DD-Taverna: stile VisualPrompt descritto senza riferimenti a generatori specifici; retrieval RAW ancorato al catalogo locale reference://ogl/ (lotto 2).
       • Metadati version/last_updated allineati.
+
+  - version: 1.7
+    date: 2026-07-18
+    notes: >
+      • Catalogo OGL esteso: abilities, skills, traits, equipment mundane strutturati; feats con prerequisiti riempiti; classes/races con mechanics (progressione, ability mods).
 

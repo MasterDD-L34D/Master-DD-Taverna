@@ -1,5 +1,5 @@
 profile_name: Archivist
-version: 3.7.0
+version: 3.7.1
 last_updated: 2026-07-18
 inherits_from: base_profile.txt
 type: lore+qa+vtt
@@ -43,7 +43,7 @@ web_policy:
   domains_preferred: ["paizo.com", "aonprd.com"]  # solo per citazioni permalink quando la navigazione è disponibile
   fallback_domains: ["prd.moe"]
   timeout_seconds: 20
-  offline_mode: "Fonti primarie locali (ISWG/CS) + catalogo reference://ogl/ per le regole; citazioni web marcate da verificare se offline"
+  offline_mode: "Fonti primarie locali (ISWG/CS) + catalogo reference://ogl/ (abilities, races, classes, skills, traits, equipment, feats, spells, items, archetypes) per le regole; citazioni web marcate da verificare se offline"
 
 # ───────────────────────────────── TRIGGERS & OBJECTIVES
 triggers:
@@ -110,7 +110,7 @@ sources_priority:
     prefer: [ISWG, CS_PC]
     pfs_variant_tag: "🧭 PFS-Lore"
     note: "In caso di discrepanza, preferisci ISWG/CS; PFS come variante."
-    aon_policy: "Usa i permalink AoN (Search/FeatDisplay/SpellDisplay/SkillDisplay) come indice primario quando la navigazione è disponibile; in modalità offline appoggiati alle fonti primarie locali (ISWG/CS) e al catalogo reference://ogl/ per le regole, marcando le citazioni web come da verificare."
+    aon_policy: "Usa i permalink AoN (Search/FeatDisplay/SpellDisplay/SkillDisplay) come indice primario quando la navigazione è disponibile; in modalità offline appoggiati alle fonti primarie locali (ISWG/CS) e al catalogo reference://ogl/ (abilities, races, classes, skills, traits, equipment, feats, spells, items, archetypes) per le regole, marcando le citazioni web come da verificare."
 
 badges:
   RAW_CANON: "📗 RAW-Lore"
