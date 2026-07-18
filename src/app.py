@@ -337,6 +337,24 @@ async def build_stub(
     return JSONResponse(response_payload)
 
 
+@app.post("/pc/build")
+async def pc_build(
+    draft: Dict = Body(...),
+    _: None = Depends(require_api_key),
+):
+    """Costruzione deterministica di un PG lv1 dai cataloghi OGL (nessun LLM)."""
+    from .pc.engine import build_character
+    from .pc.models import CharacterDraft
+
+    try:
+        sheet = build_character(CharacterDraft.from_dict(draft))
+    except (KeyError, TypeError) as exc:
+        raise HTTPException(status_code=400, detail=f"draft malformato: {exc}") from exc
+    if sheet["errors"]:
+        raise HTTPException(status_code=422, detail=sheet["errors"])
+    return sheet
+
+
 @app.get("/modules/{name:path}")
 @app.post("/modules/{name:path}")
 async def get_module_content(

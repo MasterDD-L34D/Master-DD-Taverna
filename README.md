@@ -395,6 +395,8 @@ in sandbox, disattiva temporaneamente con /echo off) e per QA CHECK bloccanti: c
 Canvas+Ledger, ripeti /self_check e verifica Echo ≥ soglia prima di rilanciare /save_npc o
 /npc_export (bloccati finché QA=CHECK o Echo è sotto soglia).
 
+`POST /pc/build` — costruzione deterministica PG lv1 dai cataloghi OGL (point-buy, razza, classe, skill, talenti, tratti, equip; 422 con lista errori di validazione). Vedi `src/pc/`.
+
 ### Avvio API locale
 
 User-friendly (dalla root del monorepo):

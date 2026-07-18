@@ -7,6 +7,7 @@
 - `src/app.py` — API FastAPI (moduli, RAG, storage taverna). Endpoint canonico storage: `/taverna_storage_meta` (`/storage_meta` = alias legacy)
 - `src/modules/` — 15 moduli prompt (12 `.txt` YAML + 2 `.md` Markdown + `tavern_hub.json`). Serviti via API e indicizzati nel RAG
 - `src/rag/` — layer RAG (retrieval su moduli + catalogo reference)
+- `src/pc/` — builder deterministico PG lv1 (catalogs/engine/models) + endpoint `POST /pc/build`
 - `frontend/rag_chat.py` — UI Streamlit
 - `data/reference/` — cataloghi: `ogl/` (OGC, committabile), `original/`, `cup_fan_content/`, `pi_local_only/` (Product Identity, **solo locale, mai committare**)
 - `tools/` — `index_rag.py`, `import_monsters.py`, `legal_filter.py`, ecc.
