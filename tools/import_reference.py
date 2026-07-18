@@ -869,7 +869,35 @@ def split_prereq_string(text):
             buf = ""
     if buf:
         parts.append(buf)
-    return [clean(p) for p in parts if clean(p) and clean(p) not in ("—", "-")]
+    out = []
+    for p in parts:
+        p = clean(p)
+        # La fonte puo' chiudere la frase col punto: rimosso, stessa regola
+        # di clean_existing_prerequisites.
+        if p.endswith("."):
+            p = p[:-1]
+        if p and p not in ("—", "-"):
+            out.append(p)
+    return out
+
+
+def clean_existing_prerequisites(entry):
+    """Ripulisce i prerequisites gia' presenti in una entry feats:
+    (a) scarta i segmenti autoreferenziali (uguali al nome entry,
+        case-insensitive, con o senza punto finale): artefatti dell'import
+        d20pfsrd per talenti che in realta' non hanno prerequisiti
+        ('Improved Initiative.' su Improved Initiative, indice AoN: '—');
+    (b) rimuove il punto finale dai segmenti ('base attack bonus +1.' ->
+        'base attack bonus +1'), solo se ultimo carattere.
+    Ritorna la lista ripulita; NON modifica la entry (ci pensa il builder)."""
+    name = entry.get("name", "").lower()
+    cleaned = []
+    for p in entry.get("prerequisites", []):
+        base = p[:-1] if p.endswith(".") else p
+        if base.lower() == name:
+            continue
+        cleaned.append(base)
+    return cleaned
 
 
 def parse_feats_index(html):
@@ -935,7 +963,10 @@ def _feat_card_prereq_lookup():
             text = parse_feat_card(contents).get("prerequisites_text", "")
             key = normalize_name(name)
             if text and key not in lookup:
-                lookup[key] = [clean(p) for p in text.split(",") if clean(p)]
+                # Il dataset chiude la frase col punto finale: rimosso dai
+                # segmenti, stessa regola di clean_existing_prerequisites.
+                parts = [clean(p) for p in text.split(",") if clean(p)]
+                lookup[key] = [p[:-1] if p.endswith(".") else p for p in parts]
     return lookup
 
 
@@ -945,9 +976,15 @@ def enrich_feats(write=False):
     2. cache locale PFRPG_Feat_card (_feat_card_prereq_lookup);
     3. indice AoN Feats.aspx (parse_feats_index: UNA pagina, ~2s, poi cache
        su disco) — la fonte di copertura principale.
-    NON sovrascrive prerequisiti gia' presenti ne' l'header (fonte d20PFSRD
-    invariata: nessun dato esterno aggiunto). Report di copertura a video
-    (filled = descriptions+feat-card, filled_index = indice AoN).
+    Prima dei fill, bonifica i prerequisiti esistenti con
+    clean_existing_prerequisites (drop delle self-reference d20pfsrd + strip
+    del punto finale; conteggi selfref_dropped/dots_stripped nel report).
+    A parte questa pulizia NON altera ne' integra prerequisiti gia' presenti
+    (no-overwrite: i dati noti incompleti, es. Power Attack ['Strength 13'],
+    restano come sono — limite noto, fuori scope) e non tocca l'header
+    (fonte d20PFSRD invariata: nessun dato esterno aggiunto). Report di
+    copertura a video (filled = descriptions+feat-card, filled_index =
+    indice AoN).
 
     NOTA copertura: le descriptions locali non includono la riga
     'Prerequisite(s):' e la cache feat-card copre quasi solo talenti i cui
@@ -963,8 +1000,17 @@ def enrich_feats(write=False):
         catalog = json.load(f)
     card_lookup = card_key = index_lookup = None
     filled = filled_index = already = no_info = skipped_pi = 0
+    selfref_dropped = dots_stripped = 0
     for entry in catalog["entries"]:
-        if entry.get("prerequisites"):
+        # Bonifica prerequisiti esistenti PRIMA dei fill: le self-reference
+        # d20pfsrd sono scartate (l'entry svuotata rientra nel flusso di fill;
+        # l'indice AoN dice '—' e resta vuota, corretto) e il punto finale e'
+        # rimosso dai segmenti mantenuti.
+        before = entry.get("prerequisites", [])
+        entry["prerequisites"] = clean_existing_prerequisites(entry)
+        selfref_dropped += len(before) - len(entry["prerequisites"])
+        dots_stripped += sum(1 for p in entry["prerequisites"] if p + "." in before)
+        if entry["prerequisites"]:
             already += 1
             continue
         found = extract_prerequisites(entry.get("description", ""))
@@ -995,7 +1041,8 @@ def enrich_feats(write=False):
             no_info += 1
     print(f"feats: gia' presenti {already}, riempiti {filled}, "
           f"da indice AoN {filled_index}, senza info {no_info} "
-          f"(di cui saltati per PI {skipped_pi})")
+          f"(di cui saltati per PI {skipped_pi}); autoreferenziali scartati "
+          f"{selfref_dropped}, punti finali rimossi {dots_stripped}")
     assert already + filled + filled_index + no_info == len(catalog["entries"])
     if write:
         write_catalog(path, catalog["entries"],

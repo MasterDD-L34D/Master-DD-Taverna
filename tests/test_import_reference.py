@@ -286,3 +286,16 @@ def test_split_prereq_string():
     assert split_prereq_string("Int 13, Spell Focus (illusion), wizard level 3rd") == ["Int 13", "Spell Focus (illusion)", "wizard level 3rd"]
     assert split_prereq_string("") == []
     print("OK: feats index + split")
+
+
+from tools.import_reference import clean_existing_prerequisites
+
+
+def test_clean_existing_prerequisites():
+    entry = {"name": "Improved Initiative", "prerequisites": ["Improved Initiative."]}
+    assert clean_existing_prerequisites(entry) == []
+    entry2 = {"name": "Power Attack", "prerequisites": ["Strength 13", "base attack bonus +1."]}
+    assert clean_existing_prerequisites(entry2) == ["Strength 13", "base attack bonus +1"]
+    entry3 = {"name": "Dodge", "prerequisites": ["Dexterity 13"]}
+    assert clean_existing_prerequisites(entry3) == ["Dexterity 13"]
+    print("OK: clean existing prerequisites")
