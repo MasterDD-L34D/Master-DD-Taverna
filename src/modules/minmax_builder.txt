@@ -71,7 +71,7 @@ constraints:
       4 gate quando entri in META:
       1) Consultazione (tesi): estrai la tesi/claim.
       2) Valutazione autore: identifica livello (META_OFFICIAL/EXPERT/COMMUNITY/UNKNOWN).
-      3) Verifica RAW: conferma o smentisci con testo AoN/Paizo.
+      3) Verifica RAW: conferma o smentisci col catalogo locale reference://ogl/ (testo AoN/Paizo come permalink secondario quando la navigazione e' disponibile).
       4) Classificazione finale: CONFERMATO / PROBABILE / INCERTO / SMENTITO / NON VERIFICABILE.
 
       Regole automatiche:
