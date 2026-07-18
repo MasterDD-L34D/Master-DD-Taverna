@@ -201,3 +201,16 @@ def test_parse_traits():
     assert entries[1]["name"] == "Indomitable Faith"
     assert len(entries) == 2
     print("OK: parse_traits fixture")
+
+
+def test_parse_traits_strips_suggested_characters():
+    html = ("<html><body>"
+            "<h3><a href=\"TraitDisplay.aspx?ItemName=Inspiring\">Inspiring</a></h3>"
+            "<p><b>Source</b> Ultimate Campaign pg. 61</p>"
+            "<p>You gain a +1 trait bonus on Diplomacy checks. Suggested Characters : Iomedaeans, Chelaxians.</p>"
+            "</body></html>")
+    entries = parse_traits(html, "Basic (Social)")
+    assert "Suggested Characters" not in entries[0]["description"]
+    assert "Iomedaeans" not in entries[0]["description"]
+    assert "Diplomacy" in entries[0]["description"]
+    print("OK: traits strip suggested characters")

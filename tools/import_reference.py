@@ -702,6 +702,13 @@ def _trait_body_lines(header):
     return lines
 
 
+def _strip_suggested(text):
+    """Taglia la coda 'Suggested Characters : ...' (flavor per il gioco online
+    pieno di demonimi Golarion — 'Iomedaeans', 'Chelaxians' — non coperti da
+    PI_WORDS per via della word boundary)."""
+    return clean(re.split(r"Suggested Characters\s*:", text)[0])
+
+
 def parse_traits(html, category):
     """Pagina Traits.aspx?Type=<category>: voci nome + source + requirement + beneficio.
 
@@ -732,10 +739,10 @@ def parse_traits(html, category):
                 continue
             r = re.match(r"^Requirement\(s\)\s*(.+)$", line)
             if r and req is None:
-                req = clean(r.group(1))
+                req = _strip_suggested(r.group(1))
                 continue
             desc_lines.append(line)
-        description = clean(" ".join(desc_lines))
+        description = _strip_suggested(" ".join(desc_lines))
         if not description:
             continue
         entries.append({
@@ -765,7 +772,9 @@ def build_traits(write=False):
     """SOLO categorie Basic UCa + Equipment (OGC). Campaign/Region/Religion/
     Faction/Family/Race/Cosmic/Exemplar/Mount/Drawbacks: ESCLUSE (PI Golarion).
     Le entry con PI residua in name/description/prerequisites (scansione
-    legal_filter._find_pi) sono rimosse e conteggiate."""
+    legal_filter._find_pi) sono rimosse e conteggiate; in write mode l'elenco
+    delle rimozioni (nome, categoria, termini PI) e' persistito in
+    reports/pi_removed_traits.txt."""
     entries = []
     for category in TRAIT_CATEGORIES:
         url = BASE + f"Traits.aspx?Type={category.replace(' ', '%20')}"
@@ -780,13 +789,24 @@ def build_traits(write=False):
         seen.add(e["source_id"])
         unique.append(e)
     entries = unique
-    pi = {e["name"] for e in entries if _trait_pi_hits(e)}
-    if pi:
-        entries = [e for e in entries if e["name"] not in pi]
-        print(f"nota: filtrate {len(pi)} entry PI: {', '.join(sorted(pi))}")
+    removed = [(e, _trait_pi_hits(e)) for e in entries]
+    removed = [(e, hits) for e, hits in removed if hits]
+    if removed:
+        pi_names = {e["name"] for e, _ in removed}
+        entries = [e for e in entries if e["name"] not in pi_names]
+        print(f"nota: filtrate {len(removed)} entry PI: {', '.join(sorted(pi_names))}")
     assert len(entries) >= 60, f"traits: attese >=60 entry, trovate {len(entries)}"
     if write:
         write_catalog(OGL_DIR / "traits.json", entries)
+        if removed:
+            lines = []
+            for e, hits in sorted(removed, key=lambda x: x[0]["name"]):
+                terms = sorted({h["term"] for h in hits})
+                lines.append(f"{e['name']} [{e['mechanics']['category']}]: {', '.join(terms)}")
+            path = OGL_DIR.parents[2] / "reports" / "pi_removed_traits.txt"
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+            print(f"scritto {path} ({len(lines)} entry rimosse)")
     else:
         print(f"report: {len(entries)} entry (write=False, nessuna scrittura)")
 

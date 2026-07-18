@@ -1,0 +1,31 @@
+Absalom Bouncer [Basic (Combat)]: Absalom
+Amiable Briber [Basic (Social)]: Absalom
+Avid Reader [Basic (Social)]: Pathfinder Society
+Beast of the Society [Basic (Magic)]: Pathfinder Society
+Berserker of the Society [Basic (Combat)]: Pathfinder Society
+Blackjacket Weapon Flair [Basic (Combat)]: Druma
+Blade of the Society [Basic (Combat)]: Pathfinder Society
+Brastlewark Businessman [Basic (Social)]: Cheliax
+Chosen of Iomedae [Basic (Faith)]: Iomedae
+Debauchery Defier [Basic (Social)]: Taldor
+Defender of the Society [Basic (Combat)]: Pathfinder Society
+Eldritch Smith [Basic (Magic)]: Torag
+Elemental Apprentice [Basic (Combat)]: Golarion, Sodden Lands
+Exalted of the Society [Basic (Faith)]: Absalom, Pathfinder Society
+Eye for the Wondrous [Basic (Magic)]: Katapesh
+Founders' Heritage [Basic (Social)]: Absalom
+Greater Adept of the Society [Basic (Magic)]: Pathfinder Society
+Havoc of the Society [Basic (Magic)]: Pathfinder Society
+Honored Fist of the Society [Basic (Combat)]: Pathfinder Society
+Infernal Colleague [Basic (Social)]: Cheliax
+Inhabitant of Illusion [Basic (Magic)]: Kyonin
+Internal Compass [Basic (Magic)]: Pharasma
+Maestro of the Society [Basic (Social)]: Absalom, Golarion, Pathfinder Society
+Merciful Scimitar [Basic (Combat)]: Sarenrae
+Numerian Fluid Indulger [Basic (Social)]: Numeria
+Pact Servant [Basic (Faith)]: Asmodeus
+Scarred by Space Pirates [Basic (Combat)]: Golarion
+Seafaring Reputation [Basic (Social)]: Absalom
+Siege Defender [Basic (Combat)]: Absalom
+Stalwart of the Society [Basic (Faith)]: Golarion, Pathfinder Society
+Tracker of the Society [Basic (Combat)]: Pathfinder Society
