@@ -348,7 +348,7 @@ async def pc_build(
 
     try:
         sheet = build_character(CharacterDraft.from_dict(draft))
-    except (KeyError, TypeError) as exc:
+    except (KeyError, TypeError, AttributeError) as exc:
         raise HTTPException(status_code=400, detail=f"draft malformato: {exc}") from exc
     if sheet["errors"]:
         raise HTTPException(status_code=422, detail=sheet["errors"])

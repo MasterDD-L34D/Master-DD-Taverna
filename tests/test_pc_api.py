@@ -58,3 +58,13 @@ def test_pc_build_invalid(client, auth_headers):
     resp = client.post("/pc/build", json=bad, headers=auth_headers)
     assert resp.status_code == 422
     assert "budget" in resp.text.lower()
+
+
+def test_pc_build_bad_request(client, auth_headers):
+    resp = client.post("/pc/build", json=dict(VALID, bogus=1), headers=auth_headers)
+    assert resp.status_code == 400
+
+
+def test_pc_build_nested_type_error(client, auth_headers):
+    resp = client.post("/pc/build", json=dict(VALID, abilities=[1, 2, 3]), headers=auth_headers)
+    assert resp.status_code == 400
