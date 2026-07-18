@@ -209,3 +209,28 @@ def test_chain_missing():
                                    skills={"Climb": 1, "Perception": 1, "Survival": 1},
                                    feats=["Cleave"]))
     assert any("Cleave" in e and "Power Attack" in e for e in sheet["errors"])
+
+
+# Costi reali (equipment_mundane.json): Longsword 15 gp, Chain shirt 100 gp,
+# Backpack (common) 2 gp, Full plate 1,500 gp. Fighter: average 175 gp.
+def test_equipment_wealth_and_ac():
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str",
+                                   skills={"Climb": 1, "Perception": 1, "Survival": 1},
+                                   equipment=["Longsword", "Chain shirt", "Backpack (common)"]))
+    assert sheet["errors"] == [], sheet["errors"]
+    # 15 + 100 + 2 = 117 su 175 -> restano 58
+    assert sheet["gold_remaining"] == 58
+    # CA = 10 + armor +4 (Chain shirt) + Dex mod 1 (Dex 12; max +4 non cappato) = 15
+    assert sheet["ac"] == 15
+    melee = [a for a in sheet["attacks"] if a["weapon"] == "Longsword"][0]
+    assert melee["bonus"] == 3  # bab 1 + Str mod +2 (str finale 15)
+    assert melee["damage"] == "1d8+2"  # dmg_m + Str mod
+
+
+def test_equipment_over_wealth_and_unknown():
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str", skills={"Climb": 1},
+                                   equipment=["Chain shirt", "Full plate"]))
+    assert any("wealth" in e.lower() or "oro" in e.lower() for e in sheet["errors"])
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str", skills={"Climb": 1},
+                                   equipment=["Spada Inesistente"]))
+    assert any("Spada Inesistente" in e for e in sheet["errors"])

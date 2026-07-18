@@ -71,6 +71,68 @@ def ability_mod(score):
     return (score - 10) // 2
 
 
+def _parse_gp(text):
+    """'15 gp' -> 15; '1,500 gp' -> 1500."""
+    m = re.search(r"(\d[\d,]*)\s*gp", str(text or ""))
+    return int(m.group(1).replace(",", "")) if m else 0
+
+
+def _parse_bonus(text):
+    """'+4' -> 4; None/''/'-' -> 0."""
+    m = re.match(r"^\+(\d+)$", str(text or ""))
+    return int(m.group(1)) if m else 0
+
+
+def apply_equipment(draft, sheet):
+    """Valida gli acquisti contro la ricchezza iniziale e calcola CA/attacchi."""
+    cls = catalogs.get_class(draft.class_)
+    wealth_text = cls["mechanics"].get("starting_wealth", "")
+    if "average" in wealth_text:
+        m = re.search(r"average\s+([\d,]+)\s*gp", wealth_text)
+        wealth = int(m.group(1).replace(",", "")) if m else 0
+    else:
+        wealth = _parse_gp(wealth_text)
+    spent = 0
+    items = []
+    for name in draft.equipment:
+        item = catalogs.find_equipment(name)
+        if item is None:
+            sheet["errors"].append(f"equipaggiamento sconosciuto: {name}")
+            continue
+        cost = _parse_gp(item["mechanics"].get("cost"))
+        spent += cost
+        items.append({"name": name, "cost": cost, "mechanics": item["mechanics"],
+                      "tags": item.get("tags", [])})
+    if spent > wealth:
+        sheet["errors"].append(f"wealth: spesi {spent} gp oltre la ricchezza iniziale {wealth} gp")
+    sheet["gold_remaining"] = wealth - spent
+    sheet["equipment"] = items
+    mods = {ab: ability_mod(sc) for ab, sc in sheet["abilities"].items()}
+    armor = shield = max_dex = None
+    for it in items:
+        m = it["mechanics"]
+        bonus = _parse_bonus(m.get("armor_bonus"))
+        if "shield" in it["tags"]:
+            shield = (shield or 0) + bonus
+        elif bonus:
+            armor = (armor or 0) + bonus
+            md = m.get("maximum_dex_bonus") or m.get("max_dex_bonus")
+            max_dex = _parse_bonus(md) if md else max_dex
+    dex = min(mods["dex"], max_dex) if max_dex is not None else mods["dex"]
+    sheet["ac"] = 10 + (armor or 0) + (shield or 0) + dex
+    attacks = []
+    for it in items:
+        if "weapon" not in it["tags"]:
+            continue
+        m = it["mechanics"]
+        is_ranged = bool(m.get("range"))
+        mod = mods["dex"] if is_ranged else mods["str"]
+        attacks.append({"weapon": it["name"], "bonus": sheet["bab"] + mod,
+                        "damage": f"{m.get('dmg_m', '-')}{'+' + str(mod) if mod > 0 and not is_ranged else ''}",
+                        "critical": m.get("critical"), "range": m.get("range")})
+    sheet["attacks"] = attacks
+
+
 def apply_abilities(draft):
     """Valida point-buy e applica i modificatori razziali.
     Ritorna dict con 'abilities' finali e 'errors'."""
@@ -112,7 +174,7 @@ def apply_abilities(draft):
 
 
 def build_character(draft):
-    """Costruisce la scheda lv1 completa (per ora: abilities, classe, skill).
+    """Costruisce la scheda lv1 completa (abilities, classe, skill, talenti, equip).
     Ritorna dict con errors (bloccanti) e warnings."""
     abilities = apply_abilities(draft)
     errors = list(abilities["errors"])
@@ -164,4 +226,5 @@ def build_character(draft):
     sheet["skills"] = out
     validate_feats(draft, sheet)
     sheet["feats"] = list(draft.feats)
+    apply_equipment(draft, sheet)
     return sheet
