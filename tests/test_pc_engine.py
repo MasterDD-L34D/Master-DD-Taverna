@@ -91,3 +91,32 @@ def test_skill_points_and_totals():
     assert sheet["errors"] == []
     assert sheet["skills"]["Climb"]["total"] == 1 + 2 + 3  # rank1 + Str mod 2 (15) + class 3
     assert sheet["skills"]["Perception"]["total"] == 1 + 2  # rank1 + Wis mod 2 (no class bonus)
+
+
+def _wizard_draft(**kw):
+    # Int 10 + 2 razziale = 12 -> mod +1; budget skill = 2 + 1 + 1 Human = 4.
+    return _draft(abilities=dict(_OK_ABILS), race_bonus_ability="int", **{"class": "Wizard"}, **kw)
+
+
+def test_knowledge_class_skill_bonus():
+    # "Knowledge (all)" del Wizard matcha Knowledge (Arcana); anche Spellcraft e' di classe.
+    sheet = build_character(_wizard_draft(skills={"Knowledge (Arcana)": 1, "Spellcraft": 1}))
+    assert sheet["errors"] == []
+    assert sheet["skills"]["Knowledge (Arcana)"]["total"] == 1 + 1 + 3  # rank + Int 1 (12) + class
+    assert sheet["skills"]["Knowledge (Arcana)"]["class_skill"] is True
+    assert sheet["skills"]["Spellcraft"]["total"] == 1 + 1 + 3
+    assert sheet["skills"]["Spellcraft"]["class_skill"] is True
+
+
+def test_wizard_lv1_basics():
+    sheet = build_character(_wizard_draft(skills={"Knowledge (Arcana)": 1, "Spellcraft": 1}))
+    assert sheet["errors"] == []
+    assert sheet["hp"] == 8  # d6 max 6 + Con mod 1 (13) + favored hp 1
+    assert sheet["saves"] == {"fort": 1, "ref": 1, "will": 4}  # base 0/0/2 + Con1/Dex1/Wis2
+    assert sheet["bab"] == 0
+
+
+def test_favored_bonus_invalid():
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str",
+                                   favored_class_bonus="HP"))
+    assert any("favored" in e.lower() for e in sheet["errors"])

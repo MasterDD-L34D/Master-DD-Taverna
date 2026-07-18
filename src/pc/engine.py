@@ -64,6 +64,9 @@ def build_character(draft):
     if cls is None:
         errors.append(f"classe sconosciuta: {draft.class_}")
         return sheet
+    if draft.favored_class_bonus not in ("hp", "skill"):
+        errors.append(f"favored_class_bonus non valido: {draft.favored_class_bonus} (atteso hp o skill)")
+        return sheet
     mech = cls["mechanics"]
     lvl1 = mech["progression"][0]
     favored_hp = 1 if draft.favored_class_bonus == "hp" else 0
@@ -79,7 +82,7 @@ def build_character(draft):
     spent = sum(draft.skills.values())
     if spent > budget:
         errors.append(f"skill ranks: {spent} spesi oltre il budget {budget}")
-    class_skills = set(mech.get("class_skills", []))
+    class_skills = mech.get("class_skills", [])
     out = {}
     for name, ranks in draft.skills.items():
         sk = catalogs.get_skill(name)
@@ -89,10 +92,11 @@ def build_character(draft):
         if ranks != 1:
             errors.append(f"{name}: al lv1 ogni skill puo' avere al piu' 1 rank")
         key = sk["mechanics"]["key_ability"]
-        class_bonus = 3 if name in class_skills else 0
-        if sk["mechanics"].get("trained_only") and name not in class_skills and ranks > 0:
+        is_class_skill = any(catalogs.class_skill_matches(name, cs) for cs in class_skills)
+        class_bonus = 3 if ranks >= 1 and is_class_skill else 0
+        if sk["mechanics"].get("trained_only") and not is_class_skill and ranks > 0:
             warnings.append(f"{name}: trained only e non di classe per {draft.class_}")
         out[name] = {"ranks": ranks, "ability": key,
-                     "total": ranks + mods[key] + class_bonus, "class_skill": name in class_skills}
+                     "total": ranks + mods[key] + class_bonus, "class_skill": is_class_skill}
     sheet["skills"] = out
     return sheet

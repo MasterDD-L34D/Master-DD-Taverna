@@ -64,3 +64,14 @@ def find_trait(name):
 
 def find_equipment(name):
     return _by_name("equipment").get(name)
+
+
+def class_skill_matches(skill_name, class_skill):
+    """Match skill del catalogo vs etichetta class_skills di classes.json.
+    Case-insensitive; 'Knowledge (all)' matcha ogni Knowledge specifica.
+    NOTA: specchio di tools/import_reference._class_skill_matches (stesso criterio)."""
+    s = skill_name.lower()
+    c = class_skill.lower()
+    if c == "knowledge (all)":
+        return s.startswith("knowledge (")
+    return s == c
