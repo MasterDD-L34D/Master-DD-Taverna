@@ -11,8 +11,8 @@
       "is_ogc": true,
       "is_pi": false,
       "cup_allowed": false,
-      "entries": 2837,
-      "notes": "Nomi e meccaniche generiche; rimossi nomi propri e riferimenti a Golarion. 2798/2837 voci arricchite con description.",
+      "entries": 2787,
+      "notes": "Nomi e meccaniche generiche; rimossi nomi propri e riferimenti a Golarion. 2748/2787 voci arricchite con description. Policy PI 2026-07-19: 49 entry PI-identity spostate in pi_local_only/feats_local.json, 24 entry ripristinate da AoN, 15 description sanitize (reports/pi_feats_apply.md).",
       "last_verified": "2026-07-19"
     },
     {
@@ -135,6 +135,19 @@
       "entries": 199,
       "notes": "Mostri/NPC importati localmente da PathfinderMonsterDatabase. NON redistribuire. Usa tools/import_monsters.py e indicizza con tools/index_rag.py --include-local.",
       "last_verified": "2026-07-18"
+    },
+    {
+      "file": "pi_local_only/feats_local.json",
+      "kind": "feats_local",
+      "source": "Archives of Nethys (aonprd.com) / d20pfsrd",
+      "license": "OGL-1.0a",
+      "is_ogc": false,
+      "is_pi": false,
+      "cup_allowed": false,
+      "local_only": true,
+      "entries": 49,
+      "notes": "Feats con Product Identity nel nome o nei prerequisiti (categorie A/B + B estesa: prereq vincolante PI + D PI-identity), spostati dal catalogo OGL con la policy 2026-07-19 (reports/pi_feats_apply.md). NON redistribuire. Generato da tools/apply_pi_feats_policy.py; indicizza con tools/index_rag.py --include-local.",
+      "last_verified": "2026-07-19"
     }
   ],
   "files": {
@@ -144,7 +157,7 @@
     },
     "feats": {
       "path": "ogl/feats.json",
-      "entries": 2837
+      "entries": 2787
     },
     "items": {
       "path": "ogl/items.json",

@@ -884,23 +884,23 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Ea bardental Channel",
-      "source": "Mythic Adventures",
+      "name": "Elemental Channel",
+      "source": "PRPG Core Rulebook",
       "prerequisites": [
         "Channel energy class feature"
       ],
       "tags": [
-        "Mythic Adventures"
+        "PRPG Core Rulebook"
       ],
       "references": [
-        "Archives of a deity of magic: Ea bardental Channel"
+        "Archives of a deity of magic: Elemental Channel"
       ],
       "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Ea bardental%20Channel"
+        "https://aonprd.com/FeatDisplay.aspx?ItemName=Elemental%20Channel"
       ],
-      "source_id": "mythic_adventures:ea bardental_channel",
-      "description": "Choose one ea bardental subtype, such as air, earth, fire, or water. You can channel your divine energy to harm or heal outsiders that possess your chosen ea bardental subtype.\n\nInstead of its normal effect, you can choose to have your ability to channel energy heal or harm outsiders of your chosen ea bardental subtype. You must make this choice each time you channel energy. If you choose to heal or harm creatures of your ea bardental subtype, your channel energy has no affect on other creatures. The amount of damage healed or dealt and the DC to halve the damage is otherwise unchanged.",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "source_id": "prpg_core_rulebook:elemental_channel",
+      "description": "Choose one elemental subtype, such as air, earth, fire, or water. You can channel your divine energy to harm or heal outsiders that possess your chosen elemental subtype.\n\nInstead of its normal effect, you can choose to have your ability to channel energy heal or harm outsiders of your chosen elemental subtype. You must make this choice each time you channel energy. If you choose to heal or harm creatures of your elemental subtype, your channel energy has no affect on other creatures. The amount of damage healed or dealt and the DC to halve the damage is otherwise unchanged.",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
       "name": "Empower Spell",
@@ -4542,59 +4542,60 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Ea bardental Fist",
-      "source": "Mythic Adventures",
+      "name": "Elemental Fist",
+      "source": "Advanced Player's Guide",
       "prerequisites": [
-        "Ea bardental FistAPG"
+        "Con 13",
+        "Wis 13",
+        "Improved Unarmed Strike",
+        "base attack bonus +8"
       ],
       "tags": [
-        "Mythic Adventures"
+        "Advanced Player's Guide"
       ],
       "references": [
-        "Archives of a deity of magic: Ea bardental Fist"
+        "Archives of a deity of magic: Elemental Fist"
       ],
       "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Ea bardental%20Fist"
+        "https://aonprd.com/FeatDisplay.aspx?ItemName=Elemental%20Fist"
       ],
-      "source_id": "mythic_adventures:ea bardental_fist",
-      "description": "Your ability to channel ea bardental power through your unarmed attacks is ferociously potent.\n\nThe extra energy damage dealt by Ea bardental Fist increases to 1d8 points, and you gain additional uses of Ea bardental Fist per day equal to your tier. You can expend one use of mythic power as an immediate action to add the extra damage from your Ea bardental Fist to all of the unarmed strikes you make until the beginning of your next turn. This counts as only one use of Ea bardental Fist, regardless of the number of attacks that you make in this fashion.",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "source_id": "advanced_player_s_guide:elemental_fist",
+      "description": "You empower your strike with elemental energy\n\nWhen you use Elemental Strike pick one of the following energy types: acid, cold, electricity, or fire. On a successful hit, the attack deals damage normally plus 1d6 points of damage of the chosen type. You must declare that you are using this feat before you make your attack roll (thus a failed attack roll ruins the attempt). You may attempt an elemental fist attack once per day for every four levels you have attained (see Special), and no more than once per round.",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
-      "name": "Ea bardental Focus",
-      "source": "Mythic Adventures",
-      "prerequisites": [
-        "Ea bardental FocusAPG"
-      ],
-      "tags": [
-        "Mythic Adventures"
-      ],
-      "references": [
-        "Archives of a deity of magic: Ea bardental Focus"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Ea bardental%20Focus"
-      ],
-      "source_id": "mythic_adventures:ea bardental_focus",
-      "description": "Your ea bardental spells are potent and effective.\n\nChoose an energy type in which you already have Ea bardental Focus. The increase to save DC provided by Ea bardental Focus and Greater Ea bardental Focus for spells of the selected energy type is 1 higher. When casting a spell with this energy type's descriptor, you can expend one use of mythic power as part of the casting to force the spell's targets to roll their saving throws twice, taking the lower result.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Ea bardental Spell",
+      "name": "Elemental Focus",
       "source": "Advanced Player's Guide",
       "prerequisites": [],
       "tags": [
         "Advanced Player's Guide"
       ],
       "references": [
-        "Archives of a deity of magic: Ea bardental Spell"
+        "Archives of a deity of magic: Elemental Focus"
       ],
       "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Ea bardental%20Spell"
+        "https://aonprd.com/FeatDisplay.aspx?ItemName=Elemental%20Focus"
       ],
-      "source_id": "advanced_player_s_guide:ea bardental_spell",
-      "description": "You can manipulate the ea bardental nature of your spells.\n\nChoose one energy type: acid, cold, electricity, or fire. You may replace a spell's normal damage with that energy type or split the spell's damage, so that half is of that energy type and half is of its normal type. An ea bardental spell uses up a spell slot one level higher than the spell's actual level.",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "source_id": "advanced_player_s_guide:elemental_focus",
+      "description": "Your spells of a certain element are more difficult to resist.\n\nChoose one energy type (acid, cold, electricity, or fire). Add +1 to the Difficulty Class for all saving throws against spells that deal damage of the energy type you select.",
+      "updated_at": "2026-07-19T00:00:00Z"
+    },
+    {
+      "name": "Elemental Spell",
+      "source": "Advanced Player's Guide",
+      "prerequisites": [],
+      "tags": [
+        "Advanced Player's Guide"
+      ],
+      "references": [
+        "Archives of a deity of magic: Elemental Spell"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/FeatDisplay.aspx?ItemName=Elemental%20Spell"
+      ],
+      "source_id": "advanced_player_s_guide:elemental_spell",
+      "description": "You can manipulate the elemental nature of your spells.\n\nChoose one energy type: acid, cold, electricity, or fire. You may replace a spell's normal damage with that energy type or split the spell's damage, so that half is of that energy type and half is of its normal type. An elemental spell uses up a spell slot one level higher than the spell's actual level.",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
       "name": "Elven Accuracy",
@@ -5061,23 +5062,23 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Greater Ea bardental Focus",
+      "name": "Greater Elemental Focus",
       "source": "Advanced Player's Guide",
       "prerequisites": [
-        "Ea bardental Focus"
+        "Elemental Focus"
       ],
       "tags": [
         "Advanced Player's Guide"
       ],
       "references": [
-        "Archives of a deity of magic: Greater Ea bardental Focus"
+        "Archives of a deity of magic: Greater Elemental Focus"
       ],
       "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Greater%20Ea bardental%20Focus"
+        "https://aonprd.com/FeatDisplay.aspx?ItemName=Greater%20Elemental%20Focus"
       ],
-      "source_id": "advanced_player_s_guide:greater_ea bardental_focus",
-      "description": "Choose an energy type to which you have already applied the Ea bardental Focus feat. Any spells you cast of this energy type are very hard to resist.\n\nAdd +1 to the Difficulty Class for all saving throws against spells that deal damage of the energy type you select. This bonus stacks with the bonus from Ea bardental Focus.",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "source_id": "advanced_player_s_guide:greater_elemental_focus",
+      "description": "Choose an energy type to which you have already applied the Elemental Focus feat. Any spells you cast of this energy type are very hard to resist.\n\nAdd +1 to the Difficulty Class for all saving throws against spells that deal damage of the energy type you select. This bonus stacks with the bonus from Elemental Focus.",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
       "name": "Greater Reposition",
@@ -8342,7 +8343,7 @@
         "Wis 17",
         "Djinni Style",
         "Djinni Spirit",
-        "Ea bardental Fist**",
+        "Elemental Fist**",
         "Improved Unarmed Strike",
         "base attack bonus +13 or monk level 11th"
       ],
@@ -8366,7 +8367,7 @@
         "Con 15",
         "Wis 15",
         "Djinni Style",
-        "Ea bardental Fist**",
+        "Elemental Fist**",
         "Improved Unarmed Strike",
         "base attack bonus +11 or monk level 9th"
       ],
@@ -8389,7 +8390,7 @@
       "prerequisites": [
         "Con 13",
         "Wis 15",
-        "Ea bardental Fist**",
+        "Elemental Fist**",
         "Improved Unarmed Strike",
         "base attack bonus +9 or monk level 5th"
       ],
@@ -8646,7 +8647,7 @@
         "Con 15",
         "Wis 15",
         "Efreeti Style",
-        "Ea bardental Fist**",
+        "Elemental Fist**",
         "Improved Unarmed Strike",
         "base attack bonus +11 or monk level 9th"
       ],
@@ -8669,7 +8670,7 @@
       "prerequisites": [
         "Con 13",
         "Wis 15",
-        "Ea bardental Fist**",
+        "Elemental Fist**",
         "Improved Unarmed Strike",
         "base attack bonus +9 or monk level 5th"
       ],
@@ -8694,7 +8695,7 @@
         "Wis 17",
         "Efreeti Style",
         "Efreeti Stance",
-        "Ea bardental Fist**",
+        "Elemental Fist**",
         "Improved Unarmed Strike",
         "base attack bonus +13 or monk level 11th"
       ],
@@ -10015,7 +10016,7 @@
       "prerequisites": [
         "Con 15",
         "Wis 17",
-        "Ea bardental Fist**",
+        "Elemental Fist**",
         "Marid Spirit",
         "Marid Style",
         "Improved Unarmed Strike",
@@ -10040,7 +10041,7 @@
       "prerequisites": [
         "Con 15",
         "Wis 15",
-        "Ea bardental Fist**",
+        "Elemental Fist**",
         "Marid Style",
         "Improved Unarmed Strike",
         "base attack bonus +11 or monk level 9th"
@@ -10064,7 +10065,7 @@
       "prerequisites": [
         "Con 13",
         "Wis 15",
-        "Ea bardental Fist**",
+        "Elemental Fist**",
         "Improved Unarmed Strike",
         "base attack bonus +9 or monk level 5th"
       ],
@@ -11410,7 +11411,7 @@
       "prerequisites": [
         "Con 15",
         "Wis 17",
-        "Ea bardental Fist**",
+        "Elemental Fist**",
         "Improved Unarmed Strike",
         "Shaitan Skin",
         "Shaitan Style",
@@ -11435,7 +11436,7 @@
       "prerequisites": [
         "Con 15",
         "Wis 15",
-        "Ea bardental Fist**",
+        "Elemental Fist**",
         "Improved Unarmed Strike",
         "Shaitan Style",
         "base attack bonus +11 or monk level 9th"
@@ -11459,7 +11460,7 @@
       "prerequisites": [
         "Con 13",
         "Wis 15",
-        "Ea bardental Fist**",
+        "Elemental Fist**",
         "Improved Unarmed Strike",
         "base attack bonus +9 or monk level 5th"
       ],
@@ -16562,46 +16563,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Lastwall Phalanx",
-      "source": "Champions Of Purity",
-      "prerequisites": [
-        "Base attack bonus +3",
-        "good alignment"
-      ],
-      "tags": [
-        "Champions Of Purity"
-      ],
-      "references": [
-        "Archives of a deity of magic: Lastwall Phalanx"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Lastwall%20Phalanx"
-      ],
-      "source_id": "champions_of_purity:lastwall_phalanx",
-      "description": "When battling the terrifying hordes of Belkzen, you find strength in your shield brothers and sisters.\n\nYou gain a sacred bonus to your AC against the attacks of evil creatures and a sacred bonus to saves against the spells and abilities of evil creatures equal to the number of adjacent allies who also have this feat.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "LastwallPhalanx",
-      "source": "Champions Of Purity",
-      "prerequisites": [
-        "Base attack bonus +3",
-        "good alignment"
-      ],
-      "tags": [
-        "Champions Of Purity"
-      ],
-      "references": [
-        "Archives of a deity of magic: LastwallPhalanx"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=LastwallPhalanx"
-      ],
-      "source_id": "champions_of_purity:lastwallphalanx",
-      "description": "When battling the terrifying hordes of Belkzen, you find strength in your shield brothers and sisters.\n\nYou gain a sacred bonus to your AC against the attacks of evil creatures and a sacred bonus to saves against the spells and abilities of evil creatures equal to the number of adjacent allies who also have this feat.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Legacy of Ozem",
       "source": "Champions Of Purity",
       "prerequisites": [
@@ -16656,26 +16617,6 @@
       ],
       "source_id": "champions_of_purity:siphon_poison",
       "description": "You can remove poison from afflicted creatures.\n\nAs a full-round action, you can remove an injury poison from a helpless or willing creature's bloodstream with a successful Heal check. The DC of this check is equal to the poison's DC. You can only draw out poison in this way within the first 2 rounds of when the target was poisoned. If the check is successful, the creature no longer suffers any additional effects from the poison. By performing this action, you do not risk poisoning yourself.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Worldwound Walker",
-      "source": "Champions Of Purity",
-      "prerequisites": [
-        "5 or more Hit Dice",
-        "good alignment"
-      ],
-      "tags": [
-        "Champions Of Purity"
-      ],
-      "references": [
-        "Archives of a deity of magic: Worldwound Walker"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Worldwound%20Walker"
-      ],
-      "source_id": "champions_of_purity:worldwound_walker",
-      "description": "Your purity always remains a blessing, even when you're surrounded by creatures that despise it.\n\nYou can alter the essence of your being to lessen the effects of spells designed to harm good creatures. When affected by spells and effects that behave differently according to alignment (such as unholy word or protection from good), you can choose whether you are considered good or neutral. This ability does not actually change your alignment or fool divinations, nor does it permit you to overcome alignment requirements for the use of magic items, class abilities, and so on.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -17090,7 +17031,7 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Ea bardental Jaunt",
+      "name": "Elemental Jaunt",
       "source": "Advanced Race Guide",
       "prerequisites": [
         "Character level 15th",
@@ -17103,14 +17044,14 @@
         "Advanced Race Guide"
       ],
       "references": [
-        "Archives of a deity of magic: Ea bardental Jaunt"
+        "Archives of a deity of magic: Elemental Jaunt"
       ],
       "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Ea bardental%20Jaunt"
+        "https://aonprd.com/FeatDisplay.aspx?ItemName=Elemental%20Jaunt"
       ],
-      "source_id": "advanced_race_guide:ea bardental_jaunt",
-      "description": "The spirits of your ancestral home call to you, beckoning you to return.\n\nOnce per day, you can cast plane shift as a spell-like ability with a caster level equal to your level to transport yourself and willing targets to an ea bardental plane that is appropriate to your race (ifrits to the Plane of Fire, oreads to the Plane of Earth, sylphs to the Plane of Air, and undines to the Plane of Water). While on that plane, you (but not anyone transported with you) are treated as though under the effect of the spell planar adaptation (Advanced Player's Guide 236).",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "source_id": "advanced_race_guide:elemental_jaunt",
+      "description": "The spirits of your ancestral home call to you, beckoning you to return.\n\nOnce per day, you can cast plane shift as a spell-like ability with a caster level equal to your level to transport yourself and willing targets to an elemental plane that is appropriate to your race (ifrits to the Plane of Fire, oreads to the Plane of Earth, sylphs to the Plane of Air, and undines to the Plane of Water). While on that plane, you (but not anyone transported with you) are treated as though under the effect of the spell planar adaptation.",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
       "name": "Firesight",
@@ -18244,7 +18185,7 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Extra Ea bardental Assault",
+      "name": "Extra Elemental Assault",
       "source": "Advanced Race Guide",
       "prerequisites": [
         "Suli"
@@ -18253,17 +18194,17 @@
         "Advanced Race Guide"
       ],
       "references": [
-        "Archives of a deity of magic: Extra Ea bardental Assault"
+        "Archives of a deity of magic: Extra Elemental Assault"
       ],
       "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Extra%20Ea bardental%20Assault"
+        "https://aonprd.com/FeatDisplay.aspx?ItemName=Extra%20Elemental%20Assault"
       ],
-      "source_id": "advanced_race_guide:extra_ea bardental_assault",
-      "description": "You have unlocked greater ea bardental power.\n\nYour ea bardental assault ability lasts an additional 2 rounds per day.",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "source_id": "advanced_race_guide:extra_elemental_assault",
+      "description": "You have unlocked greater elemental power.\n\nYour elemental assault ability lasts an additional 2 rounds per day.",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
-      "name": "Incremental Ea bardental Assault",
+      "name": "Incremental Elemental Assault",
       "source": "Advanced Race Guide",
       "prerequisites": [
         "Suli"
@@ -18272,14 +18213,14 @@
         "Advanced Race Guide"
       ],
       "references": [
-        "Archives of a deity of magic: Incremental Ea bardental Assault"
+        "Archives of a deity of magic: Incremental Elemental Assault"
       ],
       "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Incremental%20Ea bardental%20Assault"
+        "https://aonprd.com/FeatDisplay.aspx?ItemName=Incremental%20Elemental%20Assault"
       ],
-      "source_id": "advanced_race_guide:incremental_ea bardental_assault",
-      "description": "You may activate and quench your ea bardental assault ability multiple times per day.\n\nYou may use your ea bardental assault ability in 1-round increments, up to a maximum number of rounds per day equal to your character level. These rounds do not have to be consecutive. Activating the ability is a swift action; ending it is a free action.",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "source_id": "advanced_race_guide:incremental_elemental_assault",
+      "description": "You may activate and quench your elemental assault ability multiple times per day.\n\nYou may use your elemental assault ability in 1-round increments, up to a maximum number of rounds per day equal to your character level. These rounds do not have to be consecutive. Activating the ability is a swift action; ending it is a free action.",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
       "name": "Stoic Pose",
@@ -20242,27 +20183,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Andoren Falconry",
-      "source": "the inner sea region World Guide",
-      "prerequisites": [
-        "Cha 13",
-        "Animal Affinity",
-        "animal companion class feature"
-      ],
-      "tags": [
-        "the inner sea region World Guide"
-      ],
-      "references": [
-        "Archives of a deity of magic: Andoren Falconry"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Andoren%20Falconry"
-      ],
-      "source_id": "inner_sea_world_guide:andoren_falconry",
-      "description": "You know the secret Andoren arts of falconry developed by the Novotnian family of Darkmoon Vale.\n\nYou improve your affinity with birds of prey, such as eagles, falcons, hawks, and owls. You gain a +2 bonus on Animal Handling checks made to train or control birds of prey. In addition, if you have a bird of prey as an animal companion, your animal companion gains one of the following bonuses chosen at the time this animal companion is gained: a +1 dodge bonus to AC, a +1 morale bonus on all attack rolls, or a +2 morale bonus on all Will saves.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Arcane Vendetta",
       "source": "the inner sea region World Guide",
       "prerequisites": [
@@ -20278,8 +20198,8 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Arcane%20Vendetta"
       ],
       "source_id": "inner_sea_world_guide:arcane_vendetta",
-      "description": "The mistreatment of your people by an arcane society (such as a realm of lost technology's Technic League or the White Witches of Irrisen) has made you particularly eager to inf lict harm on those who use arcane magic.\n\nYou deal +2 damage with weapon attacks made against any target you have witnessed casting an arcane spell (not using a spell-like ability) in the last 5 rounds. You must have successfully identified the spell with a Spellcraft check to know without a doubt that the spell is arcane.",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "description": "The mistreatment of your people by an arcane society (such as a realm of lost technology's Technic League or the White Witches of a winter-locked realm) has made you particularly eager to inf lict harm on those who use arcane magic.\n\nYou deal +2 damage with weapon attacks made against any target you have witnessed casting an arcane spell (not using a spell-like ability) in the last 5 rounds. You must have successfully identified the spell with a Spellcraft check to know without a doubt that the spell is arcane.",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
       "name": "Careful Speaker",
@@ -20297,8 +20217,8 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Careful%20Speaker"
       ],
       "source_id": "inner_sea_world_guide:careful_speaker",
-      "description": "The paranoid terror that comes from living in a region with a dangerous government (such as a diabolic empire or Galt) has made you unusually aware of what you say.\n\nYou gain a +2 bonus on all Bluff checks made to fool someone or pass secret messages (but not to feint in combat), and a +2 bonus on all Will saves against attempts to scry upon you or read your mind.",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "description": "The paranoid terror that comes from living in a region with a dangerous government (such as a diabolic empire or a revolution-torn land) has made you unusually aware of what you say.\n\nYou gain a +2 bonus on all Bluff checks made to fool someone or pass secret messages (but not to feint in combat), and a +2 bonus on all Will saves against attempts to scry upon you or read your mind.",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
       "name": "Demon Hunter",
@@ -20394,8 +20314,8 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Eye%20of%20the%20Arclord"
       ],
       "source_id": "inner_sea_world_guide:eye_of_the_arclord",
-      "description": "Your understanding of the esoteric teachings of the Arclords of Nex allows you to open an eldritch eye that grants you superior perception of the magical world.\n\nOnce per day as a standard action, you can open an incandescent third eye upon your forehead. The eye can remain open for 1 minute, during which time you cast all divination spells at +1 caster level (as long as you begin casting the spell before the eye closes), gain darkvision 60 feet, and can use detect magic (as the spell of the same name). You gain a +8 bonus on Perception checks to notice invisible creatures while the eye is open as well.",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "description": "Your understanding of the esoteric teachings of the Arclords of a mage-ruled realm allows you to open an eldritch eye that grants you superior perception of the magical world.\n\nOnce per day as a standard action, you can open an incandescent third eye upon your forehead. The eye can remain open for 1 minute, during which time you cast all divination spells at +1 caster level (as long as you begin casting the spell before the eye closes), gain darkvision 60 feet, and can use detect magic (as the spell of the same name). You gain a +8 bonus on Perception checks to notice invisible creatures while the eye is open as well.",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
       "name": "Fey Foundling",
@@ -20586,25 +20506,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Hermean Blood",
-      "source": "the inner sea region World Guide",
-      "prerequisites": [
-        "You may only gain this feat at 1st level"
-      ],
-      "tags": [
-        "the inner sea region World Guide"
-      ],
-      "references": [
-        "Archives of a deity of magic: Hermean Blood"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Hermean%20Blood"
-      ],
-      "source_id": "inner_sea_world_guide:hermean_blood",
-      "description": "You are the descendant of someone recruited to Hermea or the bastard result of a Hermean's illicit pairing with someone foreign to that land.\n\nThough you may not know it, the blood of greatness flows in your veins. Pick two skills that share the same associated ability score. Those skills are always considered class skills for you. It's possible that Hermean agents may come looking for you, either to evaluate you for an invitation or to cover up an embarrassing dalliance, as determined by the GM's whim.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Necromantic Affinity",
       "source": "the inner sea region World Guide",
       "prerequisites": [
@@ -20756,47 +20657,6 @@
       ],
       "source_id": "inner_sea_world_guide:survivor",
       "description": "Only the strong thrive in your homeland, and you are no weakling, even among your kin.\n\nYou gain a +5 bonus on all Constitution checks made to stabilize while dying. Once per day, if you are struck by a critical hit or sneak attack, you can spend an immediate action to negate the critical or the sneak attack damage, making the attack a normal hit.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Taldan Duelist",
-      "source": "the inner sea region World Guide",
-      "prerequisites": [
-        "Dex 13",
-        "Exotic Weapon Proficiency (falcata)",
-        "Shield Proficiency (buckler)",
-        "Weapon Focus (falcata)"
-      ],
-      "tags": [
-        "the inner sea region World Guide"
-      ],
-      "references": [
-        "Archives of a deity of magic: Taldan Duelist"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Taldan%20Duelist"
-      ],
-      "source_id": "inner_sea_world_guide:taldan_duelist",
-      "description": "You trained at one of a fading empire's elite fighting schools and are skilled at rondelero, the art of fighting with the falcata (see the Advanced Player's Guide) and buckler.\n\nWhen fighting with the falcata and buckler, your shield bonus to AC increases by +1 and you gain a +2 bonus on Acrobatics checks.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Totem Spirit",
-      "source": "the inner sea region World Guide",
-      "prerequisites": [
-        "Member of a Shoanti tribe"
-      ],
-      "tags": [
-        "the inner sea region World Guide"
-      ],
-      "references": [
-        "Archives of a deity of magic: Totem Spirit"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Totem%20Spirit"
-      ],
-      "source_id": "inner_sea_world_guide:totem_spirit",
-      "description": "You are mystically tied to your tribe's sacred totem.\n\nThe benefit granted by this feat depends on which Shoanti tribe you belong to: Lyrune-Quah (Moon Clan): You gain a +1 bonus on Will saves and a +2 bonus on Perception checks. Shadde-Quah (Axe Clan): If you have the rage ability, you can rage for 3 additional rounds per day. You also gain a +2 bonus on Intimidate checks. Shriikirri-Quah (Hawk Clan): You gain a +2 bonus on Initiative checks and a +2 bonus on Ride checks. Shundar-Quah (Spire Clan): You gain a +1 bonus on Fortitude saves and a +2 bonus on Perception checks. Sklar-Quah (Sun Clan): You gain a +1 bonus on Ref lex saves and a +2 bonus on Acrobatics checks. Skoan-Quah (Skull Clan): You gain a +2 bonus on weapon damage against undead and a +2 bonus on Heal checks. Tamiir-Quah (Wind Clan): Your base land speed increases by 5 feet. You also gain a +2 bonus on Acrobatics checks.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -21461,8 +21321,8 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Thunder%20And%20Fang"
       ],
       "source_id": "a frontier land:thunder_and_fang",
-      "description": "You have mastered the ancient Shoanti Thunder and Fang fighting style, allowing you to fight with increased effectiveness when wielding an earth breaker and klar.\n\nYou can use an earth breaker as though it were a one-handed weapon. When using an earth breaker in one hand and a klar in your off hand, you retain the shield bonus your klar grants to your Armor Class even when you use it to attack. Treat your klar as a light weapon for the purposes of determining your two-weapon fighting penalty.",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "description": "You have mastered the ancient tribal Thunder and Fang fighting style, allowing you to fight with increased effectiveness when wielding an earth breaker and klar.\n\nYou can use an earth breaker as though it were a one-handed weapon. When using an earth breaker in one hand and a klar in your off hand, you retain the shield bonus your klar grants to your Armor Class even when you use it to attack. Treat your klar as a light weapon for the purposes of determining your two-weapon fighting penalty.",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
       "name": "Chainbreaker",
@@ -21817,26 +21677,6 @@
       ],
       "source_id": "faction_guide:old_cults_awakener",
       "description": "You hear the voices of the Old Ones, and believe it is your destiny to awaken others to their ancient cause using bizarre and torturous rituals. Whether your work leaves these individuals mad or truly touched by alien sentience remains unproven.\n\nYou can attempt a DC 25 Heal check upon an unconscious but stable intelligent creature. The ritual takes 1 hour to complete. If it's successful, the victim must make a DC 25 Will save or he gains a false memory of a vision that he has personally been chosen by the Great Old Ones to serve them (treat as an implanted memory from modify memory, except this is a nonmagical effect). If the ritual is unsuccessful, the victim takes 1d2 points of Intelligence and Wisdom drain; you may attempt the ritual again.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Ominous Mien",
-      "source": "Faction Guide",
-      "prerequisites": [
-        "Hellknight rank",
-        "Hellknight 10 TPA"
-      ],
-      "tags": [
-        "Faction Guide"
-      ],
-      "references": [
-        "Archives of a deity of magic: Ominous Mien"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Ominous%20Mien"
-      ],
-      "source_id": "faction_guide:ominous_mien",
-      "description": "Your walk, stance, and voice all amplify your status as a Hellknight when you cast spells or use spell-like abilities against opponents.\n\nWhenever you cast a spell or use a spell-like ability from the compulsion, fear, phantasm, or shadow sub-schools, add +1 to the DC of the saving throw against that spell or effect.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -24250,8 +24090,8 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Vengeful%20Banisher"
       ],
       "source_id": "demon_hunter_s_handbook:vengeful_banisher",
-      "description": "You've witnessed demons and their madness firsthand, likely in one of the lands detailed in this section, or perhaps some other demon-marked region such as the Worldwound or the Abyss. Since then, you've sworn to send these wretched fiends back to whence they came, and you've become an expert at rooting out their kind and their servants.\n\nYou gain a +2 bonus on saving throws against spells or effects originating from demon worshipers and from creatures of the demon type.",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "description": "You've witnessed demons and their madness firsthand, likely in one of the lands detailed in this section, or perhaps some other demon-marked region such as a demon-blighted land or the Abyss. Since then, you've sworn to send these wretched fiends back to whence they came, and you've become an expert at rooting out their kind and their servants.\n\nYou gain a +2 bonus on saving throws against spells or effects originating from demon worshipers and from creatures of the demon type.",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
       "name": "Coordinated Distraction",
@@ -25627,23 +25467,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "an ancient desert kingdomology",
-      "source": "People Of The Sands",
-      "prerequisites": [],
-      "tags": [
-        "People Of The Sands"
-      ],
-      "references": [
-        "Archives of a deity of magic: an ancient desert kingdomology"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=an ancient desert kingdomology"
-      ],
-      "source_id": "people_of_the_sands:an ancient desert kingdomology",
-      "description": "You have a broad interest in an ancient desert kingdom and are something of an authority in one specialized field.\n\nPick one Intelligence-based skill. You gain a +3 bonus on all checks made using that skill in relation to an ancient desert kingdom or its people. In addition, you gain a +1 bonus on all other Intelligence-based skill checks made in relation to an ancient desert kingdom or its people.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Out Of The Sun",
       "source": "People Of The Sands",
       "prerequisites": [
@@ -25661,25 +25484,6 @@
       ],
       "source_id": "people_of_the_sands:out_of_the_sun",
       "description": "Your allies use the sun's glare to their advantage.\n\nWhen you hit with a melee attack, you can attempt a Bluff check as a move action to feint. You do not gain the benefits of this feint; instead, if your Bluff check is successful, an ally with this feat who is adjacent to you or your opponent gains the benefits, so that her next melee attack against that opponent does not allow him to use his Dexterity bonus to AC (if any). This attack must be made on or before your ally's next turn. You gain a +2 circumstance bonus on your Bluff check in bright light. This bonus increases to +4 in natural sunlight. You cannot use this feat in dim light or darkness.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Thuvian Grenadier",
-      "source": "People Of The Sands",
-      "prerequisites": [
-        "Precise Shot or Throw Anything"
-      ],
-      "tags": [
-        "People Of The Sands"
-      ],
-      "references": [
-        "Archives of a deity of magic: Thuvian Grenadier"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Thuvian%20Grenadier"
-      ],
-      "source_id": "people_of_the_sands:thuvian_grenadier",
-      "description": "Training with alchemically inclined allies helps you avoid friendly fire.\n\nWhenever you hit a creature with a splash weapon, you may choose to exclude one creature within the weapon's splash area from taking splash damage. If a creature within the splash area also has this feat, it automatically ignores splash damage from your splash weapons on a successful hit. In addition, if you miss with a splash weapon and the errant weapon lands in a square occupied or adjacent to an ally with this feat, your ally can attempt a DC 20 Ref lex save. If the ally succeeds, he is able to catch the weapon. If your ally also has the Snatch Arrows feat, he can toss the splash weapon back to you as an immediate action.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -26345,8 +26149,8 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Grand%20Duchy%20Familiarity"
       ],
       "source_id": "inner_sea_combat:grand_duchy_familiarity",
-      "description": "You have spent significant time in the Grand Duchy of Alkenstar, and your proximity to so many firearms has given you a familiarity with their delicate handling.\n\nOnce per day as an immediate action, you can reroll an attack roll with a firearm that would have resulted in a misfire. You must take the results of the new roll, even if it results in a misfire as well.",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "description": "You have spent significant time in the Grand Duchy of a gunpowder city, and your proximity to so many firearms has given you a familiarity with their delicate handling.\n\nOnce per day as an immediate action, you can reroll an attack roll with a firearm that would have resulted in a misfire. You must take the results of the new roll, even if it results in a misfire as well.",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
       "name": "Redirected Shot",
@@ -26701,26 +26505,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Breaker Of Barriers",
-      "source": "the inner sea region Gods",
-      "prerequisites": [
-        "Str 17",
-        "worshiper of Rovagug"
-      ],
-      "tags": [
-        "the inner sea region Gods"
-      ],
-      "references": [
-        "Archives of a deity of magic: Breaker Of Barriers"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Breaker%20Of%20Barriers"
-      ],
-      "source_id": "inner_sea_gods:breaker_of_barriers",
-      "description": "You see it as your sacred duty to destroy all obstacles.\n\nYou gain a +2 bonus on Strength checks to break down doors, walls, dams, and other barriers and on combat maneuver checks to bull rush and overrun opponents. You ignore the first 5 points of hardness when you deal damage to doors, walls, dams, and other barriers.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Bullseye Shot",
       "source": "the inner sea region Gods",
       "prerequisites": [
@@ -26776,26 +26560,6 @@
       ],
       "source_id": "inner_sea_gods:channel_discord",
       "description": "You can focus the Abyss's power to sow discord among those who take damage from your channeled energy.\n\nOnce per day when you channel negative energy to harm living creatures, in addition to dealing damage you can choose to affect those who fail their Will save against your channel with a song of discord (caster level equal to your effective cleric level).",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Channel Endurance",
-      "source": "the inner sea region Gods",
-      "prerequisites": [
-        "Channel positive energy 3d6",
-        "worshiper of Gozreh"
-      ],
-      "tags": [
-        "the inner sea region Gods"
-      ],
-      "references": [
-        "Archives of a deity of magic: Channel Endurance"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Channel%20Endurance"
-      ],
-      "source_id": "inner_sea_gods:channel_endurance",
-      "description": "Calling upon the winds and the waves, you prepare your allies for the dangers of the natural world.\n\nOnce per day when you channel positive energy to heal living creatures, you can choose to grant each healed creature the benefit of endure ea bardents (caster level equal to your effective cleric level). This effect lasts 24 hours.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -26958,27 +26722,6 @@
       ],
       "source_id": "inner_sea_gods:deific_obedience",
       "description": "Your reverence for a deity is so great that daily prayer and minor sacrifices grant you special boons.\n\nEach deity requires a different daily obedience, but all obediences take no more than 1 hour per day to perform. Once you've performed the obedience, you gain the benefit of a special ability or resistance as indicated in the \"Obedience\" entry for the god to whom you performed the obedience. If you have at least 12 Hit Dice, you also gain the first boon granted by your deity upon undertaking your obedience. If you have at least 16 Hit Dice, you also gain the deity's second boon. If you have 20 Hit Dice or more, you also gain the deity's third boon. Unless a specific duration or number of uses per day is listed, a boon's effects are constant. Certain prestige classes (see page 198) gain access to these boons at lower levels as a benefit of their prestige class. If you have no levels in one of these prestige classes, you gain the boons marked as exalted boons. If you later take levels in sentinel or evangelist, you lose access to the exalted boons and gain access to the new boons appropriate to your class. If you ever fail to perform a daily obedience, you lose all access to the benefits and boons granted by this feat until you next perform the obedience.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Destroy Identity",
-      "source": "the inner sea region Gods",
-      "prerequisites": [
-        "Critical Focus",
-        "base attack bonus +11",
-        "worshiper of Lamashtu"
-      ],
-      "tags": [
-        "the inner sea region Gods"
-      ],
-      "references": [
-        "Archives of a deity of magic: Destroy Identity"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Destroy%20Identity"
-      ],
-      "source_id": "inner_sea_gods:destroy_identity",
-      "description": "You can use your weapons to mar your opponents' most distinctive characteristics.\n\nWhenever you confirm a critical hit against an opponent, in addition to dealing critical damage as normal, you maim your target so much that it takes 2 points of Charisma damage and becomes staggered for 1 round.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -27163,21 +26906,23 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Ea bardental Vigor",
+      "name": "Elemental Vigor",
       "source": "the inner sea region Gods",
-      "prerequisites": [],
+      "prerequisites": [
+        "Worshiper of an elemental lord"
+      ],
       "tags": [
         "the inner sea region Gods"
       ],
       "references": [
-        "Archives of a deity of magic: Ea bardental Vigor"
+        "Archives of a deity of magic: Elemental Vigor"
       ],
       "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Ea bardental%20Vigor"
+        "https://aonprd.com/FeatDisplay.aspx?ItemName=Elemental%20Vigor"
       ],
-      "source_id": "inner_sea_gods:ea bardental_vigor",
-      "description": "You have learned transformative secrets from communing with ea bardental beings.\n\nWhenever you use a polymorph effect to assume the form of an ea bardental you gain a rush of vital energy. You gain a number of temporary hit points equal to the caster level of the polymorph effect and you gain a +10 foot bonus to your base speed.",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "source_id": "inner_sea_gods:elemental_vigor",
+      "description": "You have learned transformative secrets from communing with elemental beings.\n\nWhenever you use a polymorph effect to assume the form of an elemental you gain a rush of vital energy. You gain a number of temporary hit points equal to the caster level of the polymorph effect and you gain a +10 foot bonus to your base speed.",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
       "name": "Fateful Channel",
@@ -27194,26 +26939,6 @@
       ],
       "source_id": "inner_sea_gods:fateful_channel",
       "description": "Your faith not only heals the body, it tugs the strands of fate.\n\nWhen you channel positive energy to heal living creatures, you grant each creature you heal the ability to roll twice and take the better result on a single attack roll, skill check, or saving throw of their choice within a number of rounds equal to your Charisma bonus (minimum 1). Multiple uses of this ability do not stack, but they do reset the effect's duration. A creature can only benefit from one instance of this channel effect at a time.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Fearsome Finish",
-      "source": "the inner sea region Gods",
-      "prerequisites": [
-        "Intimidating Prowess",
-        "worshiper of Lamashtu"
-      ],
-      "tags": [
-        "the inner sea region Gods"
-      ],
-      "references": [
-        "Archives of a deity of magic: Fearsome Finish"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Fearsome%20Finish"
-      ],
-      "source_id": "inner_sea_gods:fearsome_finish",
-      "description": "When you slay enemies, you frighten other opponents.\n\nUpon reducing an enemy to 0 or fewer hit points, for the remaining duration of the combat encounter, you gain a +4 bonus on any Intimidate checks made to demoralize opponents who can see both you and the opponent you dropped.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -27491,26 +27216,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Merciless Rush",
-      "source": "the inner sea region Gods",
-      "prerequisites": [
-        "Improved Bull Rush",
-        "worshiper of Rovagug"
-      ],
-      "tags": [
-        "the inner sea region Gods"
-      ],
-      "references": [
-        "Archives of a deity of magic: Merciless Rush"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Merciless%20Rush"
-      ],
-      "source_id": "inner_sea_gods:merciless_rush",
-      "description": "Though hordes stand against you, they rarely stand long.\n\nWhen you bull rush a creature and your check exceeds the target's CMD by 5 or more, you deal damage equal to your Strength modifier to that target.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Messenger Of Fate",
       "source": "the inner sea region Gods",
       "prerequisites": [],
@@ -27528,25 +27233,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Nightmare Scars",
-      "source": "the inner sea region Gods",
-      "prerequisites": [
-        "Worshiper of Lamashtu"
-      ],
-      "tags": [
-        "the inner sea region Gods"
-      ],
-      "references": [
-        "Archives of a deity of magic: Nightmare Scars"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Nightmare%20Scars"
-      ],
-      "source_id": "inner_sea_gods:nightmare_scars",
-      "description": "You bear scars in honor of Lamashtu, whether because you injured yourself in her name or because she saw fit to bless you with them.\n\nYou gain a +2 bonus on Diplomacy and Handle Animal checks to affect the attitudes of magical beasts, monstrous humanoids, and worshipers of Lamashtu. You take a -2 penalty on Diplomacy and Handle Animal checks to affect the attitudes of all other types of creatures. You also gain a +2 bonus on Intimidate checks, and take no penalty on Intimidate checks based on your size.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Nimble Natural Summons",
       "source": "the inner sea region Gods",
       "prerequisites": [],
@@ -27561,25 +27247,6 @@
       ],
       "source_id": "inner_sea_gods:nimble_natural_summons",
       "description": "Your summoned natural allies may walk the wild parts of the world unimpeded.\n\nCreatures you summon with summon nature's ally can move through any sort of undergrowth (such as natural thorns, briars, and similar terrain) at their normal speeds without taking damage or suffering other impairment. Thorns, briars, and undergrowth areas that have been magically manipulated to impede motion, however, still affect summoned creatures.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Oath Of The Unbound",
-      "source": "the inner sea region Gods",
-      "prerequisites": [
-        "Worshiper of Rovagug"
-      ],
-      "tags": [
-        "the inner sea region Gods"
-      ],
-      "references": [
-        "Archives of a deity of magic: Oath Of The Unbound"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Oath%20Of%20The%20Unbound"
-      ],
-      "source_id": "inner_sea_gods:oath_of_the_unbound",
-      "description": "You have sworn never to be shackled.\n\nYou gain a +2 bonus on combat maneuver checks to break free of a grapple or pin, on Strength checks to burst bonds or to break through doors or walls, and on saving throws to resist spells and effects that would entangle or slow you.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -27725,27 +27392,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Riptide Attack",
-      "source": "the inner sea region Gods",
-      "prerequisites": [
-        "Improved Drag",
-        "Improved Trip",
-        "worshiper of Gozreh"
-      ],
-      "tags": [
-        "the inner sea region Gods"
-      ],
-      "references": [
-        "Archives of a deity of magic: Riptide Attack"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Riptide%20Attack"
-      ],
-      "source_id": "inner_sea_gods:riptide_attack",
-      "description": "You can immediately drag opponents you successfully trip.\n\nWhenever you succeed at a trip combat maneuver, you can automatically attempt a drag combat maneuver against your tripped target as a swift action.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Savior's Arrow",
       "source": "the inner sea region Gods",
       "prerequisites": [],
@@ -27870,27 +27516,6 @@
       ],
       "source_id": "inner_sea_gods:spiked_destroyer",
       "description": "You can attack with your armor spikes while using bull rush or overrun.\n\nWhen you succeed at a bull rush or overrun combat maneuver, you may automatically make an attack roll with your armor spikes against the target of the maneuver as a swift action, using your highest attack bonus.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Squash Flat",
-      "source": "the inner sea region Gods",
-      "prerequisites": [
-        "Improved Bull Rush",
-        "Merciless Rush",
-        "worshiper of Rovagug"
-      ],
-      "tags": [
-        "the inner sea region Gods"
-      ],
-      "references": [
-        "Archives of a deity of magic: Squash Flat"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Squash%20Flat"
-      ],
-      "source_id": "inner_sea_gods:squash_flat",
-      "description": "You can bull rush an opponent straight to the ground.\n\nWhenever you make a bull rush attack and your combat maneuver check exceeds the target's CMD by 5 or more, you can attempt to trip the target as part of your bull rush as a free action. This does not provoke an attack of opportunity.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -28067,25 +27692,6 @@
       ],
       "source_id": "inner_sea_gods:undermining_exploit",
       "description": "Your familiarity with earth and stone gives you a distinct advantage on rocky battlefields.\n\nYou gain a +4 insight bonus on combat maneuver checks against opponents occupying a square of rocky difficult terrain such as rubble, broken ground, or steep stairs.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Wave Master",
-      "source": "the inner sea region Gods",
-      "prerequisites": [
-        "Worshiper of Gozreh"
-      ],
-      "tags": [
-        "the inner sea region Gods"
-      ],
-      "references": [
-        "Archives of a deity of magic: Wave Master"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Wave%20Master"
-      ],
-      "source_id": "inner_sea_gods:wave_master",
-      "description": "Gozreh has seen fit to bless you as an uncommonly skilled swimmer.\n\nWhen you succeed at a Swim check, you can move your full speed as a full-round action or half your speed as a move action. This does not grant you the benefit of having a swim speed.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -28290,7 +27896,7 @@
       "name": "Harrowed Summoning",
       "source": "The Harrow Handbook",
       "prerequisites": [
-        "Harrowed (Pathfinder Campaign Setting: The Inner Sea World Guide 287)"
+        "Harrowed (Pathfinder Campaign Setting: the inner sea region World Guide 287)"
       ],
       "tags": [
         "The Harrow Handbook"
@@ -28303,7 +27909,7 @@
       ],
       "source_id": "the_harrow_handbook:harrowed_summoning",
       "description": "Your summoned creatures are empowered by the magic of the harrow.\n\nWhen you cast a conjuration (summoning) spell or use a spell-like ability to summon one or more creatures, you can draw two random cards from a complete harrow deck you own. Doing so adds both a somatic component (if the spell does not already have one) and a focus component (the harrow deck) to the spell, but does not increase the spell's casting time. For the duration of the spell, each summoned creature gains a +4 enhancement bonus to the corresponding ability scores of the drawn card's suits. If both cards are the same suit, each summoned creature gains a +6 bonus to that ability score instead. If either card's alignment is a true match for the summoned creatures' alignment, the duration of the spell is doubled, while drawing an opposite match halves the duration of the spell. If both a true match and an opposite match are drawn, the spell's duration is unchanged. A creature summoned in this way is distinctly altered by the cards drawn. Its physical appearance ref lects the visual ea bardents of the cards (for example, a creature summoned with The Publican might have only one eye). The creature's personality is also inf luenced by the cards, but not so much as to alter its alignment (for example, The Snakebite might summon a creature that likes to gossip).",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
       "name": "Deadly Dealer",
@@ -28390,21 +27996,23 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Ea bardental Commixture",
-      "source": "Blood Of The Ea bardents",
-      "prerequisites": [],
+      "name": "Elemental Commixture",
+      "source": "Blood Of The Elements",
+      "prerequisites": [
+        "Caster level 1st"
+      ],
       "tags": [
-        "Blood Of The Ea bardents"
+        "Blood Of The Elements"
       ],
       "references": [
-        "Archives of a deity of magic: Ea bardental Commixture"
+        "Archives of a deity of magic: Elemental Commixture"
       ],
       "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Ea bardental%20Commixture"
+        "https://aonprd.com/FeatDisplay.aspx?ItemName=Elemental%20Commixture"
       ],
-      "source_id": "blood_of_the_ea bardents:ea bardental_commixture",
-      "description": "You can combine your ea bardental spells with those of your allies to produce entirely new and synergistic magical effects.\n\nYou and an ally within 30 feet who shares this feat can cast your spells together to create a more powerful, hybrid effect. Both spells must have an ea bardental descriptor (air, earth, fire, or water), or an energy descriptor that corresponds to one of the ea bardents (acid [earth], cold [water], electricity [air], or fire [fire]) . Both spells must be at least 1st level, within 1 spell level of each other, and cast during the same initiative turn through the use of readied actions. When the spells to be commixed are cast, one is designated as the primary spell (typically the higherlevel spell), while the other is the secondary spell. The primary spell must be an offensive spell that targets an area or one or more creatures. The secondary spell can be any spell with an appropriate descriptor. Neither spell can take more than a standard action to cast. The primary spell behaves as written (with the exception of the synergistic benefits that are described below). The secondary spell does not manifest any of its usual effects; instead, targeted creatures are affected by a secondary effect that is determined by the combination of the two spells' descriptors. Targeted creatures can attempt a saving throw against the primary spell as normal (assuming that a save is normally allowed), and then attempt a separate save against the secondary effect. The secondary effect's save type is described in its listing, and its save DC is equal to the normal save DC of the primary or secondary spell, whichever is lower (or, if neither spell allows a saving throw, 10 + lowest spell's level + spellcaster's primary spellcasting ability score [Int, Wis, or Cha] modifier). Commixed spells cannot be counterspelled normally. A creature with Improved Counterspell can counterspell commixed spells if both spells are correctly identified and both belong to the same school. Regardless, the secondary effects of two spells combined through Ea bardental Commixture cannot be counterspelled. Spell resistance still applies to the secondary effect, unless both of the commixed spells bypass spell resistance. Synergistic Benefits: The primary spell's save DC (if any) increases by 1. If either spell is normally modified by Spell Focus or Greater Spell Focus, the bonus to save DCs granted by those feats stacks with this increase. The caster of the primary spell also gains a +1 bonus on any caster level check made to overcome spell resistance. Secondary Effects: While the secondary spell has no direct effect other than bolstering the effects of the primary spell, the combination of spells also creates a unique secondary effect depending on the ea bardental descriptors of the commixed spells. For the purpose of this secondary effect, the acid, cold, and electricity descriptors count as earth, water, and air descriptors, respectively. Commixed spells with the same ea bardental descriptors do not produce a secondary effect, though the primary spell still gains the synergistic benefits described above. &#8226; Dust (Air/Earth): Choked by dust, the targets must succeed at a Fortitude save or become staggered for 1 round plus 1 round per 5 caster levels of the secondary spell's caster. Targeted spellcasters must succeed at a concentration check to cast spells (the DC is equal to the save DC). On a successful save, the targets are not staggered but must still attempt concentration checks. &#8226; Lava (Earth/Fire): The targets are splattered with bits of molten rock and take 1d6 points of fire damage. The targets must succeed at a Reflex save or catch fire (see Catching on Fire on page 444 of the Pathfinder RPG Core Rulebook). &#8226; Mud (Earth/Water): The targets must succeed at a Reflex save or fall prone and have their movement speeds cut in half (to a minimum speed of 5 feet) for 1 round plus 1 round per 5 caster levels of the secondary spell's caster. On a successful save, the targets' movement speeds are cut in half for 1 round. &#8226; Smoke (Air/Fire): The targets suffer smoke inhalation and must succeed at Fortitude saves or become nauseated for 1 round and blinded for 1d4 rounds. Success negates the nausea effect and reduces the blindness to 1 round. Creatures immune to fire are immune to the nausea effect. &#8226; Snow (Air/Water): The primary spell gains the cold descriptor if it doesn't have that descriptor already, and half the damage dealt (if any) is cold damage. The targets must succeed at a Reflex save or fall prone. &#8226; Steam (Fire/Water): Damage caused by the primary spell (if any) is treated as nonlethal, untyped damage (neither cold nor fire damage) and is not affected by energy resistance or absorbed by protection from energy. The targets become blinded for 1d4 rounds unless they succeed at a Will save.",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "source_id": "blood_of_the_elements:elemental_commixture",
+      "description": "You can combine your elemental spells with those of your allies to produce entirely new and synergistic magical effects.\n\nYou and an ally within 30 feet who shares this feat can cast your spells together to create a more powerful, hybrid effect. Both spells must have an elemental descriptor (air, earth, fire, or water), or an energy descriptor that corresponds to one of the elements (acid [earth], cold [water], electricity [air], or fire [fire]) . Both spells must be at least 1st level, within 1 spell level of each other, and cast during the same initiative turn through the use of readied actions.\n\nWhen the spells to be commixed are cast, one is designated as the primary spell (typically the higherlevel spell), while the other is the secondary spell. The primary spell must be an offensive spell that targets an area or one or more creatures. The secondary spell can be any spell with an appropriate descriptor. Neither spell can take more than a standard action to cast. The primary spell behaves as written (with the exception of the synergistic benefits that are described below). The secondary spell does not manifest any of its usual effects; instead, targeted creatures are affected by a secondary effect that is determined by the combination of the two spells' descriptors.\n\nTargeted creatures can attempt a saving throw against the primary spell as normal (assuming that a save is normally allowed), and then attempt a separate save against the secondary effect. The secondary effect's save type is described in its listing, and its save DC is equal to the normal save DC of the primary or secondary spell, whichever is lower (or, if neither spell allows a saving throw, 10 + lowest spell's level + spellcaster's primary spellcasting ability score [Int, Wis, or Cha] modifier).\n\nCommixed spells cannot be counterspelled normally. A creature with Improved Counterspell can counterspell commixed spells if both spells are correctly identified and both belong to the same school. Regardless, the secondary effects of two spells combined through Elemental Commixture cannot be counterspelled. Spell resistance still applies to the secondary effect, unless both of the commixed spells bypass spell resistance.\n\nSynergistic Benefits: The primary spell's save DC (if any) increases by 1. If either spell is normally modified by Spell Focus or Greater Spell Focus, the bonus to save DCs granted by those feats stacks with this increase. The caster of the primary spell also gains a +1 bonus on any caster level check made to overcome spell resistance.\n\nSecondary Effects: While the secondary spell has no direct effect other than bolstering the effects of the primary spell, the combination of spells also creates a unique secondary effect depending on the elemental descriptors of the commixed spells. For the purpose of this secondary effect, the acid, cold, and electricity descriptors count as earth, water, and air descriptors, respectively. Commixed spells with the same elemental descriptors do not produce a secondary effect, though the primary spell still gains the synergistic benefits described above. Dust (Air/Earth): Choked by dust, the targets must succeed at a Fortitude save or become staggered for 1 round plus 1 round per 5 caster levels of the secondary spell's caster. Targeted spellcasters must succeed at a concentration check to cast spells (the DC is equal to the save DC). On a successful save, the targets are not staggered but must still attempt concentration checks.Lava (Earth/Fire): The targets are splattered with bits of molten rock and take 1d6 points of fire damage. The targets must succeed at a Reflex save or catch fire (see Catching on Fire on page 444 of the Pathfinder RPG Core Rulebook).Mud (Earth/Water): The targets must succeed at a Reflex save or fall prone and have their movement speeds cut in half (to a minimum speed of 5 feet) for 1 round plus 1 round per 5 caster levels of the secondary spell's caster. On a successful save, the targets' movement speeds are cut in half for 1 round.Smoke (Air/Fire): The targets suffer smoke inhalation and must succeed at Fortitude saves or become nauseated for 1 round and blinded for 1d4 rounds. Success negates the nausea effect and reduces the blindness to 1 round. Creatures immune to fire are immune to the nausea effect.Snow (Air/Water): The primary spell gains the cold descriptor if it doesn't have that descriptor already, and half the damage dealt (if any) is cold damage. The targets must succeed at a Reflex save or fall prone.Steam (Fire/Water): Damage caused by the primary spell (if any) is treated as nonlethal, untyped damage (neither cold nor fire damage) and is not affected by energy resistance or absorbed by protection from energy. The targets become blinded for 1d4 rounds unless they succeed at a Will save.",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
       "name": "Call Out",
@@ -31320,28 +30928,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Mark Of The Devoted",
-      "source": "Undead Unleashed",
-      "prerequisites": [
-        "1st-level character",
-        "human of Mwangi ethnicity",
-        "Walkena worshiper",
-        "must personally create a token worth at least 50 gp prior to an 8-hour branding ritual during which you survive taking 2d6 points of fire damage"
-      ],
-      "tags": [
-        "Undead Unleashed"
-      ],
-      "references": [
-        "Archives of a deity of magic: Mark Of The Devoted"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Mark%20Of%20The%20Devoted"
-      ],
-      "source_id": "undead_unleashed:mark_of_the_devoted",
-      "description": "You have pledged your life to defend Mzali against invaders, and will continue to do so even after your death.\n\nDedicated to ridding your land of colonialist invaders, you have pledged your eternal soul to the purging of their presence from Mzali. Upon completion of the ritual, you gain fire resistance 2 and a +1 morale bonus on Will saves.  When you are killed, you rise as a juju zombie (Pathfinder RPG Bestiary 2 291) after 1d4 minutes. Upon rising, your alignment changes to evil. Lawful and chaotic components of your alignment are not changed. After this transformation, you deal an additional 1d6 points of fire damage with the slam attack gained from the template.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Ally Shield",
       "source": "Champions Of Corruption",
       "prerequisites": [],
@@ -31597,27 +31183,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Daggermark Lore",
-      "source": "Advanced Class Origins",
-      "prerequisites": [
-        "Craft (alchemy) 5 ranks",
-        "member of the Daggermark Poisoner’s Guild",
-        "poison lore or poison use class feature"
-      ],
-      "tags": [
-        "Advanced Class Origins"
-      ],
-      "references": [
-        "Archives of a deity of magic: Daggermark Lore"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Daggermark%20Lore"
-      ],
-      "source_id": "advanced_class_origins:daggermark_lore",
-      "description": "You understand the exclusive poisons brewed by your guild far better than the buyers you sell to, and you can deliver them so they are more difficult to weather.\n\nChoose one poison. When you deliver that poison, the number of saves needed to cure it increases by 1, and the DC to cure it with neutralize poison increases by 5. Succeeding at the  initial save still negates the poison. Typical poisons used by Daggermark poisoners are listed in Pathfinder Player Companion: Alchemy Manual and Pathfinder Chronicles: Guide to the River Kingdoms.  Additionally, if you have the poison lore class feature, you're considered to have the poison use class feature for the purpose of meeting Prerequisites.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Eldritch Aid",
       "source": "Advanced Class Origins",
       "prerequisites": [
@@ -31792,8 +31357,8 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Totem%20Beast"
       ],
       "source_id": "advanced_class_origins:totem_beast",
-      "description": "Your animal companion becomes spiritually connected to an animal totem that has a spiritual signif icance for you or your background, such as a Shoanti clan's animal totem.\n\nSelect one animal aspect from the list presented in the hunter class's animal focus class feature. Your animal companion has natural coloration suggestive of this aspect-a bear might have a dark spot in the shape of a bat, or a hawk might have unusual tiger striping in its feathers. Your animal companion gains the benefits of the selected animal aspect, treating its Hit Dice as its effective hunter level for this ability. This bonus doesn't stack if the animal companion is already under the benefit of the same animal aspect because of the actual class feature.  For example, an animal companion with Totem Beast (snake) under the effect of the snake aspect from its hunter owner would get a +2 bonus on attack rolls when making attacks of opportunity, not a +4 bonus.",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "description": "Your animal companion becomes spiritually connected to an animal totem that has a spiritual signif icance for you or your background, such as a tribal clan's animal totem.\n\nSelect one animal aspect from the list presented in the hunter class's animal focus class feature. Your animal companion has natural coloration suggestive of this aspect-a bear might have a dark spot in the shape of a bat, or a hawk might have unusual tiger striping in its feathers. Your animal companion gains the benefits of the selected animal aspect, treating its Hit Dice as its effective hunter level for this ability. This bonus doesn't stack if the animal companion is already under the benefit of the same animal aspect because of the actual class feature.  For example, an animal companion with Totem Beast (snake) under the effect of the snake aspect from its hunter owner would get a +2 bonus on attack rolls when making attacks of opportunity, not a +4 bonus.",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
       "name": "Unfair Grip",
@@ -36274,7 +35839,7 @@
       "name": "Tattoo Attunement",
       "source": "Monster Summoner's Handbook",
       "prerequisites": [
-        "Inscribe Magical TattooISM"
+        "Inscribe Magical Tattoo; Spellcraft 5 ranks"
       ],
       "tags": [
         "Monster Summoner's Handbook"
@@ -36286,8 +35851,8 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Tattoo%20Attunement"
       ],
       "source_id": "monster_summoner_s_handbook:tattoo_attunement",
-      "description": "You've learned to absorb summoned creatures into temporary spell tattoos.\n\nInscribe Magical Tattoo",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "description": "You've learned to absorb summoned creatures into temporary spell tattoos.\n\nAs a standard action, you can touch a single creature that you've summoned, instantly transforming it into a magical tattoo on your body. This tattoo takes up one magic item slot if the summoned creature is Medium or smaller, and one additional adjacent slot for each size category larger than Medium (see page 16 of Pathfinder Campaign Setting: the inner sea region Magic for rules on magical tattoos). You can have only one such tattoo at a time.\n\nWhile in tattoo form, the summoned creature can't take actions and doesn't need to eat, sleep, or breathe; it retains the remaining duration of the summoning spell used to conjure it. The creature can stay in tattoo form for a number of hours equal to your caster level. If the creature is still in tattoo form at the end of that time, the tattoo disappears, the creature is sent back to the plane from which it was summoned, and the remaining duration of the summon is wasted. As a standard action that provokes attacks of opportunity, you can cause the creature to change from a tattoo back into creature form, and appear in a square adjacent to you. The remaining duration of the spell is then expended as normal. The creature is staggered for 1 round after emerging from tattoo form. This is a supernatural ability.",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
       "name": "Tattoo Conversion",
@@ -36312,7 +35877,7 @@
       "name": "Tattoo Transformation",
       "source": "Monster Summoner's Handbook",
       "prerequisites": [
-        "Inscribe Magical TattooISM"
+        "Inscribe Magical Tattoo; Tattoo Attunement; Spellcraft 9 ranks"
       ],
       "tags": [
         "Monster Summoner's Handbook"
@@ -36324,8 +35889,8 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Tattoo%20Transformation"
       ],
       "source_id": "monster_summoner_s_handbook:tattoo_transformation",
-      "description": "You've learned to take on some of the resistance of a summoned creature when you absorb it as a tattoo.\n\nSpellcraft 9 ranks.",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "description": "You've learned to take on some of the resistance of a summoned creature when you absorb it as a tattoo.\n\nWhen you use Tattoo Attunement on a creature you've summoned, you can gain that creature's elemental resistance as long as it is in tattoo form. If the creature has resistance to multiple elemental types, you gain only one of them. If the creature is immune to an elemental type, you gain resistance 20 to that type. For example, if the creature has resistance 10 to both fire and cold and immunity to electricity, you can gain resistance 10 to either fire or cold or resistance 20 to electricity as long as the creature is in tattoo form.",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
       "name": "Versatile Summon Monster",
@@ -37256,7 +36821,7 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Impa bardent Focus",
+      "name": "Implement Focus",
       "source": "Occult Adventures",
       "prerequisites": [
         "Occultist level 3rd"
@@ -37265,14 +36830,14 @@
         "Occult Adventures"
       ],
       "references": [
-        "Archives of a deity of magic: Impa bardent Focus"
+        "Archives of a deity of magic: Implement Focus"
       ],
       "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Impa bardent%20Focus"
+        "https://aonprd.com/FeatDisplay.aspx?ItemName=Implement%20Focus"
       ],
-      "source_id": "occult_adventures:impa bardent_focus",
-      "description": "You are more adept at spending generic focus on focus powers from your chosen school.\n\nSelect one of your impa bardent schools. When you spend generic focus to activate focus powers with one of that school's impa bardents, the focus powers cost their listed amount of mental focus.",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "source_id": "occult_adventures:implement_focus",
+      "description": "You are more adept at spending generic focus on focus powers from your chosen school.\n\nSelect one of your implement schools. When you spend generic focus to activate focus powers with one of that school's implements, the focus powers cost their listed amount of mental focus.",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
       "name": "Intense Pain",
@@ -37899,23 +37464,23 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Strong Impa bardent Link",
+      "name": "Strong Implement Link",
       "source": "Occult Adventures",
       "prerequisites": [
-        "Impa bardents class feature"
+        "Implements class feature"
       ],
       "tags": [
         "Occult Adventures"
       ],
       "references": [
-        "Archives of a deity of magic: Strong Impa bardent Link"
+        "Archives of a deity of magic: Strong Implement Link"
       ],
       "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Strong%20Impa bardent%20Link"
+        "https://aonprd.com/FeatDisplay.aspx?ItemName=Strong%20Implement%20Link"
       ],
-      "source_id": "occult_adventures:strong_impa bardent_link",
-      "description": "Your connection to a particular impa bardent allows you to draw on its power more efficiently even when it's not in your possession.\n\nWhen you are within 30 feet of your impa bardent, you don't need to attempt a concentration check to cast spells associated with that impa bardent. When you are at a greater distance, the DC for the concentration check is equal to 15 + the spell's level.",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "source_id": "occult_adventures:strong_implement_link",
+      "description": "Your connection to a particular implement allows you to draw on its power more efficiently even when it's not in your possession.\n\nWhen you are within 30 feet of your implement, you don't need to attempt a concentration check to cast spells associated with that implement. When you are at a greater distance, the DC for the concentration check is equal to 15 + the spell's level.",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
       "name": "Third Eye",
@@ -39167,26 +38732,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Deadly Troupe",
-      "source": "the inner sea region Races",
-      "prerequisites": [
-        "Perform (act) or Perform (dance) 3 ranks",
-        "human (Varisian)"
-      ],
-      "tags": [
-        "the inner sea region Races"
-      ],
-      "references": [
-        "Archives of a deity of magic: Deadly Troupe"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Deadly%20Troupe"
-      ],
-      "source_id": "inner_sea_races:deadly_troupe",
-      "description": "You combine ea bardents of dance and acting with your combat style to distract your enemies.\n\nWhen at least one ally who also has this feat is threatening a foe, you gain a +4 circumstance bonus against that foe on Bluff checks to feint, Bluff checks to create a diversion to hide, and Acrobatics checks to move through that foe's threatened squares. You also gain a +2 circumstance bonus on steal and dirty trick combat maneuver checks made against that foe.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Death Roll",
       "source": "the inner sea region Races",
       "prerequisites": [
@@ -39267,21 +38812,26 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Ea bardental Strike",
+      "name": "Elemental Strike",
       "source": "the inner sea region Races",
-      "prerequisites": [],
+      "prerequisites": [
+        "Ifrit",
+        "oread",
+        "sylph",
+        "or undine"
+      ],
       "tags": [
         "the inner sea region Races"
       ],
       "references": [
-        "Archives of a deity of magic: Ea bardental Strike"
+        "Archives of a deity of magic: Elemental Strike"
       ],
       "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Ea bardental%20Strike"
+        "https://aonprd.com/FeatDisplay.aspx?ItemName=Elemental%20Strike"
       ],
-      "source_id": "inner_sea_races:ea bardental_strike",
-      "description": "You draw upon your extraplanar heritage to imbue your weapons with ea bardental energies.\n\nAs a swift action, you can imbue your weapons with ea bardental energy. For 1 round, your weapons deal an additional 1 point of energy damage. The type of energy damage depends on your race: acid for oread, electricity for sylph, fire for ifrit, or cold for undine. For every 5 levels you possess, this bonus increases by 1, to a maximum of +5 at 20th level.",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "source_id": "inner_sea_races:elemental_strike",
+      "description": "You draw upon your extraplanar heritage to imbue your weapons with elemental energies.\n\nAs a swift action, you can imbue your weapons with elemental energy. For 1 round, your weapons deal an additional 1 point of energy damage. The type of energy damage depends on your race: acid for oread, electricity for sylph, fire for ifrit, or cold for undine. For every 5 levels you possess, this bonus increases by 1, to a maximum of +5 at 20th level.",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
       "name": "Eternal Enmity",
@@ -39366,40 +38916,26 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Flow Of Ea bardents",
-      "source": "the inner sea region Races",
-      "prerequisites": [],
-      "tags": [
-        "the inner sea region Races"
-      ],
-      "references": [
-        "Archives of a deity of magic: Flow Of Ea bardents"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Flow%20Of%20Ea bardents"
-      ],
-      "source_id": "inner_sea_races:flow_of_ea bardents",
-      "description": "You can spontaneously channel your ally's ea bardental essence, be it burning fire, freezing ice, crackling lightning, or searing acid.\n\nWhenever you're adjacent to an ifrit, oread, sylph, or undine ally who also has this feat, you can spontaneously replace or split a spell's damage when  casting it, as though the spell were affected by Ea bardental SpellAPG (without using a higher-level spell slot). The type of energy damage depends on your ally's race: acid for oread, electricity for sylph, fire for ifrit, or cold for undine.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Friendly Rivalry",
+      "name": "Flow of Elements",
       "source": "the inner sea region Races",
       "prerequisites": [
-        "Human (Taldan)"
+        "Ability to cast spells; ifrit",
+        "oread",
+        "sylph",
+        "or undine"
       ],
       "tags": [
         "the inner sea region Races"
       ],
       "references": [
-        "Archives of a deity of magic: Friendly Rivalry"
+        "Archives of a deity of magic: Flow of Elements"
       ],
       "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Friendly%20Rivalry"
+        "https://aonprd.com/FeatDisplay.aspx?ItemName=Flow%20of%20Elements"
       ],
-      "source_id": "inner_sea_races:friendly_rivalry",
-      "description": "You fight harder when you're trying to score a quick kill in single combat before your ally does.\n\nIf you're the only one threatening a foe and an ally within 30 feet who also has this feat is the only creature threatening a different foe, you gain a +2 morale bonus on your melee attack rolls against the foe that only you are threatening. You gain the bonus only if neither of the qualifying opponents is flat-footed, helpless or otherwise unable to act. You must be able to see your ally to gain the benefit of this feat. If another ally who is not threatening your chosen foe makes any sort of attack against that foe (such as a ranged attack or a spell), you lose this feat's benefit for 1 round.",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "source_id": "inner_sea_races:flow_of_elements",
+      "description": "You can spontaneously channel your ally's elemental essence, be it burning fire, freezing ice, crackling lightning, or searing acid.\n\nWhenever you're adjacent to an ifrit, oread, sylph, or undine ally who also has this feat, you can spontaneously replace or split a spell's damage when casting it, as though the spell were affected by Elemental SpellAPG (without using a higher-level spell slot). The type of energy damage depends on your ally's race: acid for oread, electricity for sylph, fire for ifrit, or cold for undine.",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
       "name": "Giantslaying Team",
@@ -39467,26 +39003,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Juju Way",
-      "source": "the inner sea region Races",
-      "prerequisites": [
-        "Knowledge (religion) 3 ranks",
-        "human (Mwangi)"
-      ],
-      "tags": [
-        "the inner sea region Races"
-      ],
-      "references": [
-        "Archives of a deity of magic: Juju Way"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Juju%20Way"
-      ],
-      "source_id": "inner_sea_races:juju_way",
-      "description": "You can use spirits of the unseen world to carry your spells for you.\n\nYou can cast spells with the range of \"touch\" at a range of 20 feet if the recipient is a willing Mwangi ally who also has this feat.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Kinslayer",
       "source": "the inner sea region Races",
       "prerequisites": [
@@ -39524,25 +39040,6 @@
       ],
       "source_id": "inner_sea_races:living_fortress",
       "description": "Stubborn, tenacious, and proud, you're all but immovable when you have kin to back you up.\n\nWhenever you fight defensively and you're adjacent to an ally who also has this feat, your racial bonus on saving throws against spells and spell-like abilities increases by 2.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Loyal To The Death",
-      "source": "the inner sea region Races",
-      "prerequisites": [
-        "Human (Tian)"
-      ],
-      "tags": [
-        "the inner sea region Races"
-      ],
-      "references": [
-        "Archives of a deity of magic: Loyal To The Death"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Loyal%20To%20The%20Death"
-      ],
-      "source_id": "inner_sea_races:loyal_to_the_death",
-      "description": "You're so loyal to your family or friends that you're willing to suffer for them.\n\nWhenever an opponent makes a melee or ranged attack against one of your allies who is adjacent to you and who also has this feat, you can spend an immediate action to shield the ally with your own body. You become the target of the attack, and the opponent gains a +4 bonus on her attack roll. For the purpose of determining distance, cover and concealment, you count as being in your ally's square when the attack is resolved. If the attack misses you due to concealment, blink, or a similar effect, it instead targets your ally as if you had not used this feat's ability.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -39627,26 +39124,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Quah Bond",
-      "source": "the inner sea region Races",
-      "prerequisites": [
-        "Totem Spirit (The Inner Sea World Guide 289)",
-        "human (Shoanti)"
-      ],
-      "tags": [
-        "the inner sea region Races"
-      ],
-      "references": [
-        "Archives of a deity of magic: Quah Bond"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Quah%20Bond"
-      ],
-      "source_id": "inner_sea_races:quah_bond",
-      "description": "Your bond with your totem spirit increases around others of the same quah.\n\nIf at least one Shoanti ally from the same quah who also has this feat is within 30 feet, double your benefits from the Totem Spirit feat.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Relentless Cheer",
       "source": "the inner sea region Races",
       "prerequisites": [
@@ -39686,44 +39163,6 @@
       ],
       "source_id": "inner_sea_races:returning_throw",
       "description": "You have turned your deadly childhood games into a tactical advantage.\n\nWhenever an ally who also has this feat makes an attack with a thrown weapon and misses the target by 4 or less, you can catch the weapon as an immediate action. Both you and your ally must be within 30 feet of the target, and you must be able to trace a line from any part of your space to any part of your ally's space so that the line passes through the target's space. As part of the action to catch the weapon, you can throw it at the target of the original attack. If your target has never seen you perform this maneuver before, it is denied its Dexterity bonus to AC against your attack. You must have at least one hand free to use this feat. You must be aware of the attack and not flat-footed.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Ruthless Opportunist",
-      "source": "the inner sea region Races",
-      "prerequisites": [
-        "Human (Chelaxian)"
-      ],
-      "tags": [
-        "the inner sea region Races"
-      ],
-      "references": [
-        "Archives of a deity of magic: Ruthless Opportunist"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Ruthless%20Opportunist"
-      ],
-      "source_id": "inner_sea_races:ruthless_opportunist",
-      "description": "Your timing and fierceness take the enemy by surprise.\n\nWhen a Chelish ally with this feat hits with an attack of opportunity against an enemy both you and that ally are threatening, you gain a +2 circumstance bonus on your melee attack rolls against that enemy for 1 round.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Scion Of The Lost Empire",
-      "source": "the inner sea region Races",
-      "prerequisites": [
-        "Human (Chelaxian or Taldan)"
-      ],
-      "tags": [
-        "the inner sea region Races"
-      ],
-      "references": [
-        "Archives of a deity of magic: Scion Of The Lost Empire"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Scion%20Of%20The%20Lost%20Empire"
-      ],
-      "source_id": "inner_sea_races:scion_of_the_lost_empire",
-      "description": "You can feel the ancient power in your blood whenever you're near others like yourself.\n\nWhile you're adjacent to an ally who also has this feat, you gain a +2 competence bonus on a single attack roll, saving throw, ability check, or skill check as an immediate action. You must choose to use this ability before making the roll.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -39830,29 +39269,6 @@
       ],
       "source_id": "inner_sea_races:suppressive_fire",
       "description": "Your well-timed ranged attacks protect your allies as they advance on the battlefield.\n\nWhenever you damage a target using a ranged attack, that target can't make attacks of opportunity for 1 round against your allies who also have this feat when they move out of one of the target's threatened squares.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Triangulate",
-      "source": "the inner sea region Races",
-      "prerequisites": [
-        "Blind-Fight",
-        "Greater Blind-Fight",
-        "Improved Blind-Fight",
-        "Perception 15 ranks",
-        "human (Kellid)"
-      ],
-      "tags": [
-        "the inner sea region Races"
-      ],
-      "references": [
-        "Archives of a deity of magic: Triangulate"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Triangulate"
-      ],
-      "source_id": "inner_sea_races:triangulate",
-      "description": "Your distrust of magic has forced you to develop tactics to fight witches, fey, and other supernatural foes. No matter how clever they think they are, they can't hide.\n\nWhenever both you and an ally who also has this feat are within 30 feet of an invisible foe of whose presence you're aware, you automatically pinpoint the foe's location. Whenever both you and an ally who has this feat are within 30 feet of a creature and you miss that creature because of its concealment, you can reroll your miss chance percentile roll.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -42047,23 +41463,6 @@
       ],
       "source_id": "agents_of_evil:associate",
       "description": "You are on good terms with a large organization, though not necessarily an official member.\n\nSelect a single organization with which you have a positive relationship. You gain a +4 circumstance bonus on Diplomacy checks to influence members of that group or when making gather information checks about the organization. In any setta bardent that is the size of a small town or larger, you can spend 1d4 hours to attempt to track down a representative of your organization to gain a minor resource or service for free (such as information), a place to stay, or transportation. If you succeed at a Diplomacy check (DC = 20 + the gp cost of the service requested [minimum 1 gp]), you successfully call in a favor and gain that service for free; otherwise, you must pay the normal fee. You can attempt this check once per week.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "an explorers' guild Ally",
-      "source": "Agents Of Evil",
-      "prerequisites": [],
-      "tags": [
-        "Agents Of Evil"
-      ],
-      "references": [
-        "Archives of a deity of magic: an explorers' guild Ally"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Pathfinder%20Society%20Ally"
-      ],
-      "source_id": "agents_of_evil:pathfinder_society_ally",
-      "description": "The an explorers' guild grants you access to its archives in thanks for services previously rendered.\n\nThe an explorers' guild's vast archives are available for you to exploit. In any setta bardent that is the size of a small town or larger, you can spend 1d4 hours researching notes from available Pathfinders to gain a +4 circumstance bonus on a single Knowledge check.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -46249,23 +45648,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "an ancient desert kingdomtologist",
-      "source": "an ancient desert kingdom Land Of Pharaohs",
-      "prerequisites": [],
-      "tags": [
-        "an ancient desert kingdom Land Of Pharaohs"
-      ],
-      "references": [
-        "Archives of a deity of magic: an ancient desert kingdomtologist"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=an ancient desert kingdomtologist"
-      ],
-      "source_id": "an ancient desert kingdom_land_of_pharaohs:an ancient desert kingdomtologist",
-      "description": "You are well schooled in the traditions, culture, and history of an ancient desert kingdom, especially the broad expanse of its long history and ancient relics.\n\nWhen in an ancient desert kingdom, you gain a +1 circumstance bonus to Bluff, Diplomacy, Disguise, Gather Information, Intimidate, and Perform checks. You gain a +5 bonus when using Appraise, Decipher Script, Knowledge (all skills), and Search to learn about a person, place, or item of ancient an ancient desert kingdom.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Religious Pilgrim",
       "source": "an ancient desert kingdom Land Of Pharaohs",
       "prerequisites": [
@@ -47498,21 +46880,24 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Impa bardent Mastery",
+      "name": "Implement Mastery",
       "source": "Magic Tactics Toolbox",
-      "prerequisites": [],
+      "prerequisites": [
+        "Implements class feature",
+        "mental focus class feature"
+      ],
       "tags": [
         "Magic Tactics Toolbox"
       ],
       "references": [
-        "Archives of a deity of magic: Impa bardent Mastery"
+        "Archives of a deity of magic: Implement Mastery"
       ],
       "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Impa bardent%20Mastery"
+        "https://aonprd.com/FeatDisplay.aspx?ItemName=Implement%20Mastery"
       ],
-      "source_id": "magic_tactics_toolbox:impa bardent_mastery",
-      "description": "You can use your impa bardents to unlock secrets of mastering relics and other items of power.\n\nFor the purposes of using item mastery feats, you treat your impa bardents as magic items with all spells that you know from each impa bardent's associated impa bardent school functioning as their effective construction requirements. When using an impa bardent to activate an item mastery feat, you can spend a number of points of mental focus equal to half of the feat's base Fortitude save bonus prerequisite to activate the feat without counting the use against the item mastery feat's total number of daily uses.",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "source_id": "magic_tactics_toolbox:implement_mastery",
+      "description": "You can use your implements to unlock secrets of mastering relics and other items of power.\n\nFor the purposes of using item mastery feats, you treat your implements as magic items with all spells that you know from each implement's associated implement school functioning as their effective construction requirements. When using an implement to activate an item mastery feat, you can spend a number of points of mental focus equal to half of the feat's base Fortitude save bonus prerequisite to activate the feat without counting the use against the item mastery feat's total number of daily uses.",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
       "name": "Racial Item Mastery",
@@ -47999,91 +47384,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Hellknight Aegis",
-      "source": "Path Of The Hellknight",
-      "prerequisites": [
-        "Heavy Armor Proficiency",
-        "base attack bonus +5",
-        "must swear allegiance to a single Hellknight order"
-      ],
-      "tags": [
-        "Path Of The Hellknight"
-      ],
-      "references": [
-        "Archives of a deity of magic: Hellknight Aegis"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Hellknight%20Aegis"
-      ],
-      "source_id": "path_of_the_hellknight:hellknight_aegis",
-      "description": "Your Hellknight armor guards you against many threats.\n\nOnce per day as a full-round action, you can give your Hellknight armor the broken condition. Upon doing so, you are affected by one of the following spells (your choice), using your character level as your caster level: break enchantment, neutralize poison, remove disease, or remove paralysis. Once you have used this benefit, your Hellknight armor must be repaired as normal to restore its full bonus to your Armor Class and return its armor check penalty to normal.  You can use this ability even if paralyzed or otherwise restrained, but not if you are unconscious. For the purposes of this ability, \"Hellknight armor\" means any armor with the word \"Hellknight\" in its name. You cannot use this ability if your armor is already broken.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Hellknight Obedience",
-      "source": "Path Of The Hellknight",
-      "prerequisites": [
-        "Knowledge (planes) 3 ranks",
-        "must swear allegiance to a single Hellknight order"
-      ],
-      "tags": [
-        "Path Of The Hellknight"
-      ],
-      "references": [
-        "Archives of a deity of magic: Hellknight Obedience"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Hellknight%20Obedience"
-      ],
-      "source_id": "path_of_the_hellknight:hellknight_obedience",
-      "description": "Performing daily Hellknight reckonings grants you special boons.\n\nUpon taking this feat, you gain proficiency in all of your Hellknight order's favored weapons. Additionally, by meditating and inflicting strenuous reckonings upon yourself, you unlock the power behind your order's doctrine. Each Hellknight order has its own unique reckoning-a trial of obedience and pain (described in general on page 9 and in the Reckoning entries of the Hellknight order stat blocks throughout this book). When coupled with the necessary reflection and meditation, this reckoning takes 1 hour per day to perform. Once you have performed your order's reckoning, you gain the benefit of a special ability as indicated in the Reckoning entry for the Hellknight order to which you've sworn allegiance.  If you have at least 12 Hit Dice, you also gain the first boon granted by the Hellknight order. If you have at least 16 Hit Dice, you also gain the Hellknight order's second boon. If you have 20 Hit Dice or more, you also gain the Hellknight order's third boon. Unless a specific duration or number of uses per day is listed in a boon's description, the boon's effects are constant.  If you ever fail to perform a daily reckoning, you lose all access to the benefits and boons granted by this feat until you next perform the reckoning.  You can take this feat only if you are associated with a Hellknight order, whether you're in training to become a Hellknight, already a member, or otherwise aligned with the order-the specifics are left to you and the GM to determine. Once per year, you can change your Hellknight allegiance, but doing so requires the approval of the Hellknight order you wish to join. If you are ever cast out of the Hellknight order to which you've sworn allegiance, you lose the benefits of this feat until you restore yourself in the Hellknights' esteem. The details of this are left to the GM's discretion.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Hellknight Obsession",
-      "source": "Path Of The Hellknight",
-      "prerequisites": [
-        "Hellknight Obedience",
-        "Knowledge (planes) 3 ranks",
-        "must swear allegiance to a single Hellknight order"
-      ],
-      "tags": [
-        "Path Of The Hellknight"
-      ],
-      "references": [
-        "Archives of a deity of magic: Hellknight Obsession"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Hellknight%20Obsession"
-      ],
-      "source_id": "path_of_the_hellknight:hellknight_obsession",
-      "description": "You equate pain with discipline and can inflict damage upon yourself to unlock greater power.\n\nDuring your hour-long Hellknight reckoning, if you choose to deal lethal damage to yourself (see page 9), you reach a state of fantastic focus. Once during the next 24 hours, you can draw upon this focus to gain the benefits of any one of the following effects. To activate the ability, you must deal 1 point of lethal damage to yourself as a swift action (unless otherwise noted). Members of the Order of the Nail often install a sharp barb within their armor that deals this damage when the wearer is subject to a critical hit (see page 28); if you're struck by a critical hit while wearing such armor, using this ability doesn't require a swift action.  Fervor: The DCs to resist the effects of the boons granted by your Hellknight Obedience feat increase by 1 for 1 hour.  Indomitability: You can reroll a single failed Will saving throw and must take the result of the second roll, even if it is worse. A swift action isn't required to use this effect, but you must still take 1 point of damage.  Menacing: You gain a +3 bonus on Intimidate and Sense Motive skill checks for 1 hour.  Mercilessness: The critical threat range of your order's favored weapon doubles for 1 hour (even if it is not a piercing or slashing weapon). This does not stack with any other effects that increase a weapon's critical threat range.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Signifer Armor Training",
-      "source": "Path Of The Hellknight",
-      "prerequisites": [
-        "Arcane Armor Mastery",
-        "Arcane Armor Training",
-        "Heavy Armor Proficiency",
-        "caster level 7th",
-        "must swear allegiance to a single Hellknight order"
-      ],
-      "tags": [
-        "Path Of The Hellknight"
-      ],
-      "references": [
-        "Archives of a deity of magic: Signifer Armor Training"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Signifer%20Armor%20Training"
-      ],
-      "source_id": "path_of_the_hellknight:signifer_armor_training",
-      "description": "You have learned the art of spellcasting while wearing signifer armor.\n\nAs a swift action, you can reduce the arcane spell failure chance due to the armor you are wearing by 30% for any spells you cast this round. This benefit applies only if you are wearing armor with \"Hellknight\" in its name. This bonus replaces, and does not stack with, the bonuses granted by Arcane Armor Mastery, Arcane Armor Training, and similar feats and effects.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Sense Loyalties",
       "source": "Spymaster's Handbook",
       "prerequisites": [
@@ -48269,8 +47569,8 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Supernatural%20Spy"
       ],
       "source_id": "spymaster_s_handbook:supernatural_spy",
-      "description": "Your familiarity with magic drives you to discover a great supernatural secret. You might work with an eldritch organization, which could be a school of magic such as the Arcana barbarianum or part of a government with strong ties to magic such as that of Irrisen, or you might attempt to keep your magical inquiries hidden from your employers.\n\nTreat your Intelligence, Wisdom, or Charisma score as 2 higher for the purpose of calculating the effects and save DCs of one of the following class features: alchemist discoveries, arcane discoveries, arcanist exploits, or magus arcana. You select both the ability score and class feature to be affected when you select this feat, and the choice cannot be changed. This increases the potency of the abilities but does not grant access to additional abilities.",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "description": "Your familiarity with magic drives you to discover a great supernatural secret. You might work with an eldritch organization, which could be a school of magic such as the Arcana barbarianum or part of a government with strong ties to magic such as that of a winter-locked realm, or you might attempt to keep your magical inquiries hidden from your employers.\n\nTreat your Intelligence, Wisdom, or Charisma score as 2 higher for the purpose of calculating the effects and save DCs of one of the following class features: alchemist discoveries, arcane discoveries, arcanist exploits, or magus arcana. You select both the ability score and class feature to be affected when you select this feat, and the choice cannot be changed. This increases the potency of the abilities but does not grant access to additional abilities.",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
       "name": "Wily Warrior",
@@ -48506,8 +47806,8 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Wyvaran%20Spellcasting"
       ],
       "source_id": "legacy_of_dragons:wyvaran_spellcasting",
-      "description": "Your unique physiology makes you particularly adept at wielding draconic magic.\n\nSelect one spell you can cast that you gained through your draconic bloodline, the Scalykind domain (Pathfinder Campaign Setting: The the inner sea region World Guide 216), or the Dragon subdomain (Pathfinder Campaign Setting: the inner sea region Gods 224). It must be at least 1 spell level lower than the highest-level spell you can cast. You can cast this spell as a spell-like ability twice per day.",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "description": "Your unique physiology makes you particularly adept at wielding draconic magic.\n\nSelect one spell you can cast that you gained through your draconic bloodline, the Scalykind domain (Pathfinder Campaign Setting: the inner sea region World Guide 216), or the Dragon subdomain (Pathfinder Campaign Setting: the inner sea region Gods 224). It must be at least 1 spell level lower than the highest-level spell you can cast. You can cast this spell as a spell-like ability twice per day.",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
       "name": "Linnorm Style",
@@ -50094,26 +49394,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Rahadoumi Exorcist",
-      "source": "Haunted Heroes Handbook",
-      "prerequisites": [
-        "Iron Will",
-        "can’t have a patron deity"
-      ],
-      "tags": [
-        "Haunted Heroes Handbook"
-      ],
-      "references": [
-        "Archives of a deity of magic: Rahadoumi Exorcist"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Rahadoumi%20Exorcist"
-      ],
-      "source_id": "haunted_heroes_handbook:rahadoumi_exorcist",
-      "description": "You can stagger incorporeal and possessed creatures through sheer force of will.\n\nAs a full-round action, you can recite the Laws of Man with such force and dedication that you stagger those creatures that prey upon the bodies, minds, and souls of mortals. When you use this ability, you must target one creature within 30 feet to which you have line of sight. A successful Will save (DC = 10 + 1/2 your Hit Dice + your Charisma modifier) negates the effects of this feat.  An incorporeal undead creature that fails its save against this effect is staggered. If you target a possessed creature, the possessing entity must succeed at a Will save to resist being staggered for 1 round. If it is staggered, the creature it possesses can immediately attempt a new saving throw to end the possession effect (possession effects that don't allow saving throws to resist them cannot be ended by Rahadoumi Exorcist, but the feat can still stagger a possessed creature). You can use this ability a number of times per day equal to 3 + your Charisma modifier.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Banish Possessor",
       "source": "Haunted Heroes Handbook",
       "prerequisites": [],
@@ -50505,8 +49785,8 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Shingle%20Runner"
       ],
       "source_id": "curse_of_the_crimson_throne_chapter_appendix:shingle_runner",
-      "description": "Many of those who dwell among the rooftops that span much of Korvosa become skillful at making bounding leaps and clambering up steep surfaces, and learn how to land more safely when they fall.\n\nYou gain a +2 bonus on Acrobatics and Climb checks, and can take 10 on Climb checks even when distracted. If you have 10 or more ranks in one of these skills, the bonus increases to +4 for that skill. If you fall, you automatically reduce the damage taken by the fall by 1d6, as if you'd fallen 10 feet less. This reduction in damage stacks with the reduction from a successful Acrobatics check to soften a fall.",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "description": "Many of those who dwell among the rooftops that span much of a port city become skillful at making bounding leaps and clambering up steep surfaces, and learn how to land more safely when they fall.\n\nYou gain a +2 bonus on Acrobatics and Climb checks, and can take 10 on Climb checks even when distracted. If you have 10 or more ranks in one of these skills, the bonus increases to +4 for that skill. If you fall, you automatically reduce the damage taken by the fall by 1d6, as if you'd fallen 10 feet less. This reduction in damage stacks with the reduction from a successful Acrobatics check to soften a fall.",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
       "name": "Graceful Athlete",
@@ -51464,23 +50744,6 @@
       ],
       "source_id": "paths_of_the_righteous:strike_true",
       "description": "Rather than attempting a series of wild blows, you line up a perfect attack.\n\nYou can focus yourself as a move action. When focused, you gain a +4 bonus on your next melee attack roll before the end of your turn.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "a god of the hunt's Blessing",
-      "source": "Paths Of The Righteous",
-      "prerequisites": [],
-      "tags": [
-        "Paths Of The Righteous"
-      ],
-      "references": [
-        "Archives of a deity of magic: a god of the hunt's Blessing"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=a god of the hunt%27s%20Blessing"
-      ],
-      "source_id": "paths_of_the_righteous:a god of the hunt_s_blessing",
-      "description": "Old Deadeye's favor grants you prowess with a bow that far exceeds your own physical capabilities.\n\nYou can use your Wisdom modifier instead of your Dexterity modifier on ranged attack rolls when using a bow.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -52503,38 +51766,43 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Ea bardental Knowledge",
+      "name": "Elemental Knowledge",
       "source": "Psychic Anthology",
-      "prerequisites": [],
+      "prerequisites": [
+        "Expanded element class feature"
+      ],
       "tags": [
         "Psychic Anthology"
       ],
       "references": [
-        "Archives of a deity of magic: Ea bardental Knowledge"
+        "Archives of a deity of magic: Elemental Knowledge"
       ],
       "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Ea bardental%20Knowledge"
+        "https://aonprd.com/FeatDisplay.aspx?ItemName=Elemental%20Knowledge"
       ],
-      "source_id": "psychic_anthology:ea bardental_knowledge",
-      "description": "Your breadth of knowledge widens as you explore your connection to the ea bardents.\n\nWhen you chose a different ea bardent from your primary ea bardent with the expanded ea bardent class feature at 7th level, you gain that ea bardent's associated skills as class skills. In addition, you gain a +1 bonus on all your ea bardent's associated skills. If you chose a third ea bardent with expanded ea bardent at 15th level, you receive these benefits for that ea bardent's associated skills as well.",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "source_id": "psychic_anthology:elemental_knowledge",
+      "description": "Your breadth of knowledge widens as you explore your connection to the elements.\n\nWhen you chose a different element from your primary element with the expanded element class feature at 7th level, you gain that element's associated skills as class skills. In addition, you gain a +1 bonus on all your element's associated skills. If you chose a third element with expanded element at 15th level, you receive these benefits for that element's associated skills as well.",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
-      "name": "Ea bardental Overload",
+      "name": "Elemental Overload",
       "source": "Psychic Anthology",
-      "prerequisites": [],
+      "prerequisites": [
+        "Elemental overflow class feature",
+        "kineticist level 15th"
+      ],
       "tags": [
         "Psychic Anthology"
       ],
       "references": [
-        "Archives of a deity of magic: Ea bardental Overload"
+        "Archives of a deity of magic: Elemental Overload"
       ],
       "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Ea bardental%20Overload"
+        "https://aonprd.com/FeatDisplay.aspx?ItemName=Elemental%20Overload"
       ],
-      "source_id": "psychic_anthology:ea bardental_overload",
-      "description": "As you become suffused with power, you become more and more like an ea bardental.\n\nWhenever you have accepted at least 4 points of burn, the chance to ignore the effects of a critical hit or sneak attack increases by an additional 10%. This chance increases by an additional 5% for every 2 points of burn you accept after that. This chance can't exceed 100%.",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "source_id": "psychic_anthology:elemental_overload",
+      "description": "As you become suffused with power, you become more and more like an elemental.\n\nWhenever you have accepted at least 4 points of burn, the chance to ignore the effects of a critical hit or sneak attack increases by an additional 10%. This chance increases by an additional 5% for every 2 points of burn you accept after that. This chance can't exceed 100%. Normal: Whenever you have accepted at least 3 points of burn, your chance to ignore the effects of a critical hit or sneak attack equals 5% × your current number of points of burn.",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
       "name": "Kinetic Crafting",
@@ -54151,257 +53419,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Aldori Artistry",
-      "source": "Adventurer's Guide",
-      "prerequisites": [
-        "Exotic Weapon Proficiency (Aldori dueling sword)",
-        "Weapon Finesse",
-        "base attack bonus +2"
-      ],
-      "tags": [
-        "Adventurer's Guide"
-      ],
-      "references": [
-        "Archives of a deity of magic: Aldori Artistry"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Aldori%20Artistry"
-      ],
-      "source_id": "adventurer_s_guide:aldori_artistry",
-      "description": "You can do more with your blade than slash and stab.\n\nChoose one of the following combat maneuvers: disarm, repositionAPG, stealAPG, sunder, or trip. You gain a +2 bonus when performing the selected maneuver while wielding an Aldori dueling sword. This bonus does not stack with the bonus provided by a combat maneuver feat with \"improved\" in its name (such as Improved Trip).",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Aldori Dueling Disciple",
-      "source": "Adventurer's Guide",
-      "prerequisites": [
-        "Exotic Weapon Proficiency (Aldori dueling sword)",
-        "Weapon Finesse",
-        "Weapon Focus (Aldori dueling sword)"
-      ],
-      "tags": [
-        "Adventurer's Guide"
-      ],
-      "references": [
-        "Archives of a deity of magic: Aldori Dueling Disciple"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Aldori%20Dueling%20Disciple"
-      ],
-      "source_id": "adventurer_s_guide:aldori_dueling_disciple",
-      "description": "Your prowess in Aldori swordplay grants you bravado.\n\nYou gain a +2 morale bonus on Intimidate checks to demoralize opponents, and the DC of any attempt to demoralize you increases by 2. When you're participating in a duel, these bonuses increase to +4.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Aldori Dueling Mastery",
-      "source": "Adventurer's Guide",
-      "prerequisites": [
-        "Exotic Weapon Proficiency (Aldori dueling sword)",
-        "Quick Draw",
-        "Weapon Finesse",
-        "Weapon Focus (Aldori dueling sword)"
-      ],
-      "tags": [
-        "Adventurer's Guide"
-      ],
-      "references": [
-        "Archives of a deity of magic: Aldori Dueling Mastery"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Aldori%20Dueling%20Mastery"
-      ],
-      "source_id": "adventurer_s_guide:aldori_dueling_mastery",
-      "description": "You have mastered the impenetrable Aldori fighting style.\n\nYou gain a +2 bonus on initiative checks as long as you start combat with an Aldori dueling sword in your hand. As long as you wield only a single Aldori dueling sword in one hand (not using a shield, an off-hand weapon, armor spikes, unarmed strikes, or natural weapons), you gain a +2 shield bonus to your AC. If you wield the sword in two hands, this bonus drops to a +1 shield bonus to AC. Although the dueling sword deals slashing damage, you treat it as if it were also a piercing weapon when determining the effects of weapons used by a duelist or swashbuckler.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Aldori Style",
-      "source": "Adventurer's Guide",
-      "prerequisites": [
-        "Alertness",
-        "Exotic Weapon Proficiency (Aldori dueling sword)",
-        "Weapon Finesse",
-        "Weapon Focus (Aldori dueling sword)"
-      ],
-      "tags": [
-        "Adventurer's Guide"
-      ],
-      "references": [
-        "Archives of a deity of magic: Aldori Style"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Aldori%20Style"
-      ],
-      "source_id": "adventurer_s_guide:aldori_style",
-      "description": "You have learned the classic Aldori dueling stance.\n\nWhile using Aldori Style and wielding only a single Aldori dueling sword in one hand (not using a shield, an off-hand weapon, armor spikes, unarmed strikes, or natural weapons), when you fight defensively or use Combat Expertise, you gain a +2 bonus on weapon damage rolls.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Aldori Style Aegis",
-      "source": "Adventurer's Guide",
-      "prerequisites": [
-        "Aldori Style",
-        "Alertness",
-        "Combat Reflexes",
-        "Exotic Weapon Proficiency (Aldori dueling sword)",
-        "Weapon Finesse",
-        "Weapon Focus (Aldori dueling sword)"
-      ],
-      "tags": [
-        "Adventurer's Guide"
-      ],
-      "references": [
-        "Archives of a deity of magic: Aldori Style Aegis"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Aldori%20Style%20Aegis"
-      ],
-      "source_id": "adventurer_s_guide:aldori_style_aegis",
-      "description": "Baron Aldori's dueling style is at its strongest when employed in one-on-one duels. Adjusting to a reverse grip and keeping your blade in motion, you parry your rival's strikes with ease.\n\nWhile using Aldori Style, at the beginning of your turn, you can designate a focused target as a swift action. This designation lasts until the beginning of your next turn, and you take a -2 penalty to your AC against all other creatures' attacks for that duration. As an immediate action while using Combat Expertise or fighting defensively, you can attempt to parry the focused target's attack. This functions as the swashbuckler's opportune parry and riposte deed (Pathfinder RPG Advanced Class Guide 57), except that it does not cost panache and you cannot riposte.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Aldori Style Conquest",
-      "source": "Adventurer's Guide",
-      "prerequisites": [
-        "Aldori Style",
-        "Aldori Style Aegis",
-        "Alertness",
-        "Combat Reflexes",
-        "Exotic Weapon Proficiency (Aldori dueling sword)",
-        "Weapon Finesse",
-        "Weapon Focus (Aldori dueling sword)"
-      ],
-      "tags": [
-        "Adventurer's Guide"
-      ],
-      "references": [
-        "Archives of a deity of magic: Aldori Style Conquest"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Aldori%20Style%20Conquest"
-      ],
-      "source_id": "adventurer_s_guide:aldori_style_conquest",
-      "description": "Defense is now second nature to you, and your blade punishes those who try to attack and fail.\n\nWhen you attempt to parry an attack using Aldori Style Aegis, you do not take any penalties on the attack roll incurred from using Combat Expertise or fighting defensively.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Duelist Of The Roaring Falls",
-      "source": "Adventurer's Guide",
-      "prerequisites": [
-        "Aldori Dueling Disciple",
-        "Exotic Weapon Proficiency (Aldori dueling sword)",
-        "Weapon Finesse",
-        "Weapon Focus (Aldori dueling sword)",
-        "base attack bonus +5"
-      ],
-      "tags": [
-        "Adventurer's Guide"
-      ],
-      "references": [
-        "Archives of a deity of magic: Duelist Of The Roaring Falls"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Duelist%20Of%20The%20Roaring%20Falls"
-      ],
-      "source_id": "adventurer_s_guide:duelist_of_the_roaring_falls",
-      "description": "You have embraced the Roaring Falls method of Aldori swordplay, known for its elegant, sweeping strikes.\n\nWhen you use an Aldori dueling sword to deal damage to a shaken, frightened, or panicked foe, you can add your Dexterity bonus to damage rolls instead of your Strength bonus. If you can already add your Dexterity bonus to damage rolls, you instead gain a +1 competence bonus on damage rolls made with an Aldori dueling sword. When you attempt a dueling parry during a duel, the penalty on your attack roll to parry is reduced from -5 to -3. To gain these benefits, you must be wielding only an Aldori dueling sword (not using a shield, an off-hand weapon, armor spikes, unarmed strikes, or natural weapons).",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Duelist Of The Shrouded Lake",
-      "source": "Adventurer's Guide",
-      "prerequisites": [
-        "Aldori Dueling Disciple",
-        "Exotic Weapon Proficiency (Aldori dueling sword)",
-        "Weapon Finesse",
-        "Weapon Focus (Aldori dueling sword)",
-        "base attack bonus +5"
-      ],
-      "tags": [
-        "Adventurer's Guide"
-      ],
-      "references": [
-        "Archives of a deity of magic: Duelist Of The Shrouded Lake"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Duelist%20Of%20The%20Shrouded%20Lake"
-      ],
-      "source_id": "adventurer_s_guide:duelist_of_the_shrouded_lake",
-      "description": "You have embraced the Shrouded Lake style of Aldori swordplay, known for its circuitous footwork.\n\nWhen attempting to bull rush or repositionAPG a foe, you gain a +1 insight bonus on the combat maneuver check and a +4 dodge bonus to your AC against attacks of opportunity you provoke. You also gain a +1 insight bonus to your CMD against bull rush and reposition attempts. When you attempt a dueling dodge during a duel, your bonus to AC increases to +6. To gain these benefits, you must be wielding only an Aldori dueling sword (not using a shield, an off-hand weapon, armor spikes, unarmed strikes, or natural weapons).",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Falling Water Gambit",
-      "source": "Adventurer's Guide",
-      "prerequisites": [
-        "Aldori Dueling Disciple",
-        "Duelist of the Roaring Falls",
-        "Duelist of the Shrouded Lake",
-        "Exotic Weapon Proficiency (Aldori dueling sword)",
-        "Weapon Finesse",
-        "Weapon Focus (Aldori dueling sword)",
-        "base attack bonus +8"
-      ],
-      "tags": [
-        "Adventurer's Guide"
-      ],
-      "references": [
-        "Archives of a deity of magic: Falling Water Gambit"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Falling%20Water%20Gambit"
-      ],
-      "source_id": "adventurer_s_guide:falling_water_gambit",
-      "description": "You have integrated both the Roaring Falls and Shrouded Lake techniques of Aldori swordplay into a seamless union.\n\nWhen attacking a creature denied its Dexterity bonus to AC because of your successful feint, you increase the threat range of your Aldori dueling sword by 1 (typically to 18-20/x2), and gain a +2 bonus on attack rolls to confirm critical hits. After you make a dueling dodge or succeed at a dueling parry during a duel, you can make an attack of opportunity against the foe who attacked you if that foe is shaken, frightened, or panicked. To gain these benefits, you must be wielding only an Aldori dueling sword (not using a shield, an off-hand weapon, armor spikes, unarmed strikes, or natural weapons).",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Garen's Discipline",
-      "source": "Adventurer's Guide",
-      "prerequisites": [
-        "Alertness",
-        "Exotic Weapon Proficiency (Aldori dueling sword)",
-        "Weapon Focus (Aldori dueling sword)",
-        "base attack bonus +4"
-      ],
-      "tags": [
-        "Adventurer's Guide"
-      ],
-      "references": [
-        "Archives of a deity of magic: Garen's Discipline"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Garen%27s%20Discipline"
-      ],
-      "source_id": "adventurer_s_guide:garen_s_discipline",
-      "description": "You've learned to defend yourself against spell and storm with dazzling flourishes of your weapon.\n\nWhenever you use Combat Expertise, fight defensively, or take the total defense action, choose a type of saving throw. (You can choose a different type each time you take such an action.) Once per round before attempting a saving throw using the selected save, you gain a +2 bonus on that save. If you have a base attack bonus of +11 or higher, this bonus increases to +3. If you have a base attack bonus of +16 or higher, the bonus instead increases to +4.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Redistributed Might",
-      "source": "Adventurer's Guide",
-      "prerequisites": [
-        "Con 13 or Wis 13",
-        "Enhanced Morale",
-        "Exotic Weapon Proficiency (Aldori dueling sword)",
-        "Iron Will",
-        "base attack bonus +4"
-      ],
-      "tags": [
-        "Adventurer's Guide"
-      ],
-      "references": [
-        "Archives of a deity of magic: Redistributed Might"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Redistributed%20Might"
-      ],
-      "source_id": "adventurer_s_guide:redistributed_might",
-      "description": "You've gained enough control over your body to translate strength into swiftness.\n\nWhenever an effect would grant you an enhancement or morale bonus to your Strength score (such as via bull's strength or a skald's inspired rageACG performance), you can instead apply that bonus to your Dexterity score. You make this choice when you first gain the bonus. The bonus type does not change.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Sirian's Masterstroke",
       "source": "Adventurer's Guide",
       "prerequisites": [],
@@ -54415,8 +53432,8 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Sirian%27s%20Masterstroke"
       ],
       "source_id": "adventurer_s_guide:sirian_s_masterstroke",
-      "description": "When bypassing a foe's defenses while feinting, you can deal devastating damage.\n\nOnce per round when you hit a foe you have successfully feinted against via a melee attack using an Aldori dueling sword, you deal an extra 2d6 points of precision damage. When your base attack bonus reaches +11, this damage bonus increases to +3d6, and at base attack bonus +16, it increases to +4d6. This precision damage does not stack with damage from sneak attack, a vigilante's sudden strike, or similar effects. Any effect which protects against sneak attack damage also protects against this additional damage.",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "description": "When bypassing a foe's defenses while feinting, you can deal devastating damage.\n\nOnce per round when you hit a foe you have successfully feinted against via a melee attack using a dueling sword, you deal an extra 2d6 points of precision damage. When your base attack bonus reaches +11, this damage bonus increases to +3d6, and at base attack bonus +16, it increases to +4d6. This precision damage does not stack with damage from sneak attack, a vigilante's sudden strike, or similar effects. Any effect which protects against sneak attack damage also protects against this additional damage.",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
       "name": "Aspis Partner",
@@ -55113,8 +54130,8 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Cypher%20Magic"
       ],
       "source_id": "adventurer_s_guide:cypher_magic",
-      "description": "Your intimacy with runes and the mysteries of ancient arcana has taught you secret ways to draw greater power from magical writings. The Cyphermages of Riddleport initially devised these unusual methods, but they have since spread far and wide through the the inner sea region region.\n\nYou cast spells from scrolls at 1 caster level higher than the scroll's caster level. In addition, you gain a +2 bonus on caster level checks to activate a scroll with a higher caster level than your own.",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "description": "Your intimacy with runes and the mysteries of ancient arcana has taught you secret ways to draw greater power from magical writings. The Cyphermages of a pirate port initially devised these unusual methods, but they have since spread far and wide through the inner sea region.\n\nYou cast spells from scrolls at 1 caster level higher than the scroll's caster level. In addition, you gain a +2 bonus on caster level checks to activate a scroll with a higher caster level than your own.",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
       "name": "Cypher Script",
@@ -55636,8 +54653,8 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Nameless%20One"
       ],
       "source_id": "adventurer_s_guide:nameless_one",
-      "description": "You completely eschew your former identity, making you impossible to locate or even name.\n\nWhen you take this feat, you eschew all of your former identities, going as far as to render your former name completely inaccessible to discover by mortal means. You perform an 8-hour ritual that requires the expenditure of 200 gp for rare oils, incense, and creation of a special mask. After this ritual, you forever lose all names and identities previously associated with you (including any identities that you gain from class abilities). You adopt a brief descriptive title in place of a new name. Your title must not reference the names of any people or places. (For example, you could adopt the title \"Blue Fox\" or \"Twilight Stalker,\" but not the title \"Chelish Avenger\" or \"Spirit of the Mwangi.\") At the ritual's conclusion, you must don the mask created for the ritual, the appearance of which is evocative of your title. While you're wearing this mask, any attempts to scry or otherwise locate any of your eschewed identities or connect you to those identities do not work, revealing nothing but darkness, as if you were an invalid target or did not exist. Successful Knowledge checks to identify you reveal your new title rather than any old identity, but can reveal your strengths and weaknesses normally. As long as you wear the ritual mask and do not reveal your connection to any past identities, any attempt to scry on you in relation to of your eschewed identities requires a successful caster level check with a DC of 10 + your Hit Dice. In addition, you are immune to effects that require the use of your name, such as the named bulletUC spell. While benefiting from this feat, you cannot wear any magic items in the head slot, as the mask used by this effect effectively occupies this slot (though this feat's benefits are not magical for the purpose of dispel magic and other effects). In addition, you cannot attempt to impersonate a specific individual by any means, magical or nonmagical. If you ever reveal or confirm your connection to your eschewed identities, you immediately lose the benefit of this feat and gain 1d4 permanent negative levels as your discarded identities return. You cannot regain the benefit of this feat or remove these negative levels until you atone (as per atonement, as if restoring a class feature).",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "description": "You completely eschew your former identity, making you impossible to locate or even name.\n\nWhen you take this feat, you eschew all of your former identities, going as far as to render your former name completely inaccessible to discover by mortal means. You perform an 8-hour ritual that requires the expenditure of 200 gp for rare oils, incense, and creation of a special mask. After this ritual, you forever lose all names and identities previously associated with you (including any identities that you gain from class abilities). You adopt a brief descriptive title in place of a new name. Your title must not reference the names of any people or places. (For example, you could adopt the title \"Blue Fox\" or \"Twilight Stalker,\" but not the title \"diabolic Avenger\" or \"Spirit of the jungle-born.\") At the ritual's conclusion, you must don the mask created for the ritual, the appearance of which is evocative of your title. While you're wearing this mask, any attempts to scry or otherwise locate any of your eschewed identities or connect you to those identities do not work, revealing nothing but darkness, as if you were an invalid target or did not exist. Successful Knowledge checks to identify you reveal your new title rather than any old identity, but can reveal your strengths and weaknesses normally. As long as you wear the ritual mask and do not reveal your connection to any past identities, any attempt to scry on you in relation to of your eschewed identities requires a successful caster level check with a DC of 10 + your Hit Dice. In addition, you are immune to effects that require the use of your name, such as the named bulletUC spell. While benefiting from this feat, you cannot wear any magic items in the head slot, as the mask used by this effect effectively occupies this slot (though this feat's benefits are not magical for the purpose of dispel magic and other effects). In addition, you cannot attempt to impersonate a specific individual by any means, magical or nonmagical. If you ever reveal or confirm your connection to your eschewed identities, you immediately lose the benefit of this feat and gain 1d4 permanent negative levels as your discarded identities return. You cannot regain the benefit of this feat or remove these negative levels until you atone (as per atonement, as if restoring a class feature).",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
       "name": "Ritual Mask",
@@ -55673,8 +54690,8 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Scholar"
       ],
       "source_id": "a_creature_need_not_be_affiliated_with_the_magaambya_to_select_this_feat:scholar",
-      "description": "You have graduated from one of the many colleges, universities, and specialized schools of higher learning scattered throughout the the inner sea region region.\n\nPick any two Knowledge skills. You gain a +2 bonus on checks with these two skills. If you have 10 or more ranks in one of these Knowledge skills, the bonus increases to +4 for that skill.",
-      "updated_at": "2026-07-16T20:28:23Z"
+      "description": "You have graduated from one of the many colleges, universities, and specialized schools of higher learning scattered throughout the inner sea region.\n\nPick any two Knowledge skills. You gain a +2 bonus on checks with these two skills. If you have 10 or more ranks in one of these Knowledge skills, the bonus increases to +4 for that skill.",
+      "updated_at": "2026-07-19T00:00:00Z"
     },
     {
       "name": "Cold Celerity",
@@ -55977,23 +54994,6 @@
       ],
       "source_id": "ap_124:barracuda_style",
       "description": "You study a combat style consisting of fluid, circular motions suited for moving and fighting underwater.\n\nYour unarmed strikes deal normal damage underwater, and you don't take penalties on attack rolls with unarmed strikes made underwater. You add your Wisdom modifier in addition to your Strength modifier on Swim checks.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Noble Scion a fading empire",
-      "source": "War For The Crown Player's Guide",
-      "prerequisites": [],
-      "tags": [
-        "War For The Crown Player's Guide"
-      ],
-      "references": [
-        "Archives of a deity of magic: Noble Scion a fading empire"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Noble%20Scion%20a fading empire"
-      ],
-      "source_id": "war_for_the_crown_player_s_guide:noble_scion_a fading empire",
-      "description": "You are a member of one of the significant noble families of a capital city, whether or not you remain in good standing with your family. In many cases, these families are Imperialists loyal to a noble scion, and as such you either are a black sheep or your family has cut you off entirely.\n\nYou gain a +2 bonus on all Knowledge (nobility) checks, and Knowledge (nobility) is always a class skill for you. You also gain an additional benefit depending on which family you belong to.  Basri: You come from the long line of ambassadors, diplomats, and travelers that make up the Basri, and  your family maintains the strongest ties to the elven nation of an elven realm of any Taldan humans. Select one of the following as a bonus starting language: Celestial, Elven, Gnome, Sylvan. You gain proficiency in one of the following weapons: longbow (including composite), longsword, rapier, or shortbow (including composite). If you gain proficiency in all martial weapons at 1st level, you can instead select elven curve blade.  Ca bardent: Your Garundi and Mwangi ancestors served a fading empire proudly during the Sixth Army of Exploration and were awarded titles for their service. Your family, which has maintained their noble titles to this day, is known for keen insights and biting observations. You can substitute your Wisdom modifier for your Charisma modifier when attempting Diplomacy skill checks.  Corcina: Your family came to prominence during the Second Army of Exploration, and maintains a legacy as explorers and sailors. You gain a +1 bonus on Climb and Escape Artist checks, and a +2 bonus on Survival checks to navigate.  Karthis: Yours is a family of distinguished military veterans, charismatic demagogues, and xenophobic zealots. As the rest of the family becomes increasingly Imperialist, you have made no effort to remain in their good graces, but you retain the skills they taught you during a childhood of rigorous training. You can apply your Charisma modifier instead of your Dexterity modifier to Initiative checks.  Kastner: Your stalwart family defines itself by opposing your devil-worshiping Chelish cousins, a grudge that inspired some of a fading empire's greatest healers, priests, and negotiators. You gain one additional use per day of channel energy, lay on hands, or mesmerist tricks, or 3 additional rounds of bardic music per day. You gain only one of these benefits, even if you later acquire a second class that provides one of the other class features listed.  Lotheed: Your family ranks include the greatest wizards and arcane scholars in a fading empire, and schooling in some of the most comprehensive arcane libraries in the the inner sea region was your birthright. If your Intelligence is 11 or higher, you gain the following spell-like abilities: 1/day-dancing lights, prestidigitation, read magic, unseen servant. The caster level for these effects is equal to one-half your class level.  Merosett: The cunning members of your large family, a longtime fixture in a capital city's bureaucracy, specialize in tracking lineages and sidestepping red tape. You gain a +5 bonus on Bluff checks to send secret messages and Sense Motive checks to discern secret messages. You halve the time required to search through archives, navigate government offices, review contracts, or otherwise work  with the complex bureaucracies your family has mastered for generations.  Stavian: As a close relative of the Grand Prince, yours has been a life of material comfort and indulgence, colored by constant threats and direct influence. You gain a +2 bonus on Fortitude saves against poison and on Will saves against enchantment spells of the charm and compulsion subschools.  Talbot: Your starkly conservative family are merchants and entrepreneurs first and aristocrats second, willing to forgo duty if they can instead pursue profit. They condemn would-be adventurers and readily oust them from the family ranks, leaving you an outcast. You gain a +2 bonus on one Profession skill of your choice. Once per day, you can use this Profession skill in place of a single Knowledge skill check.  Varima: Your family immigrated to a fading empire from Vudra hundreds of years ago, and thanks to noble roots, extensive trade contacts, and an unparalleled skill in negotiation, soon developed into a steadfast fixture of a capital city's social scene. Whenever you use Diplomacy to influence a crowd or a room (but not individuals), you can roll twice and use the better result.  Vernisant: Your family is descended from the great general Arnisant, who commanded Taldan forces during the Shining Crusade... and they will never let anyone forget it! Their fierce Imperialist support and nationalist fervor has left you alienated from your relatives now, but their emphasis on scholarship left a mark nonetheless. You gain a +1 bonus on all Knowledge skills in which you have at least 1 rank.  Vinmark: Newcomers and outsiders, your Ulfen family was exalted to nobility 19 years ago, when Stavian III promoted your family patriarch to Baron of a capital city as a reward for service in the Ulfen Guard. Established aristocrats consider your family crude, choosing to leave them on the margins of Taldan politics unless a noble thinks they could use you to curry favor with the Grand Prince, but hard-won practicality and newborn cynicism grant you insight most Taldan nobles lack. Once per day when rolling a Sense Motive check, you may roll two dice and use the better result.  Zespire: Your family runs charities and lobbies heavily for social reform, leaving them with few friends among their a capital cityn peers but heartfelt support from the common folk and lesser nobility. You gain a +2 bonus on Diplomacy and Perform checks when dealing with common citizens and with nobles whose titles are limited to Lord, Lady, Knight, or Dame.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
