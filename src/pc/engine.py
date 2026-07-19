@@ -179,7 +179,14 @@ def _range_ft(text):
 
 
 def apply_equipment(draft, sheet):
-    """Valida gli acquisti contro la ricchezza iniziale e calcola CA/attacchi.
+    """Valida gli acquisti contro la ricchezza del livello e calcola CA/attacchi.
+
+    Al lv1 la ricchezza e' la starting_wealth di classe e la validazione e'
+    stretta: item sconosciuto o spesa oltre budget sono errori. Ai livelli
+    2-20 la ricchezza e' la Wealth by Level (catalogs.wealth_by_level) e la
+    validazione e' best-effort: item non in catalogo (es. oggetti magici) e
+    spesa oltre il WBL producono warning, non errori. gold_remaining, CA e
+    attacchi sono calcolati allo stesso modo (wealth = WBL per lv>1).
 
     Applica il bonus di taglia: creature Small (es. Halfling, Gnome) hanno
     +1 alla CA e +1 a tutti i tiri per colpire.
@@ -188,19 +195,27 @@ def apply_equipment(draft, sheet):
     (ranged solo se range >= 30 ft) — armi da tiro con gittata < 30 ft
     classificate melee; le armi da lancio (Dagger, Club, Shortspear...)
     restano correttamente melee."""
-    cls = catalogs.get_class(draft.class_)
-    wealth_text = cls["mechanics"].get("starting_wealth", "")
-    if "average" in wealth_text:
-        m = re.search(r"average\s+([\d,]+)\s*gp", wealth_text)
-        wealth = int(m.group(1).replace(",", "")) if m else 0
+    level = getattr(draft, "level", 1)
+    strict = level == 1
+    if strict:
+        cls = catalogs.get_class(draft.class_)
+        wealth_text = cls["mechanics"].get("starting_wealth", "")
+        if "average" in wealth_text:
+            m = re.search(r"average\s+([\d,]+)\s*gp", wealth_text)
+            wealth = int(m.group(1).replace(",", "")) if m else 0
+        else:
+            wealth = _parse_cost(wealth_text)
     else:
-        wealth = _parse_cost(wealth_text)
+        wealth = catalogs.wealth_by_level(level) or 0
     spent = 0
     items = []
     for name in draft.equipment:
         item = catalogs.find_equipment(name)
         if item is None:
-            sheet["errors"].append(f"equipaggiamento sconosciuto: {name}")
+            if strict:
+                sheet["errors"].append(f"equipaggiamento sconosciuto: {name}")
+            else:
+                sheet["warnings"].append(f"{name}: non in catalogo (valutato a mano)")
             continue
         cost = _parse_cost(item["mechanics"].get("cost"))
         spent += cost
@@ -208,8 +223,12 @@ def apply_equipment(draft, sheet):
                       "tags": item.get("tags", [])})
     spent = round(spent, 2)
     if spent > wealth:
-        sheet["errors"].append(
-            f"wealth: spesi {spent:.2f} gp oltre la ricchezza iniziale {wealth:.2f} gp")
+        if strict:
+            sheet["errors"].append(
+                f"wealth: spesi {spent:.2f} gp oltre la ricchezza iniziale {wealth:.2f} gp")
+        else:
+            sheet["warnings"].append(
+                f"wealth: spesi {spent:.2f} gp oltre WBL {wealth} gp")
     sheet["gold_remaining"] = round(wealth - spent, 2)
     sheet["equipment"] = items
     mods = {ab: ability_mod(sc) for ab, sc in sheet["abilities"].items()}

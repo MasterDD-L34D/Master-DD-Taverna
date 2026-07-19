@@ -663,3 +663,24 @@ def test_ranks_prereq_multi_level():
     sheet = build_character(_draft_lv(2, skills={"Perception": 2},
                                       feats=["Back to Back"]))
     assert any("Back to Back" in e for e in sheet["errors"])
+
+
+# --- Livelli >1: equipment best-effort con Wealth by Level (WBL) ---
+
+def test_wbl_warning_and_unknown_magic_item():
+    # lv5 WBL = 10500 gp; item magico sconosciuto -> warning (non errore)
+    sheet = build_character(_draft_lv(5, skills={"Climb": 5},
+                                      equipment=["Longsword", "Chain shirt", "+1 Flaming Longsword"]))
+    assert sheet["errors"] == []
+    assert any("+1 Flaming Longsword" in w for w in sheet["warnings"])
+    # oltre WBL -> warning
+    sheet2 = build_character(_draft_lv(2, skills={"Climb": 1},  # WBL 1000
+                                       equipment=["Chain shirt", "Full plate", "Longsword", "Shortbow"]))
+    assert any("wbl" in w.lower() or "wealth" in w.lower() for w in sheet2["warnings"])
+
+
+def test_wbl_table():
+    from src.pc.catalogs import wealth_by_level
+    assert wealth_by_level(1) is None
+    assert wealth_by_level(2) == 1000
+    assert wealth_by_level(20) == 880000

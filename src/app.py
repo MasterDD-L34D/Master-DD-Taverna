@@ -342,11 +342,15 @@ async def pc_build(
     draft: Dict = Body(...),
     _: None = Depends(require_api_key),
 ):
-    """Costruzione deterministica di un PG lv1 dai cataloghi OGL (nessun LLM).
+    """Costruzione deterministica di un PG livelli 1-20 dai cataloghi OGL (nessun LLM).
 
-    Gli effetti passivi lv1 dei talenti in pc.feat_effects.FEAT_EFFECTS sono
-    applicati ai valori calcolati; i talenti non supportati sono solo
-    validati (prerequisiti e conteggio)."""
+    Per lv>1 l'equipment e' best-effort con warning anziche' errori: ricchezza
+    da Wealth by Level (WBL); item non in catalogo (es. oggetti magici) e
+    spesa oltre il WBL sono segnalati come warning. Limitazione: gli effetti
+    meccanici dei talenti sono applicati solo per quelli supportati in
+    pc.feat_effects.FEAT_EFFECTS (passivi scalati col livello, Weapon/Skill
+    Focus, Weapon Finesse); i talenti non supportati sono solo validati
+    (prerequisiti e conteggio)."""
     from .pc.engine import build_character
     from .pc.models import CharacterDraft
 

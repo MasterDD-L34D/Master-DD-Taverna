@@ -66,6 +66,18 @@ def find_equipment(name):
     return _by_name("equipment").get(name)
 
 
+# Character Wealth by Level (PFRPG Core, tabella OGC).
+WBL_BY_LEVEL = {2: 1000, 3: 3000, 4: 6000, 5: 10500, 6: 16000, 7: 23500,
+                8: 33000, 9: 46000, 10: 62000, 11: 82000, 12: 108000, 13: 140000,
+                14: 185000, 15: 240000, 16: 315000, 17: 410000, 18: 530000,
+                19: 685000, 20: 880000}
+
+
+def wealth_by_level(level):
+    """Wealth-by-level per livelli > 1; None per lv1 (usa starting_wealth)."""
+    return None if level == 1 else WBL_BY_LEVEL.get(level)
+
+
 def class_skill_matches(skill_name, class_skill):
     """Match skill del catalogo vs etichetta class_skills di classes.json.
     Case-insensitive; 'Knowledge (all)' matcha ogni Knowledge specifica.

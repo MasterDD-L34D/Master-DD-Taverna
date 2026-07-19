@@ -395,7 +395,7 @@ in sandbox, disattiva temporaneamente con /echo off) e per QA CHECK bloccanti: c
 Canvas+Ledger, ripeti /self_check e verifica Echo ≥ soglia prima di rilanciare /save_npc o
 /npc_export (bloccati finché QA=CHECK o Echo è sotto soglia).
 
-`POST /pc/build` — costruzione deterministica PG lv1 dai cataloghi OGL (point-buy, razza, classe, skill, talenti, tratti, equip; 422 con lista errori di validazione. Gli effetti meccanici dei talenti supportati (passivi lv1, Weapon/Skill Focus, Weapon Finesse — vedi `src/pc/feat_effects.py`) vengono applicati ai valori; gli altri sono solo validati). Vedi `src/pc/`.
+`POST /pc/build` — costruzione deterministica PG livelli 1-20 dai cataloghi OGL (point-buy, razza, classe, skill, talenti, tratti, equip; 422 con lista errori di validazione. Per lv>1 l'equipment è best-effort con warning anziché errori: ricchezza da Wealth by Level (WBL, vedi `src/pc/catalogs.py`), item non in catalogo (es. oggetti magici) e spesa oltre il WBL segnalati come warning. Gli effetti meccanici dei talenti supportati (passivi scalati col livello, Weapon/Skill Focus, Weapon Finesse — vedi `src/pc/feat_effects.py`) vengono applicati ai valori; gli altri sono solo validati). Vedi `src/pc/`.
 
 ### Avvio API locale
 
