@@ -18,14 +18,14 @@
     {
       "file": "ogl/spells.json",
       "kind": "spells",
-      "source": "Pathfinder RPG Reference Document / d20pfsrd",
+      "source": "Pathfinder RPG Reference Document / d20pfsrd / Archives of Nethys (aonprd.com)",
       "license": "OGL-1.0a",
       "is_ogc": true,
       "is_pi": false,
       "cup_allowed": false,
       "entries": 1035,
       "notes": "Nomi e meccaniche generiche; rimossi nomi propri e riferimenti a Golarion. 1032/1035 voci arricchite con description.",
-      "last_verified": "2026-07-16"
+      "last_verified": "2026-07-19"
     },
     {
       "file": "ogl/items.json",

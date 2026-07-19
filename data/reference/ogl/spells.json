@@ -1,6 +1,6 @@
 {
   "_license": "Open Game Content under OGL 1.0a. See LICENSE-OGL.txt and COPYRIGHT_NOTICE.txt.",
-  "_source": "Pathfinder RPG Reference Document © 2011 Paizo Publishing, LLC; d20PFSRD.",
+  "_source": "Pathfinder RPG Reference Document © 2011 Paizo Publishing, LLC; d20PFSRD; Archives of Nethys (aonprd.com).",
   "entries": [
     {
       "name": "Acid Arrow",
@@ -1204,7 +1204,8 @@
         "range": "touch",
         "duration": "1 min./level",
         "saving_throw": "Will negates (harmless)",
-        "casting_time": "1 standard action"
+        "casting_time": "1 standard action",
+        "spell_resistance": "yes"
       }
     },
     {
