@@ -9,6 +9,8 @@ Strategia offline, due fonti combinate:
 
 Il gist ha priorita' sui campi che copre; `descriptors` e `spell_resistance`
 arrivano solo dalla description (assenti nel gist reale).
+Nota copertura: spell_resistance e descriptors sono limitati dalle fonti
+(gist senza quei campi; colon-format quasi senza quelle righe).
 
 Default: solo report. Con --write aggiunge `mechanics` alle entry.
 """
@@ -16,6 +18,7 @@ import argparse
 import json
 import re
 import sys
+from collections import Counter
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -48,8 +51,21 @@ _SIMPLE_FIELDS = {
 }
 
 
+# Marcatore di inizio prosa libera: in entrambi i formati tutte le chiavi
+# header precedono "Description:", che non e' mai un campo mechanics.
+_PROSE_START_RE = re.compile(r"\bDescription\s*:")
+
+
 def _split_header_fields(description: str) -> dict:
-    """Spezza l'header della description in coppie chiave -> valore."""
+    """Spezza l'header della description in coppie chiave -> valore.
+
+    Tronca al primo "Description:" PRIMA del regex: senza questo, _KEY_RE
+    matcha le chiavi header anche dentro la prosa (hazard Banishment, dove
+    "Spell Resistance" in prosa finiva in `spell_resistance`).
+    """
+    prose = _PROSE_START_RE.search(description)
+    if prose:
+        description = description[:prose.start()]
     matches = list(_KEY_RE.finditer(description))
     fields = {}
     for i, m in enumerate(matches):
@@ -102,10 +118,38 @@ def parse_description_mechanics(description: str) -> dict:
     return mech
 
 
+# Prefissi locali che il gist registra in forma invertita ("X, Greater").
+_INVERTIBLE_PREFIXES = ("Greater", "Lesser", "Mass")
+
+
+def _gist_entry(gist: dict, name: str):
+    """Cerca la entry gist per una spell locale.
+
+    Ordine: nome esatto, poi normalizzato; se assente e il nome inizia con
+    Greater/Lesser/Mass, riprova con la forma invertita "<resto>, <prefisso>"
+    (es. "Greater Invisibility" -> "Invisibility, Greater").
+    """
+    candidates = [name]
+    for prefix in _INVERTIBLE_PREFIXES:
+        if name.startswith(prefix + " "):
+            candidates.append(f"{name[len(prefix) + 1:]}, {prefix}")
+            break
+    exact = getattr(gist, "exact", None)
+    if exact:
+        for cand in candidates:
+            if cand in exact:
+                return exact[cand]
+    for cand in candidates:
+        entry = gist.get(cand) or gist.get(cand.lower()) or gist.get(normalize_name(cand))
+        if entry:
+            return entry
+    return None
+
+
 def merge_mechanics(entry: dict, gist: dict) -> dict:
     """Fonde regex su description (base) e campi gist (priorita')."""
     mech = parse_description_mechanics(entry.get("description") or "")
-    g = gist.get(normalize_name(entry.get("name", ""))) if gist else None
+    g = _gist_entry(gist, entry.get("name", "")) if gist else None
     if not g:
         return mech
 
@@ -126,18 +170,33 @@ def merge_mechanics(entry: dict, gist: dict) -> dict:
     return mech
 
 
-def load_gist_cache(cache_dir: Path) -> dict:
-    """Carica la cache gist come {nome normalizzato: entry}; {} se assente."""
+class GistLookup(dict):
+    """{nome normalizzato: entry} con mappa accessoria `.exact` {nome esatto: entry}.
+
+    Il match esatto ha priorita' su quello normalizzato per evitare collisioni:
+    il gist contiene sia "Peacebond" sia "Peace Bond", che normalizzati
+    collidono (last-wins); con `.exact` ogni nome locale trova la sua entry.
+    """
+
+    def __init__(self):
+        super().__init__()
+        self.exact = {}
+
+
+def load_gist_cache(cache_dir: Path) -> GistLookup:
+    """Carica la cache gist in una GistLookup; vuota se la cache e' assente."""
     matches = sorted(cache_dir.glob(GIST_GLOB)) if cache_dir.is_dir() else []
+    lookup = GistLookup()
     if not matches:
-        return {}
+        return lookup
     data = json.loads(matches[0].read_text(encoding="utf-8"))
-    gist = {}
     for item in data:
         name = item.get("name")
-        if name:
-            gist[normalize_name(name)] = item
-    return gist
+        if not name:
+            continue
+        lookup.exact.setdefault(name, item)
+        lookup[normalize_name(name)] = item
+    return lookup
 
 
 def main(argv=None) -> int:
@@ -160,12 +219,14 @@ def main(argv=None) -> int:
     matched = []
     unmatched = []
     n_school = 0
+    field_counts = Counter()
     for entry in entries:
         mech = merge_mechanics(entry, gist)
         if mech:
             matched.append(entry.get("name", "?"))
             if "school" in mech:
                 n_school += 1
+            field_counts.update(mech.keys())
             if args.write:
                 entry["mechanics"] = mech
         else:
@@ -173,6 +234,11 @@ def main(argv=None) -> int:
 
     print(f"mechanics: {len(matched)}/{len(entries)} entry "
           f"(di cui {n_school} con school), unmatched: {len(unmatched)}")
+    print("copertura per campo:")
+    for field in ("school", "descriptors", "spell_level", "casting_time",
+                  "components", "range", "duration", "saving_throw",
+                  "spell_resistance"):
+        print(f"  {field}: {field_counts.get(field, 0)}/{len(entries)}")
     if unmatched:
         sample = ", ".join(unmatched[:20])
         print(f"unmatched sample: {sample}" + (" ..." if len(unmatched) > 20 else ""))

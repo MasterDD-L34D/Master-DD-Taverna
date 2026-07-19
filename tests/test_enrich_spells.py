@@ -28,12 +28,37 @@ def test_parse_multiclass_level():
 
 
 def test_merge_mechanics_gist_priority():
-    entry = {"name": "Fireball", "description": "School evocation; Level sorcerer/wizard 3"}
-    gist = {"fireball": {"school": "evocation", "spell_level": {"sorcerer/wizard": 3},
-                          "components": ["V", "S", "M"], "range": "medium",
-                          "saving_throw": "Reflex half", "spell_resistance": True}}
+    # shape reale del gist: components stringa, spell_level stringa,
+    # niente spell_resistance/descriptors (arrivano solo dalla description).
+    entry = {"name": "Fireball",
+             "description": ("School evocation [fire]; Level sorcerer/wizard 3. "
+                             "Saving Throw Reflex half; Spell Resistance yes")}
+    gist = {"fireball": {"school": "evocation",
+                          "spell_level": "sorcerer/wizard 3, magus 3",
+                          "components": "V, S, M (a ball of bat guano and sulfur)",
+                          "range": "long (400 ft. + 40 ft./level)",
+                          "saving_throw": "Reflex half"}}
     mech = merge_mechanics(entry, gist)
     assert mech["school"] == "evocation"
-    assert mech["components"] == ["V", "S", "M"]
-    assert mech["spell_resistance"] in (True, "yes")
+    assert mech["components"] == "V, S, M (a ball of bat guano and sulfur)"
+    assert mech["spell_level"] == {"sorcerer/wizard": 3, "magus": 3}
+    assert mech["descriptors"] == ["fire"]
+    assert mech["spell_resistance"] == "yes"
     print("OK: spells mechanics merge")
+
+
+def test_no_prose_leak_banishment():
+    desc = ("School abjuration; Level cleric 7, sorcerer/wizard 7\n\n"
+            "Casting Time 1 standard action\nComponents V, S, F\n\n"
+            "Description: If the target wins its save, Spell Resistance applies (if any), and the saving throw DC increases by 2.")
+    mech = parse_description_mechanics(desc)
+    assert "saving throw DC" not in str(mech.get("spell_resistance", ""))
+    assert mech["school"] == "abjuration"
+
+
+def test_inverted_name_greater():
+    gist = {"invisibility, greater": {"school": "illusion", "spell_level": {"sorcerer/wizard": 4}}}
+    entry = {"name": "Greater Invisibility", "description": ""}
+    mech = merge_mechanics(entry, gist)
+    assert mech["school"] == "illusion"
+    assert mech["spell_level"] == {"sorcerer/wizard": 4}
