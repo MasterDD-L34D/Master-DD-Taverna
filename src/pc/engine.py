@@ -35,14 +35,16 @@ def _check_prereq(prereq, ctx):
     m = re.search(r"(\d+)\s+ranks?", text, re.I)
     if m:
         n = int(m.group(1))
-        if n > 1:
-            return False, f"richiede {n} ranks (personaggio lv1) ({text})"
         skill_ref = re.sub(r"\s*\d+\s+ranks?.*$", "", text, flags=re.I).strip(" ,;")
-        if skill_ref and skill_ref not in ctx.get("skills", {}):
-            return False, f"richiede 1 rank in {skill_ref} (non presente nel draft)"
-        return True, f"1 rank: {text}"
+        if n > ctx["class_level"]:
+            return False, f"richiede {n} ranks (personaggio lv{ctx['class_level']}) ({text})"
+        if skill_ref:
+            have = ctx.get("skills", {}).get(skill_ref, {}).get("ranks", 0)
+            if have < n:
+                return False, f"richiede {n} rank{'s' if n > 1 else ''} in {skill_ref} (presenti {have} nel draft)"
+        return True, f"{n} rank: {text}"
     if re.search(r"rank", text, re.I):
-        return True, f"skill rank: {text} (forma non verificabile, accettata al lv1)"
+        return True, f"skill rank: {text} (forma non verificabile, accettata)"
     return True, f"forma prerequisito non valutabile: {text}"  # warning, non errore
 
 
@@ -90,8 +92,9 @@ def _class_bonus_feats(class_name, level):
 def validate_feats(draft, sheet):
     """Conta talenti consentiti e valuta i prerequisiti noti.
 
-    Il tetto scala col livello (1-20): 1 + livello//2 base, +1 se Human, + i
-    talenti bonus di classe (_class_bonus_feats). I prerequisiti di livello
+    Il tetto scala col livello (1-20): (livello+1)//2 base (talenti ai livelli
+    dispari: 1,3,5,...), +1 se Human, + i talenti bonus di classe
+    (_class_bonus_feats). I prerequisiti di livello
     ("fighter level 4th", "caster level 1st"...) sono valutati contro il
     livello del personaggio. I talenti concessi automaticamente dalla classe
     al lv1 (es. Improved Unarmed Strike e Stunning Fist per il Monk, Scribe
@@ -103,7 +106,7 @@ def validate_feats(draft, sheet):
     ctx = {"abilities": dict(sheet["abilities"]), "bab": sheet["bab"],
            "feats": chosen + granted, "skills": sheet.get("skills", {}),
            "class_level": draft.level}
-    allowed = (1 + draft.level // 2 + (1 if draft.race == "Human" else 0)
+    allowed = ((draft.level + 1) // 2 + (1 if draft.race == "Human" else 0)
                + _class_bonus_feats(draft.class_, draft.level))
     if len(chosen) > allowed:
         sheet["errors"].append(f"feat: {len(chosen)} selezionati su {allowed} consentiti al lv{draft.level}")
@@ -303,8 +306,8 @@ def build_character(draft):
 
     Gli effetti meccanici dei talenti sono applicati ai valori calcolati come
     ultimo passo solo per i talenti supportati in src/pc/feat_effects.py
-    (passivi lv1, Weapon/Skill Focus, Weapon Finesse); gli altri sono solo
-    validati (prerequisiti e conteggio)."""
+    (passivi scalati col livello, Weapon/Skill Focus, Weapon Finesse); gli
+    altri sono solo validati (prerequisiti e conteggio)."""
     abilities = apply_abilities(draft)
     errors = list(abilities["errors"])
     warnings = list(abilities.get("warnings", []))

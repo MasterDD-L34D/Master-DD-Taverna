@@ -1,9 +1,9 @@
-"""Effetti meccanici dei talenti applicati ai valori della scheda (lv1).
+"""Effetti meccanici dei talenti applicati ai valori della scheda (scalati col livello).
 
 La mappa e' deliberatamente dichiarativa: ogni talento -> dict di modificatori
 applicati in apply_feat_effects. I talenti senza effetto numerico sui valori
-lv1 (metamagic, granted di classe, condizionali) sono ignorati senza warning;
-le selezioni mancanti/invalide producono warning."""
+della scheda (metamagic, granted di classe, condizionali) sono ignorati senza
+warning; le selezioni mancanti/invalide producono warning."""
 import re
 
 from src.pc import catalogs
@@ -101,7 +101,11 @@ def apply_feat_effects(sheet):
         if not effect:
             continue
         if "hp" in effect:
-            sheet["hp"] += effect["hp"]
+            if base == "Toughness":
+                # RAW: +3 hp piu' +1 per ogni DV oltre il 3°.
+                sheet["hp"] += effect["hp"] + max(0, sheet["level"] - 3)
+            else:
+                sheet["hp"] += effect["hp"]
         if "ac" in effect:
             sheet["ac"] += effect["ac"]
         if "initiative" in effect:

@@ -576,7 +576,7 @@ def test_wizard_lv10_spells_and_max_hp():
 # --- Skill e talenti multi-livello: conteggio talenti e prerequisiti di livello ---
 
 def test_feats_count_by_level():
-    # Human Fighter lv5: 1 + 5//2 + 1 + (1 + 5//2) = 1+2+1+3 = 7 consentiti
+    # Human Fighter lv5: (5+1)//2 + 1 + (1 + 5//2) = 3+1+3 = 7 consentiti
     feats = ["Power Attack", "Dodge", "Cleave", "Point-Blank Shot", "Weapon Focus",
              "Improved Initiative", "Toughness"]
     sheet = build_character(_draft_lv(5, race_bonus_ability="dex",
@@ -598,3 +598,68 @@ def test_prereq_class_level_threshold():
     sheet = build_character(_draft_lv(4, skills={"Climb": 4},
                                       feats=["Weapon Focus", "Weapon Specialization"]))
     assert sheet["errors"] == [], sheet["errors"]
+
+
+# --- Follow-up review: conteggio base RAW, Toughness scalato, skill/ranks multi-livello ---
+
+def test_skills_multi_level_budget_and_cap():
+    # Fighter lv5: budget = (2+0)*5 + 5 Human = 15; cap per singola skill = livello (5).
+    sheet = build_character(_draft_lv(5, skills={"Climb": 6}))
+    assert any("Climb" in e and "ranks" in e for e in sheet["errors"])
+    sheet = build_character(_draft_lv(5, skills={"Climb": 5, "Perception": 5,
+                                                 "Survival": 5, "Intimidate": 1}))
+    assert any("budget" in e for e in sheet["errors"])
+    sheet = build_character(_draft_lv(5, skills={"Climb": 5, "Perception": 5, "Survival": 5}))
+    assert sheet["errors"] == [], sheet["errors"]
+    assert sheet["skills"]["Climb"]["total"] == 10  # 5 ranks + Str mod 2 (15) + class 3
+
+
+def test_base_feats_even_levels():
+    # Talenti base ai livelli dispari (1,3,5,...): (livello+1)//2. Wizard non ha bonus.
+    # Human Wizard lv2: 1 base + 1 Human = 2 consentiti; 3 -> errore.
+    ok = ["Improved Initiative", "Toughness"]
+    sheet = build_character(_draft_lv(2, **{"class": "Wizard"},
+                                      skills={"Spellcraft": 2, "Knowledge (Arcana)": 2},
+                                      feats=ok))
+    assert sheet["errors"] == [], sheet["errors"]
+    sheet = build_character(_draft_lv(2, **{"class": "Wizard"},
+                                      skills={"Spellcraft": 2, "Knowledge (Arcana)": 2},
+                                      feats=ok + ["Lightning Reflexes"]))
+    assert any("feat" in e.lower() for e in sheet["errors"])
+    # Human Wizard lv4: 2 base + 1 Human = 3 consentiti; 4 -> errore.
+    ok4 = ok + ["Lightning Reflexes"]
+    sheet = build_character(_draft_lv(4, **{"class": "Wizard"},
+                                      skills={"Spellcraft": 4, "Knowledge (Arcana)": 4},
+                                      feats=ok4))
+    assert sheet["errors"] == [], sheet["errors"]
+    sheet = build_character(_draft_lv(4, **{"class": "Wizard"},
+                                      skills={"Spellcraft": 4, "Knowledge (Arcana)": 4},
+                                      feats=ok4 + ["Iron Will"]))
+    assert any("feat" in e.lower() for e in sheet["errors"])
+
+
+def test_toughness_scales_with_level():
+    # RAW: +3 hp piu' +1 per ogni DV oltre il 3° -> +5 al lv5, +3 al lv1.
+    plain = build_character(_draft_lv(5, skills={"Climb": 5, "Perception": 5, "Survival": 5}))
+    tough = build_character(_draft_lv(5, skills={"Climb": 5, "Perception": 5, "Survival": 5},
+                                      feats=["Toughness"]))
+    assert tough["errors"] == [], tough["errors"]
+    assert tough["hp"] == plain["hp"] + 5  # 3 + max(0, 5-3)
+    plain1 = build_character(_draft_lv(1, skills={"Climb": 1}))
+    tough1 = build_character(_draft_lv(1, skills={"Climb": 1}, feats=["Toughness"]))
+    assert tough1["errors"] == [], tough1["errors"]
+    assert tough1["hp"] == plain1["hp"] + 3  # regressione: al lv1 resta +3
+
+
+def test_ranks_prereq_multi_level():
+    # Back to Back richiede "Perception 3 ranks": al lv3 con Perception 3 ok;
+    # senza i 3 ranks fallisce; al lv2 fallisce perche' 3 > livello.
+    sheet = build_character(_draft_lv(3, skills={"Climb": 3, "Perception": 3},
+                                      feats=["Back to Back"]))
+    assert sheet["errors"] == [], sheet["errors"]
+    sheet = build_character(_draft_lv(3, skills={"Climb": 3},
+                                      feats=["Back to Back"]))
+    assert any("Back to Back" in e and "3 ranks" in e for e in sheet["errors"])
+    sheet = build_character(_draft_lv(2, skills={"Perception": 2},
+                                      feats=["Back to Back"]))
+    assert any("Back to Back" in e for e in sheet["errors"])
