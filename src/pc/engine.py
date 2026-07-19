@@ -146,6 +146,77 @@ def validate_traits(draft, sheet):
     sheet["traits"] = out
 
 
+# Cerchi di spells_per_day: "0" (cantrips), poi "1st".."9th".
+_CIRCLE_RE = re.compile(r"^(0|[1-9](?:st|nd|rd|th))$")
+
+
+def _castable_circles(spells_per_day):
+    """Cerchi con almeno uno slot base (>0) da una riga spells_per_day.
+
+    I valori sono STRINGHE ("3", "0", "1+1" per lo slot di dominio del
+    Cleric): si prende l'intero iniziale; "0" = nessuno slot base -> cerchio
+    non castabile (es. Paladin lv4: {"1st": "0"}). La chiave "0" assente in
+    una riga presente (es. Sorcerer) = cantrips a volonta': nessun vincolo
+    di slot per il cerchio 0."""
+    castable = set()
+    for key, count in (spells_per_day or {}).items():
+        if not _CIRCLE_RE.match(key):
+            continue
+        circle = 0 if key == "0" else int(key[0])
+        base = int(re.match(r"\d+", str(count)).group())
+        if base > 0:
+            castable.add(circle)
+    if spells_per_day and "0" not in spells_per_day:
+        castable.add(0)
+    return castable
+
+
+def validate_spells(draft, sheet):
+    """Valida la selezione incantesimi contro catalogo e spells/day.
+
+    Regole (contratto WORKFLOW §4, default DICHIARATI):
+    - draft.spells vuoto/omesso -> no-op: lo sheet resta identico (nessuna
+      chiave "spells" aggiunta: retrocompatibilita' oracolo pathmaster-dd);
+    - classe non-caster (nessuna riga spells_per_day in TUTTA la
+      progressione): selezione spells -> errore dichiarato;
+    - per ogni spell: deve esistere in spells.json; la sua lista per-classe
+      (mechanics.spell_level, chiavi combinate splittate, vedi
+      catalogs.spell_level_for_class) deve contenere la classe del draft;
+      il cerchio deve avere almeno uno slot base al livello del personaggio
+      (_castable_circles);
+    - sheet["spells"] = lista delle entry validate come
+      {name, level (per la classe del draft), school}.
+    Fuori scope (dichiarato): spells known vs prepared (la selezione NON e'
+    contata contro gli slot giornalieri), bonus spells da ability score,
+    caster level separato da class level."""
+    if not draft.spells:
+        return
+    cls = catalogs.get_class(draft.class_)
+    progression = cls["mechanics"]["progression"]
+    if not any(row.get("spells_per_day") for row in progression):
+        sheet["errors"].append(f"incantesimi: {draft.class_} non e' una classe incantatrice")
+        return
+    castable = _castable_circles(progression[draft.level - 1].get("spells_per_day"))
+    out = []
+    for name in draft.spells:
+        spell = catalogs.find_spell(name)
+        if spell is None:
+            sheet["errors"].append(f"incantesimo sconosciuto: {name}")
+            continue
+        level = catalogs.spell_level_for_class(spell, draft.class_)
+        if level is None:
+            sheet["errors"].append(f"{name}: non e' un incantesimo da {draft.class_}")
+            continue
+        if level not in castable:
+            sheet["errors"].append(
+                f"{name}: cerchio {level} non castabile da {draft.class_} "
+                f"al lv{draft.level} (nessuno slot)")
+            continue
+        out.append({"name": name, "level": level,
+                    "school": spell["mechanics"].get("school")})
+    sheet["spells"] = out
+
+
 def ability_mod(score):
     return (score - 10) // 2
 
@@ -397,6 +468,7 @@ def build_character(draft):
                      "total": ranks + mods[key] + class_bonus, "class_skill": is_class_skill}
     sheet["skills"] = out
     validate_feats(draft, sheet)
+    validate_spells(draft, sheet)
     apply_equipment(draft, sheet)
     validate_traits(draft, sheet)
     apply_feat_effects(sheet)
@@ -425,6 +497,12 @@ def render_markdown(sheet):
         lines.append("**Talenti**: " + ", ".join(sheet["feats"]))
     if sheet.get("traits"):
         lines.append("**Tratti**: " + ", ".join(sheet["traits"]))
+    if sheet.get("spells"):
+        lines.append("**Incantesimi**: " + ", ".join(
+            f"{s['name']} ({s['level']}°, {s['school']})" for s in sheet["spells"]))
+        if sheet.get("spells_per_day"):
+            lines.append("**Slot/giorno**: " + ", ".join(
+                f"{k}={v}" for k, v in sheet["spells_per_day"].items()))
     if sheet.get("equipment"):
         lines.append(f"**Equip** (oro restante {sheet.get('gold_remaining', 0):.2f} gp): "
                      + ", ".join(i["name"] for i in sheet["equipment"]))

@@ -13,6 +13,7 @@ def load(kind):
         "abilities": "abilities.json", "races": "races.json", "classes": "classes.json",
         "skills": "skills.json", "traits": "traits.json",
         "equipment": "equipment_mundane.json", "feats": "feats.json",
+        "spells": "spells.json",
     }[kind]
     with open(OGL_DIR / filename, encoding="utf-8") as f:
         return json.load(f)["entries"]
@@ -64,6 +65,28 @@ def find_trait(name):
 
 def find_equipment(name):
     return _by_name("equipment").get(name)
+
+
+def find_spell(name):
+    return _by_name("spells").get(name)
+
+
+def spell_level_for_class(spell, class_name):
+    """Cerchio di `spell` per `class_name`; None se la classe non la lancia.
+
+    Le chiavi di mechanics.spell_level sono lowercase e possono essere
+    combinate ("sorcerer/wizard", "cleric/oracle"): splittate su "/".
+    Il match sul nome classe e' case-insensitive ("Wizard" == "wizard").
+    Le classi assenti da classes.json (bloodrager, oracle, occultist, ...)
+    sono ignorate senza errore: una chiave che nomina solo classi fuori
+    catalogo non produce match."""
+    known = {e["name"].lower() for e in load("classes")}
+    target = class_name.lower()
+    for key, level in spell.get("mechanics", {}).get("spell_level", {}).items():
+        for part in key.split("/"):
+            if part in known and part == target:
+                return level
+    return None
 
 
 # Character Wealth by Level (PFRPG Core, tabella OGC).

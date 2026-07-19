@@ -68,3 +68,30 @@ def test_pc_build_bad_request(client, auth_headers):
 def test_pc_build_nested_type_error(client, auth_headers):
     resp = client.post("/pc/build", json=dict(VALID, abilities=[1, 2, 3]), headers=auth_headers)
     assert resp.status_code == 400
+
+
+WIZARD3 = {
+    "name": "Ezren", "method": "point-buy", "campaign_type": "Standard Fantasy",
+    "abilities": {"str": 13, "dex": 12, "con": 13, "int": 10, "wis": 14, "cha": 12},
+    "race": "Human", "race_bonus_ability": "int", "class": "Wizard", "level": 3,
+    "skills": {"Spellcraft": 3, "Knowledge (Arcana)": 3},
+    "spells": ["Magic Missile", "Mage Armor"],
+}
+
+
+def test_pc_build_spells_ok(client, auth_headers):
+    resp = client.post("/pc/build", json=WIZARD3, headers=auth_headers)
+    assert resp.status_code == 200, resp.text
+    sheet = resp.json()
+    assert sheet["errors"] == []
+    assert [s["name"] for s in sheet["spells"]] == ["Magic Missile", "Mage Armor"]
+    assert sheet["spells"][0]["level"] == 1
+    assert sheet["spells_per_day"]  # Wizard lv3: {"0": "4", "1st": "2", "2nd": "1"}
+
+
+def test_pc_build_spells_invalid(client, auth_headers):
+    # Cure Light Wounds non e' nella lista del Wizard -> errore bloccante.
+    bad = dict(WIZARD3, spells=["Cure Light Wounds"])
+    resp = client.post("/pc/build", json=bad, headers=auth_headers)
+    assert resp.status_code == 422
+    assert "Cure Light Wounds" in resp.text

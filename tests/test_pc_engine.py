@@ -689,3 +689,108 @@ def test_wbl_table():
     assert wealth_by_level(1) is None
     assert wealth_by_level(2) == 1000
     assert wealth_by_level(20) == 880000
+
+
+# --- Incantesimi: selezione caster validata contro catalogo e spells/day ---
+
+# Dati reali (spells.json): Magic Missile/Mage Armor sorcerer/wizard 1,
+# Cure Light Wounds bard 1 + cleric/oracle 1 + druid 1 + paladin 1 + ranger 2,
+# Daze sorcerer/wizard 0, Bless cleric/oracle 1 + paladin 1.
+def test_wizard_spells_valid():
+    sheet = build_character(_wizard_draft(skills={"Knowledge (Arcana)": 1, "Spellcraft": 1},
+                                          spells=["Magic Missile", "Mage Armor"]))
+    assert sheet["errors"] == [], sheet["errors"]
+    assert sheet["spells"] == [{"name": "Magic Missile", "level": 1, "school": "evocation"},
+                               {"name": "Mage Armor", "level": 1, "school": "conjuration"}]
+
+
+def test_spell_unknown():
+    sheet = build_character(_wizard_draft(skills={"Spellcraft": 1},
+                                          spells=["Palla Inesistente"]))
+    assert any("incantesimo sconosciuto" in e and "Palla Inesistente" in e
+               for e in sheet["errors"])
+
+
+def test_spell_not_of_class():
+    # Cure Light Wounds non e' nella lista del Wizard (nessuna chiave *wizard*).
+    sheet = build_character(_wizard_draft(skills={"Spellcraft": 1},
+                                          spells=["Cure Light Wounds"]))
+    assert any("Cure Light Wounds" in e and "Wizard" in e for e in sheet["errors"])
+
+
+def test_spell_circle_without_slots():
+    # Paladin lv4: spells_per_day {"1st": "0"} -> cerchio 1 senza slot base.
+    sheet = build_character(_draft_lv(4, race_bonus_ability="wis", **{"class": "Paladin"},
+                                      skills={"Diplomacy": 4}, spells=["Bless"]))
+    assert any("Bless" in e and "slot" in e for e in sheet["errors"])
+
+
+def test_spell_circle_key_absent_from_row():
+    # Caso distinto da Paladin "1st": "0": qui la chiave-cerchio e' ASSENTE
+    # dalla riga di progressione. Wizard lv3: spells_per_day {"0","1st","2nd"}
+    # (nessuna "3rd"); Fireball e' sorcerer/wizard 3 -> cerchio non castabile.
+    sheet = build_character(_wizard_draft(level=3,
+                                          skills={"Spellcraft": 3, "Knowledge (Arcana)": 3},
+                                          spells=["Fireball"]))
+    assert any("Fireball" in e and "non castabile" in e for e in sheet["errors"])
+
+
+def test_spells_non_caster():
+    # Fighter non ha righe spells_per_day in progressione: errore dichiarato.
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str",
+                                   skills={"Climb": 1}, spells=["Magic Missile"]))
+    assert any("classe incantatrice" in e and "Fighter" in e for e in sheet["errors"])
+
+
+def test_sorcerer_cantrips_at_will():
+    # Sorcerer lv1: spells_per_day {"1st": "3"} (chiave "0" assente) -> il
+    # cerchio 0 non ha vincolo di slot (cantrips a volonta').
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="cha",
+                                   **{"class": "Sorcerer"}, skills={"Spellcraft": 1},
+                                   spells=["Daze"]))
+    assert sheet["errors"] == [], sheet["errors"]
+    assert sheet["spells"] == [{"name": "Daze", "level": 0, "school": "enchantment"}]
+
+
+def test_cleric_domain_slots_string():
+    # Cleric lv1: "1st": "1+1" (slot di dominio) -> l'intero iniziale > 0 basta.
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="wis",
+                                   **{"class": "Cleric"}, skills={"Spellcraft": 1},
+                                   spells=["Bless"]))
+    assert sheet["errors"] == [], sheet["errors"]
+    assert sheet["spells"][0]["level"] == 1
+
+
+def test_spells_omitted_backward_compat():
+    # Retrocompatibilita' oracolo: senza spells nel draft lo sheet non cambia
+    # (nessuna chiave "spells", nessuna sezione Incantesimi nel render).
+    sheet = build_character(_wizard_draft(skills={"Knowledge (Arcana)": 1, "Spellcraft": 1}))
+    assert sheet["errors"] == [], sheet["errors"]
+    assert "spells" not in sheet
+    assert "Incantesimi" not in render_markdown(sheet)
+    draft = CharacterDraft.from_dict({"name": "T", "method": "point-buy",
+                                      "campaign_type": "Standard Fantasy",
+                                      "abilities": dict(_OK_ABILS),
+                                      "race": "Human", "class": "Wizard"})
+    assert draft.spells == []
+
+
+def test_find_spell_and_level_for_class():
+    from src.pc.catalogs import find_spell, spell_level_for_class
+    mm = find_spell("Magic Missile")
+    assert mm is not None and find_spell("Palla Inesistente") is None
+    # chiave combinata "sorcerer/wizard" splittata; match case-insensitive
+    assert spell_level_for_class(mm, "Wizard") == 1
+    assert spell_level_for_class(mm, "wizard") == 1
+    assert spell_level_for_class(mm, "Sorcerer") == 1
+    # bloodrager non e' in classes.json: ignorato senza errore -> None
+    assert spell_level_for_class(mm, "Bloodrager") is None
+    assert spell_level_for_class(find_spell("Cure Light Wounds"), "Wizard") is None
+
+
+def test_markdown_render_spells():
+    sheet = build_character(_wizard_draft(skills={"Knowledge (Arcana)": 1, "Spellcraft": 1},
+                                          spells=["Magic Missile", "Mage Armor"]))
+    md = render_markdown(sheet)
+    assert "**Incantesimi**" in md and "Magic Missile" in md
+    assert "**Slot/giorno**" in md

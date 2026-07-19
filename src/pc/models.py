@@ -18,6 +18,7 @@ class CharacterDraft:
     feats: list = field(default_factory=list)
     traits: list = field(default_factory=list)
     equipment: list = field(default_factory=list)
+    spells: list = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data):

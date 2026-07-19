@@ -1,5 +1,6 @@
 """Invarianti dei cataloghi OGL reali (dati su disco, nessuna rete)."""
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -114,3 +115,18 @@ def test_class_skills_crossref():
                 missing.append((cls["name"], cs))
     assert not missing, f"class skills senza match nel catalogo: {missing}"
     print("OK: cross-ref class skills completo")
+
+
+def test_spells_per_day_value_format():
+    """Ogni valore spells_per_day di classes.json e' una stringa numerica
+    (slot base) con eventuale suffisso "+N" (slot bonus/dominio, es. Cleric
+    "1+1"): il builder legge l'intero iniziale (fail-closed sui dati)."""
+    classes = _load("classes.json")["entries"]
+    bad = []
+    for cls in classes:
+        for i, row in enumerate(cls.get("mechanics", {}).get("progression", []), start=1):
+            for circle, value in (row.get("spells_per_day") or {}).items():
+                if not re.match(r"^\d+(\+\d+)?$", str(value)):
+                    bad.append((cls["name"], i, circle, value))
+    assert not bad, f"spells_per_day con formato inatteso: {bad}"
+    print("OK: formato valori spells_per_day")
