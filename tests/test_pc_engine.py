@@ -673,10 +673,15 @@ def test_wbl_warning_and_unknown_magic_item():
                                       equipment=["Longsword", "Chain shirt", "+1 Flaming Longsword"]))
     assert sheet["errors"] == []
     assert any("+1 Flaming Longsword" in w for w in sheet["warnings"])
-    # oltre WBL -> warning
+    # l'item sconosciuto non produce attacchi e non altera la CA
+    assert all(a["weapon"] != "+1 Flaming Longsword" for a in sheet["attacks"])
+    assert sheet["ac"] == 15  # 10 + armor 4 (Chain shirt) + Dex mod 1 (Dex 12)
+    # oltre WBL -> warning; piu' armature indossabili -> warning (non errore) a lv>1
     sheet2 = build_character(_draft_lv(2, skills={"Climb": 1},  # WBL 1000
                                        equipment=["Chain shirt", "Full plate", "Longsword", "Shortbow"]))
+    assert sheet2["errors"] == []
     assert any("wbl" in w.lower() or "wealth" in w.lower() for w in sheet2["warnings"])
+    assert any("armature" in w for w in sheet2["warnings"])
 
 
 def test_wbl_table():

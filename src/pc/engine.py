@@ -184,9 +184,10 @@ def apply_equipment(draft, sheet):
     Al lv1 la ricchezza e' la starting_wealth di classe e la validazione e'
     stretta: item sconosciuto o spesa oltre budget sono errori. Ai livelli
     2-20 la ricchezza e' la Wealth by Level (catalogs.wealth_by_level) e la
-    validazione e' best-effort: item non in catalogo (es. oggetti magici) e
-    spesa oltre il WBL producono warning, non errori. gold_remaining, CA e
-    attacchi sono calcolati allo stesso modo (wealth = WBL per lv>1).
+    validazione e' best-effort: item non in catalogo (es. oggetti magici),
+    spesa oltre il WBL e piu' armature indossabili producono warning, non
+    errori. gold_remaining, CA e attacchi sono calcolati allo stesso modo
+    (wealth = WBL per lv>1).
 
     Applica il bonus di taglia: creature Small (es. Halfling, Gnome) hanno
     +1 alla CA e +1 a tutti i tiri per colpire.
@@ -195,7 +196,7 @@ def apply_equipment(draft, sheet):
     (ranged solo se range >= 30 ft) — armi da tiro con gittata < 30 ft
     classificate melee; le armi da lancio (Dagger, Club, Shortspear...)
     restano correttamente melee."""
-    level = getattr(draft, "level", 1)
+    level = draft.level
     strict = level == 1
     if strict:
         cls = catalogs.get_class(draft.class_)
@@ -206,7 +207,7 @@ def apply_equipment(draft, sheet):
         else:
             wealth = _parse_cost(wealth_text)
     else:
-        wealth = catalogs.wealth_by_level(level) or 0
+        wealth = catalogs.wealth_by_level(level)
     spent = 0
     items = []
     for name in draft.equipment:
@@ -228,7 +229,7 @@ def apply_equipment(draft, sheet):
                 f"wealth: spesi {spent:.2f} gp oltre la ricchezza iniziale {wealth:.2f} gp")
         else:
             sheet["warnings"].append(
-                f"wealth: spesi {spent:.2f} gp oltre WBL {wealth} gp")
+                f"wealth: spesi {spent:.2f} gp oltre WBL {wealth:.2f} gp")
     sheet["gold_remaining"] = round(wealth - spent, 2)
     sheet["equipment"] = items
     mods = {ab: ability_mod(sc) for ab, sc in sheet["abilities"].items()}
@@ -247,7 +248,11 @@ def apply_equipment(draft, sheet):
             armors.append((bonus, _parse_bonus(md) if md else None))
     armor = 0
     if len(armors) > 1:
-        sheet["errors"].append("indossabili piu' armature: usa la migliore")
+        if strict:
+            sheet["errors"].append("indossabili piu' armature: usa la migliore")
+        else:
+            sheet["warnings"].append(
+                "indossabili piu' armature: usata la migliore per la CA")
     if armors:
         best = max(armors, key=lambda a: a[0])
         armor = best[0]
