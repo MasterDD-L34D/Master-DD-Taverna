@@ -416,3 +416,28 @@ def test_race_bonus_ability_ignored_warning():
     assert sheet["errors"] == []
     assert any("race_bonus_ability ignorato" in w for w in sheet["warnings"])
     assert sheet["abilities"]["dex"] == 14  # +2 razziale fisso
+
+
+# --- Effetti meccanici dei talenti (src/pc/feat_effects.py) ---
+
+# Il tetto al lv1 e' 3 talenti (1 base + 1 Human + 1 Fighter) e Dodge richiede
+# Dex 13: gli effetti passivi sono verificati su due build legali distinte.
+def test_passive_feat_effects_applied():
+    plain = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str",
+                                   skills={"Climb": 1, "Perception": 1, "Survival": 1}))
+    boosted = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str",
+                                     skills={"Climb": 1, "Perception": 1, "Survival": 1},
+                                     feats=["Toughness", "Iron Will", "Improved Initiative"]))
+    assert boosted["errors"] == []
+    assert boosted["hp"] == plain["hp"] + 3          # Toughness
+    assert boosted["saves"]["will"] == plain["saves"]["will"] + 2  # Iron Will
+    assert boosted["initiative"] == plain["initiative"] + 4        # Improved Initiative
+    assert boosted["saves"]["fort"] == plain["saves"]["fort"]      # invariato
+    # Bonus razziale su Dex (14): Dodge (Dex 13) soddisfatto -> +1 CA.
+    plain_dex = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="dex",
+                                      skills={"Climb": 1, "Perception": 1, "Survival": 1}))
+    dodged = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="dex",
+                                     skills={"Climb": 1, "Perception": 1, "Survival": 1},
+                                     feats=["Dodge"]))
+    assert dodged["errors"] == []
+    assert dodged["ac"] == plain_dex["ac"] + 1       # Dodge

@@ -48,7 +48,7 @@ def test_pc_build_ok(client, auth_headers):
     assert resp.status_code == 200, resp.text
     sheet = resp.json()
     assert sheet["errors"] == []
-    assert sheet["hp"] == 12 and sheet["ac"] == 16
+    assert sheet["hp"] == 12 and sheet["ac"] == 17  # CA 16 base + 1 Dodge (feat effects)
     assert sheet["abilities"]["str"] == 13
     assert sheet["abilities"]["dex"] == 14
 

@@ -2,6 +2,7 @@
 import re
 
 from src.pc import catalogs
+from src.pc.feat_effects import apply_feat_effects
 
 ABILS = ("str", "dex", "con", "int", "wis", "cha")
 
@@ -277,8 +278,9 @@ def build_character(draft):
     """Costruisce la scheda lv1 completa (abilities, classe, skill, talenti, equip).
     Ritorna dict con errors (bloccanti) e warnings.
 
-    Limitazioni note: gli effetti meccanici dei talenti selezionati NON sono
-    applicati ai valori calcolati; solo validazione prerequisiti e conteggio."""
+    Gli effetti meccanici passivi dei talenti (feat_effects.FEAT_EFFECTS) sono
+    applicati ai valori calcolati come ultimo passo; i talenti senza effetto
+    numerico al lv1 sono solo validati (prerequisiti e conteggio)."""
     abilities = apply_abilities(draft)
     errors = list(abilities["errors"])
     warnings = list(abilities.get("warnings", []))
@@ -331,6 +333,7 @@ def build_character(draft):
     validate_feats(draft, sheet)
     apply_equipment(draft, sheet)
     validate_traits(draft, sheet)
+    apply_feat_effects(sheet)
     return sheet
 
 
