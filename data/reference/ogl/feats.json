@@ -36274,7 +36274,7 @@
       "name": "Tattoo Attunement",
       "source": "Monster Summoner's Handbook",
       "prerequisites": [
-        "Inscribe Magical TattooISM or a frontier landn TattooISWG"
+        "Inscribe Magical TattooISM"
       ],
       "tags": [
         "Monster Summoner's Handbook"
@@ -36286,14 +36286,14 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Tattoo%20Attunement"
       ],
       "source_id": "monster_summoner_s_handbook:tattoo_attunement",
-      "description": "You've learned to absorb summoned creatures into temporary spell tattoos.\n\nInscribe Magical Tattoo | a frontier landn Tattoo",
+      "description": "You've learned to absorb summoned creatures into temporary spell tattoos.\n\nInscribe Magical Tattoo",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
       "name": "Tattoo Conversion",
       "source": "Once per day as a standard action that provokes attacks of opportunity, you can make a melee touch attack against a summoned creature to transform it into a magical tattoo on your body as per Tattoo Attunement. When you later transform the creature from tattoo to creature form, you can attempt an opposed Spellcraft check against the creature's original summoner; if that summoner is unconscious or dead, you automatically succeed at the check. If you succeed, the creature must succeed at a Will save (DC = 10 + your caster level) or treat you as the caster of the spell that originally summoned it for the remaining duration of the spell. This is a supernatural ability.",
       "prerequisites": [
-        "Inscribe Magical Tattoo or Varisian Tattoo; Tattoo Attunement; Spellcraft 15 ranks; ability to cast control summoned creature"
+        "Inscribe Magical Tattoo; Tattoo Attunement; Spellcraft 15 ranks; ability to cast control summoned creature"
       ],
       "tags": [
         "Once per day as a standard action that provokes attacks of opportunity, you can make a melee touch attack against a summoned creature to transform it into a magical tattoo on your body as per Tattoo Attunement. When you later transform the creature from tattoo to creature form, you can attempt an opposed Spellcraft check against the creature's original summoner; if that summoner is unconscious or dead, you automatically succeed at the check. If you succeed, the creature must succeed at a Will save (DC = 10 + your caster level) or treat you as the caster of the spell that originally summoned it for the remaining duration of the spell. This is a supernatural ability."
@@ -36312,7 +36312,7 @@
       "name": "Tattoo Transformation",
       "source": "Monster Summoner's Handbook",
       "prerequisites": [
-        "Inscribe Magical TattooISM or a frontier landn TattooISWG"
+        "Inscribe Magical TattooISM"
       ],
       "tags": [
         "Monster Summoner's Handbook"
@@ -39723,7 +39723,7 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Scion%20Of%20The%20Lost%20Empire"
       ],
       "source_id": "inner_sea_races:scion_of_the_lost_empire",
-      "description": "You can feel the ancient power in your blood whenever you're near others like yourself.\n\nWhile you're adjacent to an ethnically Chelish or Taldan ally who also has this feat, you gain a +2 competence bonus on a single attack roll, saving throw, ability check, or skill check as an immediate action. You must choose to use this ability before making the roll.",
+      "description": "You can feel the ancient power in your blood whenever you're near others like yourself.\n\nWhile you're adjacent to an ally who also has this feat, you gain a +2 competence bonus on a single attack roll, saving throw, ability check, or skill check as an immediate action. You must choose to use this ability before making the roll.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -55135,7 +55135,7 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Cypher%20Script"
       ],
       "source_id": "adventurer_s_guide:cypher_script",
-      "description": "Through researching lengthy, ancient, arcane scripts, you have discovered a more efficient method of recording spells. As with the Cypher Magic feat, Cypher Script was originally developed by the Cyphermages of Riddleport, but recently has been spreading through the the inner sea region region.\n\nAny spell you scribe in your spellbook costs half as much as normal and takes up only half the room it normally would (round all fractions up). It takes you only 10 minutes per spell level to scribe a spell into your spellbook (5 minutes for cantrips).",
+      "description": "Through researching lengthy, ancient, arcane scripts, you have discovered a more efficient method of recording spells. As with the Cypher Magic feat, Cypher Script was originally developed by the Cyphermages, but recently has been spreading far and wide.\n\nAny spell you scribe in your spellbook costs half as much as normal and takes up only half the room it normally would (round all fractions up). It takes you only 10 minutes per spell level to scribe a spell into your spellbook (5 minutes for cantrips).",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
