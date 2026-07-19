@@ -107,7 +107,7 @@ def _mechanics(monster: dict) -> dict:
     }
 
 
-def load_monsters(input_path: Path) -> list[dict]:
+def load_monsters(input_path: Path) -> list[tuple[str, dict]]:
     raw = input_path.read_bytes()
     try:
         data = json.loads(raw.decode("utf-8"))
@@ -171,6 +171,7 @@ def _find_data_json(source_dir: Path, letter: str | None) -> Path | None:
     if letter:
         candidates.append(source_dir / "data" / letter / "data.json")
     candidates.extend([
+        source_dir / "data" / "full" / "data.json",
         source_dir / "data" / "poc" / "data.json",
         source_dir / "data" / "data.json",
     ])
