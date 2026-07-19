@@ -6,8 +6,6 @@ from src.pc.feat_effects import apply_feat_effects
 
 ABILS = ("str", "dex", "con", "int", "wis", "cha")
 
-FEAT_BONUS_CLASSES = {"Fighter", "Monk"}
-
 
 def _check_prereq(prereq, ctx):
     """Valuta un prerequisito testuale. Ritorna (ok, nota)."""
@@ -27,11 +25,11 @@ def _check_prereq(prereq, ctx):
     m = re.search(r"level\s+(\d+)(?:st|nd|rd|th)", text, re.I)
     if m:
         needed = int(m.group(1))
-        return needed <= 1, f"richiede livello {needed} (personaggio lv1)"
+        return needed <= ctx["class_level"], f"richiede livello {needed} (personaggio lv{ctx['class_level']})"
     m = re.search(r"(\d+)(?:st|nd|rd|th)-level", text, re.I)
     if m:
         needed = int(m.group(1))
-        return needed <= 1, f"richiede livello {needed} (personaggio lv1)"
+        return needed <= ctx["class_level"], f"richiede livello {needed} (personaggio lv{ctx['class_level']})"
     if "proficien" in text.lower():
         return True, f"proficiency: {text} (assunta da classe)"
     m = re.search(r"(\d+)\s+ranks?", text, re.I)
@@ -59,9 +57,12 @@ SPECIAL_FEAT_ALIASES = {"unarmed strike": "Improved Unarmed Strike"}
 
 
 def _granted_feats(draft):
-    """Talenti concessi automaticamente dalla classe al lv1 (le voci special di
+    """Talenti concessi automaticamente dalla classe (le voci special di
     progression[0] che matchano un feat in feats.json, case-insensitive).
-    Non consumano slot e non richiedono prerequisiti."""
+    Coprono solo i grant fissi del lv1 (es. Stunning Fist del Monk, Scribe
+    Scroll del Wizard): i talenti bonus in scala sul livello sono conteggiati
+    a parte da _class_bonus_feats. Non consumano slot e non richiedono
+    prerequisiti."""
     cls = catalogs.get_class(draft.class_)
     if cls is None:
         return []
@@ -75,20 +76,37 @@ def _granted_feats(draft):
     return granted
 
 
+def _class_bonus_feats(class_name, level):
+    """Talenti bonus da classe in scala sul livello (slot extra; i grant fissi
+    del lv1 restano in _granted_feats): Fighter 1 + livello//2 (lv1 e ogni
+    livello pari); Monk ai livelli 1, 2, 6, 10, 14, 18."""
+    if class_name == "Fighter":
+        return 1 + level // 2
+    if class_name == "Monk":
+        return sum(1 for x in (1, 2, 6, 10, 14, 18) if level >= x)
+    return 0
+
+
 def validate_feats(draft, sheet):
     """Conta talenti consentiti e valuta i prerequisiti noti.
 
-    I talenti concessi automaticamente dalla classe al lv1 (es. Improved
-    Unarmed Strike e Stunning Fist per il Monk, Scribe Scroll per il Wizard)
-    NON contano nel tetto consentito e NON passano il check dei prerequisiti."""
+    Il tetto scala col livello (1-20): 1 + livello//2 base, +1 se Human, + i
+    talenti bonus di classe (_class_bonus_feats). I prerequisiti di livello
+    ("fighter level 4th", "caster level 1st"...) sono valutati contro il
+    livello del personaggio. I talenti concessi automaticamente dalla classe
+    al lv1 (es. Improved Unarmed Strike e Stunning Fist per il Monk, Scribe
+    Scroll per il Wizard) NON contano nel tetto consentito e NON passano il
+    check dei prerequisiti."""
     granted = _granted_feats(draft)
     granted_norm = {_norm_feat_name(g) for g in granted}
     chosen = [f for f in draft.feats if _norm_feat_name(f) not in granted_norm]
     ctx = {"abilities": dict(sheet["abilities"]), "bab": sheet["bab"],
-           "feats": chosen + granted, "skills": sheet.get("skills", {})}
-    allowed = 1 + (1 if draft.race == "Human" else 0) + (1 if draft.class_ in FEAT_BONUS_CLASSES else 0)
+           "feats": chosen + granted, "skills": sheet.get("skills", {}),
+           "class_level": draft.level}
+    allowed = (1 + draft.level // 2 + (1 if draft.race == "Human" else 0)
+               + _class_bonus_feats(draft.class_, draft.level))
     if len(chosen) > allowed:
-        sheet["errors"].append(f"feat: {len(chosen)} selezionati su {allowed} consentiti al lv1")
+        sheet["errors"].append(f"feat: {len(chosen)} selezionati su {allowed} consentiti al lv{draft.level}")
     for name in chosen:
         # Selezioni parentetiche: feats.json espande alcune voci ("Weapon Focus
         # (Longsword)") ma non altre ("Skill Focus (Perception)"): si prova il
@@ -301,11 +319,11 @@ def build_character(draft):
     if cls is None:
         errors.append(f"classe sconosciuta: {draft.class_}")
         return sheet
-    if not isinstance(draft.level, int) or not 1 <= draft.level <= 20:
-        sheet["errors"].append(f"level: deve essere un intero 1-20 (ricevuto {draft.level!r})")
+    if type(draft.level) is not int or not 1 <= draft.level <= 20:
+        errors.append(f"level: deve essere un intero 1-20 (ricevuto {draft.level!r})")
         return sheet
     if draft.hp_method not in ("average", "max"):
-        sheet["errors"].append(f"hp_method non valido: {draft.hp_method}")
+        errors.append(f"hp_method non valido: {draft.hp_method}")
         return sheet
     if draft.favored_class_bonus not in ("hp", "skill"):
         errors.append(f"favored_class_bonus non valido: {draft.favored_class_bonus} (atteso hp o skill)")
@@ -341,8 +359,8 @@ def build_character(draft):
         if sk is None:
             errors.append(f"skill sconosciuta: {name}")
             continue
-        if not 0 <= ranks <= draft.level:
-            errors.append(f"{name}: {ranks} ranks non validi (0..{draft.level} al lv{draft.level})")
+        if not 0 < ranks <= draft.level:
+            errors.append(f"{name}: {ranks} ranks non validi (1..{draft.level} al lv{draft.level})")
         key = sk["mechanics"]["key_ability"]
         is_class_skill = any(catalogs.class_skill_matches(name, cs) for cs in class_skills)
         class_bonus = 3 if ranks >= 1 and is_class_skill else 0

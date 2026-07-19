@@ -571,3 +571,30 @@ def test_wizard_lv10_spells_and_max_hp():
     assert sheet["hp"] == 70
     assert sheet["bab"] == 5  # Wizard lv10: +5
     assert sheet["spells_per_day"]
+
+
+# --- Skill e talenti multi-livello: conteggio talenti e prerequisiti di livello ---
+
+def test_feats_count_by_level():
+    # Human Fighter lv5: 1 + 5//2 + 1 + (1 + 5//2) = 1+2+1+3 = 7 consentiti
+    feats = ["Power Attack", "Dodge", "Cleave", "Point-Blank Shot", "Weapon Focus",
+             "Improved Initiative", "Toughness"]
+    sheet = build_character(_draft_lv(5, race_bonus_ability="dex",
+                                      skills={"Climb": 5, "Perception": 5, "Survival": 5},
+                                      feats=feats))
+    assert sheet["errors"] == [], sheet["errors"]
+    assert len(sheet["feats"]) == 7
+    sheet2 = build_character(_draft_lv(5, race_bonus_ability="dex",
+                                       skills={"Climb": 5, "Perception": 5, "Survival": 5},
+                                       feats=feats + ["Lightning Reflexes"]))
+    assert any("feat" in e.lower() for e in sheet2["errors"])
+
+
+def test_prereq_class_level_threshold():
+    # Weapon Specialization richiede fighter level 4th + Weapon Focus: fallisce a lv3, ok a lv4
+    sheet = build_character(_draft_lv(3, skills={"Climb": 3},
+                                      feats=["Weapon Focus", "Weapon Specialization"]))
+    assert any("Weapon Specialization" in e for e in sheet["errors"])
+    sheet = build_character(_draft_lv(4, skills={"Climb": 4},
+                                      feats=["Weapon Focus", "Weapon Specialization"]))
+    assert sheet["errors"] == [], sheet["errors"]
