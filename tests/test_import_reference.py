@@ -91,6 +91,74 @@ def test_race_scoping_fail_closed():
     print("OK: race scoping fail-closed")
 
 
+# Fixture ricalcate sul markup REALE aonprd delle esotiche (cache 2026-07-19):
+# heading h1 '<Razza> Racial Traits', righe flat <b> separate da <br/>, ultimo
+# bold (Languages) subito prima dell'heading successivo senza <br/> interposto.
+
+GOBLIN_HTML = """
+<html><body>
+<h1 class="title">Goblin Racial Traits</h1><b>+4 Dexterity, –2 Strength, –2 Charisma</b>: Goblins are fast but weak, and they're unpleasant to be around.<br /> <b>Small</b>: Goblins are Small and gain a +1 size bonus to their AC.<br /> <b>Normal Speed</b>: Goblins are fast for their size, and have a base speed of 30 feet.<br /> <b>Darkvision</b>: Goblins can see in the dark up to 60 feet.<br /> <b>Languages</b>: Goblins begin play speaking Goblin. Goblins with high Intelligence scores can choose from the following languages: Common, Draconic, and Orc<h1 class="title">Subraces</h1><h3 class="framing">Oversized Goblins</h3><p>flavor</p>
+</body></html>
+"""
+
+
+def test_parse_race_exotic_goblin():
+    """Formato Goblin: heading h1 '<Razza> Racial Traits', mods +4/–2/–2,
+    lista lingue SENZA punto finale prima dell'heading successivo."""
+    entry = parse_race(GOBLIN_HTML, "Goblin")
+    mech = entry["mechanics"]
+    assert mech["ability_mods"] == {"dex": 4, "str": -2, "cha": -2}
+    assert mech["size"] == "Small"
+    assert mech["speed"] == 30
+    assert any(t["name"] == "Darkvision" for t in mech["traits"])
+    assert mech["languages"]["auto"] == ["Goblin"]
+    # Il dettaglio dell'ultimo bold si ferma all'heading 'Subraces':
+    # senza stop sugli heading il bonus finale sarebbe 'OrcSubraces ...'.
+    assert mech["languages"]["bonus"] == ["Common", "Draconic", "Orc"]
+    print("OK: parse_race exotic goblin")
+
+
+KASATHA_HTML = """
+<html><body>
+<h1 class="title">Kasatha Racial Traits</h1><b>+2 Dexterity, +2 Wisdom</b>: Kasathas are nimble and perceptive.<br /> <b>Medium</b>: Kasathas are Medium creatures.<br /> <b>Normal Speed</b>: Kasathas have a base speed of 30 feet.<br /> <b>Multi-Armed</b>: Kasathas have four arms.<br /> <b>Languages</b>: Kasathas speak Common and Kasatha. Kasathas with high Intelligence scores can choose from the following: Dwarven, Draconic, Gnoll, Orc, and Sphinx.<h1 class="title">Kasatha Alternate Racial Traits</h1>
+</body></html>
+"""
+
+
+def test_parse_race_exotic_kasatha():
+    """Formato Kasatha: mods senza penalita', lingue con 'speak' (non
+    'begin play speaking') e bonus da 'choose from the following:'."""
+    entry = parse_race(KASATHA_HTML, "Kasatha")
+    mech = entry["mechanics"]
+    assert mech["ability_mods"] == {"dex": 2, "wis": 2}
+    assert mech["size"] == "Medium"
+    assert mech["speed"] == 30
+    assert any(t["name"] == "Multi-Armed" for t in mech["traits"])
+    assert mech["languages"]["auto"] == ["Common", "Kasatha"]
+    assert mech["languages"]["bonus"] == ["Dwarven", "Draconic", "Gnoll", "Orc", "Sphinx"]
+    print("OK: parse_race exotic kasatha")
+
+
+STRIX_HTML = """
+<html><body>
+<h1 class="title">Strix Racial Traits</h1><b>+2 Dexterity, –2 Charisma</b>: Strix are swift but aloof.<br /> <b>Medium</b>: Strix are Medium creatures.<br /> <b>Normal Speed</b>: Strix have a base speed of 30 feet.<br /> <b>Flight</b>: Strix have a fly speed of 60 feet with average maneuverability.<br /> <b>Languages</b>: Strix begin play speaking Strix. Those with high Intelligence scores can choose any of the following languages: Auran, Azlanti, Common, Draconic, and Infernal.<h1 class="title">Strix Alternate Racial Traits</h1>
+</body></html>
+"""
+
+
+def test_parse_race_exotic_strix():
+    """Formato Strix: mods a due voci, bonus lingue da 'choose any of ...'."""
+    entry = parse_race(STRIX_HTML, "Strix")
+    mech = entry["mechanics"]
+    assert mech["ability_mods"] == {"dex": 2, "cha": -2}
+    assert mech["size"] == "Medium"
+    assert mech["speed"] == 30
+    assert any(t["name"] == "Flight" for t in mech["traits"])
+    assert mech["languages"]["auto"] == ["Strix"]
+    assert mech["languages"]["bonus"] == ["Auran", "Azlanti", "Common", "Draconic", "Infernal"]
+    print("OK: parse_race exotic strix")
+
+
 CLASS_HTML = """
 <html><body>
 <h2>Barbarian</h2>

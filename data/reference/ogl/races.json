@@ -486,6 +486,1122 @@
           "bonus": []
         }
       }
+    },
+    {
+      "name": "Catfolk",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:catfolk",
+      "prerequisites": [],
+      "tags": [
+        "race",
+        "core",
+        "medium"
+      ],
+      "references": [
+        "AoN: Catfolk (Races)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/RacesDisplay.aspx?ItemName=Catfolk"
+      ],
+      "description": "Catfolk: modificatori {'dex': 2, 'cha': 2, 'wis': -2}, taglia Medium, velocita' 30 ft. Tratti razziali: Catfolk; Low-Light Vision; Cat’s Luck; Natural Hunter; Sprinter.",
+      "mechanics": {
+        "ability_mods": {
+          "dex": 2,
+          "cha": 2,
+          "wis": -2
+        },
+        "size": "Medium",
+        "speed": 30,
+        "traits": [
+          {
+            "name": "Catfolk",
+            "text": "Catfolk are humanoids with the catfolk subtype."
+          },
+          {
+            "name": "Low-Light Vision",
+            "text": "In dim light, catfolk can see twice as far as humans."
+          },
+          {
+            "name": "Cat’s Luck",
+            "text": "Once per day when a catfolk attempts a Reflex saving throw, he can roll the saving throw twice and take the better result. He must decide to use this ability before the saving throw is attempted."
+          },
+          {
+            "name": "Natural Hunter",
+            "text": "Catfolk receive a +2 racial bonus on Perception, Stealth, and Survival checks."
+          },
+          {
+            "name": "Sprinter",
+            "text": "Catfolk gain a 10-foot racial bonus to their speed when using the charge, run, or withdraw actions."
+          }
+        ],
+        "languages": {
+          "auto": [
+            "Common",
+            "Catfolk"
+          ],
+          "bonus": [
+            "Elven",
+            "Gnoll",
+            "Gnome",
+            "Goblin",
+            "Halfling",
+            "Orc",
+            "Sylvan"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Fetchling",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:fetchling",
+      "prerequisites": [],
+      "tags": [
+        "race",
+        "core",
+        "medium"
+      ],
+      "references": [
+        "AoN: Fetchling (Races)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/RacesDisplay.aspx?ItemName=Fetchling"
+      ],
+      "description": "Fetchling: modificatori {'dex': 2, 'cha': 2, 'wis': -2}, taglia Medium, velocita' 30 ft. Tratti razziali: Native Outsider; Darkvision; Low-Light Vision; Skilled; Shadow Blending; Shadowy Resistance; Spell-Like Abilities.",
+      "mechanics": {
+        "ability_mods": {
+          "dex": 2,
+          "cha": 2,
+          "wis": -2
+        },
+        "size": "Medium",
+        "speed": 30,
+        "traits": [
+          {
+            "name": "Native Outsider",
+            "text": "Fetchlings are outsiders with the native subtype."
+          },
+          {
+            "name": "Darkvision",
+            "text": "Fetchlings can see in the dark up to 60 feet."
+          },
+          {
+            "name": "Low-Light Vision",
+            "text": "Fetchlings can see twice as far as humans in conditions of dim light."
+          },
+          {
+            "name": "Skilled",
+            "text": "Fetchlings have a +2 racial bonus on Knowledge (planes) and Stealth checks."
+          },
+          {
+            "name": "Shadow Blending",
+            "text": "Attacks against a fetchling in dim light have a 50% miss chance instead of the normal 20% miss chance. This ability does not grant total concealment; it just increases the miss chance."
+          },
+          {
+            "name": "Shadowy Resistance",
+            "text": "Fetchlings have cold resistance 5 and electricity resistance 5."
+          },
+          {
+            "name": "Spell-Like Abilities",
+            "text": "A fetchling can use disguise self once per day as a spell-like ability. He can assume the form of any humanoid creature using this spell-like ability. When a fetchling reaches character 9th level in any combination of classes, he gains shadow walk (self only) as a spell-like ability usable once per day, and at 13th level, he gains plane shift (self only, to the Shadow Plane or the Material Plane only) usable once per day. A fetchling’s caster level for these abilities is equal to his character level."
+          }
+        ],
+        "languages": {
+          "auto": [
+            "Common"
+          ],
+          "bonus": [
+            "Aklo",
+            "Aquan",
+            "Auran",
+            "Draconic",
+            "D’ziriak (understanding only, cannot speak)",
+            "Ignan",
+            "Terran",
+            "any regional human tongue"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Goblin",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:goblin",
+      "prerequisites": [],
+      "tags": [
+        "race",
+        "core",
+        "small"
+      ],
+      "references": [
+        "AoN: Goblin (Races)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/RacesDisplay.aspx?ItemName=Goblin"
+      ],
+      "description": "Goblin: modificatori {'dex': 4, 'str': -2, 'cha': -2}, taglia Small, velocita' 30 ft. Tratti razziali: Goblinoid; Darkvision; Skilled.",
+      "mechanics": {
+        "ability_mods": {
+          "dex": 4,
+          "str": -2,
+          "cha": -2
+        },
+        "size": "Small",
+        "speed": 30,
+        "traits": [
+          {
+            "name": "Goblinoid",
+            "text": "Goblins are humanoids with the goblinoid subtype."
+          },
+          {
+            "name": "Darkvision",
+            "text": "Goblins can see in the dark up to 60 feet."
+          },
+          {
+            "name": "Skilled",
+            "text": "+4 racial bonus on Ride and Stealth checks."
+          }
+        ],
+        "languages": {
+          "auto": [
+            "Goblin"
+          ],
+          "bonus": [
+            "Common",
+            "Draconic",
+            "Dwarven",
+            "Gnoll",
+            "Gnome",
+            "Halfling",
+            "Orc"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Grippli",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:grippli",
+      "prerequisites": [],
+      "tags": [
+        "race",
+        "core",
+        "small"
+      ],
+      "references": [
+        "AoN: Grippli (Races)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/RacesDisplay.aspx?ItemName=Grippli"
+      ],
+      "description": "Grippli: modificatori {'dex': 2, 'wis': 2, 'str': -2}, taglia Small, velocita' 30 ft. Tratti razziali: Grippli; Natural Climber; Darkvision; Camouflage; Swamp Stride; Weapon Familiarity.",
+      "mechanics": {
+        "ability_mods": {
+          "dex": 2,
+          "wis": 2,
+          "str": -2
+        },
+        "size": "Small",
+        "speed": 30,
+        "traits": [
+          {
+            "name": "Grippli",
+            "text": "Gripplis are humanoids with the grippli subtype."
+          },
+          {
+            "name": "Natural Climber",
+            "text": "Gripplis have a climb speed of 20 feet."
+          },
+          {
+            "name": "Darkvision",
+            "text": "Gripplis can see in the dark up to 60 feet."
+          },
+          {
+            "name": "Camouflage",
+            "text": "Gripplis receive a +4 racial bonus on Stealth checks in marshes and forested areas."
+          },
+          {
+            "name": "Swamp Stride",
+            "text": "A grippli can move through difficult terrain at its normal speed while within a swamp. Magically altered terrain affects a grippli normally."
+          },
+          {
+            "name": "Weapon Familiarity",
+            "text": "Gripplis are proficient with nets."
+          }
+        ],
+        "languages": {
+          "auto": [
+            "Common",
+            "Grippli"
+          ],
+          "bonus": [
+            "Boggard",
+            "Draconic",
+            "Elven",
+            "Gnome",
+            "Goblin",
+            "Sylvan"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Kasatha",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:kasatha",
+      "prerequisites": [],
+      "tags": [
+        "race",
+        "core",
+        "medium"
+      ],
+      "references": [
+        "AoN: Kasatha (Races)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/RacesDisplay.aspx?ItemName=Kasatha"
+      ],
+      "description": "Kasatha: modificatori {'dex': 2, 'wis': 2}, taglia Medium, velocita' 30 ft. Tratti razziali: Kasatha; Defensive Training; Desert Runner; Desert Stride; Jumper; Multi-Armed; Stalker.",
+      "mechanics": {
+        "ability_mods": {
+          "dex": 2,
+          "wis": 2
+        },
+        "size": "Medium",
+        "speed": 30,
+        "traits": [
+          {
+            "name": "Kasatha",
+            "text": "Kasathas are humanoids with the kasatha subtype."
+          },
+          {
+            "name": "Defensive Training",
+            "text": "Kasathas have a +2 dodge bonus to Armor Class."
+          },
+          {
+            "name": "Desert Runner",
+            "text": "A kasatha has a +4 racial bonus on Constitution checks and Fortitude saves to avoid fatigue, exhaustion, and other ill effects from running, forced marches, starvation, thirst, and hot or cold environments."
+          },
+          {
+            "name": "Desert Stride",
+            "text": "A kasatha moves through nonmagical difficult terrain in desert environments at normal speed."
+          },
+          {
+            "name": "Jumper",
+            "text": "A kasatha is always considered to have a running start when attempting Acrobatics checks to jump."
+          },
+          {
+            "name": "Multi-Armed",
+            "text": "A kasatha has four arms. One hand is considered its primary hand; all others are considered off hands. It can use any of its hands for other purposes that require free hands."
+          },
+          {
+            "name": "Stalker",
+            "text": "Perception and Stealth are class skills for kasathas."
+          }
+        ],
+        "languages": {
+          "auto": [
+            "Common",
+            "Kasatha"
+          ],
+          "bonus": [
+            "Dwarven",
+            "Draconic",
+            "Gnoll",
+            "Orc",
+            "Sphinx"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Kitsune",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:kitsune",
+      "prerequisites": [],
+      "tags": [
+        "race",
+        "core",
+        "medium"
+      ],
+      "references": [
+        "AoN: Kitsune (Races)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/RacesDisplay.aspx?ItemName=Kitsune"
+      ],
+      "description": "Kitsune: modificatori {'dex': 2, 'cha': 2, 'str': -2}, taglia Medium, velocita' 30 ft. Tratti razziali: Kitsune; Low-Light Vision; Change Shape; Agile; Kitsune Magic; Natural Weapons.",
+      "mechanics": {
+        "ability_mods": {
+          "dex": 2,
+          "cha": 2,
+          "str": -2
+        },
+        "size": "Medium",
+        "speed": 30,
+        "traits": [
+          {
+            "name": "Kitsune",
+            "text": "Kitsune are humanoids with the kitsune and shapechanger subtypes."
+          },
+          {
+            "name": "Low-Light Vision",
+            "text": "Kitsune can see twice as far as humans in conditions of dim light."
+          },
+          {
+            "name": "Change Shape",
+            "text": "A kitsune can assume the appearance of a specific single human form of the same sex. The kitsune always takes this specific form when she uses this ability. A kitsune in human form cannot use her bite attack, but gains a +10 racial bonus on Disguise checks made to appear human. Changing shape is a standard action. This ability otherwise functions as alter self, except that the kitsune does not adjust her ability scores and can remain in this form indefinitely."
+          },
+          {
+            "name": "Agile",
+            "text": "Kitsune receive a +2 racial bonus on Acrobatics checks."
+          },
+          {
+            "name": "Kitsune Magic",
+            "text": "Kitsune add 1 to the DCs of any saving throws to resist enchantment spells that they cast. Kitsune with a Charisma score of 11 or higher gain the following spell-like ability: 3/day—dancing lights (caster level equals the kitsune’s level)."
+          },
+          {
+            "name": "Natural Weapons",
+            "text": "In her natural form, a kitsune has a bite attack that deals 1d4 points of damage."
+          }
+        ],
+        "languages": {
+          "auto": [
+            "Common",
+            "Sylvan"
+          ],
+          "bonus": [
+            "any human language",
+            "Aklo",
+            "Celestial",
+            "Elven",
+            "Gnome",
+            "Tengu"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Oread",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:oread",
+      "prerequisites": [],
+      "tags": [
+        "race",
+        "core",
+        "medium"
+      ],
+      "references": [
+        "AoN: Oread (Races)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/RacesDisplay.aspx?ItemName=Oread"
+      ],
+      "description": "Oread: modificatori {'str': 2, 'wis': 2, 'cha': -2}, taglia Medium, velocita' 20 ft. Tratti razziali: Native Outsider; Darkvision; Spell-Like Ability; Energy Resistance; Earth Affinity.",
+      "mechanics": {
+        "ability_mods": {
+          "str": 2,
+          "wis": 2,
+          "cha": -2
+        },
+        "size": "Medium",
+        "speed": 20,
+        "traits": [
+          {
+            "name": "Native Outsider",
+            "text": "Oreads are outsiders with the native subtype."
+          },
+          {
+            "name": "Darkvision",
+            "text": "Oreads can see in the dark up to 60 feet."
+          },
+          {
+            "name": "Spell-Like Ability",
+            "text": "Oreads can use magic stone 1/day as spell-like ability (with a caster level equal to the oread’s character level; DC 11 + Charisma modifier)."
+          },
+          {
+            "name": "Energy Resistance",
+            "text": "Oreads have acid resistance 5."
+          },
+          {
+            "name": "Earth Affinity",
+            "text": "Oread sorcerers with the elemental (earth) bloodline treat their Charisma scores as 2 points higher for the purposes of all sorcerer spells and class abilities. Oread clerics with the Earth domain use their domain powers and spells at +1 caster level."
+          }
+        ],
+        "languages": {
+          "auto": [
+            "Common",
+            "Terran"
+          ],
+          "bonus": [
+            "Aquan",
+            "Auran",
+            "Dwarven",
+            "Elven",
+            "Gnome",
+            "Halfling",
+            "Ignan",
+            "Undercommon"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Samsaran",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:samsaran",
+      "prerequisites": [],
+      "tags": [
+        "race",
+        "core",
+        "medium"
+      ],
+      "references": [
+        "AoN: Samsaran (Races)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/RacesDisplay.aspx?ItemName=Samsaran"
+      ],
+      "description": "Samsaran: modificatori {'int': 2, 'wis': 2, 'con': -2}, taglia Medium, velocita' 30 ft. Tratti razziali: Samsaran; Low-Light Vision; Lifebound; Samsaran Magic; Shards of the Past.",
+      "mechanics": {
+        "ability_mods": {
+          "int": 2,
+          "wis": 2,
+          "con": -2
+        },
+        "size": "Medium",
+        "speed": 30,
+        "traits": [
+          {
+            "name": "Samsaran",
+            "text": "Samsarans are humanoids with the samsaran subtype."
+          },
+          {
+            "name": "Low-Light Vision",
+            "text": "Samsarans can see twice as far as humans in conditions of dim light."
+          },
+          {
+            "name": "Lifebound",
+            "text": "Samsarans gain a +2 racial bonus on all saving throws to resist death effects, saving throws against negative energy effects, Fortitude saves to remove negative levels, and Constitution checks to stabilize if reduced to negative hit points."
+          },
+          {
+            "name": "Samsaran Magic",
+            "text": "Samsarans with a Charisma score of 11 or higher gain the following spell-like abilities: 1/day— comprehend languages, deathwatch, and stabilize. The caster level for these effects equals the samsaran’s character level."
+          },
+          {
+            "name": "Shards of the Past",
+            "text": "A samsaran’s past lives grant her bonuses on two skills. The samsaran chooses two skills—she gains a +2 racial bonus on both, and they are always class skills for her. Once made, this choice can’t be altered."
+          }
+        ],
+        "languages": {
+          "auto": [
+            "Common",
+            "Samsaran"
+          ],
+          "bonus": [
+            "any human language",
+            "Abyssal",
+            "Aquan",
+            "Auran",
+            "Celestial",
+            "Draconic",
+            "Giant",
+            "Ignan",
+            "Infernal",
+            "Nagaji",
+            "Tengu",
+            "Terran"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Shabti",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:shabti",
+      "prerequisites": [],
+      "tags": [
+        "race",
+        "core",
+        "medium"
+      ],
+      "references": [
+        "AoN: Shabti (Races)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/RacesDisplay.aspx?ItemName=Shabti"
+      ],
+      "description": "Shabti: modificatori {'con': 2, 'cha': 2}, taglia Medium, velocita' 30 ft. Tratti razziali: Native Outsider; Darkvision; Immortal (Ex); Immune to Undeath (Ex); Past Life Knowledge (Ex); Resist Level Drain (Ex); Shattered Soul (Ex); Spell-Like Ability.",
+      "mechanics": {
+        "ability_mods": {
+          "con": 2,
+          "cha": 2
+        },
+        "size": "Medium",
+        "speed": 30,
+        "traits": [
+          {
+            "name": "Native Outsider",
+            "text": "Shabti are outsiders with the native subtype."
+          },
+          {
+            "name": "Darkvision",
+            "text": "Shabti can see in the dark up to 60 feet."
+          },
+          {
+            "name": "Immortal (Ex)",
+            "text": "Shabti do not age naturally and can’t die of old age. While some might come into being at age categories other than adulthood, they never leave their original age categories. Spells and effects that cause aging affect a shabti as normal."
+          },
+          {
+            "name": "Immune to Undeath (Ex)",
+            "text": "Shabti can’t become undead. Spells and abilities that would transform a shabti into an undead creature have no effect."
+          },
+          {
+            "name": "Past Life Knowledge (Ex)",
+            "text": "Shabti remember bits of their past lives. As a result, they treat all Knowledge skills as class skills."
+          },
+          {
+            "name": "Resist Level Drain (Ex)",
+            "text": "A shabti takes no penalties from energy drain effects, though it can still be killed if it accrues more negative levels than it has Hit Dice. After 24 hours, any negative levels a shabti takes are automatically removed without the need for additional saving throws."
+          },
+          {
+            "name": "Shattered Soul (Ex)",
+            "text": "Shabti who are killed are exceptionally difficult to return to life. Anyone who attempts to return a shabti to life using raise dead, resurrection, or a similar spell must succeed at a caster level check whose DC is equal to 10 + the shabti’s Hit Dice. If it fails, the spell fails and the caster can’t return the shabti to life for the next 24 hours (though the caster can try again after this period)."
+          },
+          {
+            "name": "Spell-Like Ability",
+            "text": "A shabti can use suggestion once per day as a spell-like ability, with a caster level equal to the shabti’s class level."
+          }
+        ],
+        "languages": {
+          "auto": [
+            "Common"
+          ],
+          "bonus": []
+        }
+      }
+    },
+    {
+      "name": "Strix",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:strix",
+      "prerequisites": [],
+      "tags": [
+        "race",
+        "core",
+        "medium"
+      ],
+      "references": [
+        "AoN: Strix (Races)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/RacesDisplay.aspx?ItemName=Strix"
+      ],
+      "description": "Strix: modificatori {'dex': 2, 'cha': -2}, taglia Medium, velocita' 30 ft. Tratti razziali: Low-Light Vision; Darkvision; Hatred; Nocturnal; Suspicious.",
+      "mechanics": {
+        "ability_mods": {
+          "dex": 2,
+          "cha": -2
+        },
+        "size": "Medium",
+        "speed": 30,
+        "traits": [
+          {
+            "name": "Low-Light Vision",
+            "text": "Strix can see twice as far as humans in conditions of dim light."
+          },
+          {
+            "name": "Darkvision",
+            "text": "Strix can see in the dark up to 60 feet."
+          },
+          {
+            "name": "Hatred",
+            "text": "Strix receive a +1 bonus on attack rolls against humanoid creatures of the human subtype because of their special training against these hated foes."
+          },
+          {
+            "name": "Nocturnal",
+            "text": "Strix gain a +2 racial bonus on Perception and Stealth checks in dim light or darkness."
+          },
+          {
+            "name": "Suspicious",
+            "text": "Strix receive a +2 racial bonus on saving throws against illusion spells or effects."
+          }
+        ],
+        "languages": {
+          "auto": [
+            "Strix"
+          ],
+          "bonus": [
+            "Auran",
+            "Common",
+            "Draconic",
+            "Giant",
+            "Gnome",
+            "Goblin",
+            "Infernal"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Suli",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:suli",
+      "prerequisites": [],
+      "tags": [
+        "race",
+        "core",
+        "medium"
+      ],
+      "references": [
+        "AoN: Suli (Races)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/RacesDisplay.aspx?ItemName=Suli"
+      ],
+      "description": "Suli: modificatori {'str': 2, 'cha': 2, 'int': -2}, taglia Medium, velocita' 30 ft. Tratti razziali: Native Outsider; Low-Light Vision; Negotiator; Elemental Assault; Energy Resistance.",
+      "mechanics": {
+        "ability_mods": {
+          "str": 2,
+          "cha": 2,
+          "int": -2
+        },
+        "size": "Medium",
+        "speed": 30,
+        "traits": [
+          {
+            "name": "Native Outsider",
+            "text": "Sulis are outsiders with the native subtype."
+          },
+          {
+            "name": "Low-Light Vision",
+            "text": "Sulis can see twice as far as humans in dim light."
+          },
+          {
+            "name": "Negotiator",
+            "text": "Sulis are keen negotiators, and gain a +2 racial bonus on Diplomacy and Sense Motive checks."
+          },
+          {
+            "name": "Elemental Assault",
+            "text": "Once per day as a swift action, a suli can shroud her arms in acid, cold, electricity, or fire. This effect lasts for 1 round per level and can be dismissed as a free action. Unarmed strikes with her arms or hands (or attacks with weapons held in those hands) deal +1d6 points of damage of the appropriate energy type."
+          },
+          {
+            "name": "Energy Resistance",
+            "text": "Sulis have resistance to acid 5, cold 5, electricity 5, and fire 5."
+          }
+        ],
+        "languages": {
+          "auto": [
+            "Common",
+            "one elemental language (Aquan, Auran, Ignan, or Terran)"
+          ],
+          "bonus": [
+            "Aquan",
+            "Auran",
+            "Draconic",
+            "Ignan",
+            "Terran"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Sylph",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:sylph",
+      "prerequisites": [],
+      "tags": [
+        "race",
+        "core",
+        "medium"
+      ],
+      "references": [
+        "AoN: Sylph (Races)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/RacesDisplay.aspx?ItemName=Sylph"
+      ],
+      "description": "Sylph: modificatori {'dex': 2, 'int': 2, 'con': -2}, taglia Medium, velocita' 30 ft. Tratti razziali: Native Outsider; Darkvision; Spell-Like Ability; Energy Resistance; Air Affinity.",
+      "mechanics": {
+        "ability_mods": {
+          "dex": 2,
+          "int": 2,
+          "con": -2
+        },
+        "size": "Medium",
+        "speed": 30,
+        "traits": [
+          {
+            "name": "Native Outsider",
+            "text": "Sylphs are outsiders with the native subtype."
+          },
+          {
+            "name": "Darkvision",
+            "text": "Sylphs can see in the dark up to 60 feet."
+          },
+          {
+            "name": "Spell-Like Ability",
+            "text": "Sylphs can use feather fall 1/day as a spell-like ability (with a caster level equal to the sylph’s character level)."
+          },
+          {
+            "name": "Energy Resistance",
+            "text": "Sylphs have electricity resistance 5."
+          },
+          {
+            "name": "Air Affinity",
+            "text": "Sylph sorcerers with the elemental (air) bloodline treat their Charisma scores as 2 points higher for the purposes of all sorcerer spells and class abilities. Sylph spellcasters with the Air domain use their domain powers and spells at +1 caster level."
+          }
+        ],
+        "languages": {
+          "auto": [
+            "Common",
+            "Auran"
+          ],
+          "bonus": [
+            "Aquan",
+            "Dwarven",
+            "Elven",
+            "Gnome",
+            "Halfling",
+            "Ignan",
+            "Terran"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Tengu",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:tengu",
+      "prerequisites": [],
+      "tags": [
+        "race",
+        "core",
+        "medium"
+      ],
+      "references": [
+        "AoN: Tengu (Races)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/RacesDisplay.aspx?ItemName=Tengu"
+      ],
+      "description": "Tengu: modificatori {'dex': 2, 'wis': 2, 'con': -2}, taglia Medium, velocita' 30 ft. Tratti razziali: Tengu; Senses; Sneaky; Gifted Linguist; Swordtrained; Natural Weapon.",
+      "mechanics": {
+        "ability_mods": {
+          "dex": 2,
+          "wis": 2,
+          "con": -2
+        },
+        "size": "Medium",
+        "speed": 30,
+        "traits": [
+          {
+            "name": "Tengu",
+            "text": "Tengus are humanoids with the tengu subtype."
+          },
+          {
+            "name": "Senses",
+            "text": "Tengus have low-light vision."
+          },
+          {
+            "name": "Sneaky",
+            "text": "Tengus gain a +2 racial bonus on Perception and Stealth checks."
+          },
+          {
+            "name": "Gifted Linguist",
+            "text": "Tengus gain a +4 racial bonus on Linguistics checks, and learn two languages each time they gain a rank in Linguistics rather than one language."
+          },
+          {
+            "name": "Swordtrained",
+            "text": "Tengus are automatically proficient with swordlike weapons (including bastard swords, daggers, elven curve blades, falchions, greatswords, kukris, longswords, punching daggers, rapiers, scimitars, short swords, and two-bladed swords)."
+          },
+          {
+            "name": "Natural Weapon",
+            "text": "A tengu has a bite attack that deals 1d3 points of damage."
+          }
+        ],
+        "languages": {
+          "auto": [
+            "Common",
+            "Tengu"
+          ],
+          "bonus": []
+        }
+      }
+    },
+    {
+      "name": "Tiefling",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:tiefling",
+      "prerequisites": [],
+      "tags": [
+        "race",
+        "core",
+        "medium"
+      ],
+      "references": [
+        "AoN: Tiefling (Races)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/RacesDisplay.aspx?ItemName=Tiefling"
+      ],
+      "description": "Tiefling: modificatori {'dex': 2, 'int': 2, 'cha': -2}, taglia Medium, velocita' 30 ft. Tratti razziali: Native Outsider; Darkvision; Skilled; Spell-Like Ability; Fiendish Resistance; Fiendish Sorcery.",
+      "mechanics": {
+        "ability_mods": {
+          "dex": 2,
+          "int": 2,
+          "cha": -2
+        },
+        "size": "Medium",
+        "speed": 30,
+        "traits": [
+          {
+            "name": "Native Outsider",
+            "text": "Tieflings are outsiders with the native subtype."
+          },
+          {
+            "name": "Darkvision",
+            "text": "Tieflings see in the dark for up to 60 feet."
+          },
+          {
+            "name": "Skilled",
+            "text": "Tieflings gain a +2 racial bonus on Bluff and Stealth checks. Tieflings of specific bloodlines (see below) gain a +2 bonus on different skill checks as indicated."
+          },
+          {
+            "name": "Spell-Like Ability",
+            "text": "Tieflings can use darkness once per day as a spell-like ability (with a caster level equal to the tiefling’s character level). Tieflings of specific bloodlines (see below) gain different spell-like abilities."
+          },
+          {
+            "name": "Fiendish Resistance",
+            "text": "Tieflings have cold resistance 5, electricity resistance 5, and fire resistance 5."
+          },
+          {
+            "name": "Fiendish Sorcery",
+            "text": "Tiefling sorcerers with the Abyssal or Infernal bloodlines treat their Charisma scores as 2 points higher for the purposes of all sorcerer class abilities."
+          }
+        ],
+        "languages": {
+          "auto": [
+            "Common",
+            "either Abyssal or Infernal"
+          ],
+          "bonus": [
+            "Abyssal",
+            "Draconic",
+            "Dwarven",
+            "Elven",
+            "Gnome",
+            "Goblin",
+            "Halfling",
+            "Infernal",
+            "Orc"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Vanara",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:vanara",
+      "prerequisites": [],
+      "tags": [
+        "race",
+        "core",
+        "medium"
+      ],
+      "references": [
+        "AoN: Vanara (Races)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/RacesDisplay.aspx?ItemName=Vanara"
+      ],
+      "description": "Vanara: modificatori {'dex': 2, 'wis': 2, 'cha': -2}, taglia Medium, velocita' 30 ft. Tratti razziali: Vanara; Low-Light Vision; Nimble; Prehensile Tail.",
+      "mechanics": {
+        "ability_mods": {
+          "dex": 2,
+          "wis": 2,
+          "cha": -2
+        },
+        "size": "Medium",
+        "speed": 30,
+        "traits": [
+          {
+            "name": "Vanara",
+            "text": "Vanaras are humanoids with the vanara subtype."
+          },
+          {
+            "name": "Low-Light Vision",
+            "text": "A vanara can see twice as far as a human in dim light."
+          },
+          {
+            "name": "Nimble",
+            "text": "Vanaras have a +2 racial bonus on Acrobatics and Stealth checks."
+          },
+          {
+            "name": "Prehensile Tail",
+            "text": "A vanara has a long, flexible tail that she can use to carry objects. She cannot wield weapons with her tail, but the tail allows her to retrieve a small, stowed object carried on her person as a swift action."
+          }
+        ],
+        "languages": {
+          "auto": [
+            "Common",
+            "Vanaran"
+          ],
+          "bonus": [
+            "Aklo",
+            "Celestial",
+            "Elven",
+            "Gnome",
+            "Goblin",
+            "Sylvan"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Vishkanya",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:vishkanya",
+      "prerequisites": [],
+      "tags": [
+        "race",
+        "core",
+        "medium"
+      ],
+      "references": [
+        "AoN: Vishkanya (Races)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/RacesDisplay.aspx?ItemName=Vishkanya"
+      ],
+      "description": "Vishkanya: modificatori {'dex': 2, 'cha': 2, 'wis': -2}, taglia Medium, velocita' 30 ft. Tratti razziali: Vishkanya; Low-Light Vision; Keen Senses; Limber; Poison Resistance; Poison Use; Toxic; Weapon Familiarity.",
+      "mechanics": {
+        "ability_mods": {
+          "dex": 2,
+          "cha": 2,
+          "wis": -2
+        },
+        "size": "Medium",
+        "speed": 30,
+        "traits": [
+          {
+            "name": "Vishkanya",
+            "text": "Vishkanyas are humanoids with the vishkanya subtype."
+          },
+          {
+            "name": "Low-Light Vision",
+            "text": "Vishkanyas can see twice as far as humans in conditions of dim light."
+          },
+          {
+            "name": "Keen Senses",
+            "text": "Vishkanyas receive a +2 racial bonus on Perception checks."
+          },
+          {
+            "name": "Limber",
+            "text": "Vishkanyas receive a +2 racial bonus on Escape Artist and Stealth checks."
+          },
+          {
+            "name": "Poison Resistance",
+            "text": "A vishkanya has a racial bonus on saving throws against poison equal to its Hit Dice."
+          },
+          {
+            "name": "Poison Use",
+            "text": "Vishkanyas are skilled in the use of poison and never accidentally poison themselves when using or applying poison."
+          },
+          {
+            "name": "Toxic",
+            "text": "A number of times per day equal to his Constitution modifier (minimum 1/day), a vishkanya can envenom a weapon that he wields with his toxic saliva or blood (using blood requires the vishkanya to be injured when he uses this ability). Applying venom in this way is a swift action."
+          },
+          {
+            "name": "Weapon Familiarity",
+            "text": "Vishkanyas are always proficient with blowguns, kukri, and shuriken."
+          }
+        ],
+        "languages": {
+          "auto": [
+            "Common",
+            "Vishkanya"
+          ],
+          "bonus": [
+            "Aklo",
+            "Draconic",
+            "Elven",
+            "Goblin",
+            "Sylvan",
+            "Undercommon"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Wayang",
+      "source": "PFRPG Core",
+      "source_id": "pfrpg_core:wayang",
+      "prerequisites": [],
+      "tags": [
+        "race",
+        "core",
+        "small"
+      ],
+      "references": [
+        "AoN: Wayang (Races)"
+      ],
+      "reference_urls": [
+        "https://aonprd.com/RacesDisplay.aspx?ItemName=Wayang"
+      ],
+      "description": "Wayang: modificatori {'dex': 2, 'int': 2, 'wis': -2}, taglia Small, velocita' 20 ft. Tratti razziali: Wayang; Darkvision; Light and Dark; Lurker; Shadow Magic; Shadow Resistance.",
+      "mechanics": {
+        "ability_mods": {
+          "dex": 2,
+          "int": 2,
+          "wis": -2
+        },
+        "size": "Small",
+        "speed": 20,
+        "traits": [
+          {
+            "name": "Wayang",
+            "text": "Wayangs are humanoids with the wayang subtype."
+          },
+          {
+            "name": "Darkvision",
+            "text": "Wayangs can see in the dark up to 60 feet."
+          },
+          {
+            "name": "Light and Dark",
+            "text": "Once per day as an immediate action, a wayang can treat positive and negative energy effects as if she were an undead creature, taking damage from positive energy and being healed of damage by negative energy. This ability lasts for 1 minute once activated."
+          },
+          {
+            "name": "Lurker",
+            "text": "Wayangs gain a +2 racial bonus on Perception and Stealth checks."
+          },
+          {
+            "name": "Shadow Magic",
+            "text": "Wayangs add 1 to the DC of any saving throws to resist spells of the shadow subschool that they cast. Wayangs with a Charisma score of 11 or higher also gain the following spell-like abilities: 1/day—ghost sound, pass without trace, and ventriloquism. The caster level for these effects is equal to the wayang’s character level. The DCs of these spells are equal to 10 + the spell’s level + the wayang’s Charisma modifier."
+          },
+          {
+            "name": "Shadow Resistance",
+            "text": "Wayangs get a +2 racial bonus on saving throws against spells of the shadow subschool."
+          }
+        ],
+        "languages": {
+          "auto": [
+            "Common",
+            "Wayang"
+          ],
+          "bonus": [
+            "any human language",
+            "Abyssal",
+            "Aklo",
+            "Draconic",
+            "Goblin",
+            "Infernal",
+            "Nagaji",
+            "Samsaran",
+            "Tengu"
+          ]
+        }
+      }
     }
   ]
 }

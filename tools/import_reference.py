@@ -118,6 +118,10 @@ def parse_abilities(html):
 
 
 RACES_CORE = ["Dwarf", "Elf", "Gnome", "Half-Elf", "Half-Orc", "Halfling", "Human"]
+RACES_EXOTIC = ["Catfolk", "Fetchling", "Goblin", "Grippli", "Kasatha", "Kitsune",
+                "Oread", "Samsaran", "Shabti", "Strix", "Suli", "Sylph", "Tengu",
+                "Tiefling", "Vanara", "Vishkanya", "Wayang"]
+RACES_ALL = RACES_CORE + RACES_EXOTIC
 ABILITY_KEYS = {"strength": "str", "dexterity": "dex", "constitution": "con",
                 "intelligence": "int", "wisdom": "wis", "charisma": "cha"}
 
@@ -163,10 +167,14 @@ def _bold_detail(bold, label):
     """Testo che segue il label bold.
 
     Markup reale AoN (flat): <b>Label</b>: testo fino a <br/> -> dai sibling.
+    Stop anche ai heading: sulle pagine esotiche l'ultimo bold della sezione
+    (di solito Languages) non ha <br/> prima dell'heading successivo e il testo
+    dell'heading ('Subraces ...', 'X Alternate Racial Traits ...') finirebbe
+    nel dettaglio.
     Markup a paragrafi (fixture): <p><b>Label</b>: testo</p> -> dal parent."""
     parts = []
     for sib in bold.next_siblings:
-        if getattr(sib, "name", None) in ("br", "b"):
+        if getattr(sib, "name", None) in ("br", "b", "h1", "h2", "h3", "h4"):
             break
         parts.append(sib.get_text() if hasattr(sib, "get_text") else str(sib))
     text = clean("".join(parts))
@@ -176,6 +184,22 @@ def _bold_detail(bold, label):
     if parent_text.startswith(label):
         return clean(parent_text[len(label):].lstrip(" :"))
     return ""
+
+
+def _split_languages(text):
+    """Split di una lista di lingue su virgola / ' and ' rispettando le
+    parentesi ('one elemental language (Aquan, Auran, Ignan, or Terran)' e
+    'Dziriak (understanding only, cannot speak)' restano token unici).
+    Il separatore riattaccato dentro le parentesi e' normalizzato a ', '."""
+    parts, buf = [], ""
+    for seg in re.split(r",| and ", text):
+        buf = f"{buf}, {seg}" if buf else seg
+        if buf.count("(") <= buf.count(")"):
+            parts.append(buf)
+            buf = ""
+    if buf:
+        parts.append(buf)
+    return [clean(p) for p in parts if clean(p)]
 
 
 def parse_race(html, race_name):
@@ -199,13 +223,15 @@ def parse_race(html, race_name):
             if m:
                 mech["speed"] = int(m.group(1))
         elif label == "Languages":
-            langs = re.search(r"speaking\s+([^.]+)", detail)
+            # Forme reali: 'begin play speaking X' (core) e 'speak X' (esotiche).
+            langs = re.search(r"speak(?:ing)?\s+([^.]+)", detail)
             if langs:
-                mech["languages"]["auto"] = [clean(x) for x in re.split(r",| and ", langs.group(1)) if clean(x)]
-            bonus = re.search(r"choose from\s+([^.]+)", detail)
+                mech["languages"]["auto"] = _split_languages(langs.group(1))
+            # Forme reali: 'choose from ...' (core) e 'choose any of ...' (Strix).
+            bonus = re.search(r"choose (?:from|any of)\s+([^.]+)", detail)
             if bonus:
                 bonus_text = re.sub(r"^the following( languages)?:\s*", "", clean(bonus.group(1)))
-                mech["languages"]["bonus"] = [clean(x) for x in re.split(r",| and ", bonus_text) if clean(x)]
+                mech["languages"]["bonus"] = _split_languages(bonus_text)
         elif label and label[0].isupper() and detail:
             mech["traits"].append({"name": label, "text": detail})
     traits_desc = "; ".join(t["name"] for t in mech["traits"])
@@ -223,10 +249,17 @@ def parse_race(html, race_name):
     }
 
 
+# Lingue con Product Identity Golarion che compaiono nei tratti razziali AoN
+# (es. 'Azlanti' per Strix: impero di Azlant, PI). Ripulitura della parola PI
+# incidentale da contenuto altrimenti OGC — stesso criterio di PI_EQUIPMENT.
+RACE_LANGUAGES_PI = {"Azlanti"}
+
+
 def build_races(write=False):
     """Merge in place: aggiorna le entry esistenti di races.json preservando
     i campi curati (notes, status, reviewed_by, short_description) e l'header
-    (alla fonte originale si aggiunge AoN)."""
+    (alla fonte originale si aggiunge AoN). Le lingue PI (RACE_LANGUAGES_PI)
+    sono rimosse dalle liste languages con nota a video."""
     path = OGL_DIR / "races.json"
     with open(path, encoding="utf-8") as f:
         catalog = json.load(f)
@@ -234,10 +267,16 @@ def build_races(write=False):
     if "aonprd" not in source_text:
         source_text = source_text.rstrip(".") + "; Archives of Nethys (aonprd.com)."
     by_name = {e["name"]: e for e in catalog["entries"]}
-    for race in RACES_CORE:
+    for race in RACES_ALL:
         url = BASE + f"RacesDisplay.aspx?ItemName={race.replace(' ', '%20')}"
         parsed = parse_race(fetch(url), race)
         assert parsed["mechanics"]["ability_mods"], f"{race}: ability_mods non parsati"
+        langs = parsed["mechanics"]["languages"]
+        for key in ("auto", "bonus"):
+            dropped = [lang for lang in langs[key] if lang in RACE_LANGUAGES_PI]
+            if dropped:
+                langs[key] = [lang for lang in langs[key] if lang not in RACE_LANGUAGES_PI]
+                print(f"nota: {race}: filtrate lingue PI: {', '.join(dropped)}")
         if race in by_name:
             by_name[race].update(parsed)
         else:
