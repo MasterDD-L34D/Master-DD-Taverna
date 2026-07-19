@@ -71,15 +71,62 @@ def _clean_text(text: str) -> str:
     return text.encode("utf-8", errors="replace").decode("utf-8")
 
 
-def convert_monsters(input_path: Path, limit: int | None = None) -> list[dict]:
+def _mechanics(monster: dict) -> dict:
+    """Subset strutturato della fonte (nomi campo reali di data.json)."""
+    hp = monster.get("HP") or {}
+    ac = monster.get("AC") or {}
+    saves = monster.get("saves") or {}
+    return {
+        "cr": monster.get("CR"),
+        "xp": monster.get("XP"),
+        "hd": hp.get("long"),
+        "hp": hp.get("total"),
+        "ac": ac.get("AC"),
+        "touch": ac.get("touch"),
+        "flat_footed": ac.get("flat_footed"),
+        "saves": {
+            "fort": saves.get("fort"),
+            "ref": saves.get("ref"),
+            "will": saves.get("will"),
+        },
+        "bab": monster.get("BAB"),
+        "cmb": monster.get("CMB"),
+        "cmd": monster.get("CMD"),
+        "ability_scores": monster.get("ability_scores"),
+        "attacks": monster.get("attacks"),
+        "skills": monster.get("skills"),
+        "feats": monster.get("feats"),
+        "special_abilities": monster.get("special_abilities"),
+        "speeds": monster.get("speeds"),
+        "senses": monster.get("senses"),
+        "sr": monster.get("SR"),
+        "dr": monster.get("DR"),
+        "immunities": monster.get("immunities"),
+        "resistances": monster.get("resistances"),
+        "weaknesses": monster.get("weaknesses"),
+    }
+
+
+def load_monsters(input_path: Path) -> list[dict]:
     raw = input_path.read_bytes()
     try:
         data = json.loads(raw.decode("utf-8"))
     except UnicodeDecodeError:
         data = json.loads(raw.decode("cp1252", errors="replace"))
+    return list(data.items())
 
+
+def convert_monsters(monsters, limit: int | None = None) -> list[dict]:
+    """Converte entry mostro della fonte in entry del catalogo reference.
+
+    `monsters` e' un iterabile di dict mostro (oppure di coppie (url, dict)).
+    """
     entries = []
-    for url, monster in data.items():
+    for item in monsters:
+        if isinstance(item, tuple):
+            url, monster = item
+        else:
+            url, monster = "unknown", item
         name = monster.get("title1", monster.get("title2", "Unknown"))
         sources = monster.get("sources", [{}])
         source = sources[0].get("name", "Pathfinder RPG Bestiary") if sources else "Pathfinder RPG Bestiary"
@@ -111,6 +158,7 @@ def convert_monsters(input_path: Path, limit: int | None = None) -> list[dict]:
             "references": [_clean_text(f"{source}{f' p. {source_page}' if source_page else ''}")],
             "reference_urls": [_url(name)],
             "description": "\n\n".join(desc_parts),
+            "mechanics": _mechanics(monster),
             "notes": _clean_text(f"Converted from PathfinderMonsterDatabase ({url})"),
         })
         if limit and len(entries) >= limit:
@@ -178,7 +226,7 @@ def main():
             sys.exit(f"ERRORE: data.json non trovato in {source_dir}/data/")
 
     print(f"Lettura mostri da: {data_json}")
-    entries = convert_monsters(data_json, limit=args.limit)
+    entries = convert_monsters(load_monsters(data_json), limit=args.limit)
     if not entries:
         sys.exit("ERRORE: nessun mostro trovato nel file di input")
 
