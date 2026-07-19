@@ -90,7 +90,11 @@ def validate_feats(draft, sheet):
     if len(chosen) > allowed:
         sheet["errors"].append(f"feat: {len(chosen)} selezionati su {allowed} consentiti al lv1")
     for name in chosen:
-        feat = catalogs.find_feat(name)
+        # Selezioni parentetiche: feats.json espande alcune voci ("Weapon Focus
+        # (Longsword)") ma non altre ("Skill Focus (Perception)"): si prova il
+        # nome intero e poi il nome base senza parentetica (come in _check_prereq).
+        base = re.sub(r"\s*\([^)]*\)\s*$", "", name)
+        feat = catalogs.find_feat(name) or catalogs.find_feat(base)
         if feat is None:
             sheet["errors"].append(f"talento sconosciuto: {name}")
             continue

@@ -449,3 +449,42 @@ def test_passive_feat_effects_applied():
     assert hardy["saves"]["fort"] == plain["saves"]["fort"] + 2    # Great Fortitude
     assert hardy["saves"]["ref"] == plain["saves"]["ref"] + 2      # Lightning Reflexes
     assert hardy["saves"]["will"] == plain["saves"]["will"]        # invariato
+
+
+# --- Selezioni parentetiche: Weapon Focus (X) e Skill Focus (Y) ---
+
+def test_weapon_focus_selection():
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str",
+                                   skills={"Climb": 1, "Perception": 1, "Survival": 1},
+                                   feats=["Weapon Focus (Longsword)"],
+                                   equipment=["Longsword", "Shortbow"]))
+    assert sheet["errors"] == []
+    melee = [a for a in sheet["attacks"] if a["weapon"] == "Longsword"][0]
+    bow = [a for a in sheet["attacks"] if a["weapon"] == "Shortbow"][0]
+    assert melee["bonus"] == 4   # bab 1 + str 2 + focus 1
+    assert bow["bonus"] == 2     # bab 1 + dex 1, niente focus
+
+
+def test_weapon_focus_without_selection_warns():
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str",
+                                   skills={"Climb": 1, "Perception": 1, "Survival": 1},
+                                   feats=["Weapon Focus"],
+                                   equipment=["Longsword"]))
+    assert sheet["errors"] == []
+    assert any("Weapon Focus" in w for w in sheet["warnings"])
+    assert sheet["attacks"][0]["bonus"] == 4  # fallback: prima arma +1
+
+
+def test_skill_focus_selection():
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str",
+                                   skills={"Climb": 1, "Perception": 1, "Survival": 1},
+                                   feats=["Skill Focus (Perception)"]))
+    assert sheet["errors"] == []
+    assert sheet["skills"]["Perception"]["total"] == 1 + 2 + 3  # rank1 + wis2 + focus3
+    # senza ranks nella skill: +3 lo stesso (RAW)
+    sheet2 = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str",
+                                    skills={"Climb": 1, "Perception": 1, "Survival": 1},
+                                    feats=["Skill Focus (Ride)"]))
+    assert sheet2["skills"]["Ride"]["ranks"] == 0
+    # Ride e' DEX in skills.json: total = 0 + dex_mod(1) + focus3
+    assert sheet2["skills"]["Ride"]["total"] == 0 + 1 + 3
