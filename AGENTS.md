@@ -42,7 +42,7 @@ python launch.py start    # API :8000 + frontend :8501 + browser
 
 ## Convenzioni
 
-- Commit: conventional, scope tra parentesi, es. `fix(modules): ... (batch N)`; push su `origin/main`
+- Commit: conventional, scope tra parentesi, es. `fix(modules): ... (batch N)`; push su `origin/main`. **ADR-0011** (dal 2026-07-19): trailer `Coding-Agent:` + `Trace-Id:` su ogni commit (via `git commit -F`); MAI `Co-Authored-By:`; niente riscrittura della storia
 - Metadati moduli: bump `version`/`last_updated` nell'header del file modificato; voce di `changelog:` se il modulo ne ha una sezione
 - Modifiche minime e mirate; niente refactor opportunistici fuori scope
 
@@ -52,3 +52,4 @@ python launch.py start    # API :8000 + frontend :8501 + browser
 - `sessione-2026-07-16/AVVIO_PROSSIMA_SESSIONE.md` — punto di ripresa e troubleshooting
 - `OPEN_SOURCE_RAG.md` — guida RAG e provider LLM
 - `docs/IMPORT_PLAYBOOK.md` — metodo consolidato per import di cataloghi OGL da fonti web (leggere prima di qualunque nuovo import dati)
+- `docs/WORKFLOW.md` — il ciclo di lavoro completo (piano → subagent-driven → review → push), policy commit ADR-0011, contratto del builder, punti di contatto con pathmaster-dd
