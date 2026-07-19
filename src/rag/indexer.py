@@ -121,6 +121,9 @@ def index_reference_catalog(reference_dir: Path | str, store: VectorStore, model
                 text_parts.append(entry["short_description"])
             if "notes" in entry and entry["notes"]:
                 text_parts.append(entry["notes"])
+            if entry.get("mechanics"):
+                mech_text = json.dumps(entry["mechanics"], ensure_ascii=False, sort_keys=True)
+                text_parts.append(f"Mechanics: {mech_text[:2000]}")
             if "tags" in entry and entry["tags"]:
                 text_parts.append("Tags: " + ", ".join(str(t) for t in entry["tags"]))
             text = "\n".join(text_parts)

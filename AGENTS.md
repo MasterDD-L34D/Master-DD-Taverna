@@ -53,3 +53,4 @@ python launch.py start    # API :8000 + frontend :8501 + browser
 - `OPEN_SOURCE_RAG.md` — guida RAG e provider LLM
 - `docs/IMPORT_PLAYBOOK.md` — metodo consolidato per import di cataloghi OGL da fonti web (leggere prima di qualunque nuovo import dati)
 - `docs/WORKFLOW.md` — il ciclo di lavoro completo (piano → subagent-driven → review → push), policy commit ADR-0011, contratto del builder, punti di contatto con pathmaster-dd
+- `docs/research/2026-07-19-process-optimization.md` — ricerca su riuso materiale scartato, deduplicazione pipeline e processo ibrido swarm (proposte ordinate per valore/costo; leggere prima di nuovi lotti su dati/infrastruttura)

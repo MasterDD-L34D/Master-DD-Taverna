@@ -1,4 +1,5 @@
 """Test del layer RAG."""
+import json
 import os
 import sys
 import tempfile
@@ -13,7 +14,7 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 from src.app import app
 from src.config import settings
 from src.rag.generator import MockProvider, OllamaOpenAIProvider, OllamaProvider, get_provider
-from src.rag.indexer import index_modules
+from src.rag.indexer import index_modules, index_reference_catalog
 from src.rag.retriever import Retriever
 from src.rag.store import VectorStore
 
@@ -82,6 +83,30 @@ def test_indexer_and_retriever(tmp_path):
     results = retriever.search("combattimento", top_k=3)
     assert len(results) >= 1
     assert any("combattimento" in r["text"].lower() for r in results)
+
+
+def test_index_reference_catalog_includes_mechanics(tmp_path):
+    """Una entry con mechanics produce un chunk contenente il testo "Mechanics:"."""
+    reference_dir = tmp_path / "reference"
+    reference_dir.mkdir()
+    (reference_dir / "manifest.json").write_text(json.dumps({
+        "catalogs": [{"file": "feats.json", "kind": "feats", "is_ogc": True}],
+    }), encoding="utf-8")
+    (reference_dir / "feats.json").write_text(json.dumps({
+        "entries": [{
+            "name": "Power Attack",
+            "description": "Colpo potente.",
+            "mechanics": {"prereq": {"bab": 1}, "effect": "trade attack for damage"},
+        }],
+    }), encoding="utf-8")
+
+    store = VectorStore(tmp_path / "store")
+    encoder = DummyEncoder(dim=16)
+    n = index_reference_catalog(reference_dir, store, "dummy", encoder)
+    assert n == 1
+    text = store.chunks[0]["text"]
+    assert "Mechanics:" in text
+    assert '"bab": 1' in text
 
 
 def test_mock_provider():
