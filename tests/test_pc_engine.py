@@ -441,3 +441,11 @@ def test_passive_feat_effects_applied():
                                      feats=["Dodge"]))
     assert dodged["errors"] == []
     assert dodged["ac"] == plain_dex["ac"] + 1       # Dodge
+    # Great Fortitude / Lightning Reflexes: +2 a Tempra e Riflessi.
+    hardy = build_character(_draft(abilities=dict(_OK_ABILS), race_bonus_ability="str",
+                                   skills={"Climb": 1, "Perception": 1, "Survival": 1},
+                                   feats=["Great Fortitude", "Lightning Reflexes"]))
+    assert hardy["errors"] == []
+    assert hardy["saves"]["fort"] == plain["saves"]["fort"] + 2    # Great Fortitude
+    assert hardy["saves"]["ref"] == plain["saves"]["ref"] + 2      # Lightning Reflexes
+    assert hardy["saves"]["will"] == plain["saves"]["will"]        # invariato

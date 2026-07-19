@@ -16,7 +16,11 @@ FEAT_EFFECTS = {
 
 
 def apply_feat_effects(sheet):
-    """Applica FEAT_EFFECTS ai talenti in sheet['feats'] (in place)."""
+    """Applica FEAT_EFFECTS ai talenti in sheet['feats'] (in place).
+
+    No-op sulle schede con errori: una scheda invalida non riceve bonus."""
+    if sheet.get("errors"):
+        return
     for feat in sheet.get("feats", []):
         effect = FEAT_EFFECTS.get(feat)
         if not effect:

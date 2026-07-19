@@ -344,9 +344,9 @@ async def pc_build(
 ):
     """Costruzione deterministica di un PG lv1 dai cataloghi OGL (nessun LLM).
 
-    Limitazione nota: gli effetti meccanici dei talenti selezionati non
-    vengono applicati ai valori calcolati (solo validazione prerequisiti
-    e conteggio)."""
+    Gli effetti passivi lv1 dei talenti in pc.feat_effects.FEAT_EFFECTS sono
+    applicati ai valori calcolati; i talenti non supportati sono solo
+    validati (prerequisiti e conteggio)."""
     from .pc.engine import build_character
     from .pc.models import CharacterDraft
 
