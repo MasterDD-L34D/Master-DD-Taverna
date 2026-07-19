@@ -12,6 +12,8 @@ class CharacterDraft:
     class_: str = field(metadata={"alias": "class"})
     race_bonus_ability: str | None = None
     favored_class_bonus: str = "hp"
+    level: int = 1
+    hp_method: str = "average"
     skills: dict = field(default_factory=dict)
     feats: list = field(default_factory=list)
     traits: list = field(default_factory=list)

@@ -528,3 +528,46 @@ def test_finesse_not_applied_when_str_higher():
     dagger = [a for a in sheet["attacks"] if a["weapon"] == "Dagger"][0]
     assert dagger["bonus"] == 5       # bab 1 + str 4 (nessuno swap a dex)
     assert dagger["damage"] == "1d4+4"
+
+
+# --- Livelli 1-20: hp/saves/bab/special/spells da classes.json progression ---
+
+# Dati reali (classes.json): Fighter lv5 bab 5, fort/ref/will 4/1/1,
+# special ["Weapon training 1"]; Wizard lv10 bab 5, spells_per_day presente.
+def _draft_lv(level, **kw):
+    base = {"name": "T", "method": "point-buy", "campaign_type": "Standard Fantasy",
+            "abilities": {"str": 13, "dex": 12, "con": 13, "int": 10, "wis": 14, "cha": 12},
+            "race": "Human", "race_bonus_ability": "str", "class": "Fighter",
+            "level": level}
+    base.update(kw)
+    return CharacterDraft.from_dict(base)
+
+
+def test_level_validation():
+    sheet = build_character(_draft_lv(0))
+    assert any("level" in e.lower() for e in sheet["errors"])
+    sheet = build_character(_draft_lv(21))
+    assert any("level" in e.lower() for e in sheet["errors"])
+
+
+def test_fighter_lv5_average_hp_and_progression():
+    sheet = build_character(_draft_lv(5, skills={"Climb": 5, "Perception": 1}))
+    assert sheet["errors"] == [], sheet["errors"]
+    # d10 max + 4 livelli x 6 (media d10) + Con 1 x5 + favored hp x5 = 10+24+5+5 = 44
+    assert sheet["hp"] == 44
+    assert sheet["bab"] == 5
+    assert sheet["saves"]["fort"] == 4 + 1  # fort lv5 Fighter = +4, +Con 1
+    assert "weapon training" in " ".join(sheet["special"]).lower()
+
+
+def test_wizard_lv10_spells_and_max_hp():
+    # Elf: dex+2/int+2/con-2 (razza senza bonus a scelta: race_bonus_ability "str"
+    # ignorato con warning); con 13-2=11 -> mod 0.
+    sheet = build_character(_draft_lv(10, hp_method="max",
+                                      **{"class": "Wizard", "race": "Elf"},
+                                      skills={"Spellcraft": 10}))
+    assert sheet["errors"] == [], sheet["errors"]
+    # d6 max x10 + Con 0 + favored hp x10 = 60+10 = 70
+    assert sheet["hp"] == 70
+    assert sheet["bab"] == 5  # Wizard lv10: +5
+    assert sheet["spells_per_day"]

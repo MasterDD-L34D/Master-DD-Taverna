@@ -1,4 +1,4 @@
-"""Motore deterministico di creazione PG lv1 (nessun LLM)."""
+"""Motore deterministico di creazione PG livelli 1-20 (nessun LLM)."""
 import re
 
 from src.pc import catalogs
@@ -279,8 +279,9 @@ def apply_abilities(draft):
 
 
 def build_character(draft):
-    """Costruisce la scheda lv1 completa (abilities, classe, skill, talenti, equip).
-    Ritorna dict con errors (bloccanti) e warnings.
+    """Costruisce la scheda completa al livello draft.level (1-20):
+    abilities, classe, hp/saves/bab/special/spells da progression, skill,
+    talenti, equip. Ritorna dict con errors (bloccanti) e warnings.
 
     Gli effetti meccanici dei talenti sono applicati ai valori calcolati come
     ultimo passo solo per i talenti supportati in src/pc/feat_effects.py
@@ -293,28 +294,43 @@ def build_character(draft):
     mods = {ab: ability_mod(sc) for ab, sc in final.items()} if final else {}
     cls = catalogs.get_class(draft.class_)
     sheet = {"name": draft.name, "race": draft.race, "class": draft.class_,
-             "abilities": final, "errors": errors, "warnings": warnings}
+             "level": draft.level, "abilities": final,
+             "errors": errors, "warnings": warnings}
     if errors:
         return sheet
     if cls is None:
         errors.append(f"classe sconosciuta: {draft.class_}")
         return sheet
+    if not isinstance(draft.level, int) or not 1 <= draft.level <= 20:
+        sheet["errors"].append(f"level: deve essere un intero 1-20 (ricevuto {draft.level!r})")
+        return sheet
+    if draft.hp_method not in ("average", "max"):
+        sheet["errors"].append(f"hp_method non valido: {draft.hp_method}")
+        return sheet
     if draft.favored_class_bonus not in ("hp", "skill"):
         errors.append(f"favored_class_bonus non valido: {draft.favored_class_bonus} (atteso hp o skill)")
         return sheet
     mech = cls["mechanics"]
-    lvl1 = mech["progression"][0]
-    favored_hp = 1 if draft.favored_class_bonus == "hp" else 0
-    sheet["hp"] = int(mech["hd"][1:]) + mods["con"] + favored_hp
-    sheet["saves"] = {"fort": lvl1["fort"] + mods["con"],
-                      "ref": lvl1["ref"] + mods["dex"],
-                      "will": lvl1["will"] + mods["wis"]}
-    sheet["bab"] = lvl1["bab"]
+    lvl = mech["progression"][draft.level - 1]
+    hd = int(mech["hd"][1:])
+    per_level = hd if draft.hp_method == "max" else hd // 2 + 1
+    favored_hp = draft.level if draft.favored_class_bonus == "hp" else 0
+    sheet["hp"] = hd + (draft.level - 1) * per_level + mods["con"] * draft.level + favored_hp
+    sheet["saves"] = {"fort": lvl["fort"] + mods["con"],
+                      "ref": lvl["ref"] + mods["dex"],
+                      "will": lvl["will"] + mods["wis"]}
+    sheet["bab"] = lvl["bab"]
+    sheet["special"] = list(lvl.get("special", []))
+    if lvl.get("spells_per_day"):
+        sheet["spells_per_day"] = dict(lvl["spells_per_day"])
+    if lvl.get("extra_progression"):
+        sheet["extra_progression"] = dict(lvl["extra_progression"])
     sheet["initiative"] = mods["dex"]
-    # skill: il minimo RAW da classe+Int e' 1; i bonus Human/favored si sommano dopo
-    budget = max(mech["skill_points_per_level"] + mods["int"], 1)
-    budget += 1 if draft.race == "Human" else 0
-    budget += 1 if draft.favored_class_bonus == "skill" else 0
+    # skill: il minimo RAW da classe+Int e' 1 per livello; i bonus Human/favored
+    # si sommano dopo (sempre per livello); ranks max per skill = livello
+    budget = max(mech["skill_points_per_level"] + mods["int"], 1) * draft.level
+    budget += draft.level if draft.race == "Human" else 0
+    budget += draft.level if draft.favored_class_bonus == "skill" else 0
     spent = sum(draft.skills.values())
     if spent > budget:
         errors.append(f"skill ranks: {spent} spesi oltre il budget {budget}")
@@ -325,8 +341,8 @@ def build_character(draft):
         if sk is None:
             errors.append(f"skill sconosciuta: {name}")
             continue
-        if ranks != 1:
-            errors.append(f"{name}: al lv1 ogni skill puo' avere al piu' 1 rank")
+        if not 0 <= ranks <= draft.level:
+            errors.append(f"{name}: {ranks} ranks non validi (0..{draft.level} al lv{draft.level})")
         key = sk["mechanics"]["key_ability"]
         is_class_skill = any(catalogs.class_skill_matches(name, cs) for cs in class_skills)
         class_bonus = 3 if ranks >= 1 and is_class_skill else 0
@@ -343,12 +359,12 @@ def build_character(draft):
 
 
 def render_markdown(sheet):
-    """Scheda testuale compatta della build lv1."""
+    """Scheda testuale compatta della build."""
     if sheet.get("errors"):
         return "# Errori di validazione\n" + "\n".join(sheet["errors"]) + "\n"
     mods = {ab: ability_mod(sc) for ab, sc in sheet["abilities"].items()}
     lines = [f"# {sheet['name']}",
-             f"{sheet['race']} {sheet['class']} 1 — PF: {sheet['hp']} — CA: {sheet['ac']} — Iniziativa: {_signed(sheet['initiative'])}",
+             f"{sheet['race']} {sheet['class']} {sheet.get('level', 1)} — PF: {sheet['hp']} — CA: {sheet['ac']} — Iniziativa: {_signed(sheet['initiative'])}",
              "",
              "**Caratteristiche**: " + ", ".join(
                  f"{ab.upper()} {sc} ({_signed(mods[ab])})"
