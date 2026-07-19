@@ -9,9 +9,67 @@ import numpy as np
 from .store import VectorStore
 
 
-def _chunk_id(source: str, idx: int) -> str:
-    base = f"{source}::{idx}"
+def _chunk_id(source: str, text: str) -> str:
+    """Id stabile al contenuto: sha256(source::text)[:16], indipendente dalla posizione."""
+    base = f"{source}::{text}"
     return hashlib.sha256(base.encode("utf-8")).hexdigest()[:16]
+
+
+_REFERENCE_PREFIX = "reference::"
+
+
+def _is_reference_source(source: str) -> bool:
+    return source.startswith(_REFERENCE_PREFIX)
+
+
+def _merge_and_save(store: VectorStore, chunks: list[dict], texts: list[str],
+                    is_domain, model_name: str, encoder, label: str) -> int:
+    """Salva `chunks` nello store riusando gli embedding dei chunk invariati.
+
+    L'id di ogni chunk e' un hash del contenuto: i chunk del dominio
+    `is_domain` gia' presenti nello store con lo stesso id riusano il
+    vecchio embedding; solo quelli nuovi o cambiati vengono ri-encodati.
+    I chunk del dominio scomparsi vengono scartati, quelli fuori dominio
+    restano intatti. Ritorna il numero di chunk salvati per questo dominio.
+    """
+    # dedup naturale per id dentro il lotto nuovo
+    seen: set[str] = set()
+    unique_chunks, unique_texts = [], []
+    for c, t in zip(chunks, texts):
+        if c["id"] in seen:
+            continue
+        seen.add(c["id"])
+        unique_chunks.append(c)
+        unique_texts.append(t)
+
+    keep: list = []                  # (chunk, embedding) fuori dominio
+    reuse: dict = {}                 # id -> embedding nel dominio
+    if store.is_ready():
+        for i, old in enumerate(store.chunks):
+            if is_domain(old["source"]):
+                reuse[old["id"]] = store.embeddings[i]
+            else:
+                keep.append((old, store.embeddings[i]))
+
+    to_encode = [i for i, c in enumerate(unique_chunks) if c["id"] not in reuse]
+    print(f"  {label}: {len(to_encode)} da ri-encodare su {len(unique_chunks)}")
+    new_embeddings = (
+        encoder.encode([unique_texts[i] for i in to_encode], show_progress_bar=True, convert_to_numpy=True)
+        if to_encode else None
+    )
+    it = iter(new_embeddings) if new_embeddings is not None else iter(())
+    merged = [reuse[c["id"]] if c["id"] in reuse else next(it) for c in unique_chunks]
+
+    all_chunks = [c for c, _ in keep] + unique_chunks
+    if not all_chunks:
+        return 0
+    parts = []
+    if keep:
+        parts.append(np.stack([e for _, e in keep]))
+    if merged:
+        parts.append(np.stack(merged))
+    store.save(all_chunks, np.vstack(parts), model_name)
+    return len(unique_chunks)
 
 
 def _split_paragraphs(text: str, max_chars: int = 1200, overlap: int = 200) -> list[str]:
@@ -39,7 +97,6 @@ def index_modules(modules_dir: Path | str, store: VectorStore, model_name: str, 
     modules_dir = Path(modules_dir)
     chunks = []
     texts = []
-    sources = []
     for path in sorted(modules_dir.rglob("*")):
         if not path.is_file() or path.suffix.lower() not in (".txt", ".md"):
             continue
@@ -52,18 +109,17 @@ def index_modules(modules_dir: Path | str, store: VectorStore, model_name: str, 
         source = str(path.relative_to(modules_dir))
         for idx, chunk_text in enumerate(_split_paragraphs(text)):
             chunks.append({
-                "id": _chunk_id(source, idx),
+                "id": _chunk_id(source, chunk_text),
                 "source": source,
                 "text": chunk_text,
                 "meta": {"index": idx},
             })
             texts.append(chunk_text)
-            sources.append(source)
     if not texts:
         raise ValueError("Nessun testo trovato da indicizzare")
-    embeddings = encoder.encode(texts, show_progress_bar=True, convert_to_numpy=True)
-    store.save(chunks, embeddings, model_name)
-    return len(chunks)
+    return _merge_and_save(store, chunks, texts,
+                           lambda s: not _is_reference_source(s),
+                           model_name, encoder, "moduli")
 
 
 def _catalog_entries(catalog: dict, reference_dir: Path, include_local: bool):
@@ -131,21 +187,12 @@ def index_reference_catalog(reference_dir: Path | str, store: VectorStore, model
                 continue
             source = f"reference::{kind}::{entry.get('name', idx)}"
             chunks.append({
-                "id": _chunk_id(source, idx),
+                "id": _chunk_id(source, text),
                 "source": source,
                 "text": text,
                 "meta": {"kind": kind, "entry": entry.get("name", "")},
             })
             texts.append(text)
-    if not texts:
-        return 0
-    embeddings = encoder.encode(texts, show_progress_bar=True, convert_to_numpy=True)
-    # merge with existing store if present
-    if store.is_ready():
-        store.chunks.extend(chunks)
-        store.embeddings = np.vstack([store.embeddings, embeddings])
-        store.meta["count"] = len(store.chunks)
-        store.save(store.chunks, store.embeddings, model_name)
-    else:
-        store.save(chunks, embeddings, model_name)
-    return len(chunks)
+    return _merge_and_save(store, chunks, texts,
+                           _is_reference_source,
+                           model_name, encoder, "reference")

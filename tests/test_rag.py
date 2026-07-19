@@ -109,6 +109,77 @@ def test_index_reference_catalog_includes_mechanics(tmp_path):
     assert '"bab": 1' in text
 
 
+class CountingEncoder(DummyEncoder):
+    """DummyEncoder che registra quanti testi encoda a ogni chiamata."""
+
+    def __init__(self, dim: int = 16):
+        super().__init__(dim)
+        self.encoded: list[str] = []
+
+    def encode(self, texts, **kwargs):
+        if isinstance(texts, str):
+            texts = [texts]
+        self.encoded.extend(texts)
+        return super().encode(texts, **kwargs)
+
+
+def _write_reference(reference_dir: Path, entries: list[dict]):
+    (reference_dir / "manifest.json").write_text(json.dumps({
+        "catalogs": [{"file": "feats.json", "kind": "feats", "is_ogc": True}],
+    }), encoding="utf-8")
+    (reference_dir / "feats.json").write_text(json.dumps({"entries": entries}), encoding="utf-8")
+
+
+def test_incremental_reindex_by_content_hash(tmp_path):
+    """Il chunk id e' sha256(source::text)[:16]; una seconda run ri-encoda solo i delta."""
+    import hashlib
+
+    reference_dir = tmp_path / "reference"
+    reference_dir.mkdir()
+    entries = [
+        {"name": "Power Attack", "description": "Colpo potente."},
+        {"name": "Dodge", "description": "Schivata."},
+    ]
+    _write_reference(reference_dir, entries)
+
+    store = VectorStore(tmp_path / "store")
+    encoder = CountingEncoder()
+
+    # prima run: tutto da encodare
+    assert index_reference_catalog(reference_dir, store, "dummy", encoder) == 2
+    assert len(encoder.encoded) == 2
+
+    # id stabile al contenuto, indipendente dalla posizione
+    for c in store.chunks:
+        expected = hashlib.sha256(f"{c['source']}::{c['text']}".encode("utf-8")).hexdigest()[:16]
+        assert c["id"] == expected
+    ids_by_source = {c["source"]: c["id"] for c in store.chunks}
+
+    # seconda run senza cambi: 0 da ri-encodare, chunk identici
+    encoder.encoded.clear()
+    assert index_reference_catalog(reference_dir, store, "dummy", encoder) == 2
+    assert encoder.encoded == []
+    assert {c["source"]: c["id"] for c in store.chunks} == ids_by_source
+
+    # delta: una entry modificata + una nuova -> solo 2 ri-encodate
+    entries[0]["description"] = "Colpo potente migliorato."
+    entries.append({"name": "Cleave", "description": "Fendente."})
+    _write_reference(reference_dir, entries)
+    encoder.encoded.clear()
+    assert index_reference_catalog(reference_dir, store, "dummy", encoder) == 3
+    assert len(encoder.encoded) == 2
+    assert any("migliorato" in t for t in encoder.encoded)
+    assert any("Cleave" in t for t in encoder.encoded)
+    # la entry invariata mantiene id (embedding riusato)
+    assert ids_by_source["reference::feats::Dodge"] in {c["id"] for c in store.chunks}
+
+    # entry rimossa -> il suo id scompare dallo store
+    entries.pop(0)
+    _write_reference(reference_dir, entries)
+    assert index_reference_catalog(reference_dir, store, "dummy", encoder) == 2
+    assert not any("Power Attack" in c["source"] for c in store.chunks)
+
+
 def test_mock_provider():
     p = MockProvider()
     out = p.generate("qual è il miglior talento?", [{"source": "feats.txt", "text": "Power Attack"}])
