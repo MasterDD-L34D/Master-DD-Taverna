@@ -3,7 +3,7 @@
 La mappa e' deliberatamente dichiarativa: ogni talento -> dict di modificatori
 applicati in apply_feat_effects. I talenti senza effetto numerico sui valori
 lv1 (metamagic, granted di classe, condizionali) sono ignorati senza warning;
-le selezioni mancanti/invalide producono warning (Task 2)."""
+le selezioni mancanti/invalide producono warning."""
 import re
 
 from src.pc import catalogs
@@ -55,12 +55,32 @@ def _apply_skill_focus(sheet, selection, mods):
     skills[selection] = {"ranks": 0, "ability": key, "total": mods[key] + 3, "class_skill": False}
 
 
+# Lista curata v1 di armi finessabili comuni (la categoria "light" completa
+# non e' ancora nei mechanics del catalogo equipment; ampliare quando disponibile).
+FINESSE_WEAPONS = {
+    "Dagger", "Punching dagger", "Rapier", "Short sword", "Whip",
+    "Spiked chain", "Elven curve blade", "Light hammer", "Handaxe",
+    "Sickle", "Kukri", "Starknife",
+}
+
+
+def _apply_finesse(sheet, mods):
+    """Weapon Finesse: sulle armi finessabili il tiro per colpire usa Dex al
+    posto di Str (apply_equipment ha gia' messo Str per melee / Dex per ranged).
+    Il danno resta a Str (RAW: finesse cambia solo il tiro per colpire)."""
+    for attack in sheet.get("attacks", []):
+        if attack["weapon"] in FINESSE_WEAPONS:
+            attack["bonus"] += mods["dex"] - mods["str"]
+
+
 def apply_feat_effects(sheet):
     """Applica FEAT_EFFECTS ai talenti in sheet['feats'] (in place).
 
     No-op sulle schede con errori: una scheda invalida non riceve bonus.
     Weapon Focus (X) e Skill Focus (Y) hanno effetto dipendente dalla
-    selezione parentetica; la selezione mancante/invalida produce warning."""
+    selezione parentetica; la selezione mancante/invalida produce warning.
+    Weapon Finesse sostituisce Str con Dex al tiro per colpire delle armi
+    in FINESSE_WEAPONS."""
     if sheet.get("errors"):
         return
     mods = {ab: (sc - 10) // 2 for ab, sc in sheet["abilities"].items()}
@@ -71,6 +91,9 @@ def apply_feat_effects(sheet):
             continue
         if base == "Skill Focus":
             _apply_skill_focus(sheet, selection, mods)
+            continue
+        if base == "Weapon Finesse":
+            _apply_finesse(sheet, mods)
             continue
         effect = FEAT_EFFECTS.get(base)
         if not effect:

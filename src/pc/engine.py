@@ -282,9 +282,10 @@ def build_character(draft):
     """Costruisce la scheda lv1 completa (abilities, classe, skill, talenti, equip).
     Ritorna dict con errors (bloccanti) e warnings.
 
-    Gli effetti meccanici passivi dei talenti (feat_effects.FEAT_EFFECTS) sono
-    applicati ai valori calcolati come ultimo passo; i talenti senza effetto
-    numerico al lv1 sono solo validati (prerequisiti e conteggio)."""
+    Gli effetti meccanici dei talenti sono applicati ai valori calcolati come
+    ultimo passo solo per i talenti supportati in src/pc/feat_effects.py
+    (passivi lv1, Weapon/Skill Focus, Weapon Finesse); gli altri sono solo
+    validati (prerequisiti e conteggio)."""
     abilities = apply_abilities(draft)
     errors = list(abilities["errors"])
     warnings = list(abilities.get("warnings", []))

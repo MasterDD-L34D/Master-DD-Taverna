@@ -349,7 +349,9 @@ def test_small_size_bonus_to_ac_and_attacks():
     # Dex finale 14 (12+2) -> mod +2: CA = 10 + armor 2 + Dex 2 + taglia 1
     assert sheet["ac"] == 15
     sword = [a for a in sheet["attacks"] if a["weapon"] == "Short sword"][0]
-    assert sword["bonus"] == 1  # bab 0 + Str mod 0 (str finale 11) + taglia 1
+    # Short sword e' finessabile: con Weapon Finesse il tiro usa Dex (non Str);
+    # bonus = bab 0 + Dex mod 2 + taglia 1 (la componente di taglia resta +1).
+    assert sword["bonus"] == 3
     assert sword["damage"] == "1d6"  # Str mod 0: nessun modificatore al danno
 
 
@@ -488,3 +490,25 @@ def test_skill_focus_selection():
     assert sheet2["skills"]["Ride"]["ranks"] == 0
     # Ride e' DEX in skills.json: total = 0 + dex_mod(1) + focus3
     assert sheet2["skills"]["Ride"]["total"] == 0 + 1 + 3
+
+
+def test_weapon_finesse_uses_dex():
+    # Halfling Rogue (dex+2, cha+2, str-2 razziali) con Weapon Finesse e Dagger (finessabile)
+    sheet = build_character(_draft(abilities=dict(_OK_ABILS),
+                                   **{"race": "Halfling", "class": "Rogue"},
+                                   skills={"Stealth": 1, "Perception": 1, "Acrobatics": 1},
+                                   feats=["Weapon Finesse"],
+                                   equipment=["Dagger", "Longsword"]))
+    assert sheet["errors"] == []
+    dagger = [a for a in sheet["attacks"] if a["weapon"] == "Dagger"][0]
+    longsword = [a for a in sheet["attacks"] if a["weapon"] == "Longsword"][0]
+    # dex 12+2=14 -> +2, +1 taglia; bab Rogue 0
+    assert dagger["bonus"] == 3          # bab 0 + dex 2 + taglia 1 (NON str)
+    assert dagger["damage"] == "1d4"     # danno a Str: str 13-2=11 -> mod 0
+    assert longsword["bonus"] == 1       # bab 0 + str 0 + taglia 1 (non finesse)
+
+
+def test_finesse_documented_list():
+    from src.pc.feat_effects import FINESSE_WEAPONS
+    assert "Dagger" in FINESSE_WEAPONS and "Rapier" in FINESSE_WEAPONS
+    assert "Longsword" not in FINESSE_WEAPONS
