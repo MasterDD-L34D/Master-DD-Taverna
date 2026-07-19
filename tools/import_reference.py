@@ -314,9 +314,34 @@ def parse_class(html, class_name):
                                              re.sub(r"\s*\([A-Z][a-z]{2}\)$", "",
                                                     re.sub(r"^and\s+", "", s.strip()))))
                                 for s in skills_match.group(1).split(",")]
-    prof = re.search(r"Weapon and Armor Proficien\w+\s*:?\s*([^.]+)\.", text, re.I)
-    if prof:
-        mech["proficiencies"] = clean(prof.group(1))
+    # Blocco 'Weapon and Armor Proficiency': TUTTE le frasi consecutive che
+    # contengono 'proficien' (armi E armature/scudi — la regex a frase singola
+    # perdeva la seconda frase, es. Alchemist '...light armor, but not with
+    # shields.'). La prima frase SENZA 'proficien' chiude il blocco (frasi su
+    # arcane spell failure o etichetta della sezione successiva, es.
+    # 'Spells :', 'Alchemy (Su) :'). Le parentetiche (iniziano con '(') sono
+    # saltate senza chiudere il blocco (Druid, nota ironwood). Punto finale
+    # dell'ultima frase rimosso: forma pre-fix preservata (le entry a frase
+    # singola restano byte-identiche).
+    prof_label = re.search(r"Weapon and Armor Proficien\w+\s*:?\s*", text, re.I)
+    if prof_label:
+        kept = []
+        for s in re.findall(r"[^.]+\.", text[prof_label.end():prof_label.end() + 1000]):
+            s = s.strip()
+            if "proficien" in s.lower():
+                # Residuo di parentetica aperta nella frase precedente e
+                # chiusa qui ('See the ironwood spell description) Druids are
+                # proficient...'): scarta il prefisso fino a ')'.
+                close = s.find(")")
+                if close != -1 and "(" not in s[:close]:
+                    s = s[close + 1:].strip()
+                kept.append(s)
+            elif s.startswith("("):
+                continue
+            else:
+                break
+        if kept:
+            mech["proficiencies"] = clean(" ".join(kept)).rstrip(".")
     # La pagina puo' contenere altre tabelle (layout, Spells Known): seleziona
     # per header (celle dirette: i wrapper di layout annidano la tabella
     # progressione e con find_all ricorsivo matcherebbero per primi).

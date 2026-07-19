@@ -308,6 +308,43 @@ def test_parse_class_witch_cantrips_column():
     print("OK: parse_class witch cantrips column")
 
 
+PROFICIENCIES_HTML = """
+<html><body>
+<h2>Alchemist</h2>
+<p><b>Hit Die</b>: d8.</p>
+<p><b>Starting Wealth</b>: 3d6 x 10 gp (average 105 gp).</p>
+<p><b>Weapon and Armor Proficiency</b>: Alchemists are proficient with all simple weapons and bombs. They are also proficient with light armor, but not with shields.</p>
+<p><b>Alchemy (Su)</b>: Alchemists are masters of alchemical substances.</p>
+<p><b>Skill Points at each Level</b>: 4 + Int modifier.</p>
+<table><tr><td><b>Level</b></td><td><b>Base Attack Bonus</b></td><td><b>Fort Save</b></td><td><b>Ref Save</b></td><td><b>Will Save</b></td><td><b>Special</b></td></tr>
+<tr><td>1st</td><td>+0</td><td>+2</td><td>+2</td><td>+0</td><td>Alchemy</td></tr></table>
+</body></html>
+"""
+
+
+def test_parse_class_proficiencies_two_sentences():
+    """Blocco proficiency a DUE frasi (armi. armature.): entrambe finiscono
+    nel campo (forma testuale preservata, punto finale rimosso come nella
+    forma pre-fix); l'etichetta della sezione successiva ('Alchemy (Su) : ...')
+    chiude il blocco e resta fuori. Sub-caso Witch: anche le frasi su arcane
+    spell failure ('Armor interferes with ...') chiudono il blocco (NON sono
+    proficiency)."""
+    entry = parse_class(PROFICIENCIES_HTML, "Alchemist")
+    prof = entry["mechanics"]["proficiencies"]
+    assert "all simple weapons and bombs" in prof
+    assert "light armor, but not with shields" in prof
+    assert prof.endswith("shields")
+    assert "Alchemy" not in prof
+    html = ("<html><body><p><b>Weapon and Armor Proficiency</b>: Witches are "
+            "proficient with all simple weapons. They are not proficient with "
+            "any type of armor or shield. Armor interferes with a witch's "
+            "gestures, which can cause her spells to fail.</p></body></html>")
+    prof = parse_class(html, "Witch")["mechanics"]["proficiencies"]
+    assert prof == ("Witches are proficient with all simple weapons. "
+                    "They are not proficient with any type of armor or shield")
+    print("OK: parse_class proficiencies two sentences")
+
+
 def test_skill_header_regex():
     name, key, trained, acp = SKILL_HEADER_RE("Disable Device (Int; Trained Only)")
     assert (name, key, trained, acp) == ("Disable Device", "int", True, False)

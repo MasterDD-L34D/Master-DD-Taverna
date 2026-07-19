@@ -303,7 +303,7 @@
           "Use Magic Device"
         ],
         "skill_points_per_level": 6,
-        "proficiencies": "A bard is proficient with all simple weapons, plus the longsword, rapier, sap, short sword, shortbow, and whip",
+        "proficiencies": "A bard is proficient with all simple weapons, plus the longsword, rapier, sap, short sword, shortbow, and whip. Bards are also proficient with light armor and shields (except tower shields)",
         "progression": [
           {
             "level": 1,
@@ -681,7 +681,7 @@
           "Spellcraft"
         ],
         "skill_points_per_level": 2,
-        "proficiencies": "Clerics are proficient with all simple weapons, light armor, medium armor, and shields (except tower shields)",
+        "proficiencies": "Clerics are proficient with all simple weapons, light armor, medium armor, and shields (except tower shields). Clerics are also proficient with the favored weapon of their deity",
         "progression": [
           {
             "level": 1,
@@ -1099,7 +1099,7 @@
           "Swim"
         ],
         "skill_points_per_level": 4,
-        "proficiencies": "Druids are proficient with the following weapons: club, dagger, dart, quarterstaff, scimitar, scythe, sickle, shortspear, sling, and spear",
+        "proficiencies": "Druids are proficient with the following weapons: club, dagger, dart, quarterstaff, scimitar, scythe, sickle, shortspear, sling, and spear. They are also proficient with all natural attacks (claw, bite, and so forth) of any form they assume with wild shape (see below). Druids are proficient with light and medium armor but are prohibited from wearing metal armor; thus, they may wear only padded, leather, or hide armor",
         "progression": [
           {
             "level": 1,
@@ -1769,7 +1769,7 @@
           "Swim"
         ],
         "skill_points_per_level": 4,
-        "proficiencies": "Monks are proficient with the club, crossbow (light or heavy), dagger, handaxe, javelin, kama, nunchaku, quarterstaff, sai, shortspear, short sword, shuriken, siangham, sling, and spear",
+        "proficiencies": "Monks are proficient with the club, crossbow (light or heavy), dagger, handaxe, javelin, kama, nunchaku, quarterstaff, sai, shortspear, short sword, shuriken, siangham, sling, and spear. Monks are not proficient with any armor or shields",
         "progression": [
           {
             "level": 1,
@@ -2836,7 +2836,7 @@
           "Use Magic Device"
         ],
         "skill_points_per_level": 8,
-        "proficiencies": "Rogues are proficient with all simple weapons, plus the hand crossbow, rapier, sap, shortbow, and short sword",
+        "proficiencies": "Rogues are proficient with all simple weapons, plus the hand crossbow, rapier, sap, shortbow, and short sword. They are proficient with light armor, but not with shields",
         "progression": [
           {
             "level": 1,
@@ -3091,7 +3091,7 @@
           "Use Magic Device"
         ],
         "skill_points_per_level": 2,
-        "proficiencies": "Sorcerers are proficient with all simple weapons",
+        "proficiencies": "Sorcerers are proficient with all simple weapons. They are not proficient with any type of armor or shield",
         "progression": [
           {
             "level": 1,
@@ -3897,7 +3897,7 @@
           "Use Magic Device"
         ],
         "skill_points_per_level": 2,
-        "proficiencies": "A magus is proficient with all simple and martial weapons",
+        "proficiencies": "A magus is proficient with all simple and martial weapons. A magus is also proficient with light armor",
         "progression": [
           {
             "level": 1,
@@ -4276,7 +4276,7 @@
           "Use Magic Device"
         ],
         "skill_points_per_level": 4,
-        "proficiencies": "Alchemists are proficient with all simple weapons and bombs",
+        "proficiencies": "Alchemists are proficient with all simple weapons and bombs. They are also proficient with light armor, but not with shields",
         "progression": [
           {
             "level": 1,
@@ -4639,7 +4639,7 @@
           "Use Magic Device"
         ],
         "skill_points_per_level": 2,
-        "proficiencies": "Arcanists are proficient with all simple weapons",
+        "proficiencies": "Arcanists are proficient with all simple weapons. They are not proficient with any type of armor or shield",
         "progression": [
           {
             "level": 1,
@@ -5357,7 +5357,7 @@
           "Swim"
         ],
         "skill_points_per_level": 4,
-        "proficiencies": "A brawler is proficient with all simple weapons plus the handaxe, short sword, and weapons from the close fighter weapon group",
+        "proficiencies": "A brawler is proficient with all simple weapons plus the handaxe, short sword, and weapons from the close fighter weapon group. She is proficient with light armor and shields (except tower shields)",
         "progression": [
           {
             "level": 1,
@@ -5918,7 +5918,7 @@
           "Swim"
         ],
         "skill_points_per_level": 4,
-        "proficiencies": "Gunslingers are proficient with all simple and martial weapons, and with all firearms",
+        "proficiencies": "Gunslingers are proficient with all simple and martial weapons, and with all firearms. They are proficient with all light armor",
         "progression": [
           {
             "level": 1,
@@ -6532,7 +6532,7 @@
           "Swim"
         ],
         "skill_points_per_level": 6,
-        "proficiencies": "An inquisitor is proficient with all simple weapons, plus the hand crossbow, longbow, repeating crossbow, shortbow, and the favored weapon of her deity",
+        "proficiencies": "An inquisitor is proficient with all simple weapons, plus the hand crossbow, longbow, repeating crossbow, shortbow, and the favored weapon of her deity. She is also proficient with light armor, medium armor, and shields (except tower shields)",
         "progression": [
           {
             "level": 1,
@@ -6905,7 +6905,7 @@
           "Use Magic Device"
         ],
         "skill_points_per_level": 6,
-        "proficiencies": "Investigators are proficient with simple weapons, plus the hand crossbow, rapier, sap, shortbow, short sword, and sword cane UE",
+        "proficiencies": "Investigators are proficient with simple weapons, plus the hand crossbow, rapier, sap, shortbow, short sword, and sword cane UE . They are proficient in light armors, but not shields",
         "progression": [
           {
             "level": 1,
@@ -7871,7 +7871,7 @@
           "Use Magic Device"
         ],
         "skill_points_per_level": 2,
-        "proficiencies": "Witches are proficient with all simple weapons",
+        "proficiencies": "Witches are proficient with all simple weapons. They are not proficient with any type of armor or shield",
         "progression": [
           {
             "level": 1,
