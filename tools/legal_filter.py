@@ -58,6 +58,11 @@ PI_WORDS = {
     "Mammoth Lords",
     "Sodden Lands",
     "Stolen Lands",
+    # Imperi antichi (PI Golarion)
+    "Azlant",
+    "Azlanti",
+    "Thassilon",
+    "Thassilonian",
     # Deità
     "Iomedae",
     "Desna",

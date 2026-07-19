@@ -70,6 +70,13 @@ def test_manifest_counts():
         assert kind in catalogs, f"manifest.catalogs manca {kind}"
         assert catalogs[kind]["entries"] == info["entries"], (
             f"{kind}: catalogs {catalogs[kind]['entries']} != files {info['entries']}")
+    # Parita' manifest <-> file reale anche per races/classes (chiude la falla
+    # segnalata dalla review: prima solo NEW_KINDS erano confrontati al disco).
+    for kind in ("races", "classes"):
+        with open(OGL / f"{kind}.json", encoding="utf-8") as f:
+            real = len(json.load(f)["entries"])
+        assert files[kind]["entries"] == real, f"{kind}: manifest {files[kind]['entries']} != reale {real}"
+        assert catalogs[kind]["entries"] == real, f"{kind}: catalogs {catalogs[kind]['entries']} != reale {real}"
     catalogs_kinds = {c["kind"] for c in manifest["catalogs"]}
     for _, (kind, _) in NEW_KINDS.items():
         assert kind in catalogs_kinds, f"manifest.catalogs manca {kind}"

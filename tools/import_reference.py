@@ -240,7 +240,8 @@ def parse_race(html, race_name):
         "source": "PFRPG Core",
         "source_id": source_id("pfrpg_core", race_name),
         "prerequisites": [],
-        "tags": ["race", "core", mech["size"].lower() if mech["size"] else "race"],
+        "tags": ["race", "core" if race_name in RACES_CORE else "exotic",
+                 mech["size"].lower() if mech["size"] else "race"],
         "references": [f"AoN: {race_name} (Races)"],
         "reference_urls": [BASE + f"RacesDisplay.aspx?ItemName={race_name.replace(' ', '%20')}"],
         "description": (f"{race_name}: modificatori {mech['ability_mods']}, taglia {mech['size']}, "

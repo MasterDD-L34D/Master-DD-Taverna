@@ -11,9 +11,9 @@
       "is_ogc": true,
       "is_pi": false,
       "cup_allowed": false,
-      "entries": 2839,
-      "notes": "Nomi e meccaniche generiche; rimossi nomi propri e riferimenti a Golarion. 2800/2839 voci arricchite con description.",
-      "last_verified": "2026-07-16"
+      "entries": 2837,
+      "notes": "Nomi e meccaniche generiche; rimossi nomi propri e riferimenti a Golarion. 2798/2837 voci arricchite con description.",
+      "last_verified": "2026-07-19"
     },
     {
       "file": "ogl/spells.json",
@@ -59,9 +59,9 @@
       "is_ogc": true,
       "is_pi": false,
       "cup_allowed": false,
-      "entries": 7,
-      "notes": "Riassunti meccanici delle razze core; nessun nome proprio di setting.",
-      "last_verified": "2026-07-16"
+      "entries": 24,
+      "notes": "Riassunti meccanici delle razze core + 17 esotiche; nessun nome proprio di setting.",
+      "last_verified": "2026-07-19"
     },
     {
       "file": "ogl/archetypes.json",
@@ -144,7 +144,7 @@
     },
     "feats": {
       "path": "ogl/feats.json",
-      "entries": 2839
+      "entries": 2837
     },
     "items": {
       "path": "ogl/items.json",
@@ -156,7 +156,7 @@
     },
     "races": {
       "path": "ogl/races.json",
-      "entries": 7
+      "entries": 24
     },
     "archetypes": {
       "path": "ogl/archetypes.json",

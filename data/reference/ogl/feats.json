@@ -20800,23 +20800,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "a frontier landn Tattoo",
-      "source": "the inner sea region World Guide",
-      "prerequisites": [],
-      "tags": [
-        "the inner sea region World Guide"
-      ],
-      "references": [
-        "Archives of a deity of magic: a frontier landn Tattoo"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=a frontier landn%20Tattoo"
-      ],
-      "source_id": "inner_sea_world_guide:a frontier landn_tattoo",
-      "description": "You bear intricate tattoos that inspire and empower your natural magic ability. These tattoos mark you as a worker of the ancient traditions of a frontier landn magic. A a frontier landn tattoo typically consists of a long string of complex characters from the Thassilonian alphabet.\n\nSelect a school of magic (other than divination) in which you have Spell Focus-you cast spells from this school at +1 caster level. Additionally, you gain a single spell-like ability usable up to three times per day. The spelllike ability gained (and its a frontier landn name) are as follows: Abjuration (avidais): resistance Conjuration (idolis): acid splash Enchantment (carnasia): daze Evocation (ragario): dancing lights Illusion (vangloris): ghost sound Necromancy (voratalo): touch of fatigue Transmutation (avaria): mage hand",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Wand Dancer",
       "source": "the inner sea region World Guide",
       "prerequisites": [
@@ -39740,7 +39723,7 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Scion%20Of%20The%20Lost%20Empire"
       ],
       "source_id": "inner_sea_races:scion_of_the_lost_empire",
-      "description": "Though you might not be able to trace your lineage back to Azlant, you can feel the ancient power in your blood whenever you're near others like yourself.\n\nWhile you're adjacent to an ethnically Chelish or Taldan ally who also has this feat, you gain a +2 competence bonus on a single attack roll, saving throw, ability check, or skill check as an immediate action. You must choose to use this ability before making the roll.",
+      "description": "You can feel the ancient power in your blood whenever you're near others like yourself.\n\nWhile you're adjacent to an ethnically Chelish or Taldan ally who also has this feat, you gain a +2 competence bonus on a single attack roll, saving throw, ability check, or skill check as an immediate action. You must choose to use this ability before making the roll.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -51501,25 +51484,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "New Thassilonian Magic",
-      "source": "Paths Of The Righteous",
-      "prerequisites": [
-        "Thassilonian specialization (Pathfinder Campaign Setting: Inner Sea Magic 17)"
-      ],
-      "tags": [
-        "Paths Of The Righteous"
-      ],
-      "references": [
-        "Archives of a deity of magic: New Thassilonian Magic"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=New%20Thassilonian%20Magic"
-      ],
-      "source_id": "paths_of_the_righteous:new_thassilonian_magic",
-      "description": "You use Thassilonian magic in a nontraditional way that preserves the ancient traditions while lifting some of its restrictions.\n\nYou choose one of your two opposition schools. You also gain Thassilonian as a bonus language. If you already speak Thassilonian, you gain one of the following languages as a bonus language instead: Aklo, Azlanti, Giant, Shoanti, or a frontier landn.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Uncanny Ally",
       "source": "Paths Of The Righteous",
       "prerequisites": [
@@ -55171,7 +55135,7 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Cypher%20Script"
       ],
       "source_id": "adventurer_s_guide:cypher_script",
-      "description": "Through researching lengthy, ancient, arcane scripts salvaged from Thassilonian ruins, you have discovered a more efficient method of recording spells. As with the Cypher Magic feat, Cypher Script was originally developed by the Cyphermages of Riddleport, but recently has been spreading through the the inner sea region region.\n\nAny spell you scribe in your spellbook costs half as much as normal and takes up only half the room it normally would (round all fractions up). It takes you only 10 minutes per spell level to scribe a spell into your spellbook (5 minutes for cantrips).",
+      "description": "Through researching lengthy, ancient, arcane scripts, you have discovered a more efficient method of recording spells. As with the Cypher Magic feat, Cypher Script was originally developed by the Cyphermages of Riddleport, but recently has been spreading through the the inner sea region region.\n\nAny spell you scribe in your spellbook costs half as much as normal and takes up only half the room it normally would (round all fractions up). It takes you only 10 minutes per spell level to scribe a spell into your spellbook (5 minutes for cantrips).",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
