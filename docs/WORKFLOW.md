@@ -48,7 +48,7 @@ Il builder deterministico è consumato dall'harness a tre vie di pathmaster-dd c
 
 | Canale | Stato | Note |
 |---|---|---|
-| **Terzo oracolo differenziale** (v1 \| v2 \| builder Taverna) | ✅ ATTIVO (spike 2026-07-19) | Il builder ha trovato 2 bug RAW comuni ai due motori pathmaster (favored class "none", conteggio feat lv1); post-fix i tre concordano sui 7 build confrontabili. Invariante feat-count adottato in entrambi i loro `feat-slots.ts` con credito. |
+| **Terzo oracolo differenziale** (v1 \| v2 \| builder Taverna) | ✅ ATTIVO (spike 2026-07-19) | Il builder ha trovato 2 bug RAW comuni ai due motori pathmaster (favored class "none", conteggio feat lv1); post-fix i tre concordano sui 7 build confrontabili. Invariante feat-count adottato in entrambi i loro `feat-slots.ts` con credito. Evoluzione contratto 2026-07-19 (commit `a7842e4`): nuovo campo opzionale `spells` nel draft (default `[]`); sheet con chiave `spells` solo se la selezione è non vuota; draft senza `spells` → output invariato. |
 | **Leva 2 import** (cataloghi Taverna → `UNMODELED_DATA` v2) | Aperto, basso valore ora | I 2839 feat OGL possono popolare/verificare il perimetro unmodeled. |
 | **Chronicle M2-B dizionario campagna** | Futuro | I cataloghi OGL (PI già pulita) come seme vocabolario PF1e. |
 | **Regola ground-truth condivisa** | Permanente | Doc = ipotesi; git + SRD = verità. La concordanza a tre NON è correttezza: nei disaccordi si apre il SRD, non si vota a maggioranza. |
