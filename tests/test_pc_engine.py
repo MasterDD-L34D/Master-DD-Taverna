@@ -511,4 +511,20 @@ def test_weapon_finesse_uses_dex():
 def test_finesse_documented_list():
     from src.pc.feat_effects import FINESSE_WEAPONS
     assert "Dagger" in FINESSE_WEAPONS and "Rapier" in FINESSE_WEAPONS
+    assert "Light mace" in FINESSE_WEAPONS and "Throwing axe" in FINESSE_WEAPONS
     assert "Longsword" not in FINESSE_WEAPONS
+
+
+def test_finesse_not_applied_when_str_higher():
+    # str 16+2 razziale = 18 (mod +4) > dex 10 (mod 0): finesse NON applicato
+    # (RAW "may use Dex": lo swap avviene solo se migliorativo).
+    # Point-buy: 16(10) 10(0) 12(2) 10(0) 12(2) 11(1) = 15 <= 15.
+    abils = {"str": 16, "dex": 10, "con": 12, "int": 10, "wis": 12, "cha": 11}
+    sheet = build_character(_draft(abilities=abils, race_bonus_ability="str",
+                                   skills={"Climb": 1, "Perception": 1, "Survival": 1},
+                                   feats=["Weapon Finesse"],
+                                   equipment=["Dagger"]))
+    assert sheet["errors"] == []
+    dagger = [a for a in sheet["attacks"] if a["weapon"] == "Dagger"][0]
+    assert dagger["bonus"] == 5       # bab 1 + str 4 (nessuno swap a dex)
+    assert dagger["damage"] == "1d4+4"

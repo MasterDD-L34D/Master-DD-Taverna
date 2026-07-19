@@ -61,15 +61,17 @@ FINESSE_WEAPONS = {
     "Dagger", "Punching dagger", "Rapier", "Short sword", "Whip",
     "Spiked chain", "Elven curve blade", "Light hammer", "Handaxe",
     "Sickle", "Kukri", "Starknife",
+    "Light mace", "Gauntlet", "Spiked gauntlet", "Throwing axe",
 }
 
 
 def _apply_finesse(sheet, mods):
     """Weapon Finesse: sulle armi finessabili il tiro per colpire usa Dex al
-    posto di Str (apply_equipment ha gia' messo Str per melee / Dex per ranged).
+    posto di Str (apply_equipment ha gia' messo Str per melee / Dex per ranged),
+    ma solo se migliorativo (RAW "may use Dex": con Str >= Dex resta Str).
     Il danno resta a Str (RAW: finesse cambia solo il tiro per colpire)."""
     for attack in sheet.get("attacks", []):
-        if attack["weapon"] in FINESSE_WEAPONS:
+        if attack["weapon"] in FINESSE_WEAPONS and mods["dex"] > mods["str"]:
             attack["bonus"] += mods["dex"] - mods["str"]
 
 
@@ -80,7 +82,7 @@ def apply_feat_effects(sheet):
     Weapon Focus (X) e Skill Focus (Y) hanno effetto dipendente dalla
     selezione parentetica; la selezione mancante/invalida produce warning.
     Weapon Finesse sostituisce Str con Dex al tiro per colpire delle armi
-    in FINESSE_WEAPONS."""
+    in FINESSE_WEAPONS, solo quando migliorativo."""
     if sheet.get("errors"):
         return
     mods = {ab: (sc - 10) // 2 for ab, sc in sheet["abilities"].items()}
