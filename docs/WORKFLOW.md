@@ -52,7 +52,7 @@ Il builder deterministico è consumato dall'harness a tre vie di pathmaster-dd c
 | **Leva 2 import** (cataloghi Taverna → `UNMODELED_DATA` v2) | Aperto, basso valore ora | I 2839 feat OGL possono popolare/verificare il perimetro unmodeled. |
 | **Chronicle M2-B dizionario campagna** | Futuro | I cataloghi OGL (PI già pulita) come seme vocabolario PF1e. |
 | **Regola ground-truth condivisa** | Permanente | Doc = ipotesi; git + SRD = verità. La concordanza a tre NON è correttezza: nei disaccordi si apre il SRD, non si vota a maggioranza. |
-| **Copertura oracolo** | Da crescere | Oggi 7/28 build (7 razze core, 12 classi). Prossimo lotto candidato: razze esotiche del corpus (Goblin, Fetchling, Kitsune, Tiefling, Shabti + altre da `src/data/builds/`); poi classi mancanti (Alchemist in testa) — con `docs/IMPORT_PLAYBOOK.md`. |
+| **Copertura oracolo** | 28/28 build | 2026-07-19: 24 razze (lotto esotiche) + 24 classi (lotto classi mancanti) → 28/29 build confrontabili; unica esclusa `paladin_aasimar` (razza Aasimar non importata). Rilancio tre-vie sulle 15 build sbloccate da segnalare a pathmaster-dd (caveat: nomi classe/razza nel corpus non canonici — `arcanist`/`tiefling` minuscoli, "Half Orc"/"Halfelf" — serve normalizzazione nel join). |
 
 ## 6. Come si riprende in futuro (checklist)
 
