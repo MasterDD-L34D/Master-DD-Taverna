@@ -192,6 +192,122 @@ def test_parse_class():
     print("OK: parse_class fixture")
 
 
+# Fixture ricalcate sul markup REALE aonprd delle classi non-core (cache
+# 2026-07-19, data/reference/aon_cache): stesso stile di CLASS_HTML, righe
+# lv1/lv2 campione e metadati nella forma reale ('Skill Points at each Level').
+
+ALCHEMIST_HTML = """
+<html><body>
+<h2>Alchemist</h2>
+<p><b>Hit Die</b>: d8.</p>
+<p><b>Starting Wealth</b>: 3d6 x 10 gp (average 105 gp).</p>
+<h3>Class Skills</h3>
+<p>The alchemist's class skills are Appraise (Int), Craft (any) (Int), Disable Device (Dex), Fly (Dex), Heal (Wis), Knowledge (arcana) (Int), Knowledge (nature) (Int), Perception (Wis), Profession (Wis), Sleight of Hand (Dex), Spellcraft (Int), Survival (Wis), and Use Magic Device (Cha).</p>
+<p><b>Skill Points at each Level</b>: 4 + Int modifier.</p>
+<table><tr><td colspan="6">&nbsp;</td><td colspan="6"><b>Spells Per Day</b></td></tr>
+<tr><td><b>Level</b></td><td><b>Base Attack Bonus</b></td><td><b>Fort Save</b></td><td><b>Ref Save</b></td><td><b>Will Save</b></td><td><b>Special</b></td><td><b>1st</b></td><td><b>2nd</b></td><td><b>3rd</b></td><td><b>4th</b></td><td><b>5th</b></td><td><b>6th</b></td></tr>
+<tr><td>1st</td><td>+0</td><td>+2</td><td>+2</td><td>+0</td><td>Alchemy, bomb 1d6, Brew Potion, mutagen, Throw Anything</td><td>1</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+<tr><td>2nd</td><td>+1</td><td>+3</td><td>+3</td><td>+0</td><td>Discovery, poison resistance +2, poison use</td><td>2</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr></table>
+</body></html>
+"""
+
+
+def test_parse_class_alchemist_extracts():
+    """Formato Alchemist (APG): riga-gruppo colspan sopra l'header, colonne
+    1st-6th che riportano ESTRATTI importati in spells_per_day (semantica
+    dichiarata: estratti ~= livelli incantesimo, non incantesimi RAW).
+    La class skill reale 'Craft (any) (Int)' e' normalizzata a 'Craft'."""
+    entry = parse_class(ALCHEMIST_HTML, "Alchemist")
+    mech = entry["mechanics"]
+    assert mech["hd"] == "d8"
+    assert mech["skill_points_per_level"] == 4
+    assert "Craft" in mech["class_skills"]
+    assert "Craft (any)" not in mech["class_skills"]
+    lvl1 = mech["progression"][0]
+    assert (lvl1["bab"], lvl1["fort"], lvl1["ref"], lvl1["will"]) == (0, 2, 2, 0)
+    # Le celle '-' sono saltate: resta solo il cerchio con slot.
+    assert lvl1["spells_per_day"] == {"1st": "1"}
+    assert "bomb 1d6" in lvl1["special"]
+    assert mech["progression"][1]["spells_per_day"] == {"1st": "2"}
+    assert entry["source"] == "Advanced Player's Guide"
+    assert entry["tags"] == ["class", "base"]
+    assert entry["source_id"] == "pfrpg_core:alchemist"
+    print("OK: parse_class alchemist extracts")
+
+
+BRAWLER_HTML = """
+<html><body>
+<h2>Brawler</h2>
+<p><b>Hit Die</b>: d10.</p>
+<p><b>Starting Wealth</b>: 3d6 x 10 gp (average 105 gp).</p>
+<h3>Class Skills</h3>
+<p>The brawler's class skills are Acrobatics (Dex), Climb (Str), Craft (Int), Escape Artist (Dex), Handle Animal (Cha), Intimidate (Cha), Knowledge (dungeoneering) (Int), Knowledge (local) (Int), Perception (Wis), Profession (Wis), Ride (Dex), Sense Motive (Wis), and Swim (Str).</p>
+<p><b>Skill Points at each Level</b>: 4 + Int modifier.</p>
+<table><tr><td><b>Level</b></td><td><b>Base Attack Bonus</b></td><td><b>Fort Save</b></td><td><b>Ref Save</b></td><td><b>Will Save</b></td><td><b>Special</b></td><td><b>Unarmed Damage</b></td></tr>
+<tr><td>1st</td><td>+1</td><td>+2</td><td>+2</td><td>+0</td><td>Brawler's cunning, martial flexibility, martial training, unarmed strike</td><td>1d6</td></tr>
+<tr><td>2nd</td><td>+2</td><td>+3</td><td>+3</td><td>+0</td><td>Bonus combat feat, brawler's flurry (Two-Weapon Fighting)</td><td>1d6</td></tr></table>
+</body></html>
+"""
+
+
+def test_parse_class_brawler_unarmed_damage():
+    """Formato Brawler (ACG, tag hybrid): nessuna riga-gruppo, colonna
+    'Unarmed Damage' -> extra_progression, MAI in spells_per_day."""
+    entry = parse_class(BRAWLER_HTML, "Brawler")
+    mech = entry["mechanics"]
+    assert mech["hd"] == "d10"
+    assert mech["skill_points_per_level"] == 4
+    lvl1 = mech["progression"][0]
+    assert (lvl1["bab"], lvl1["fort"], lvl1["ref"], lvl1["will"]) == (1, 2, 2, 0)
+    assert lvl1["extra_progression"] == {"Unarmed Damage": "1d6"}
+    assert "spells_per_day" not in lvl1
+    assert "Unarmed Damage" not in lvl1.get("spells_per_day", {})
+    assert lvl1["special"] == ["Brawler's cunning", "martial flexibility",
+                               "martial training", "unarmed strike"]
+    assert "brawler's flurry (Two-Weapon Fighting)" in mech["progression"][1]["special"]
+    assert entry["source"] == "Advanced Class Guide"
+    assert entry["tags"] == ["class", "hybrid"]
+    assert entry["source_id"] == "pfrpg_core:brawler"
+    print("OK: parse_class brawler unarmed damage")
+
+
+WITCH_HTML = """
+<html><body>
+<h2>Witch</h2>
+<p><b>Hit Die</b>: d6.</p>
+<p><b>Starting Wealth</b>: 3d6 x 10 gp (average 105 gp).</p>
+<h3>Class Skills</h3>
+<p>The witch's class skills are Craft (Int), Fly (Dex), Heal (Wis), Intimidate (Cha), Knowledge (arcana) (Int), Knowledge (history) (Int), Knowledge (nature) (Int), Knowledge (planes) (Int), Profession (Wis), Spellcraft (Int), and Use Magic Device (Cha).</p>
+<p><b>Skill Points at each Level</b>: 2 + Int modifier.</p>
+<table><tr><td colspan="6">&nbsp;</td><td colspan="10"><b>Spells Per Day</b></td></tr>
+<tr><td><b>Level</b></td><td><b>Base Attack Bonus</b></td><td><b>Fort Save</b></td><td><b>Ref Save</b></td><td><b>Will Save</b></td><td><b>Special</b></td><td><b>0</b></td><td><b>1st</b></td><td><b>2nd</b></td><td><b>3rd</b></td><td><b>4th</b></td><td><b>5th</b></td><td><b>6th</b></td><td><b>7th</b></td><td><b>8th</b></td><td><b>9th</b></td></tr>
+<tr><td>1st</td><td>+0</td><td>+0</td><td>+0</td><td>+2</td><td>Cantrips, hex, witch’s familiar</td><td>3</td><td>1</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+<tr><td>2nd</td><td>+1</td><td>+0</td><td>+0</td><td>+3</td><td>Hex</td><td>4</td><td>2</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr></table>
+</body></html>
+"""
+
+
+def test_parse_class_witch_cantrips_column():
+    """Formato Witch (APG full caster): riga-gruppo + colonna cerchio '0'
+    (cantrips) in spells_per_day; apostrofo tipografico reale U+2019 nello
+    special ('witch’s familiar')."""
+    entry = parse_class(WITCH_HTML, "Witch")
+    mech = entry["mechanics"]
+    assert mech["hd"] == "d6"
+    assert mech["skill_points_per_level"] == 2
+    lvl1 = mech["progression"][0]
+    assert (lvl1["bab"], lvl1["fort"], lvl1["ref"], lvl1["will"]) == (0, 0, 0, 2)
+    assert lvl1["spells_per_day"] == {"0": "3", "1st": "1"}
+    assert "witch’s familiar" in lvl1["special"]
+    lvl2 = mech["progression"][1]
+    assert lvl2["will"] == 3
+    assert lvl2["spells_per_day"] == {"0": "4", "1st": "2"}
+    assert entry["source"] == "Advanced Player's Guide"
+    assert entry["tags"] == ["class", "base"]
+    assert entry["source_id"] == "pfrpg_core:witch"
+    print("OK: parse_class witch cantrips column")
+
+
 def test_skill_header_regex():
     name, key, trained, acp = SKILL_HEADER_RE("Disable Device (Int; Trained Only)")
     assert (name, key, trained, acp) == ("Disable Device", "int", True, False)

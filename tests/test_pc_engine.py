@@ -783,9 +783,21 @@ def test_find_spell_and_level_for_class():
     assert spell_level_for_class(mm, "Wizard") == 1
     assert spell_level_for_class(mm, "wizard") == 1
     assert spell_level_for_class(mm, "Sorcerer") == 1
-    # bloodrager non e' in classes.json: ignorato senza errore -> None
-    assert spell_level_for_class(mm, "Bloodrager") is None
+    # bloodrager ora presente in classes.json (lotto classi mancanti 2026-07-19):
+    # Magic Missile e' bloodrager 1 (RAW)
+    assert spell_level_for_class(mm, "Bloodrager") == 1
     assert spell_level_for_class(find_spell("Cure Light Wounds"), "Wizard") is None
+
+
+def test_spell_level_investigator_alias():
+    """Alias dichiarato investigator -> alchemist: RAW l'Investigator usa la
+    lista formule dell'Alchemist (spells.json: 156 chiavi 'alchemist', 0
+    'investigator'). Cure Light Wounds e' alchemist 1 -> investigator 1."""
+    from src.pc.catalogs import find_spell, spell_level_for_class
+    clw = find_spell("Cure Light Wounds")
+    assert spell_level_for_class(clw, "Alchemist") == 1
+    assert spell_level_for_class(clw, "Investigator") == 1
+    assert spell_level_for_class(clw, "investigator") == 1
 
 
 def test_markdown_render_spells():

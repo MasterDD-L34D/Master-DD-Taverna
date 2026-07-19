@@ -249,9 +249,48 @@ def build_races(write=False):
 CLASSES_CORE = ["Barbarian", "Bard", "Cleric", "Druid", "Fighter", "Monk",
                 "Paladin", "Ranger", "Rogue", "Sorcerer", "Wizard", "Magus"]
 
+# Le 12 classi non-core importate da aonprd (piano
+# planning/2026-07-19-missing-classes-import.md).
+CLASSES_MISSING = ["Alchemist", "Arcanist", "Bloodrager", "Brawler", "Cavalier",
+                   "Gunslinger", "Hunter", "Inquisitor", "Investigator",
+                   "Kineticist", "Medium", "Witch"]
+
+# Fonte onesta per classe (default "PFRPG Core" per le non mappate). Lo slug di
+# source_id resta "pfrpg_core" per TUTTE le classi (decisione controller:
+# nessun consumer dipende dal libro fonte e l'unicita' e' gia' garantita).
+CLASS_SOURCES = {"Alchemist": "Advanced Player's Guide",
+                 "Cavalier": "Advanced Player's Guide",
+                 "Inquisitor": "Advanced Player's Guide",
+                 "Witch": "Advanced Player's Guide",
+                 "Gunslinger": "Ultimate Combat",
+                 "Arcanist": "Advanced Class Guide",
+                 "Bloodrager": "Advanced Class Guide",
+                 "Brawler": "Advanced Class Guide",
+                 "Hunter": "Advanced Class Guide",
+                 "Investigator": "Advanced Class Guide",
+                 "Kineticist": "Occult Adventures",
+                 "Medium": "Occult Adventures",
+                 "Magus": "Ultimate Magic"}
+
+# Tag di classe per libro fonte: core (CRB), base (APG/UC/UM), hybrid (ACG),
+# occult (OA). KeyError voluto (fail-fast) se una fonte non e' mappata.
+CLASS_SOURCE_TAGS = {"PFRPG Core": "core",
+                     "Advanced Player's Guide": "base",
+                     "Ultimate Combat": "base",
+                     "Ultimate Magic": "base",
+                     "Advanced Class Guide": "hybrid",
+                     "Occult Adventures": "occult"}
+
 
 def parse_class(html, class_name):
-    """Pagina ClassDisplay: HD, wealth, class skills, skill points, tabella progressione."""
+    """Pagina ClassDisplay: HD, wealth, class skills, skill points, tabella progressione.
+
+    Fonte e tag da CLASS_SOURCES/CLASS_SOURCE_TAGS (default PFRPG Core/core).
+    Semantica dichiarata per Alchemist/Investigator: la tabella riporta
+    "Spells Per Day" ma i valori sono ESTRATTI (colonne 1st-6th importate in
+    spells_per_day come gli incantesimi): estratti ~= livelli incantesimo,
+    NON incantesimi RAW (decisione controller, vedi piano
+    planning/2026-07-19-missing-classes-import.md)."""
     soup = BeautifulSoup(html, "html.parser")
     mech = {"hd": None, "starting_wealth": None, "class_skills": [],
             "skill_points_per_level": None, "proficiencies": None, "progression": []}
@@ -267,7 +306,13 @@ def parse_class(html, class_name):
         mech["skill_points_per_level"] = int(sp.group(1))
     skills_match = re.search(r"class skills (?:are|of [^:]+:)\s*([^.]+)\.", text, re.I)
     if skills_match:
-        mech["class_skills"] = [clean(re.sub(r"\s*\([A-Z][a-z]{2}\)$", "", re.sub(r"^and\s+", "", s.strip())))
+        # Dopo lo strip del suffisso caratteristica '(Int)', si normalizza
+        # anche '(any)' ('Craft (any) (Int)' Alchemist -> 'Craft'): il
+        # catalogo skills ha solo la skill generica (crossref
+        # test_class_skills_crossref).
+        mech["class_skills"] = [clean(re.sub(r"\s*\(any\)$", "",
+                                             re.sub(r"\s*\([A-Z][a-z]{2}\)$", "",
+                                                    re.sub(r"^and\s+", "", s.strip()))))
                                 for s in skills_match.group(1).split(",")]
     prof = re.search(r"Weapon and Armor Proficien\w+\s*:?\s*([^.]+)\.", text, re.I)
     if prof:
@@ -318,12 +363,13 @@ def parse_class(html, class_name):
     desc = (f"{class_name}: HD {mech['hd']}, skill points {mech['skill_points_per_level']}+Int. "
             f"Class skills: {', '.join(mech['class_skills'][:8])}. "
             f"Progressione su {len(mech['progression'])} livelli.")
+    source = CLASS_SOURCES.get(class_name, "PFRPG Core")
     return {
         "name": class_name,
-        "source": "PFRPG Core" if class_name != "Magus" else "Ultimate Magic",
+        "source": source,
         "source_id": source_id("pfrpg_core", class_name),
         "prerequisites": [],
-        "tags": ["class", "core" if class_name != "Magus" else "base"],
+        "tags": ["class", CLASS_SOURCE_TAGS[source]],
         "references": [f"AoN: {class_name} (Classes)"],
         "reference_urls": [BASE + f"ClassDisplay.aspx?ItemName={class_name}"],
         "description": desc,
@@ -332,7 +378,16 @@ def parse_class(html, class_name):
 
 
 def build_classes(write=False):
-    """Merge in place su classes.json preservando i campi curati e l'header."""
+    """Merge in place su classes.json preservando i campi curati e l'header.
+
+    Itera CLASSES_CORE + CLASSES_MISSING: le entry nuove (le 12 non-core)
+    sono aggiunte in coda SENZA campi curati (status/reviewed_by/notes/... —
+    non inventati, decisione controller); quelle esistenti sono aggiornate in
+    place e i campi curati restano."""
+    # Fail-fast sulle fonti (come CLASS_SOURCE_TAGS[source] in parse_class):
+    # ogni classe non-core deve avere la fonte onesta mappata.
+    senza_fonte = [c for c in CLASSES_MISSING if c not in CLASS_SOURCES]
+    assert not senza_fonte, f"classi senza fonte in CLASS_SOURCES: {', '.join(senza_fonte)}"
     path = OGL_DIR / "classes.json"
     with open(path, encoding="utf-8") as f:
         catalog = json.load(f)
@@ -340,7 +395,7 @@ def build_classes(write=False):
     if "aonprd" not in source_text:
         source_text = source_text.rstrip(".") + "; Archives of Nethys (aonprd.com)."
     by_name = {e["name"]: e for e in catalog["entries"]}
-    for cls in CLASSES_CORE:
+    for cls in CLASSES_CORE + CLASSES_MISSING:
         url = BASE + f"ClassDisplay.aspx?ItemName={cls}"
         parsed = parse_class(fetch(url), cls)
         assert len(parsed["mechanics"]["progression"]) == 20, (

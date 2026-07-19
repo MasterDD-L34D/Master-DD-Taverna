@@ -71,17 +71,28 @@ def find_spell(name):
     return _by_name("spells").get(name)
 
 
+# Alias di lista incantesimi (default DICHIARATO, contratto WORKFLOW §4): RAW
+# l'Investigator usa la lista formule dell'Alchemist; in spells.json esistono
+# 156 spell con chiave "alchemist" e 0 con chiave "investigator". La classe a
+# sinistra risolve con la lista della classe a destra.
+CLASS_SPELL_LIST_ALIASES = {"investigator": "alchemist"}
+
+
 def spell_level_for_class(spell, class_name):
     """Cerchio di `spell` per `class_name`; None se la classe non la lancia.
 
     Le chiavi di mechanics.spell_level sono lowercase e possono essere
     combinate ("sorcerer/wizard", "cleric/oracle"): splittate su "/".
     Il match sul nome classe e' case-insensitive ("Wizard" == "wizard").
-    Le classi assenti da classes.json (bloodrager, oracle, occultist, ...)
-    sono ignorate senza errore: una chiave che nomina solo classi fuori
-    catalogo non produce match."""
+    Prima del match si applica CLASS_SPELL_LIST_ALIASES (investigator ->
+    alchemist, lista formule condivisa RAW).
+    Le classi assenti da classes.json sono ignorate senza errore: una
+    chiave che nomina solo classi fuori catalogo non produce match.
+    Dal lotto classi mancanti (2026-07-19) il catalogo copre 24 classi:
+    bloodrager & co. ora matchano; restano ignorate solo le classi non
+    importate (es. occultist, finche' non importata)."""
     known = {e["name"].lower() for e in load("classes")}
-    target = class_name.lower()
+    target = CLASS_SPELL_LIST_ALIASES.get(class_name.lower(), class_name.lower())
     for key, level in spell.get("mechanics", {}).get("spell_level", {}).items():
         for part in key.split("/"):
             if part in known and part == target:

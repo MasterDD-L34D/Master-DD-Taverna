@@ -184,6 +184,11 @@ def validate_spells(draft, sheet):
       catalogs.spell_level_for_class) deve contenere la classe del draft;
       il cerchio deve avere almeno uno slot base al livello del personaggio
       (_castable_circles);
+    - estratti (Alchemist/Investigator): validati sulla lista spell per
+      livello di estratto — spells_per_day riporta ESTRATTI, che NON sono
+      incantesimi RAW (nessuno spell trigger modellato);
+    - alias investigator -> alchemist (lista formule condivisa RAW, vedi
+      catalogs.CLASS_SPELL_LIST_ALIASES);
     - sheet["spells"] = lista delle entry validate come
       {name, level (per la classe del draft), school}.
     Fuori scope (dichiarato): spells known vs prepared (la selezione NON e'

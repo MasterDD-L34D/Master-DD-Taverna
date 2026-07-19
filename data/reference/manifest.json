@@ -47,9 +47,9 @@
       "is_ogc": true,
       "is_pi": false,
       "cup_allowed": false,
-      "entries": 12,
-      "notes": "Riassunti meccanici delle classi core + Magus; nessun nome proprio di setting.",
-      "last_verified": "2026-07-16"
+      "entries": 24,
+      "notes": "Riassunti meccanici di 24 classi: 11 core + Magus (UM) + 4 APG + 1 UC + 5 ACG + 2 OA; nessun nome proprio di setting.",
+      "last_verified": "2026-07-19"
     },
     {
       "file": "ogl/races.json",
@@ -152,7 +152,7 @@
     },
     "classes": {
       "path": "ogl/classes.json",
-      "entries": 12
+      "entries": 24
     },
     "races": {
       "path": "ogl/races.json",
