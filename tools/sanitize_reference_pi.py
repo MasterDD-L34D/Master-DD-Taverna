@@ -104,6 +104,8 @@ REPLACEMENTS = [
     ("Norgorber", "a god of secrets"),
     ("Numeria", "a realm of lost technology"),
     ("Osirion", "an ancient desert kingdom"),
+    # Variante di "Osirion" (quality review Task 3): stessa forma neutra.
+    ("Osiria", "an ancient desert kingdom"),
     ("Oppara", "a capital city"),
     ("Pharasma", "a goddess of fate"),
     ("Qadira", "a desert kingdom"),
@@ -210,6 +212,11 @@ DESCRIPTION_ONLY_REPLACEMENTS = [
     ("Gozreh", "a god of nature"),
     ("Rovagug", "a god of destruction"),
     ("Lamashtu", "a goddess of monsters"),
+    # Task 3 esteso (policy traits 2026-07-19): "Aroden's" e' coperto dal
+    # boundary (l'apostrofo resta fuori dal match); "Arodenite" NON matcha
+    # (boundary: le entry "Arodenite*" sono PI-identity -> pi_local_only).
+    ("Aroden", "a dead god"),
+    ("Sothis", "a desert metropolis"),
 ]
 
 # Campi mai sanitizzati: il nome (policy: le entry PI-identita' vanno in

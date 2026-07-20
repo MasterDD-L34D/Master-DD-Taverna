@@ -8877,35 +8877,6 @@
       }
     },
     {
-      "name": "Hellknight leather",
-      "source": "Adventurer's Guide",
-      "source_id": "adventurer_s_guide:hellknight_leather",
-      "prerequisites": [],
-      "tags": [
-        "equipment",
-        "armor",
-        "light"
-      ],
-      "references": [
-        "AoN: Equipment (armor light)"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/EquipmentArmorDisplay.aspx?ItemName=Hellknight%20leather",
-        "https://aonprd.com/Equipment.aspx"
-      ],
-      "description": "Hellknight leather (armor, light), costo 30 gp, peso 25 lbs.",
-      "mechanics": {
-        "cost": "30 gp",
-        "armor_bonus": "+3",
-        "max_dex_bonus": "+5",
-        "armor_check_penalty": "-1",
-        "arcane_spell_failure_chance": "15%",
-        "speed_30_ft": "30 ft.",
-        "speed_20_ft": "20 ft.",
-        "weight": "25 lbs."
-      }
-    },
-    {
       "name": "Hide shirt",
       "source": "Birthplace of Legends",
       "source_id": "birthplace_of_legends:hide_shirt",
@@ -9747,35 +9718,6 @@
       }
     },
     {
-      "name": "Alkenstar fortress plate",
-      "source": "Adventurer's Armory 2",
-      "source_id": "adventurer_s_armory_2:alkenstar_fortress_plate",
-      "prerequisites": [],
-      "tags": [
-        "equipment",
-        "armor",
-        "heavy"
-      ],
-      "references": [
-        "AoN: Equipment (armor heavy)"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/EquipmentArmorDisplay.aspx?ItemName=Alkenstar%20fortress%20plate",
-        "https://aonprd.com/Equipment.aspx"
-      ],
-      "description": "Alkenstar fortress plate (armor, heavy), costo 2,100 gp, peso 75 lbs.",
-      "mechanics": {
-        "cost": "2,100 gp",
-        "armor_bonus": "+8",
-        "max_dex_bonus": "+0",
-        "armor_check_penalty": "-7",
-        "arcane_spell_failure_chance": "40%",
-        "speed_30_ft": "20 ft.",
-        "speed_20_ft": "15 ft.",
-        "weight": "75 lbs."
-      }
-    },
-    {
       "name": "Half-plate",
       "source": "PFRPG Core",
       "source_id": "pfrpg_core:half_plate",
@@ -9795,35 +9737,6 @@
       "description": "Half-plate (armor, heavy), costo 600 gp, peso 50 lbs.",
       "mechanics": {
         "cost": "600 gp",
-        "armor_bonus": "+8",
-        "max_dex_bonus": "+0",
-        "armor_check_penalty": "-7",
-        "arcane_spell_failure_chance": "40%",
-        "speed_30_ft": "20 ft.",
-        "speed_20_ft": "15 ft.",
-        "weight": "50 lbs."
-      }
-    },
-    {
-      "name": "Hellknight half-plate",
-      "source": "Adventurer's Guide",
-      "source_id": "adventurer_s_guide:hellknight_half_plate",
-      "prerequisites": [],
-      "tags": [
-        "equipment",
-        "armor",
-        "heavy"
-      ],
-      "references": [
-        "AoN: Equipment (armor heavy)"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/EquipmentArmorDisplay.aspx?ItemName=Hellknight%20half-plate",
-        "https://aonprd.com/Equipment.aspx"
-      ],
-      "description": "Hellknight half-plate (armor, heavy), costo 850 gp, peso 50 lbs.",
-      "mechanics": {
-        "cost": "850 gp",
         "armor_bonus": "+8",
         "max_dex_bonus": "+0",
         "armor_check_penalty": "-7",
@@ -9943,35 +9856,6 @@
         "armor_bonus": "+9",
         "max_dex_bonus": "+1",
         "armor_check_penalty": "-6",
-        "arcane_spell_failure_chance": "35%",
-        "speed_30_ft": "20 ft.",
-        "speed_20_ft": "15 ft.",
-        "weight": "50 lbs."
-      }
-    },
-    {
-      "name": "Hellknight plate",
-      "source": "Adventurer's Guide",
-      "source_id": "adventurer_s_guide:hellknight_plate",
-      "prerequisites": [],
-      "tags": [
-        "equipment",
-        "armor",
-        "heavy"
-      ],
-      "references": [
-        "AoN: Equipment (armor heavy)"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/EquipmentArmorDisplay.aspx?ItemName=Hellknight%20plate",
-        "https://aonprd.com/Equipment.aspx"
-      ],
-      "description": "Hellknight plate (armor, heavy), costo 2,000 gp, peso 50 lbs.",
-      "mechanics": {
-        "cost": "2,000 gp",
-        "armor_bonus": "+9",
-        "max_dex_bonus": "+1",
-        "armor_check_penalty": "-5",
         "arcane_spell_failure_chance": "35%",
         "speed_30_ft": "20 ft.",
         "speed_20_ft": "15 ft.",

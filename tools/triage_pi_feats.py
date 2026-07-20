@@ -32,6 +32,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from tools.legal_filter import DEITY_TERMS, PI_TERMS
 from tools.sanitize_reference_pi import REPLACEMENTS
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -45,40 +46,11 @@ SNAPSHOT_HEAD = "364cd15"
 
 # Lista termini PI estesa (75): word-boundary obbligatorio (senza boundary
 # "Nex" matcha "next" — motivo dei 227 falsi positivi della scansione grezza).
-# UNICA fonte per il triage; Task 3 la unifichera' con tools/legal_filter.py.
-# Estensione 2026-07-19 (quality review): +21 termini verificati a mano —
-# 17 da review piu' Hermean, Kellid, Mzali, Vudra da sweep word-boundary su
-# feats.json. Falsi positivi scartati documentati nel report (Shackles,
-# Linnorm, Juju). Candidati cercati a zero hit: elenco in § Copertura.
-PI_TERMS = [
-    # Nazioni / regioni / luoghi di Golarion
-    "Golarion", "Absalom", "Varisia", "Cheliax", "Chelaxian", "Taldor",
-    "Taldan", "Andoran", "Andoren", "Qadira", "Qadiran", "Osirion",
-    "Osirian", "Osiriani", "Nex", "Geb", "Nidal", "Rahadoum", "Rahadoumi",
-    "Thuvia", "Thuvian", "Katapesh", "Kyonin", "Druma", "Numeria",
-    "Ustalav", "Oppara", "Sodden Lands", "Mana Wastes", "Inner Sea",
-    # Deita' maggiori
-    "Sarenrae", "Iomedae", "Asmodeus", "Desna", "Calistria", "Norgorber",
-    "Zon-Kuthon", "Urgathoa", "Rovagug", "Lamashtu", "Abadar", "Irori",
-    "Gozreh", "Pharasma", "Shelyn", "Cayden", "Erastil", "Torag",
-    "Besmara", "Gorum", "Nethys",
-    # Organizzazioni / ordini
-    "Aldori", "Hellknight", "Pathfinder Society",
-    # Toponimi / etnie / deita' minori Golarion (estensione quality review)
-    "Lastwall", "Worldwound", "Belkzen", "Shoanti", "Mwangi", "Tian",
-    "Varisian", "Chelish", "Irrisen", "Galt", "Hermea", "Hermean",
-    "Alkenstar", "Korvosa", "Riddleport", "Daggermark", "River Kingdoms",
-    "Walkena", "Mzali", "Vudra", "Kellid",
-]
-
-# Sottoinsieme delle deita': un match di questi termini nei prerequisites
-# determina la categoria B (prerequisito deita-specifico).
-DEITY_TERMS = {
-    "sarenrae", "iomedae", "asmodeus", "desna", "calistria", "norgorber",
-    "zon-kuthon", "urgathoa", "rovagug", "lamashtu", "abadar", "irori",
-    "gozreh", "pharasma", "shelyn", "cayden", "erastil", "torag",
-    "besmara", "gorum", "nethys", "walkena",
-}
+# Task 3 (2026-07-19): la lista vive in tools/legal_filter.py come FONTE
+# UNICA (questo modulo la importa; niente doppie liste). Il gate vi aggiunge
+# i suoi termini storici (iconici, marchi) e i candidati a zero hit di
+# § Copertura: quelli restano solo nel gate, la lista del triage e'
+# invariata nei contenuti.
 
 # Regex unica: termini piu' lunghi prima (es. "Pathfinder Society" prima di
 # "Pathfinder"), word-boundary su entrambi i lati, case-insensitive.
@@ -407,7 +379,8 @@ def render_report(rows, dangling, systemic, total_entries):
         "(fonte canonica: AoN/indice feats in cache), con match word-boundary "
         "case-insensitive, e ogni hit e' verificato a mano contro falsi "
         "positivi prima dell'inclusione. La lista vive in un punto solo "
-        "(`PI_TERMS` nel tool); Task 3 la unifichera' con `legal_filter.py`.")
+        "(`PI_TERMS` in `tools/legal_filter.py`, importata da questo tool; "
+        "unificazione fatta in Task 3).")
     add("")
     add("**Estensione 2026-07-19** (quality review): 17 termini mandati "
         "(Lastwall, Worldwound, Belkzen, Shoanti, Mwangi, Tian, Varisian, "

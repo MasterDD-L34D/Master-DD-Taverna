@@ -4,6 +4,19 @@
 Verifica che i cataloghi OGC siano etichettati correttamente e non contengano
 Product Identity nota, e che pi_local_only/ non sia tracciato da git.
 
+Estensione 2026-07-19 (Task 3, planning/2026-07-19-pi-feats-triage.md):
+la lista PI estesa (`PI_TERMS`, 75 termini, da tools/triage_pi_feats.py)
+vive QUI come fonte unica — il triage la importa, niente doppie liste.
+Il gate scansiona l'unione di: PI_TERMS, i termini storici del gate non
+presenti nel triage feats (iconici, marchi, altri luoghi) e i candidati a
+zero hit documentati nel triage (§ Copertura: toponimi sicuri + demon
+lord/archdevil, a protezione degli import futuri). Match word-boundary
+case-insensitive su regex unica (senza boundary "Nex" matcha "next").
+I replacement sanctioned della sanitize (es. "the inner sea region", che
+contiene "inner sea") sono mascherati prima della scansione — precedente:
+tools/apply_pi_feats_policy.py (_masked_terms). "Sargava" resta fuori per
+decisione documentata (hit solo come titolo libro in source/source_id).
+
 Uso:
   python tools/legal_filter.py
 
@@ -24,6 +37,10 @@ from collections.abc import Mapping
 from datetime import datetime, timezone
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from tools.sanitize_reference_pi import DESCRIPTION_ONLY_REPLACEMENTS, REPLACEMENTS
+
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 REFERENCE_DIR = REPO_ROOT / "data" / "reference"
@@ -33,76 +50,115 @@ REPORT_JSON = REPORT_DIR / "legal_filter_report.json"
 REPORT_CSV = REPORT_DIR / "legal_filter_report.csv"
 
 
-# Product Identity nota di Paizo / Pathfinder 1E. I termini sono controllati con
-# word boundary per ridurre i falsi positivi.
-PI_WORDS = {
-    # Setting
-    "Golarion",
-    "Absalom",
-    "Varisia",
-    "Cheliax",
-    "Andoran",
-    "Qadira",
-    "Taldor",
-    "Ustalav",
-    "Numeria",
-    "Osirion",
-    "Katapesh",
-    "Mana Wastes",
-    "Thuvia",
-    "Rahadoum",
-    "Druma",
-    "Kyonin",
-    "Five Kings Mountains",
-    "Hold of Belkzen",
-    "Mammoth Lords",
-    "Sodden Lands",
-    "Stolen Lands",
-    # Imperi antichi (PI Golarion)
-    "Azlant",
-    "Azlanti",
-    "Thassilon",
-    "Thassilonian",
-    # Deità
-    "Iomedae",
-    "Desna",
-    "Torag",
-    "Sarenrae",
-    "Cayden",
-    "Pharasma",
-    "Asmodeus",
-    "Norgorber",
-    "Calistria",
-    "Shelyn",
-    "Zon-Kuthon",
-    "Irori",
-    "Gorum",
-    "Erastil",
-    "Urgathoa",
-    "Besmara",
-    "Abadar",
-    "Nethys",
+# Lista termini PI estesa (75), FONTE UNICA: importata da
+# tools/triage_pi_feats.py (Task 3). Word-boundary obbligatorio (senza
+# boundary "Nex" matcha "next" — motivo dei 227 falsi positivi della
+# scansione grezza del triage). Estensione 2026-07-19 (quality review):
+# +21 termini verificati a mano — 17 da review piu' Hermean, Kellid, Mzali,
+# Vudra da sweep word-boundary su feats.json. Falsi positivi scartati
+# documentati nel report di triage (Shackles, Linnorm, Juju).
+PI_TERMS = [
+    # Nazioni / regioni / luoghi di Golarion
+    "Golarion", "Absalom", "Varisia", "Cheliax", "Chelaxian", "Taldor",
+    "Taldan", "Andoran", "Andoren", "Qadira", "Qadiran", "Osirion",
+    "Osirian", "Osiriani", "Nex", "Geb", "Nidal", "Rahadoum", "Rahadoumi",
+    "Thuvia", "Thuvian", "Katapesh", "Kyonin", "Druma", "Numeria",
+    "Ustalav", "Oppara", "Sodden Lands", "Mana Wastes", "Inner Sea",
+    # Deita' maggiori
+    "Sarenrae", "Iomedae", "Asmodeus", "Desna", "Calistria", "Norgorber",
+    "Zon-Kuthon", "Urgathoa", "Rovagug", "Lamashtu", "Abadar", "Irori",
+    "Gozreh", "Pharasma", "Shelyn", "Cayden", "Erastil", "Torag",
+    "Besmara", "Gorum", "Nethys",
+    # Organizzazioni / ordini
+    "Aldori", "Hellknight", "Pathfinder Society",
+    # Toponimi / etnie / deita' minori Golarion (estensione quality review)
+    "Lastwall", "Worldwound", "Belkzen", "Shoanti", "Mwangi", "Tian",
+    "Varisian", "Chelish", "Irrisen", "Galt", "Hermea", "Hermean",
+    "Alkenstar", "Korvosa", "Riddleport", "Daggermark", "River Kingdoms",
+    "Walkena", "Mzali", "Vudra", "Kellid",
+]
+
+# Sottoinsieme delle deita': il triage lo usa per la categoria B
+# (prerequisito deita-specifico). Fonte unica anche per questo set.
+DEITY_TERMS = {
+    "sarenrae", "iomedae", "asmodeus", "desna", "calistria", "norgorber",
+    "zon-kuthon", "urgathoa", "rovagug", "lamashtu", "abadar", "irori",
+    "gozreh", "pharasma", "shelyn", "cayden", "erastil", "torag",
+    "besmara", "gorum", "nethys", "walkena",
+}
+
+# Termini storici del gate (pre-Task 3) non presenti nel triage feats:
+# iconici, marchi e altri luoghi Golarion-specifici.
+GATE_LEGACY_TERMS = {
+    # Luoghi
+    "Five Kings Mountains", "Hold of Belkzen", "Mammoth Lords",
+    "Stolen Lands", "Azlant", "Azlanti", "Thassilon", "Thassilonian",
     # Iconici
-    "Seelah",
-    "Ezren",
-    "Valeros",
-    "Merisiel",
-    "Kyra",
-    "Harsk",
-    "Lem",
-    "Sajan",
-    "Amiri",
-    "Lini",
-    # Marchi / entità
+    "Seelah", "Ezren", "Valeros", "Merisiel", "Kyra", "Harsk", "Lem",
+    "Sajan", "Amiri", "Lini",
+    # Marchi / entita'
     "Paizo",
 }
 
+# Candidati a zero hit sul catalogo corrente (triage 2026-07-19, § Copertura
+# della lista): toponimi sicuri + demon lord/archdevil. Inclusi a protezione
+# degli import futuri; a zero hit oggi non creano violazioni.
+# NOTA: "Sargava" NON e' in lista per decisione documentata (hit solo come
+# titolo libro in source/source_id; la policy sui titoli libro e' separata).
+# "Azlant"/"Thassilon" erano gia' tra i termini storici del gate.
+# "Osiria" (variante di "Osirion") aggiunta in quality review Task 3: aveva
+# 1 hit reale (prereq di Bureaucrat's Favored), sanitizzato con la famiglia
+# Osirion; resta nel gate a protezione degli import futuri.
+GATE_CANDIDATE_TERMS = {
+    # Toponimi sicuri
+    "Magnimar", "Nirmathas", "Molthune", "Brevoy", "Sandpoint", "Cassomir",
+    "Ostenso", "Westcrown", "Egorian", "Almas", "Sothis", "Mendev",
+    "Sarkoris", "Vudran", "Jalmeray", "Iobaria", "Kalabuto", "Bloodcove",
+    "Eleder", "Usaro", "Garund", "Avistan", "Mbeke", "Taralu", "Xin",
+    "Aroden", "Osiria",
+    # Demon lord / archdevil
+    "Deskari", "Baphomet", "Pazuzu", "Nocticula", "Zura", "Cyth-V'sug",
+    "Moloch", "Belial", "Dispater", "Mammon", "Geryon", "Baalzebul",
+    "Mephistopheles",
+}
+
+# Product Identity scansionata dal gate: unione delle tre liste sopra.
+# I termini sono controllati con word boundary per ridurre i falsi positivi.
+PI_WORDS = set(PI_TERMS) | GATE_LEGACY_TERMS | GATE_CANDIDATE_TERMS
+
 # Frasi PI che vanno controllate come sottostringhe esatte (case-insensitive).
+# "Pathfinder Society" non e' qui: e' in PI_TERMS (word-boundary la copre;
+# tenerla in entrambe raddoppierebbe i hit).
 PI_PHRASES = {
-    "Pathfinder Society",
     "Paizo Inc.",
     "Paizo Publishing",
 }
+
+# Regex unica delle parole PI: termini piu' lunghi prima (es. "Hold of
+# Belkzen" prima di "Belkzen"), word-boundary su entrambi i lati,
+# case-insensitive (stessa tecnica della regex del triage).
+_PI_WORDS_RE = re.compile(
+    r"\b(?P<term>" + "|".join(
+        re.escape(w) for w in sorted(PI_WORDS, key=len, reverse=True)) + r")\b",
+    re.IGNORECASE,
+)
+
+# Forma canonica del termine (quella della lista) per i hit: la regex e'
+# case-insensitive, il report usa la forma della lista.
+_CANONICAL = {w.lower(): w for w in PI_WORDS}
+
+# Replacement sanctioned della sanitize che contengono ancora un termine PI
+# letterale (oggi solo "the inner sea region", che contiene "inner sea"):
+# mascherati prima della scansione, come in apply_pi_feats_policy. Derivati
+# dalle liste di REPLACEMENTS (fonte unica): se un futuro replacement
+# contenesse un termine PI, entrerebbe automaticamente nel mask.
+_SANCTIONED_MASK = [
+    re.compile(re.escape(value), re.IGNORECASE)
+    for value in sorted(
+        {new for _, new in REPLACEMENTS + DESCRIPTION_ONLY_REPLACEMENTS
+         if _PI_WORDS_RE.search(new)},
+        key=len, reverse=True)
+]
 
 
 def _load_manifest() -> Mapping:
@@ -148,7 +204,14 @@ def _iter_strings(obj, skip_metadata: bool = True):
 
 
 def _find_pi(text: str) -> list[dict]:
-    """Restituisce le occorrenze PI trovate in text."""
+    """Restituisce le occorrenze PI trovate in text.
+
+    I replacement sanctioned della sanitize (es. "the inner sea region") sono
+    mascherati prima della scansione: contengono un termine PI letterale ma
+    sono testo legittimo prodotto dalla sanitize stessa.
+    """
+    for mask_re in _SANCTIONED_MASK:
+        text = mask_re.sub("", text)
     found = []
     lowered = text.lower()
     for phrase in PI_PHRASES:
@@ -163,13 +226,12 @@ def _find_pi(text: str) -> list[dict]:
                 "context": text[max(0, idx - 30) : idx + len(phrase) + 30],
             })
             start = idx + len(phrase)
-    for word in PI_WORDS:
-        for match in re.finditer(rf"\b{re.escape(word)}\b", text, flags=re.IGNORECASE):
-            found.append({
-                "type": "word",
-                "term": word,
-                "context": text[max(0, match.start() - 30) : match.end() + 30],
-            })
+    for match in _PI_WORDS_RE.finditer(text):
+        found.append({
+            "type": "word",
+            "term": _CANONICAL.get(match.group("term").lower(), match.group("term")),
+            "context": text[max(0, match.start() - 30) : match.end() + 30],
+        })
     return found
 
 

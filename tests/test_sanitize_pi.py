@@ -156,6 +156,38 @@ class TestTerminiDescriptionOnly:
         assert sanitize_text("such as the Worldwound or the Abyss", description=True) == \
             "such as a demon-blighted land or the Abyss"
 
+    def test_aroden_description_only(self):
+        # Regola aggiunta per la policy traits (Task 3 esteso).
+        assert sanitize_text("various Analects of Aroden", description=True) == \
+            "various Analects of a dead god"
+
+    def test_aroden_possessivo(self):
+        # L'apostrofo resta fuori dal match: il boundary regge "'s".
+        assert sanitize_text("portions of Aroden's advice", description=True) == \
+            "portions of a dead god's advice"
+
+    def test_arodenite_non_toccato(self):
+        # Forma aggettivale: il boundary non matcha dentro "Arodenite"
+        # (le entry "Arodenite*" vanno in pi_local_only, non sanitize).
+        text = "the Arodenite tradition"
+        assert sanitize_text(text, description=True) == text
+
+    def test_sothis(self):
+        assert sanitize_text("the government of Sothis", description=True) == \
+            "the government of a desert metropolis"
+
+    def test_osiria_variante_osirion(self):
+        # Fix quality review (Task 3): "Osiria" (variante di Osirion nel
+        # prereq di Bureaucrat's Favored) usa la stessa forma neutra della
+        # famiglia Osirion, nel set BASE (disciplina prereq dei feats).
+        assert sanitize_text("the court of the Black Dome in Osiria") == \
+            "the court of the Black Dome in an ancient desert kingdom"
+
+    def test_osiria_non_corrompe_osirian(self):
+        # Il boundary non matcha "Osiria" dentro "Osirian".
+        text = "an Osirian tradesperson"
+        assert sanitize_text(text) == text
+
 
 class TestCampiTecniciIntoccati:
     def test_campi_tecnici_non_sanitizzati(self):

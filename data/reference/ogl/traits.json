@@ -43,26 +43,6 @@
       }
     },
     {
-      "name": "Aldori Caution",
-      "source": "Weapon Master's Handbook",
-      "source_id": "weapon_master_s_handbook:aldori_caution",
-      "prerequisites": [],
-      "tags": [
-        "trait",
-        "basic_combat"
-      ],
-      "references": [
-        "AoN: Traits (Basic (Combat))"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/TraitDisplay.aspx?ItemName=Aldori%20Caution"
-      ],
-      "description": "You learned defensive moves from Aldori trainers. You gain an additional +1 dodge bonus to Armor Class while you fight defensively or use the total defense action.",
-      "mechanics": {
-        "category": "Basic (Combat)"
-      }
-    },
-    {
       "name": "Anatomist",
       "source": "Ultimate Campaign",
       "source_id": "ultimate_campaign:anatomist",
@@ -158,26 +138,6 @@
         "https://aonprd.com/TraitDisplay.aspx?ItemName=Armored%20Soul"
       ],
       "description": "When wearing armor or using a shield, you gain a +1 trait bonus on saving throws against divine spells that deal damage.",
-      "mechanics": {
-        "category": "Basic (Combat)"
-      }
-    },
-    {
-      "name": "Arodenite Sword Training",
-      "source": "Arcane Anthology",
-      "source_id": "arcane_anthology:arodenite_sword_training",
-      "prerequisites": [],
-      "tags": [
-        "trait",
-        "basic_combat"
-      ],
-      "references": [
-        "AoN: Traits (Basic (Combat))"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/TraitDisplay.aspx?ItemName=Arodenite%20Sword%20Training"
-      ],
-      "description": "Your family has passed down training in Aroden’s favored weapon, even though the god no longer answers their prayers. You are proficient with the longsword. If your class grants longsword proficiency as well, you gain a +1 trait bonus on attacks of opportunity with longswords.",
       "mechanics": {
         "category": "Basic (Combat)"
       }
@@ -777,7 +737,7 @@
       "reference_urls": [
         "https://aonprd.com/TraitDisplay.aspx?ItemName=Dueling%20Cloak%20Adept"
       ],
-      "description": "You are trained in using your cloak to disguise your body and deceive your enemies. While wearing a cloak and using an Aldori dueling sword, you gain a +2 trait bonus on Bluff checks made to feint. Additionally, every time you successfully feint while wearing a cloak, you gain a +1 dodge bonus to your Armor Class until your next turn.",
+      "description": "You are trained in using your cloak to disguise your body and deceive your enemies. While wearing a cloak and using a dueling sword, you gain a +2 trait bonus on Bluff checks made to feint. Additionally, every time you successfully feint while wearing a cloak, you gain a +1 dodge bonus to your Armor Class until your next turn.",
       "mechanics": {
         "category": "Basic (Combat)"
       }
@@ -2627,7 +2587,7 @@
       "reference_urls": [
         "https://aonprd.com/TraitDisplay.aspx?ItemName=Crusader"
       ],
-      "description": "From studying “Prime Commander” and reading accounts of the battles in the Worldwound, you have trained to be a crusader against demonic forces. You gain a +1 trait bonus on attack rolls against outsiders with the chaotic subtype.",
+      "description": "From studying “Prime Commander” and reading accounts of the battles in a demon-blighted land, you have trained to be a crusader against demonic forces. You gain a +1 trait bonus on attack rolls against outsiders with the chaotic subtype.",
       "mechanics": {
         "category": "Basic (Faith)"
       }
@@ -2809,7 +2769,7 @@
       "reference_urls": [
         "https://aonprd.com/TraitDisplay.aspx?ItemName=Divine%20Denier"
       ],
-      "description": "You can’t bring yourself to accept the authority of the gods, even though friends might hound you relentlessly to change your ways. Perhaps you’re a Rahadoumi objecting on ideological grounds, or perhaps you just want to be left alone. Your doubt causes you to shrug off divine magic more quickly than others. Once per day when you are affected by a divine spell, you may reduce that spell’s duration to half (minimum 1 round) for you alone.",
+      "description": "You can’t bring yourself to accept the authority of the gods, even though friends might hound you relentlessly to change your ways. Perhaps you’re a godless one objecting on ideological grounds, or perhaps you just want to be left alone. Your doubt causes you to shrug off divine magic more quickly than others. Once per day when you are affected by a divine spell, you may reduce that spell’s duration to half (minimum 1 round) for you alone.",
       "mechanics": {
         "category": "Basic (Faith)"
       }
@@ -5889,7 +5849,7 @@
       "reference_urls": [
         "https://aonprd.com/TraitDisplay.aspx?ItemName=Scholar%20of%20the%20Analects"
       ],
-      "description": "You studied various Analects of Aroden from a young age and became skilled at using magic written by others. You can cast read magic as a spell-like ability three times per day, using your character level as your caster level.",
+      "description": "You studied various Analects of a dead god from a young age and became skilled at using magic written by others. You can cast read magic as a spell-like ability three times per day, using your character level as your caster level.",
       "mechanics": {
         "category": "Basic (Magic)"
       }
@@ -6071,7 +6031,7 @@
       "reference_urls": [
         "https://aonprd.com/TraitDisplay.aspx?ItemName=Stabbing%20Spells"
       ],
-      "description": "Aroden wrote much about ways to use weapons to enhance magic’s effectiveness, and you have taken to heart the insights gleaned from his words. Whenever you strike a foe with a weapon, you gain a +2 trait bonus on caster level checks to overcome that foe’s spell resistance until the end of your next turn.",
+      "description": "A dead god wrote much about ways to use weapons to enhance magic’s effectiveness, and you have taken to heart the insights gleaned from his words. Whenever you strike a foe with a weapon, you gain a +2 trait bonus on caster level checks to overcome that foe’s spell resistance until the end of your next turn.",
       "mechanics": {
         "category": "Basic (Magic)"
       }
@@ -6541,26 +6501,6 @@
       }
     },
     {
-      "name": "Arodenite Historian",
-      "source": "Arcane Anthology",
-      "source_id": "arcane_anthology:arodenite_historian",
-      "prerequisites": [],
-      "tags": [
-        "trait",
-        "basic_social"
-      ],
-      "references": [
-        "AoN: Traits (Basic (Social))"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/TraitDisplay.aspx?ItemName=Arodenite%20Historian"
-      ],
-      "description": "You believe there is much useful information to glean from the mark Aroden left on history, and learn all you can about his exploits and teachings. This has given you significant insights on how different kinds of information are interconnected. If you fail a Knowledge (arcana, history, or religion) check, you can reroll the check 1 round later using your bonus for one of the other two skills.",
-      "mechanics": {
-        "category": "Basic (Social)"
-      }
-    },
-    {
       "name": "Artisan",
       "source": "Ultimate Campaign",
       "source_id": "ultimate_campaign:artisan",
@@ -6725,7 +6665,7 @@
       "source": "Heroes of the High Court",
       "source_id": "heroes_of_the_high_court:bureaucrat_s_favored",
       "prerequisites": [
-        "Associated with the court of the Black Dome in Osiria"
+        "Associated with the court of the Black Dome in an ancient desert kingdom"
       ],
       "tags": [
         "trait",
@@ -6737,7 +6677,7 @@
       "reference_urls": [
         "https://aonprd.com/TraitDisplay.aspx?ItemName=Bureaucrat's%20Favored"
       ],
-      "description": "You have gained favor with the government of Sothis. Once per week, you can attempt a DC 20 Diplomacy or Intimidate check to gain access to an exclusive site or event, such as a government building or an aristocrat’s ball.",
+      "description": "You have gained favor with the government of a desert metropolis. Once per week, you can attempt a DC 20 Diplomacy or Intimidate check to gain access to an exclusive site or event, such as a government building or an aristocrat’s ball.",
       "mechanics": {
         "category": "Basic (Social)"
       }
@@ -7637,28 +7577,6 @@
       }
     },
     {
-      "name": "Gifted Smuggler",
-      "source": "Adventurer's Armory 2",
-      "source_id": "adventurer_s_armory_2:gifted_smuggler",
-      "prerequisites": [
-        "Ostenso"
-      ],
-      "tags": [
-        "trait",
-        "basic_social"
-      ],
-      "references": [
-        "AoN: Traits (Basic (Social))"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/TraitDisplay.aspx?ItemName=Gifted%20Smuggler"
-      ],
-      "description": "You have a knack for hiding goods on your person. Any small object you attempt to hide on your body is treated as an extraordinarily small object for the purpose of Sleight of Hand checks.",
-      "mechanics": {
-        "category": "Basic (Social)"
-      }
-    },
-    {
       "name": "Gregarious",
       "source": "Quests and Campaigns",
       "source_id": "quests_and_campaigns:gregarious",
@@ -8375,7 +8293,7 @@
       "reference_urls": [
         "https://aonprd.com/TraitDisplay.aspx?ItemName=Reassuring%20Advice"
       ],
-      "description": "You’ve studied the speeches and writings of a leader or thinker who served as a reassuring voice in her community in the turbulent times after Aroden died, painfully learning which portions of Aroden’s advice no longer applied and what of his writings could still be usefully applied. Once per day, you can speak Aroden’s words of encouragement to grant any human a +1 insight bonus on any attack roll, saving throw, or skill check of his choice within the following hour. The choice to use the insight bonus must be made before the related roll is made.",
+      "description": "You’ve studied the speeches and writings of a leader or thinker who served as a reassuring voice in her community in the turbulent times after a dead god died, painfully learning which portions of a dead god’s advice no longer applied and what of his writings could still be usefully applied. Once per day, you can speak a dead god’s words of encouragement to grant any human a +1 insight bonus on any attack roll, saving throw, or skill check of his choice within the following hour. The choice to use the insight bonus must be made before the related roll is made.",
       "mechanics": {
         "category": "Basic (Social)"
       }

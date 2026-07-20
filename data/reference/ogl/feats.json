@@ -47227,10 +47227,10 @@
     },
     {
       "name": "Caster's Champion",
-      "source": "Path Of The Hellknight",
+      "source": "a strict-order handbook",
       "prerequisites": [],
       "tags": [
-        "Path Of The Hellknight"
+        "a strict-order handbook"
       ],
       "references": [
         "Archives of a deity of magic: Caster's Champion"
@@ -47244,12 +47244,12 @@
     },
     {
       "name": "Extended Scrying",
-      "source": "Path Of The Hellknight",
+      "source": "a strict-order handbook",
       "prerequisites": [
         "Ability to cast a spell of the scrying subschool"
       ],
       "tags": [
-        "Path Of The Hellknight"
+        "a strict-order handbook"
       ],
       "references": [
         "Archives of a deity of magic: Extended Scrying"
@@ -47263,7 +47263,7 @@
     },
     {
       "name": "Gate Breaker",
-      "source": "Path Of The Hellknight",
+      "source": "a strict-order handbook",
       "prerequisites": [
         "Str 13",
         "Improved Sunder",
@@ -47271,7 +47271,7 @@
         "base attack bonus +1"
       ],
       "tags": [
-        "Path Of The Hellknight"
+        "a strict-order handbook"
       ],
       "references": [
         "Archives of a deity of magic: Gate Breaker"
@@ -47285,12 +47285,12 @@
     },
     {
       "name": "Scrutinize Spell",
-      "source": "Path Of The Hellknight",
+      "source": "a strict-order handbook",
       "prerequisites": [
         "Spellcraft 1 rank"
       ],
       "tags": [
-        "Path Of The Hellknight"
+        "a strict-order handbook"
       ],
       "references": [
         "Archives of a deity of magic: Scrutinize Spell"
@@ -47304,7 +47304,7 @@
     },
     {
       "name": "Relic Breaker",
-      "source": "Path Of The Hellknight",
+      "source": "a strict-order handbook",
       "prerequisites": [
         "Str 13",
         "Gate Breaker",
@@ -47313,7 +47313,7 @@
         "base attack bonus +1"
       ],
       "tags": [
-        "Path Of The Hellknight"
+        "a strict-order handbook"
       ],
       "references": [
         "Archives of a deity of magic: Relic Breaker"
@@ -47327,13 +47327,13 @@
     },
     {
       "name": "Censoring Critical",
-      "source": "Path Of The Hellknight",
+      "source": "a strict-order handbook",
       "prerequisites": [
         "Critical Focus",
         "base attack bonus +15"
       ],
       "tags": [
-        "Path Of The Hellknight"
+        "a strict-order handbook"
       ],
       "references": [
         "Archives of a deity of magic: Censoring Critical"
@@ -47347,12 +47347,12 @@
     },
     {
       "name": "Dislocate",
-      "source": "Path Of The Hellknight",
+      "source": "a strict-order handbook",
       "prerequisites": [
         "Con 13"
       ],
       "tags": [
-        "Path Of The Hellknight"
+        "a strict-order handbook"
       ],
       "references": [
         "Archives of a deity of magic: Dislocate"
@@ -47366,12 +47366,12 @@
     },
     {
       "name": "Traditional Weapons",
-      "source": "Path Of The Hellknight",
+      "source": "a strict-order handbook",
       "prerequisites": [
         "Int 13"
       ],
       "tags": [
-        "Path Of The Hellknight"
+        "a strict-order handbook"
       ],
       "references": [
         "Archives of a deity of magic: Traditional Weapons"
