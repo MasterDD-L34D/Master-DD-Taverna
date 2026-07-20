@@ -47,7 +47,18 @@ Quattro stadi, tutti necessari (imparato su traits: 3 giri di fix):
 3. **Supplemento per-dominio** (pattern `TRAITS_PI_SUPPLEMENT`): lista extra di termini Golarion applicata solo al dominio, senza toccare `PI_WORDS` globale (che impatterebbe i cataloghi già committati). Includere le **forme aggettivali/demonimiche**.
 4. **Strip delle code flavor**: sezioni tipo "Suggested Characters :" sono piene di demonimi — strip, non rimozione della entry (recupera dati OGC validi).
 5. **Persistenza**: ogni filtro scrive `reports/pi_removed_<kind>.txt` (entry + motivo) e lo si committa.
-6. **Verifica a mano oltre il gate**: scansione sottostringa con ~30 termini Golarion su name+description+prerequisites — il gate da solo non basta (esperienza: 43 entry PI passate col gate a 0).
+6. **Verifica a mano oltre il gate** — **superata il 2026-07-19**: il gate `tools/legal_filter.py` ora usa la lista PI unica del repo (133 parole word-boundary + frasi, masking dei replacement sanitize derivato), condivisa da `tools/triage_pi_feats.py` (assert di identità). Il debito storico (le ~43 entry PI passate col gate a 0) è stato triagiato e chiuso: vedi §6.1.
+
+## 6.1 Decisione policy PI (2026-07-19, lotto triage feats)
+
+Triage completo di `feats.json` (`reports/pi_feats_triage.md`, tool `tools/triage_pi_feats.py`, 75 termini word-boundary) e applicazione (`tools/apply_pi_feats_policy.py`, `tools/apply_pi_traits_equipment_policy.py`, report `reports/pi_feats_apply.md` + `reports/pi_traits_equipment_apply.md`). Categorie e destinazioni:
+
+- **A — PI nel nome** (identità PI: Aldori, Hellknight, Lastwall, Worldwound…) → `pi_local_only/<kind>_local.json` (uso locale, gitignored, indicizzato solo con `--include-local`). **Sanitize del NOME vietata** (la sanitize storica naive produsse mostri come "Noble Scion a fading empire" e corruzioni "Lem"→"a bard" dentro "elemental").
+- **B — prerequisito vincolante PI** (deità o etnia/organizzazione/tradizione Golarion: "worshiper of Rovagug", "Human (Chelaxian)", "Member of a Shoanti tribe") → `pi_local_only/` (la sanitize svuoterebbe il vincolo).
+- **C — PI solo in prosa description** → sanitize in place con `tools/sanitize_reference_pi.py` (ora word-boundary, idempotente, name mai toccato; regole description-only non repo-wide: `main()` applica solo le REPLACEMENTS base).
+- **D — artifact della sanitize storica** → ripristino da fonte AoN, poi ricategorizzazione A/C.
+
+Risultato: feats 2837→2787 (49 in `feats_local.json`), traits 470→466 (4 in `traits_local.json`, 7 sanitize), equipment 790→786 (4 in `equipment_local.json`); **gate a 0 violazioni totali**; scansione word-boundary su name/description/prerequisites: 0 residui. Citazioni di libri PI in `source`/`tags`: sanitize (convenzione "the inner sea region Gods" / "a strict-order handbook"); titoli nel campo `source` di equipment/traits restano follow-up documentato.
 
 ## 5. Checklist di registrazione (anti-staleness)
 
