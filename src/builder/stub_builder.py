@@ -811,6 +811,17 @@ def build_stub_payload(
     )
     if isinstance(ac_block, Mapping) and "scudo" not in ac_block:
         ac_block = {**ac_block, "scudo": 0}
+    # Classi SENZA competenza in alcuna armatura (RAW PF1, testi di classe
+    # AoN: sezione "Weapon and Armor Proficiency" — CRB wizard/sorcerer/monk,
+    # APG witch, ACG arcanist, Occult Adventures psychic; verificato
+    # 2026-10-20 nel cantiere P12 di pathmaster-dd: il fallback inventava
+    # "Armatura leggera" anche per queste classi e la misura a valle contava
+    # 27 build con armatura stimata non competente). Limite dichiarato:
+    # copre le classi del corpus; una classe non elencata riceve la riga
+    # generica come prima.
+    classi_senza_armatura = {
+        "wizard", "sorcerer", "witch", "arcanist", "monk", "psychic",
+    }
     equip_full = []
     if wizard_levels:
         for entry in wizard_levels:
@@ -819,7 +830,13 @@ def build_stub_payload(
         for entry in cutpurse_levels:
             equip_full.extend(entry.get("equip", []))
     else:
-        equip_full.extend(["Arma preferita", "Armatura leggera"])
+        equip_full.append("Arma preferita")
+        # P12-generatore: nessuna armatura inventata per classi che RAW non
+        # ne sono competenti (lo stub e' un segnaposto: il silenzio della
+        # fonte non autorizza un oggetto che produce una penalita').
+        if str(class_name or "").lower() not in classi_senza_armatura:
+            equip_full.append("Armatura leggera")
+
     inventory_full = ["Kit da avventuriero", "Pozione di cura x2"]
     talents_full: list[str] = []
     if wizard_levels:
