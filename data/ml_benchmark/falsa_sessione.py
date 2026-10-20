@@ -54,16 +54,29 @@ def cmd_record(name: str, minuti: float, device: int | None) -> None:
           f"-> {wav}\nCtrl+C per fermare prima. Via tra 3 s...")
     sd.sleep(3000)
     n = int(minuti * 60 * SR)
-    rec = sd.rec(n, samplerate=SR, channels=1, dtype="float32",
-                 device=device)
+    # Registrazione via callback con conteggio dei frame: `sd.rec()` torna un
+    # buffer lungo quanto la durata richiesta e su Ctrl+C la coda non scritta
+    # finirebbe nel WAV come zeri/campioni non inizializzati — DiariZen
+    # processerebbe anche quella coda e il benchmark sarebbe falsato.
+    buf = np.zeros((n, 1), dtype="float32")
+    scritti = 0
+
+    def _callback(indata, frames, _time_info, _status):
+        nonlocal scritti
+        take = min(frames, n - scritti)
+        if take > 0:
+            buf[scritti:scritti + take] = indata[:take]
+            scritti += take
+
     try:
-        sd.wait()
+        with sd.InputStream(samplerate=SR, channels=1, dtype="float32",
+                            device=device, callback=_callback):
+            while scritti < n:
+                sd.sleep(200)
     except KeyboardInterrupt:
-        sd.stop()
-        # stima dei campioni effettivi non disponibile: rileggo lo stato
-        print("\nRegistrazione interrotta: salvo il buffer (la coda puo' "
-              "contenere silenzio — annota solo la parte parlata).")
-    sf.write(str(wav), np.asarray(rec).reshape(-1), SR)
+        print(f"\nRegistrazione interrotta: salvo i {scritti / SR:.1f} s "
+              "effettivamente catturati.")
+    sf.write(str(wav), buf[:scritti].reshape(-1), SR)
     print(f"Salvato {wav} ({wav.stat().st_size / 1e6:.1f} MB). "
           f"Prossimo passo: diarize {name}")
 
