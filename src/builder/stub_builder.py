@@ -8,7 +8,10 @@ the full ``minmax_builder.txt`` text.
 
 from __future__ import annotations
 
+import json
 import re
+from functools import lru_cache
+from pathlib import Path
 from typing import Any, Mapping
 
 from jsonschema.exceptions import ValidationError
@@ -23,6 +26,47 @@ class StubBuilderError(Exception):
     def __init__(self, message: str, status_code: int = 400) -> None:
         super().__init__(message)
         self.status_code = status_code
+
+
+_ARCHETYPES_PATH = (
+    Path(__file__).resolve().parent.parent.parent
+    / "data" / "reference" / "ogl" / "archetypes.json"
+)
+
+
+@lru_cache(maxsize=1)
+def _catalogo_archetipi() -> tuple:
+    """Entry del catalogo archetipi locale (OGL). Dato mancante -> vuoto."""
+    try:
+        data = json.loads(_ARCHETYPES_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return ()
+    entries = data.get("entries") if isinstance(data, Mapping) else None
+    return tuple(entries) if isinstance(entries, list) else ()
+
+
+def _archetipo_concede_armatura(class_name: str, archetype: object) -> bool:
+    """True se l'archetipo altera le competenze della classe concedendo
+    un'armatura (euristica sul testo RAW della feature "Weapon and Armor
+    Proficiency" nel catalogo locale — es. sohei del monaco)."""
+    nome = str(archetype or "").strip().lower()
+    if not nome or nome == "base":
+        return False
+    for entry in _catalogo_archetipi():
+        mechanics = entry.get("mechanics") if isinstance(entry, Mapping) else None
+        if not isinstance(mechanics, Mapping):
+            continue
+        if str(mechanics.get("class") or "").lower() != class_name:
+            continue
+        if str(entry.get("name") or "").strip().lower() != nome:
+            continue
+        for feature in mechanics.get("features") or []:
+            if not isinstance(feature, Mapping):
+                continue
+            text = str(feature.get("text") or "").lower()
+            if "armor" in text and "proficient" in text:
+                return True
+    return False
 
 
 def _normalize_mode(mode: str | None, body: dict[str, Any] | None) -> str:
@@ -834,7 +878,13 @@ def build_stub_payload(
         # P12-generatore: nessuna armatura inventata per classi che RAW non
         # ne sono competenti (lo stub e' un segnaposto: il silenzio della
         # fonte non autorizza un oggetto che produce una penalita').
-        if str(class_name or "").lower() not in classi_senza_armatura:
+        # Eccezione RAW: un archetipo che ALTERA le competenze della classe
+        # concedendo un'armatura (es. sohei del monaco: "proficient with
+        # light armor") riabilita la riga — il dato e' il catalogo locale.
+        classe = str(class_name or "").lower()
+        if classe not in classi_senza_armatura or _archetipo_concede_armatura(
+            classe, resolved_archetype
+        ):
             equip_full.append("Armatura leggera")
 
     inventory_full = ["Kit da avventuriero", "Pozione di cura x2"]

@@ -321,6 +321,31 @@ def test_build_stub_keeps_light_armor_for_other_classes(
     assert "Armatura leggera" in payload["sheet"]["equipaggiamento"]
 
 
+def test_build_stub_monk_sohei_keeps_light_armor(client, auth_headers):
+    # Eccezione RAW: il sohei ALTERA le competenze del monaco concedendo
+    # l'armatura leggera (catalogo locale archetypes.json, feature "Weapon
+    # and Armor Proficiency": "proficient with ... light armor").
+    response = client.post(
+        "/build/stub?class=monk&race=Elf&level=1&mode=extended&archetype=sohei",
+        headers=auth_headers,
+    )
+    assert response.status_code == 200
+    payload = response.json()
+    assert "Armatura leggera" in payload["sheet"]["equipaggiamento"]
+
+
+def test_build_stub_monk_zen_archer_no_light_armor(client, auth_headers):
+    # Contrasto: lo zen archer altera solo le competenze nelle ARMI — il
+    # testo non concede armature, quindi il monaco resta senza.
+    response = client.post(
+        "/build/stub?class=monk&race=Elf&level=1&mode=extended&archetype=zen%20archer",
+        headers=auth_headers,
+    )
+    assert response.status_code == 200
+    payload = response.json()
+    assert "Armatura leggera" not in payload["sheet"]["equipaggiamento"]
+
+
 def test_get_module_content_path_traversal(client, auth_headers):
     response = client.get(
         f"/modules/{quote('../config.py', safe='')}", headers=auth_headers

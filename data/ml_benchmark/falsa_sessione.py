@@ -73,10 +73,20 @@ def cmd_diarize(name: str) -> None:
     wav = out_dir / "sessione.wav"
     if not wav.exists():
         raise SystemExit(f"manca {wav} — prima: record {name}")
+    # La cache vale solo per QUESTO wav: una registrazione rifatta con lo
+    # stesso nome (dimensione/mtime diverse) invalida i segmenti salvati,
+    # altrimenti il DER confronterebbe ipotesi stantie.
+    fingerprint = {"size": wav.stat().st_size, "mtime": int(wav.stat().st_mtime)}
     seg_json = out_dir / "segmenti_diarizen.json"
     if seg_json.exists():
-        segments = json.loads(seg_json.read_text(encoding="utf-8"))["segments"]
+        cache = json.loads(seg_json.read_text(encoding="utf-8"))
+        if cache.get("model") == MODEL and cache.get("wav") == fingerprint:
+            segments = cache["segments"]
+        else:
+            segments = None
     else:
+        segments = None
+    if segments is None:
         from diarizen.pipelines.inference import DiariZenPipeline
         pipeline = DiariZenPipeline.from_pretrained(MODEL, rttm_out_dir=None)
         result = pipeline(str(wav), sess_name=name)
@@ -85,7 +95,8 @@ def cmd_diarize(name: str) -> None:
             for t, _, s in result.itertracks(yield_label=True)
         ]
         seg_json.write_text(
-            json.dumps({"model": MODEL, "segments": segments},
+            json.dumps({"model": MODEL, "wav": fingerprint,
+                        "segments": segments},
                        ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8")
     tsv = out_dir / "turni_ipotesi.tsv"
