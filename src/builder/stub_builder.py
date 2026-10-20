@@ -8,7 +8,10 @@ the full ``minmax_builder.txt`` text.
 
 from __future__ import annotations
 
+import json
 import re
+from functools import lru_cache
+from pathlib import Path
 from typing import Any, Mapping
 
 from jsonschema.exceptions import ValidationError
@@ -23,6 +26,57 @@ class StubBuilderError(Exception):
     def __init__(self, message: str, status_code: int = 400) -> None:
         super().__init__(message)
         self.status_code = status_code
+
+
+_ARCHETYPES_PATH = (
+    Path(__file__).resolve().parent.parent.parent
+    / "data" / "reference" / "ogl" / "archetypes.json"
+)
+
+# Grant esplicito di competenza nelle armature ("proficient with ... light
+# armor"), non la semplice co-occorrenza delle parole: "proficient with the
+# club, dagger, ..." di menhir guardian e "no armor check penalty" di
+# scrollmaster non sono grant di armatura. `(?<!not )` esclude i testi che
+# NEGANO la competenza ("not proficient with any armor").
+_RE_GRANT_ARMATURA = re.compile(
+    r"(?<!not )proficient\s+(?:with|in)\b[^.]*\barmou?r\b",
+    re.IGNORECASE,
+)
+
+
+@lru_cache(maxsize=1)
+def _catalogo_archetipi() -> tuple:
+    """Entry del catalogo archetipi locale (OGL). Dato mancante -> vuoto."""
+    try:
+        data = json.loads(_ARCHETYPES_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return ()
+    entries = data.get("entries") if isinstance(data, Mapping) else None
+    return tuple(entries) if isinstance(entries, list) else ()
+
+
+def _archetipo_concede_armatura(class_name: str, archetype: object) -> bool:
+    """True se l'archetipo altera le competenze della classe concedendo
+    un'armatura (euristica sul testo RAW della feature "Weapon and Armor
+    Proficiency" nel catalogo locale — es. sohei del monaco)."""
+    nome = str(archetype or "").strip().lower()
+    if not nome or nome == "base":
+        return False
+    for entry in _catalogo_archetipi():
+        mechanics = entry.get("mechanics") if isinstance(entry, Mapping) else None
+        if not isinstance(mechanics, Mapping):
+            continue
+        if str(mechanics.get("class") or "").lower() != class_name:
+            continue
+        if str(entry.get("name") or "").strip().lower() != nome:
+            continue
+        for feature in mechanics.get("features") or []:
+            if not isinstance(feature, Mapping):
+                continue
+            text = str(feature.get("text") or "")
+            if _RE_GRANT_ARMATURA.search(text):
+                return True
+    return False
 
 
 def _normalize_mode(mode: str | None, body: dict[str, Any] | None) -> str:
@@ -811,6 +865,17 @@ def build_stub_payload(
     )
     if isinstance(ac_block, Mapping) and "scudo" not in ac_block:
         ac_block = {**ac_block, "scudo": 0}
+    # Classi SENZA competenza in alcuna armatura (RAW PF1, testi di classe
+    # AoN: sezione "Weapon and Armor Proficiency" — CRB wizard/sorcerer/monk,
+    # APG witch, ACG arcanist, Occult Adventures psychic; verificato
+    # 2026-10-20 nel cantiere P12 di pathmaster-dd: il fallback inventava
+    # "Armatura leggera" anche per queste classi e la misura a valle contava
+    # 27 build con armatura stimata non competente). Limite dichiarato:
+    # copre le classi del corpus; una classe non elencata riceve la riga
+    # generica come prima.
+    classi_senza_armatura = {
+        "wizard", "sorcerer", "witch", "arcanist", "monk", "psychic",
+    }
     equip_full = []
     if wizard_levels:
         for entry in wizard_levels:
@@ -819,7 +884,19 @@ def build_stub_payload(
         for entry in cutpurse_levels:
             equip_full.extend(entry.get("equip", []))
     else:
-        equip_full.extend(["Arma preferita", "Armatura leggera"])
+        equip_full.append("Arma preferita")
+        # P12-generatore: nessuna armatura inventata per classi che RAW non
+        # ne sono competenti (lo stub e' un segnaposto: il silenzio della
+        # fonte non autorizza un oggetto che produce una penalita').
+        # Eccezione RAW: un archetipo che ALTERA le competenze della classe
+        # concedendo un'armatura (es. sohei del monaco: "proficient with
+        # light armor") riabilita la riga — il dato e' il catalogo locale.
+        classe = str(class_name or "").lower()
+        if classe not in classi_senza_armatura or _archetipo_concede_armatura(
+            classe, resolved_archetype
+        ):
+            equip_full.append("Armatura leggera")
+
     inventory_full = ["Kit da avventuriero", "Pozione di cura x2"]
     talents_full: list[str] = []
     if wizard_levels:

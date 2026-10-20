@@ -284,6 +284,89 @@ def test_build_stub_endpoint_payload_matches_schema(client, auth_headers):
     )
 
 
+# Classi prive di competenza in alcuna armatura secondo i testi di classe
+# PF1 (sezione "Weapon and Armor Proficiency"): lo stub non deve inventare
+# "Armatura leggera" per queste classi (cantiere P12, 2026-10-20).
+@pytest.mark.parametrize(
+    "cls",
+    ["wizard", "sorcerer", "witch", "arcanist", "monk", "psychic"],
+)
+def test_build_stub_no_light_armor_for_unproficient_classes(
+    client, auth_headers, cls
+):
+    response = client.post(
+        f"/build/stub?class={cls}&race=Elf&level=1&mode=extended",
+        headers=auth_headers,
+    )
+    assert response.status_code == 200
+    payload = response.json()
+    equip = payload["sheet"]["equipaggiamento"]
+    inventario = payload["sheet"]["inventario"]
+    assert "Armatura leggera" not in equip
+    assert "Armatura leggera" not in inventario
+
+
+@pytest.mark.parametrize("cls", ["fighter", "cleric", "unknownclass"])
+def test_build_stub_keeps_light_armor_for_other_classes(
+    client, auth_headers, cls
+):
+    response = client.post(
+        f"/build/stub?class={cls}&race=Elf&level=1&mode=extended",
+        headers=auth_headers,
+    )
+    assert response.status_code == 200
+    payload = response.json()
+    # Limite dichiarato: le classi non elencate (incluse quelle sconosciute)
+    # ricevono ancora la riga generica come prima del fix.
+    assert "Armatura leggera" in payload["sheet"]["equipaggiamento"]
+
+
+def test_build_stub_monk_sohei_keeps_light_armor(client, auth_headers):
+    # Eccezione RAW: il sohei ALTERA le competenze del monaco concedendo
+    # l'armatura leggera (catalogo locale archetypes.json, feature "Weapon
+    # and Armor Proficiency": "proficient with ... light armor").
+    response = client.post(
+        "/build/stub?class=monk&race=Elf&level=1&mode=extended&archetype=sohei",
+        headers=auth_headers,
+    )
+    assert response.status_code == 200
+    payload = response.json()
+    assert "Armatura leggera" in payload["sheet"]["equipaggiamento"]
+
+
+def test_build_stub_monk_zen_archer_no_light_armor(client, auth_headers):
+    # Contrasto: lo zen archer altera solo le competenze nelle ARMI — il
+    # testo non concede armature, quindi il monaco resta senza.
+    response = client.post(
+        "/build/stub?class=monk&race=Elf&level=1&mode=extended&archetype=zen%20archer",
+        headers=auth_headers,
+    )
+    assert response.status_code == 200
+    payload = response.json()
+    assert "Armatura leggera" not in payload["sheet"]["equipaggiamento"]
+
+
+@pytest.mark.parametrize(
+    "cls,archetype",
+    [
+        ("monk", "menhir%20guardian"),   # grant di sole armi; "armor" compare
+        ("wizard", "scrollmaster"),      # solo nel nome della feature sostituita
+    ],
+)
+def test_build_stub_archetype_without_armor_grant_no_light_armor(
+    client, auth_headers, cls, archetype
+):
+    # Falsi positivi della co-occorrenza "armor"+"proficient": questi testi
+    # contengono entrambe le parole ma NON concedono competenza in armature.
+    response = client.post(
+        f"/build/stub?class={cls}&race=Elf&level=1&mode=extended&archetype={archetype}",
+        headers=auth_headers,
+    )
+    assert response.status_code == 200
+    payload = response.json()
+    assert "Armatura leggera" not in payload["sheet"]["equipaggiamento"]
+
+
 def test_get_module_content_path_traversal(client, auth_headers):
     response = client.get(
         f"/modules/{quote('../config.py', safe='')}", headers=auth_headers
