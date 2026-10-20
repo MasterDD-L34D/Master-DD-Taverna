@@ -73,3 +73,34 @@ def test_empty_hypothesis_is_all_miss():
 def test_empty_reference_raises():
     with pytest.raises(ValueError):
         compute_der([], [_seg(0.0, 1.0, "S1")])
+
+
+def test_hungarian_matches_brute_force_optimum():
+    """Parita' con la forza bruta: il mapping ungherese deve raggiungere lo
+    STESSO errore minimo dell'enumerazione esaustiva (su un caso con overlap,
+    miss, fa e confusion insieme). La forza bruta vive solo qui, come oracolo
+    lento e ovvio contro cui si misura quello veloce; griglia e scoring sono
+    quelli della libreria, quindi la parita' isola la sola scelta del mapping."""
+    import itertools
+    import math
+
+    from src.ml.der import _grid, _precompute, _score_precomputed
+
+    ref = [
+        _seg(0.0, 2.0, "A"), _seg(1.0, 3.0, "B"), _seg(3.0, 5.0, "C"),
+    ]
+    hyp = [
+        _seg(0.2, 2.2, "S1"), _seg(1.1, 2.8, "S2"),
+        _seg(4.0, 6.0, "S3"),  # parte oltre la fine della ref: fa
+    ]
+    r = compute_der(ref, hyp)
+
+    ref_labels = sorted({s["speaker"] for s in ref})
+    hyp_labels = sorted({s["speaker"] for s in hyp})
+    n_ticks = max(1, int(math.ceil(max(s["end"] for s in ref + hyp) / 0.01)))
+    pre = _precompute(_grid(ref, 0.01, n_ticks), _grid(hyp, 0.01, n_ticks))
+    best_err = min(
+        sum(_score_precomputed(pre, dict(zip(hyp_labels, choice)))[1:4])
+        for choice in itertools.product(ref_labels + [None], repeat=len(hyp_labels))
+    )
+    assert r["miss"] + r["false_alarm"] + r["confusion"] == best_err

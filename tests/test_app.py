@@ -346,6 +346,27 @@ def test_build_stub_monk_zen_archer_no_light_armor(client, auth_headers):
     assert "Armatura leggera" not in payload["sheet"]["equipaggiamento"]
 
 
+@pytest.mark.parametrize(
+    "cls,archetype",
+    [
+        ("monk", "menhir%20guardian"),   # grant di sole armi; "armor" compare
+        ("wizard", "scrollmaster"),      # solo nel nome della feature sostituita
+    ],
+)
+def test_build_stub_archetype_without_armor_grant_no_light_armor(
+    client, auth_headers, cls, archetype
+):
+    # Falsi positivi della co-occorrenza "armor"+"proficient": questi testi
+    # contengono entrambe le parole ma NON concedono competenza in armature.
+    response = client.post(
+        f"/build/stub?class={cls}&race=Elf&level=1&mode=extended&archetype={archetype}",
+        headers=auth_headers,
+    )
+    assert response.status_code == 200
+    payload = response.json()
+    assert "Armatura leggera" not in payload["sheet"]["equipaggiamento"]
+
+
 def test_get_module_content_path_traversal(client, auth_headers):
     response = client.get(
         f"/modules/{quote('../config.py', safe='')}", headers=auth_headers

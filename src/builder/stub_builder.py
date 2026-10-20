@@ -33,6 +33,16 @@ _ARCHETYPES_PATH = (
     / "data" / "reference" / "ogl" / "archetypes.json"
 )
 
+# Grant esplicito di competenza nelle armature ("proficient with ... light
+# armor"), non la semplice co-occorrenza delle parole: "proficient with the
+# club, dagger, ..." di menhir guardian e "no armor check penalty" di
+# scrollmaster non sono grant di armatura. `(?<!not )` esclude i testi che
+# NEGANO la competenza ("not proficient with any armor").
+_RE_GRANT_ARMATURA = re.compile(
+    r"(?<!not )proficient\s+(?:with|in)\b[^.]*\barmou?r\b",
+    re.IGNORECASE,
+)
+
 
 @lru_cache(maxsize=1)
 def _catalogo_archetipi() -> tuple:
@@ -63,8 +73,8 @@ def _archetipo_concede_armatura(class_name: str, archetype: object) -> bool:
         for feature in mechanics.get("features") or []:
             if not isinstance(feature, Mapping):
                 continue
-            text = str(feature.get("text") or "").lower()
-            if "armor" in text and "proficient" in text:
+            text = str(feature.get("text") or "")
+            if _RE_GRANT_ARMATURA.search(text):
                 return True
     return False
 

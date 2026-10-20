@@ -1,9 +1,15 @@
 """Misura DER semplificata (E3, REQ-010): attribution error su griglia fine.
 
-Ispirata al DER standard NIST (md-eval), implementazione in casa (~70 righe,
-solo stdlib): le etichette ipotesi "S1".."Sn" sono anonime, quindi si cerca il
-mapping ottimo ipotesi->reference per forza bruta (n speaker piccolo) prima di
-contare gli errori. Semplificazioni documentate rispetto al NIST formale:
+Ispirata al DER standard NIST (md-eval), implementazione in casa (solo
+stdlib): le etichette ipotesi "S1".."Sn" sono anonime, quindi si cerca il
+mapping ottimo ipotesi->reference prima di contare gli errori. Il mapping
+ottimo e' un linear assignment puro: con le tabelle di `_precompute`,
+miss+fa+confusion = speaker-time ref + tick ipotesi - 2 x co-attivazioni del
+mapping, cioe' minimizzare l'errore equivale a massimizzare la somma delle
+co-attivazioni. Si risolve con l'algoritmo ungherese O(n^2 m) — la forza
+bruta sui mapping (6^5 assegnazioni x 120k tick, rilievo Codex 2026-10-20)
+non scala su sessioni reali da 15-30 minuti. Semplificazioni documentate
+rispetto al NIST formale:
 
 - niente collare di tolleranza ai confini segmento (forgiveness collar);
 - griglia temporale fissa (default 10 ms) invece di integrazione continua;
@@ -20,7 +26,6 @@ NON e' il gate formale REQ-010: quello richiede audio reale di sessione.
 """
 from __future__ import annotations
 
-import itertools
 import math
 
 DEFAULT_TICK_SECONDS = 0.01
@@ -40,10 +45,8 @@ def _grid(segments, tick, n_ticks):
 def _precompute(ref_grid, hyp_grid):
     """Conteggi per-tick in UN passaggio: co-attivazioni (s,h), tick per
     speaker, tick con ref attivo e ipotesi vuota. Il costo della misura sta
-    nella griglia (10 ms x minuti): precomputare qui e valutare ogni mapping
-    su queste tabelle rende il costo per mapping O(#speaker) invece di
-    O(#tick) — con 5-6 speaker e 20 minuti e' la differenza fra secondi e
-    ore (la forza bruta sui mapping resta: n speaker e' piccolo)."""
+    nella griglia (10 ms x minuti): precomputare qui e valutare il mapping su
+    queste tabelle rende lo scoring O(#speaker) invece di O(#tick)."""
     co: dict = {}
     ref_ticks: dict = {}
     hyp_ticks: dict = {}
@@ -85,6 +88,53 @@ def _score_precomputed(pre, mapping):
     return correct, miss, fa, confusion, scored
 
 
+def _assegnazione_ottima(profit):
+    """Algoritmo ungherese (potenziali, O(n^2 m)) per il massimo profitto.
+
+    `profit`: matrice n righe x m colonne con n <= m. Ritorna dict
+    riga -> colonna. Schema standard (cp-algorithms), costi = -profit."""
+    n = len(profit)
+    m = len(profit[0])
+    u = [0.0] * (n + 1)
+    v = [0.0] * (m + 1)
+    p = [0] * (m + 1)  # p[j] = riga assegnata alla colonna j
+    way = [0] * (m + 1)
+    for i in range(1, n + 1):
+        p[0] = i
+        j0 = 0
+        minv = [math.inf] * (m + 1)
+        used = [False] * (m + 1)
+        while True:
+            used[j0] = True
+            i0 = p[j0]
+            delta = math.inf
+            j1 = 0
+            for j in range(1, m + 1):
+                if used[j]:
+                    continue
+                cur = -profit[i0 - 1][j - 1] - u[i0] - v[j]
+                if cur < minv[j]:
+                    minv[j] = cur
+                    way[j] = j0
+                if minv[j] < delta:
+                    delta = minv[j]
+                    j1 = j
+            for j in range(m + 1):
+                if used[j]:
+                    u[p[j]] += delta
+                    v[j] -= delta
+                else:
+                    minv[j] -= delta
+            j0 = j1
+            if p[j0] == 0:
+                break
+        while j0:
+            j1 = way[j0]
+            p[j0] = p[j1]
+            j0 = j1
+    return {p[j] - 1: j - 1 for j in range(1, m + 1) if p[j] != 0}
+
+
 def compute_der(ref_segments, hyp_segments, tick=DEFAULT_TICK_SECONDS):
     """DER fra reference (ground truth) e ipotesi (segmenti con `speaker`).
 
@@ -100,14 +150,20 @@ def compute_der(ref_segments, hyp_segments, tick=DEFAULT_TICK_SECONDS):
     ref_labels = sorted({s["speaker"] for s in ref_segments})
     hyp_labels = sorted({s["speaker"] for s in hyp_segments})
     pre = _precompute(ref_grid, hyp_grid)
-    best = None
-    for choice in itertools.product(ref_labels + [None], repeat=len(hyp_labels)):
-        mapping = dict(zip(hyp_labels, choice))
-        result = _score_precomputed(pre, mapping)
-        err = result[1] + result[2] + result[3]
-        if best is None or err < best[0]:
-            best = (err, mapping, result)
-    _, mapping, (correct, miss, fa, confusion, scored) = best
+    co = pre[0]
+    # Colonne: speaker ref + una colonna dummy per OGNI ipotesi (profitto 0),
+    # cosi' l'ungherese puo' lasciare non mappata qualunque ipotesi — come il
+    # None della vecchia enumerazione.
+    colonne = ref_labels + [None] * len(hyp_labels)
+    mapping = dict.fromkeys(hyp_labels)
+    if hyp_labels:
+        profit = [
+            [co.get((s, h), 0) if s is not None else 0 for s in colonne]
+            for h in hyp_labels
+        ]
+        for row, colonna in _assegnazione_ottima(profit).items():
+            mapping[hyp_labels[row]] = colonne[colonna]
+    correct, miss, fa, confusion, scored = _score_precomputed(pre, mapping)
     return {
         "der": (miss + fa + confusion) / max(1, scored),
         "miss": miss,
