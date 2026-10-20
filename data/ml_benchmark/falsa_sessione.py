@@ -49,8 +49,12 @@ def cmd_record(name: str, minuti: float, device: int | None) -> None:
     wav = out_dir / "sessione.wav"
     if wav.exists():
         raise SystemExit(f"esiste gia': {wav} — scegli un altro nome")
+    # `--device 0` e' un indice valido: `or` lo scambierebbe per "assente".
+    device_name = sd.query_devices(
+        device if device is not None else sd.default.device[0]
+    )["name"]
     print(f"Registro {minuti:g} min dal microfono "
-          f"{sd.query_devices(device or sd.default.device[0])['name']} "
+          f"{device_name} "
           f"-> {wav}\nCtrl+C per fermare prima. Via tra 3 s...")
     sd.sleep(3000)
     n = int(minuti * 60 * SR)
