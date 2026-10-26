@@ -19,6 +19,7 @@ Uso:
                                                        # = fotografia attuale
                                                        # (solo dopo fix ratificati)
 """
+
 from __future__ import annotations
 
 import argparse
@@ -35,7 +36,11 @@ LAST = ROOT / "data/oracolo-gate-last.json"
 PATHMASTER = Path(os.environ.get("PATHMASTER_REPO") or ROOT.parent / "pathmaster-dd")
 SONDA = PATHMASTER / "tools/sonda-noncompetenza.mts"
 
-CHIAVI = [("max_ko_armi", "koArmi"), ("max_ko_armature", "koArmature"), ("max_unknown", "unknown")]
+CHIAVI = [
+    ("max_ko_armi", "koArmi"),
+    ("max_ko_armature", "koArmature"),
+    ("max_unknown", "unknown"),
+]
 
 
 def osserva(risultati: dict) -> dict:
@@ -49,7 +54,9 @@ def osserva(risultati: dict) -> dict:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--update", action="store_true", help="riscrive le soglie = fotografia attuale")
+    ap.add_argument(
+        "--update", action="store_true", help="riscrive le soglie = fotografia attuale"
+    )
     args = ap.parse_args()
 
     if not Sonda_disponibile():
@@ -67,8 +74,13 @@ def main() -> int:
     # l'estensione; il comando e' fisso e trusted, niente input esterno.
     res = subprocess.run(
         "npx tsx tools/sonda-noncompetenza.mts",
-        cwd=PATHMASTER, env=env, capture_output=True, text=True,
-        encoding="utf-8", errors="replace", shell=True,
+        cwd=PATHMASTER,
+        env=env,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        shell=True,
     )
     if res.returncode != 0 or not LAST.exists():
         print(res.stdout)
@@ -80,23 +92,35 @@ def main() -> int:
     if args.update:
         for chiave_soglia, chiave_oss in CHIAVI:
             soglie[chiave_soglia] = oss[chiave_oss]
-        GATE.write_text(json.dumps(soglie, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        GATE.write_text(
+            json.dumps(soglie, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+        )
         print(f"OK: soglie aggiornate = fotografia attuale {oss}")
         return 0
 
     fuori = []
     for chiave_soglia, chiave_oss in CHIAVI:
         if oss[chiave_oss] > soglie[chiave_soglia]:
-            fuori.append(f"{chiave_oss}: osservato {oss[chiave_oss]} > soglia {soglie[chiave_soglia]}")
+            fuori.append(
+                f"{chiave_oss}: osservato {oss[chiave_oss]} > soglia {soglie[chiave_soglia]}"
+            )
     if fuori:
         print("GATE ORACOLO ROSSO:", file=sys.stderr)
         for f in fuori:
             print(f"  - {f}", file=sys.stderr)
-        print("  Dettaglio nel JSON dell'ultima corsa: data/oracolo-gate-last.json", file=sys.stderr)
-        print("  Se la deviazione e' un fix legittimo: abbassa le soglie con --update (commit motivato).", file=sys.stderr)
+        print(
+            "  Dettaglio nel JSON dell'ultima corsa: data/oracolo-gate-last.json",
+            file=sys.stderr,
+        )
+        print(
+            "  Se la deviazione e' un fix legittimo: abbassa le soglie con --update (commit motivato).",
+            file=sys.stderr,
+        )
         return 1
-    print(f"OK: gate oracolo verde {oss} (soglie {soglie['max_ko_armi']}/"
-          f"{soglie['max_ko_armature']}/{soglie['max_unknown']})")
+    print(
+        f"OK: gate oracolo verde {oss} (soglie {soglie['max_ko_armi']}/"
+        f"{soglie['max_ko_armature']}/{soglie['max_unknown']})"
+    )
     return 0
 
 

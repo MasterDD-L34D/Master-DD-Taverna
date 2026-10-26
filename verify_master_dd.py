@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Verifica automatica del lavoro su Master-DD-Taverna."""
+
 import json
 import os
 import subprocess
@@ -9,7 +10,9 @@ from pathlib import Path
 
 def run(cmd, check=True):
     print(f"\n>>> {' '.join(cmd)}")
-    res = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
+    res = subprocess.run(
+        cmd, capture_output=True, text=True, encoding="utf-8", errors="replace"
+    )
     if res.stdout:
         print(res.stdout)
     if res.stderr:
@@ -51,7 +54,11 @@ def check_data_quality_report():
 
 def check_orphans():
     bak_dir = "src/data/builds/archive"
-    baks = [f for f in os.listdir(bak_dir) if f.endswith(".bak")] if os.path.isdir(bak_dir) else []
+    baks = (
+        [f for f in os.listdir(bak_dir) if f.endswith(".bak")]
+        if os.path.isdir(bak_dir)
+        else []
+    )
     if baks:
         sys.exit(f"ERRORE: file .bak orfani presenti: {baks}")
     if os.path.exists("reports/module_tests/staging_sandbox_log.md"):
@@ -73,7 +80,12 @@ def check_module_index():
 
 
 def check_reports_valid_json():
-    for name in ["reports/build_review.json", "reports/index_analysis.json", "reports/dual_pass_report.json", "reports/data_quality_report.json"]:
+    for name in [
+        "reports/build_review.json",
+        "reports/index_analysis.json",
+        "reports/dual_pass_report.json",
+        "reports/data_quality_report.json",
+    ]:
         if not os.path.exists(name):
             sys.exit(f"ERRORE: report mancante {name}")
         try:
@@ -85,7 +97,10 @@ def check_reports_valid_json():
 
 def check_rag_index():
     store_dir = Path("src/data/vector_store")
-    if not (store_dir / "chunks.json").exists() or not (store_dir / "embeddings.npy").exists():
+    if (
+        not (store_dir / "chunks.json").exists()
+        or not (store_dir / "embeddings.npy").exists()
+    ):
         sys.exit("ERRORE: indice RAG non trovato in src/data/vector_store")
     chunks = json.load(open(store_dir / "chunks.json", encoding="utf-8"))
     if len(chunks) < 5000:
@@ -111,16 +126,28 @@ def check_rag_endpoints():
         settings.allow_anonymous = False
         headers = {"x-api-key": "verify-rag-key"}
         with TestClient(app) as client:
-            resp = client.post("/rag/search", json={"query": "talento Power Attack", "top_k": 3}, headers=headers)
+            resp = client.post(
+                "/rag/search",
+                json={"query": "talento Power Attack", "top_k": 3},
+                headers=headers,
+            )
             if resp.status_code != 200:
-                sys.exit(f"ERRORE: /rag/search ha risposto {resp.status_code}: {resp.text}")
+                sys.exit(
+                    f"ERRORE: /rag/search ha risposto {resp.status_code}: {resp.text}"
+                )
             data = resp.json()
             if len(data.get("results", [])) != 3:
                 sys.exit("ERRORE: /rag/search non ha restituito 3 risultati")
 
-            resp = client.post("/rag/ask", json={"query": "cosa fa Power Attack?", "top_k": 3, "provider": "mock"}, headers=headers)
+            resp = client.post(
+                "/rag/ask",
+                json={"query": "cosa fa Power Attack?", "top_k": 3, "provider": "mock"},
+                headers=headers,
+            )
             if resp.status_code != 200:
-                sys.exit(f"ERRORE: /rag/ask ha risposto {resp.status_code}: {resp.text}")
+                sys.exit(
+                    f"ERRORE: /rag/ask ha risposto {resp.status_code}: {resp.text}"
+                )
         print("OK: endpoint RAG /search e /ask funzionanti")
     finally:
         settings.api_key = original_key
@@ -147,13 +174,24 @@ def check_build_endpoint():
         with TestClient(app) as client:
             resp = client.post(
                 "/rag/build",
-                json={"class": "Fighter", "race": "Human", "level": 5, "focus": "DPR", "provider": "mock"},
+                json={
+                    "class": "Fighter",
+                    "race": "Human",
+                    "level": 5,
+                    "focus": "DPR",
+                    "provider": "mock",
+                },
                 headers=headers,
             )
             if resp.status_code != 200:
-                sys.exit(f"ERRORE: /rag/build ha risposto {resp.status_code}: {resp.text}")
+                sys.exit(
+                    f"ERRORE: /rag/build ha risposto {resp.status_code}: {resp.text}"
+                )
             data = resp.json()
-            if "build" not in data or data["build"]["build_state"]["class"] != "Fighter":
+            if (
+                "build" not in data
+                or data["build"]["build_state"]["class"] != "Fighter"
+            ):
                 sys.exit("ERRORE: /rag/build non ha restituito una build valida")
         print("OK: endpoint /rag/build funzionante")
     finally:
