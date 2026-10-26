@@ -50,6 +50,20 @@ def _safe_import(name: str, *args: Any, **kwargs: Any) -> Any:
     return __import__(name, *args, **kwargs)
 
 
+def _walk_helpers(prefix: str, node: Any) -> Iterator[tuple[str, dict]]:
+    """Helper possono vivere sotto namespace (Taverna_NPC: Echo/GameMode/Quiz):
+    discendi finche' non trovi una foglia con 'logic', con nome qualificato
+    dotted (Codex P3: senza, i namespace interi venivano droppati)."""
+    if isinstance(node, dict):
+        if "logic" in node:
+            yield prefix, node
+        else:
+            for sub, spec in node.items():
+                yield from _walk_helpers(
+                    f"{prefix}.{sub}" if prefix else str(sub), spec
+                )
+
+
 def _norm_commands(raw: Any) -> Iterator[tuple[str, dict]]:
     if isinstance(raw, dict):
         for name, spec in raw.items():
@@ -155,13 +169,12 @@ def load_kernel(
                 continue
             k.data[key] = val
         for key in ("helpers", "functions"):
-            for name, spec in (data.get(key) or {}).items():
-                if isinstance(spec, dict) and "logic" in spec:
-                    k.helpers[str(name)] = {
-                        "params": spec.get("params") or [],
-                        "logic": spec["logic"] or "",
-                        "origin": path.name,
-                    }
+            for name, spec in _walk_helpers("", data.get(key) or {}):
+                k.helpers[name] = {
+                    "params": spec.get("params") or [],
+                    "logic": spec["logic"] or "",
+                    "origin": path.name,
+                }
         for key, val in data.items():
             # chiavi template: quelle canoniche (nome nudo) + qualunque altra
             # dict *templates* (es. ui_templates_quiz_pro -> nome dotted)

@@ -348,3 +348,59 @@ def test_lookup_primo_token_nomi_con_firma(tmp_path):
     it = Interpreter(k)
     it.run_command("/go")
     assert it.state["build_state"]["scelta"] == "s01"
+
+
+def test_set_ricorsivo_su_mapping_e_liste(tmp_path):
+    # Codex P1: value mapping/lista con template annidati -> resi, non literal
+    k = _mini(
+        tmp_path,
+        "commands:\n  /go:\n    params: [nome]\n    action:\n"
+        "      - set: build_state.anagrafica\n        value:\n"
+        "          nome: '{{ nome }}'\n          tags: ['{{ nome }}']\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go", nome="Ada")
+    assert it.state["build_state"]["anagrafica"] == {"nome": "Ada", "tags": ["Ada"]}
+
+
+def test_command_con_template_reso_prima_di_tokenizzare(tmp_path):
+    # Codex P2: /inner count={{ n or 3 }} lega count=3, non count="{{"
+    k = _mini(
+        tmp_path,
+        "commands:\n  /inner:\n    params: [count]\n"
+        "    action: [{set: build_state.count, value: '{{ count }}'}]\n"
+        "  /go:\n    action: [{command: '/inner count={{ n or 3 }}'}]\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go")
+    assert it.state["build_state"]["count"] == 3  # int nativo, non stringa
+
+
+def test_helper_sotto_namespace(tmp_path):
+    # Codex P3: helpers Echo.saluta (namespace) caricati e chiamabili via call
+    k = _mini(
+        tmp_path,
+        "helpers:\n  Echo:\n    saluta:\n      params: [nome]\n"
+        "      logic: |\n        return 'ciao ' + nome\n"
+        "commands:\n  /go:\n    action:\n"
+        "      - call: Echo.saluta\n        with: {nome: Ada}\n"
+        "        return_as: res\n      - output: '{{ res }}'\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go")
+    assert it.output_log == ["ciao Ada"]
+
+
+def test_compute_forma_espresione(tmp_path):
+    # Codex P4: logic template su riga unica = espressione, non corpo Python
+    k = _mini(
+        tmp_path,
+        "helpers:\n  doppia:\n    params: [x]\n    logic: |\n      return x * 2\n"
+        "commands:\n  /go:\n    params: [n, q, v]\n    action:\n"
+        "      - compute: uno\n        logic: '{{ doppia(n) }}'\n"
+        "      - compute: due\n        logic: '{{q|int}} * {{v|float}}'\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go", n=4, q=3, v=2.5)
+    assert it.state["uno"] == 8
+    assert it.state["due"] == 7.5

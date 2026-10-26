@@ -7,9 +7,11 @@ registrati in ``noop_log`` — mai silenziosi.
 
 from __future__ import annotations
 
+import ast
 import builtins
 import copy as _copy
 import json
+import re
 import shlex
 import textwrap
 from typing import Any
@@ -325,7 +327,14 @@ class Interpreter:
 
     def _rn(self, value: Any, params: dict) -> Any:
         """Render native (value/if/when): bool e int nativi; chiave mancante
-        su dict esistente -> None (assente = non valorizzato)."""
+        su dict esistente -> None (assente = non valorizzato). Mapping e
+        liste sono resi ricorsivamente (Codex P1: senza, `set: value:
+        {nome: '{{nome}}'}` persisteva il template letterale nello stato,
+        vedi minmax_builder /save_character)."""
+        if isinstance(value, dict):
+            return {k: self._rn(v, params) for k, v in value.items()}
+        if isinstance(value, list):
+            return [self._rn(v, params) for v in value]
         if not isinstance(value, str) or ("{{" not in value and "{%" not in value):
             return value
         result = self._native.from_string(value).render(self._ctx(params))
@@ -535,10 +544,13 @@ class Interpreter:
         )
 
     def _v_call(self, a, params, depth):
-        fn = self._g.get(a["call"])
+        name = a["call"]
+        fn = self._g.get(name) or self._g.get(
+            re.sub(r"\W", "_", name)
+        )  # helper dotted: il def compilato usa nome python safe (Codex P3)
         if not callable(fn):
             self.noop_log.append(
-                {"verb": f"call:{a['call']}", "motivo": "helper non compilato"}
+                {"verb": f"call:{name}", "motivo": "helper non compilato"}
             )
             return
         kwargs = {k: self._rn(v, params) for k, v in (a.get("with") or {}).items()}
@@ -548,24 +560,40 @@ class Interpreter:
 
     def _v_compute(self, a, params, depth):
         body = (a.get("logic") or "").rstrip()
+        if "{{" in body and "\n" not in body:
+            # Codex P4: forma espressione (ruling_expert, narrative_flow) —
+            # template su riga unica, non corpo Python: render nativo nel
+            # contesto del comando, poi coercizione letterale/aritmetica.
+            value = self._rn(body, params)
+            if isinstance(value, str):
+                try:
+                    value = ast.literal_eval(value)
+                except (ValueError, SyntaxError):
+                    try:
+                        value = eval(value, {"__builtins__": {}}, self._ctx(params))
+                    except Exception:
+                        pass  # ponytail: resta la stringa renderizzata
+            set_path(self.state, a["compute"], value)
+            return
         src = "def __compute():\n" + textwrap.indent(body, "    ")
         exec(compile(src, "<compute>", "exec"), self._g)
         set_path(self.state, a["compute"], self._g["__compute"]())
 
     def _v_command(self, a, params, depth):
         self._dispatch_command(
-            a.get("command") or a.get("route") or a.get("call_command"), depth
+            a.get("command") or a.get("route") or a.get("call_command"), depth, params
         )
 
     def _v_call_command(self, a, params, depth):
-        self._dispatch_command(a.get("call_command") or a.get("command"), depth)
+        self._dispatch_command(a.get("call_command") or a.get("command"), depth, params)
 
     def _v_route(self, a, params, depth):
-        self._dispatch_command(a.get("route"), depth)
+        self._dispatch_command(a.get("route"), depth, params)
 
-    def _dispatch_command(self, spec: Any, depth: int) -> None:
+    def _dispatch_command(self, spec: Any, depth: int, params: dict) -> None:
         if depth >= MAX_DEPTH:
             raise DslAbort(f"ricorsione command: oltre profondita {MAX_DEPTH}")
+        spec = self._rn(spec, params)  # Codex P2: render prima di tokenizzare
         if not isinstance(spec, str):
             raise DslAbort(f"command non stringa: {spec!r}")
         tokens = shlex.split(spec)
