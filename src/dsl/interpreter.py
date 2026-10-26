@@ -24,6 +24,15 @@ MAX_DEPTH = 8
 _MISSING = object()
 
 
+def _as_list(node: Any) -> list:
+    """MEDIA-4: il DSL scrive le liste talvolta come dict singolo; esecuzione
+    e gate devono vedere lo stesso albero, altrimenti il gate G2 e' cieco
+    sui rami scritti in forma dict (runtime ok, classificazione falsata)."""
+    if isinstance(node, dict):
+        return [node]
+    return node if isinstance(node, list) else []
+
+
 def _declared(cmd: dict, name: str) -> list[str]:
     """Params del comando: lista dichiarata, altrimenti i placeholder
     ``<...>`` del nome (comandi con firma nel nome, es. /quiz_bestworst)."""
@@ -265,7 +274,12 @@ class Interpreter:
         self.events: list[dict[str, Any]] = []
         # ALTA-1 (review Claude): senza __builtins__ esplicito, Python
         # inietta i builtin veri e la whitelist import e' teatro (eval/open
-        # esisterebbero lo stesso). Qui i builtin negati spariscono davvero.
+        # esisterebbero lo stesso). MODELLO DI MINACCIA: protezione contro
+        # refusi/errore accidentale, NON isolamento — in-process non si
+        # chiude (ogni funzione espone __globals__; random importa os).
+        # Prerequisito duro: i moduli vengono SOLO dal repo. Se un modulo
+        # arrivera' mai da utente/modello (homebrew), isolamento a livello
+        # di processo: e' una precondizione ES2/ES3, non un fix locale.
         safe_builtins = {
             k: v for k, v in vars(builtins).items() if k not in DENIED_BUILTINS
         }
@@ -363,9 +377,7 @@ class Interpreter:
         self._sync()
 
     def _run_actions(self, actions: list, params: dict, depth: int) -> None:
-        if isinstance(actions, dict):  # MEDIA-4: then: {command: /x} -> [dict]
-            actions = [actions]
-        for action in actions or []:
+        for action in _as_list(actions):
             if not isinstance(action, dict):
                 continue
             self._dispatch(action, params, depth)
@@ -650,9 +662,7 @@ class Interpreter:
         return report
 
     def _collect_verbs(self, actions: list, verbs: set) -> None:
-        if isinstance(actions, dict):  # MEDIA-4: dict singolo -> lista
-            actions = [actions]
-        for action in actions or []:
+        for action in _as_list(actions):
             if not isinstance(action, dict):
                 continue
             for key in action:
@@ -663,25 +673,21 @@ class Interpreter:
                         key
                     )  # candidato sconosciuto: la classificazione lo rivela
             for key in ("then", "else", "actions", "do"):
-                if isinstance(action.get(key), list):
-                    self._collect_verbs(action[key], verbs)
-            for case in action.get("cases") or []:
-                if isinstance(case, dict) and isinstance(case.get("do"), list):
-                    self._collect_verbs(case["do"], verbs)
+                self._collect_verbs(action.get(key), verbs)
+            for case in _as_list(action.get("cases")):
+                if isinstance(case, dict):
+                    self._collect_verbs(case.get("do"), verbs)
 
     def _templates_in(self, actions: list) -> list[str]:
         found: list[str] = []
-        if isinstance(actions, dict):  # MEDIA-4
-            actions = [actions]
-        for action in actions or []:
+        for action in _as_list(actions):
             if isinstance(action, dict):
                 name = action.get("output_template")
                 if isinstance(name, str) and "{{" not in name and "{%" not in name:
                     found.append(name)
                 for key in ("then", "else", "actions", "do"):
-                    if isinstance(action.get(key), list):
-                        found.extend(self._templates_in(action[key]))
-                for case in action.get("cases") or []:  # BASSA-10
-                    if isinstance(case, dict) and isinstance(case.get("do"), list):
-                        found.extend(self._templates_in(case["do"]))
+                    found.extend(self._templates_in(action.get(key)))
+                for case in _as_list(action.get("cases")):  # BASSA-10
+                    if isinstance(case, dict):
+                        found.extend(self._templates_in(case.get("do")))
         return found

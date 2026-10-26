@@ -287,3 +287,64 @@ def test_argomenti_posizionali_legati_e_extra_segnalati(tmp_path):
     it.run_command("/go")
     assert it.state["build_state"]["q"] == "-q"
     assert any("argomento_posizionale_scolto" in e for e in it.events)
+
+
+def test_precedenza_stato_su_dati_modulo(tmp_path):
+    # MEDIA-6: una chiave di stato vince sul dato top-level omonimo del modulo
+    k = _mini(
+        tmp_path,
+        "saluto: dal_modulo\ncommands:\n  /go:\n    action:\n"
+        "      - set: build_state.saluto\n        value: dallo_stato\n"
+        "      - output: '{{ saluto }}'\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go")
+    assert it.output_log == ["dallo_stato"]
+
+
+def test_scratch_non_tracima_al_chiamante(tmp_path):
+    # MEDIA-8: lo scratch scritto da un comando annidato muore con lui
+    k = _mini(
+        tmp_path,
+        "commands:\n  /inner:\n    action:\n"
+        "      - parse_json: {input: '[1]', as: leaked}\n"
+        "  /go:\n    action:\n      - command: /inner\n"
+        "      - foreach: leaked\n        actions:\n"
+        "          - output: '{{ item }}'\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go")
+    assert it.output_log == []
+    assert any("foreach_non_risolto" in e for e in it.events)
+
+
+def test_templates_in_scende_nei_cases(tmp_path):
+    # BASSA-10: il gate G2 vede i template citati dentro cases[].do
+    k = _mini(
+        tmp_path,
+        "ui_templates:\n  ok: fine\n"
+        "commands:\n  /go:\n    action:\n"
+        "      - switch: '{{ 1 }}'\n        cases:\n"
+        "          - when: '1'\n            do:\n"
+        "              - output_template: ok\n"
+        "          - when: '2'\n            do:\n"
+        "              - output_template: mancante\n",
+    )
+    report = Interpreter(k).coverage_report()
+    assert report["errore"], "template mancante dentro cases non segnalato"
+    assert report["errore"][0]["template_mancanti"] == ["mancante"]
+
+
+def test_lookup_primo_token_nomi_con_firma(tmp_path):
+    # BASSA-13: il dizionario chiave per nome intero, il modello scrive il
+    # primo token; il placeholder <set_id> lega il posizionale
+    k = _mini(
+        tmp_path,
+        "commands:\n"
+        '  /quiz_bestworst <set_id> best="<opzione>" worst="<opzione>":\n'
+        "    action: [{set: build_state.scelta, value: '{{ set_id }}'}]\n"
+        "  /go:\n    action: [{command: '/quiz_bestworst s01 best=a worst=b'}]\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go")
+    assert it.state["build_state"]["scelta"] == "s01"
