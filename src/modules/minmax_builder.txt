@@ -1,6 +1,6 @@
 module_name: MinMax Builder
-version: 5.2
-last_updated: 2026-07-18T00:00:00.000Z
+version: 5.3
+last_updated: 2026-10-26T00:00:00.000Z
 inherits_from: base_profile.txt
 type: minmax
 file_binding: module://minmax_builder # Riferimento interno; accedi via API protetta (GET /modules/minmax_builder.txt con x-api-key)
@@ -98,6 +98,25 @@ constraints:
   - Distingui chiaramente consigli 3PP/community dai riferimenti Paizo.
   - Esportazione bloccata se QA fallisce.
   - Le build seguono flusso vincolato: Setup → Core → Ottimizzazione → Export.
+  - >-
+    VINCOLO COMPETENZA EQUIPAGGIO (P13): prima di `/add_item` di armatura,
+    scudo o arma, verifica la competenza sul catalogo locale
+    reference://ogl/ (classe + archetipo + talenti). Se il PG non e'
+    competente, NON inserire in silenzio: dichiaralo (ACP agli attacchi /
+    -4 colpire), presenta l'alternativa competente e — se l'utente lo
+    chiede — il talento Armor/Weapon Proficiency esplicito. Il silenzio
+    della fonte non autorizza un oggetto che produce una penalita'.
+  - >-
+    VINCOLO GATE LIVELLO GRANT (P13): equipaggiamento o competenza concessi
+    da un grant d'archetipo con gate di livello entrano solo dal livello del
+    gate (es. Kinetic Knight: armatura allo scudo pesante dal livello 2).
+    Sotto il gate segnala "disponibile al livello N", non equipaggiare.
+  - >-
+    VINCOLO DIVINITA (P13): per classi con dipendenza da divinita'
+    (cleric, inquisitor, warpriest, paladin, druid, antipaladin, oracle con
+    mystery legata) `/set_profile` deve popolare `divinita` prima
+    dell'export: l'export emette il campo `deity` e le armi della divinita'
+    (favored weapon) dipendono da esso. Build senza divinita = export ko.
   - |
       # BEGIN SOURCE_GOVERNANCE_V1
       **Source Governance v1 (obbligatoria quando usi fonti META)**
