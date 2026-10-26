@@ -74,7 +74,7 @@
       "classi": [
         {
           "nome": "Rogue",
-          "livelli": 1,
+          "livelli": 10,
           "archetipi": [
             "Cutpurse"
           ]
@@ -87,9 +87,9 @@
         "INT": 14,
         "SAG": 10,
         "CAR": 8,
-        "attacco": "+6 (pugnale) / +5 (fionda)",
-        "danni": "1d4+2 (pugnale) / 1d3+2 (fionda)",
-        "ca": 16
+        "attacco": "+21/+21 (pugnali)",
+        "danni": "1d4+8 (pugnale) +5d6 furtivo",
+        "ca": 26
       },
       "statistiche_chiave": {
         "attacco": "+6 (pugnale) / +5 (fionda)",
@@ -128,7 +128,18 @@
       },
       "skill_points": 100,
       "talenti": [
-        "Skill Focus (Sleight of Hand)"
+        "Skill Focus (Sleight of Hand)",
+        "Arma accurata",
+        "Arma accurata superiore",
+        "Arma focalizzata (pugnale)",
+        "Arma focalizzata superiore (pugnale)",
+        "Colpo senz'armi migliorato",
+        "Combattere con due armi",
+        "Mobilità",
+        "Riflessi in combattimento",
+        "Schivare",
+        "Schivare prodigioso",
+        "Talento ladresco: Opportunista"
       ],
       "capacita_classe": [
         "Attacco furtivo +1d6",
@@ -137,7 +148,16 @@
         "Percepire trappole +1"
       ],
       "equipaggiamento": [
-        "Armatura di cuoio borchiato"
+        "Armatura di cuoio borchiato",
+        "Anello di protezione +1",
+        "Anello di protezione +2",
+        "Attrezzi da scasso di qualità",
+        "Bracciali dell'armatura +1",
+        "Cappa elfica grigia",
+        "Cintura dell'agilità +2",
+        "Cintura dell'agilità +4",
+        "Fionda con 20 proiettili",
+        "Giaco di maglia ombreggiato"
       ],
       "inventario": [
         "Armatura di cuoio borchiato",
@@ -145,7 +165,25 @@
         "Fionda con 20 proiettili",
         "Kit da avventuriero",
         "Pozione di cura x2",
-        "Pugnale bilanciato"
+        "Pugnale bilanciato",
+        "Anello di protezione +1",
+        "Anello di protezione +2",
+        "Bracciali dell'armatura +1",
+        "Cappa elfica grigia",
+        "Cintura dell'agilità +2",
+        "Cintura dell'agilità +4",
+        "Giaco di maglia ombreggiato",
+        "Giaco di maglia ombreggiato +2",
+        "Guanti da ladro",
+        "Guanti della destrezza +4",
+        "Mantello della resistenza +1",
+        "Mantello della resistenza +2",
+        "Pugnale +1",
+        "Pugnale +2 bilanciato",
+        "Pugnale agile +2",
+        "Pugnale masterwork",
+        "Pugnale velocità +2",
+        "Stivali dell'agilità"
       ],
       "slot_incantesimi": "Non incantatore",
       "ac_breakdown": {
@@ -1078,5 +1116,49 @@
       "checkpoint": 1,
       "source": "rogue_halfling_cutpurse"
     }
-  ]
+  ],
+  "_normalized": {
+    "fusioneArchivio": {
+      "livello": {
+        "da": 1,
+        "a": 10
+      },
+      "statistiche": "dal blocco archiviato",
+      "talenti": {
+        "da": 1,
+        "a": 12
+      },
+      "equipaggiamentoAggiunto": [
+        "Anello di protezione +1",
+        "Anello di protezione +2",
+        "Attrezzi da scasso di qualità",
+        "Bracciali dell'armatura +1",
+        "Cappa elfica grigia",
+        "Cintura dell'agilità +2",
+        "Cintura dell'agilità +4",
+        "Fionda con 20 proiettili",
+        "Giaco di maglia ombreggiato"
+      ],
+      "inventarioAggiunto": [
+        "Anello di protezione +1",
+        "Anello di protezione +2",
+        "Bracciali dell'armatura +1",
+        "Cappa elfica grigia",
+        "Cintura dell'agilità +2",
+        "Cintura dell'agilità +4",
+        "Giaco di maglia ombreggiato",
+        "Giaco di maglia ombreggiato +2",
+        "Guanti da ladro",
+        "Guanti della destrezza +4",
+        "Mantello della resistenza +1",
+        "Mantello della resistenza +2",
+        "Pugnale +1",
+        "Pugnale +2 bilanciato",
+        "Pugnale agile +2",
+        "Pugnale masterwork",
+        "Pugnale velocità +2",
+        "Stivali dell'agilità"
+      ]
+    }
+  }
 }

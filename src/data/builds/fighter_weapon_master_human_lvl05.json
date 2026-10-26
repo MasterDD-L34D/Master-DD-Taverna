@@ -71,7 +71,7 @@
       "classi": [
         {
           "nome": "Fighter",
-          "livelli": 1,
+          "livelli": 5,
           "archetipi": [
             "Weapon Master"
           ]
@@ -86,7 +86,7 @@
         "CAR": 8,
         "attacco": "+4",
         "danni": "1d8+3",
-        "ca": 12
+        "ca": 18
       },
       "statistiche_chiave": {
         "attacco": "+4",
@@ -126,7 +126,8 @@
         "Tecnica distintiva Weapon Master"
       ],
       "equipaggiamento": [
-        "Arma preferita"
+        "Arma preferita",
+        "Armatura leggera"
       ],
       "inventario": [
         "Arma preferita",
@@ -988,5 +989,17 @@
       "checkpoint": 1,
       "source": "fighter_weapon_master_human"
     }
-  ]
+  ],
+  "_normalized": {
+    "fusioneArchivio": {
+      "livello": {
+        "da": 1,
+        "a": 5
+      },
+      "statistiche": "dal blocco archiviato",
+      "equipaggiamentoAggiunto": [
+        "Armatura leggera"
+      ]
+    }
+  }
 }

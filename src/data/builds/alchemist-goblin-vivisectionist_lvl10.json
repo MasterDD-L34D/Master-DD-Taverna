@@ -102,7 +102,7 @@
       "classi": [
         {
           "nome": "Alchemist",
-          "livelli": 1,
+          "livelli": 10,
           "archetipi": [
             "Vivisectionist"
           ]
@@ -115,9 +115,9 @@
         "INT": 14,
         "SAG": 10,
         "CAR": 8,
-        "attacco": "+5",
-        "danni": "1d6+2",
-        "ca": 17
+        "attacco": "+17",
+        "danni": "2d6+10",
+        "ca": 27
       },
       "statistiche_chiave": {
         "attacco": "+5",
@@ -155,7 +155,8 @@
         "Tecnica distintiva Vivisectionist"
       ],
       "equipaggiamento": [
-        "Arma preferita"
+        "Arma preferita",
+        "Armatura leggera"
       ],
       "inventario": [
         "Arma preferita",
@@ -1113,5 +1114,26 @@
     "reference_urls": [
       "http://localhost:8000/modules/minmax_builder.txt?mode=extended&class=Alchemist&stub=true&level=1&race=Goblin&archetype=Vivisectionist"
     ]
+  },
+  "_normalized": {
+    "fusioneArchivio": {
+      "livello": {
+        "da": 1,
+        "a": 10
+      },
+      "statistiche": "dal blocco archiviato",
+      "talenti": {
+        "da": 1,
+        "a": 2
+      },
+      "equipaggiamentoAggiunto": [
+        "Armatura leggera"
+      ]
+    },
+    "puliziaIllegalita": {
+      "tolti": [
+        "Colpo possente"
+      ]
+    }
   }
 }

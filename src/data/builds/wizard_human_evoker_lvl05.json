@@ -76,7 +76,7 @@
       "classi": [
         {
           "nome": "Wizard",
-          "livelli": 1,
+          "livelli": 5,
           "archetipi": [
             "Evoker"
           ]
@@ -89,7 +89,7 @@
         "INT": 10,
         "SAG": 12,
         "CAR": 8,
-        "ca": 12
+        "ca": 17
       },
       "statistiche_chiave": {
         "attacco": null,
@@ -122,7 +122,11 @@
       },
       "skill_points": 15,
       "talenti": [
-        "Iniziativa migliorata"
+        "Iniziativa migliorata",
+        "Incantesimi focalizzati (Invocazione)",
+        "Incantesimi massimizzati (metamagia)",
+        "Magia focalizzata superiore (Invocazione)",
+        "Metamagia (Incantesimi Estesi)"
       ],
       "capacita_classe": [
         "Legame arcano (famiglio)",
@@ -131,14 +135,24 @@
         "Slot 1°:4 | Equip: bastone ferrato, spellbook, abito da viaggiatore"
       ],
       "equipaggiamento": [
-        "Abito da viaggiatore"
+        "Abito da viaggiatore",
+        "Anello di protezione +1",
+        "Bacchetta di dardo incantato (CL3)",
+        "Bastone ferrato",
+        "Mantello resistente +1"
       ],
       "inventario": [
         "Abito da viaggiatore",
         "Bastone ferrato",
         "Kit da avventuriero",
         "Pozione di cura x2",
-        "Spellbook"
+        "Spellbook",
+        "Anello di protezione +1",
+        "Bacchetta di dardo incantato (CL3)",
+        "Mantello resistente +1",
+        "Pagina di pergamena",
+        "Perla di potere I",
+        "Veste da mago rinforzata"
       ],
       "spell_levels": [
         {
@@ -298,7 +312,8 @@
         "data": "2026-07-27",
         "livello": 5,
         "decisione": "statline GPT-A invariata (20pb legale); flex INT (primaria da wizard). NOTA: statline editoriale povera per il concept (INT 10 pre-razziale) ma legale; ribilanciamento fuori perimetro lotto A"
-      }
+      },
+      "default_armor_by_class": true
     }
   },
   "narrative": "Human Evoker pronta/o per il campo, specializzata/o in tattiche da Wizard.",
@@ -1031,5 +1046,36 @@
       "checkpoint": 1,
       "source": "wizard_human_evoker"
     }
-  ]
+  ],
+  "_normalized": {
+    "fusioneArchivio": {
+      "livello": {
+        "da": 1,
+        "a": 5
+      },
+      "statistiche": "dal blocco archiviato",
+      "talenti": {
+        "da": 1,
+        "a": 5
+      },
+      "equipaggiamentoAggiunto": [
+        "Anello di protezione +1",
+        "Bacchetta di dardo incantato (CL3)",
+        "Bastone ferrato",
+        "Mantello resistente +1"
+      ],
+      "inventarioAggiunto": [
+        "Anello di protezione +1",
+        "Bacchetta di dardo incantato (CL3)",
+        "Mantello resistente +1",
+        "Pagina di pergamena",
+        "Perla di potere I",
+        "Veste da mago rinforzata"
+      ]
+    },
+    "defaultArmorByClass": {
+      "from": "comportamento implicito del converter fino al 2026-08-19",
+      "reason": "la build non dichiara ne armatura ne categoria: la stima di classe era applicata in silenzio"
+    }
+  }
 }

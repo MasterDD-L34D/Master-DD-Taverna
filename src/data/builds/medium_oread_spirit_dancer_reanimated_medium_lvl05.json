@@ -71,7 +71,7 @@
       "classi": [
         {
           "nome": "Medium",
-          "livelli": 1,
+          "livelli": 5,
           "archetipi": [
             "Spirit Dancer + Reanimated Medium"
           ]
@@ -86,7 +86,7 @@
         "CAR": 8,
         "attacco": "+4",
         "danni": "1d8+3",
-        "ca": 12
+        "ca": 18
       },
       "statistiche_chiave": {
         "attacco": "+4",
@@ -116,7 +116,8 @@
       },
       "skill_points": 20,
       "talenti": [
-        "Iniziativa migliorata"
+        "Iniziativa migliorata",
+        "Colpo possente"
       ],
       "capacita_classe": [
         "Addestramento marziale",
@@ -125,7 +126,8 @@
         "Tecnica distintiva Spirit Dancer + Reanimated Medium"
       ],
       "equipaggiamento": [
-        "Arma preferita"
+        "Arma preferita",
+        "Armatura leggera"
       ],
       "inventario": [
         "Arma preferita",
@@ -979,5 +981,21 @@
       "checkpoint": 1,
       "source": "medium_oread_spirit_dancer_reanimated_medium"
     }
-  ]
+  ],
+  "_normalized": {
+    "fusioneArchivio": {
+      "livello": {
+        "da": 1,
+        "a": 5
+      },
+      "statistiche": "dal blocco archiviato",
+      "talenti": {
+        "da": 1,
+        "a": 2
+      },
+      "equipaggiamentoAggiunto": [
+        "Armatura leggera"
+      ]
+    }
+  }
 }

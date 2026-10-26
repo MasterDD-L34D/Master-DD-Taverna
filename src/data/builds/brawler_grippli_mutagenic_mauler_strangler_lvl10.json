@@ -72,7 +72,7 @@
       "classi": [
         {
           "nome": "Brawler",
-          "livelli": 1,
+          "livelli": 10,
           "archetipi": [
             "Mutagenic Mauler",
             "Strangler"
@@ -80,15 +80,15 @@
         }
       ],
       "statistiche": {
-        "FOR": 16,
-        "DES": 16,
-        "COS": 14,
+        "FOR": 20,
+        "DES": 22,
+        "COS": 16,
         "INT": 10,
-        "SAG": 13,
-        "CAR": 7,
-        "attacco": "+6",
-        "danni": "1d6+5",
-        "ca": 15
+        "SAG": 12,
+        "CAR": 8,
+        "attacco": "+20",
+        "danni": "2d6+24",
+        "ca": 28
       },
       "statistiche_chiave": {
         "attacco": "+4",
@@ -1051,5 +1051,14 @@
     "reference_urls": [
       "http://localhost:8000/modules/minmax_builder.txt?mode=extended&class=Brawler&stub=true&race=Grippli"
     ]
+  },
+  "_normalized": {
+    "fusioneArchivio": {
+      "livello": {
+        "da": 1,
+        "a": 10
+      },
+      "statistiche": "dal blocco archiviato"
+    }
   }
 }
