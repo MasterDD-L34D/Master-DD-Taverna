@@ -14,16 +14,90 @@ import json
 import re
 import shlex
 import textwrap
+from functools import lru_cache
 from typing import Any
 
 import jinja2
+from jinja2.meta import find_undeclared_variables
 from jinja2.nativetypes import NativeEnvironment
+from jinja2.visitor import NodeVisitor
 
 from .loader import DENIED_BUILTINS, Kernel, _safe_import
 from .state import get_path, set_path
 
 MAX_DEPTH = 8
 _MISSING = object()
+
+_PARSE_ENV = jinja2.Environment()  # solo parse per la scansione dei nomi
+# token di una spec comando: sequenze di frammenti non-spaziature o template
+# (un template puo' contenere spazi: "count={{ n }}" e' UN token)
+_SPEC_TOKEN_RE = re.compile(r"(?:\{\{.*?\}\}|\{%.*?%\}|\S)+")
+
+
+@lru_cache(maxsize=None)
+def _tmpl_names(tmpl: str) -> frozenset:
+    """Nomi liberi di un template (jinja2.meta, AST). Non parseggiabile ->
+    insieme vuoto: la scansione non salta mai per un refuso di sintassi
+    (lo segnalano i gate G3/static_check, non un salto silenzioso)."""
+    try:
+        parsed = _PARSE_ENV.parse(tmpl)
+    except jinja2.TemplateSyntaxError:
+        return frozenset()
+    return frozenset(find_undeclared_variables(parsed))
+
+
+class _GuardedNames(NodeVisitor):
+    """Nomi con fallback esplicito (`n or X`, `n|default(X)`): su questi un
+    nome non legato NON e' un wipe — il template si protegge da solo con la
+    degradazione a None (idioma Codex P2: `/inner count={{ n or 3 }}`)."""
+
+    def __init__(self) -> None:
+        self.guarded: set = set()
+
+    def visit_Or(self, node: Any) -> None:
+        # lato sinistro di un 'or': se rende falsy (None) si prende il dx;
+        # find_all scende solo ai figli, il nodo stesso va incluso a mano
+        if isinstance(node.left, jinja2.nodes.Name):
+            self.guarded.add(node.left.name)
+        for name_node in node.left.find_all(jinja2.nodes.Name):
+            self.guarded.add(name_node.name)
+        self.generic_visit(node)
+
+    def visit_Filter(self, node: Any) -> None:
+        if node.name in ("default", "d"):
+            if isinstance(node.node, jinja2.nodes.Name):
+                self.guarded.add(node.node.name)
+            for name_node in node.node.find_all(jinja2.nodes.Name):
+                self.guarded.add(name_node.name)
+        self.generic_visit(node)
+
+
+@lru_cache(maxsize=None)
+def _tmpl_guarded(tmpl: str) -> frozenset:
+    try:
+        parsed = _PARSE_ENV.parse(tmpl)
+    except jinja2.TemplateSyntaxError:
+        return frozenset()
+    visitor = _GuardedNames()
+    visitor.visit(parsed)
+    return frozenset(visitor.guarded)
+
+
+def _referenced_vars(node: Any) -> set:
+    """Nomi liberi SENZA fallback referenziati da un nodo YAML, ricorsivo
+    su dict/liste. I nomi guardati (`or`/`default`) restano fuori: il
+    render li risolve da solo senza wipe."""
+    out: set = set()
+    if isinstance(node, str):
+        if "{{" in node or "{%" in node:
+            out |= _tmpl_names(node) - _tmpl_guarded(node)
+    elif isinstance(node, dict):
+        for v in node.values():
+            out |= _referenced_vars(v)
+    elif isinstance(node, list):
+        for v in node:
+            out |= _referenced_vars(v)
+    return out
 
 
 def _as_list(node: Any) -> list:
@@ -274,6 +348,16 @@ class Interpreter:
         self.output_log: list[str] = []
         self.noop_log: list[dict[str, str]] = []
         self.events: list[dict[str, Any]] = []
+        # ADR 008: nomi gia' risolvibili senza i params (stato, dati modulo,
+        # helper, builtin, radici di stato): un ref a questi NON e' "non
+        # legato" anche se omonimo di un param assente.
+        self._known = (
+            set(_builtins())
+            | set(kernel.data)
+            | {h.split(".")[0] for h in kernel.helpers}
+            | set(self.state)
+        )
+        self._saltati: list[str] = []  # target/arg saltati nel frame corrente
         # ALTA-1 (review Claude): senza __builtins__ esplicito, Python
         # inietta i builtin veri e la whitelist import e' teatro (eval/open
         # esisterebbero lo stesso). MODELLO DI MINACCIA: protezione contro
@@ -372,18 +456,51 @@ class Interpreter:
 
     # -- esecuzione comandi ----------------------------------------------
 
+    def _unresolvable(self, node: Any, params: dict) -> set:
+        """ADR 008: nomi referenziati dal nodo che il contesto corrente NON
+        puo' risolvere (nei params, nello scratch di loop, nei noti). Un
+        verbo mutante su questi nomi e' no-op: scriverebbe un valore falso
+        (None reso) sovrascrivendo lo stato esistente."""
+        return _referenced_vars(node) - self._known - set(self.scratch) - set(params)
+
+    def _skip_node(self, node: Any, target: str, params: dict) -> bool:
+        """True se l'action va saltata (target registrato tra i saltati)."""
+        if self._unresolvable(node, params):
+            self._saltati.append(target)
+            return True
+        return False
+
     def run_command(self, name: str, _depth: int = 0, **params: Any) -> None:
         cmd = self.kernel.commands.get(name)
         if cmd is None:
             raise DslAbort(f"comando sconosciuto: {name}")
-        bound = {p: params.get(p) for p in _declared(cmd, name)}  # D8: mancanti -> None
+        declared = _declared(cmd, name)
+        # D8/ADR 008: assente in params != None passato. Solo i params
+        # passati sono legati; gli altri sono "param non legato".
+        bound = {p: params[p] for p in declared if p in params}
+        unbound = sorted(p for p in declared if p not in params)
+        prev_saltati = self._saltati
+        self._saltati = []
         snap = dict(self.scratch)
+        saltati: list[str] = []
         try:
             self._run_actions(cmd.get("action") or [], bound, _depth)
+            saltati = self._saltati
         finally:  # MEDIA-8: lo scratch di un comando non tracima al chiamante
             self.scratch.clear()
             self.scratch.update(snap)
+            self._saltati = prev_saltati
         self._sync()
+        if saltati:  # evento aggregato: il merge parziale e' mai silenzioso
+            self.events.append(
+                {
+                    "update_parziale": {
+                        "comando": name,
+                        "param_non_legati": unbound,
+                        "saltati": saltati,
+                    }
+                }
+            )
 
     def _run_actions(self, actions: list, params: dict, depth: int) -> None:
         for action in _as_list(actions):
@@ -406,7 +523,11 @@ class Interpreter:
         if isinstance(target, list):  # flow style: [{path: val}, ...]
             for item in target:
                 for path, value in item.items():
+                    if self._skip_node(value, str(path), params):
+                        continue
                     self._set_target(path, self._rn(value, params))
+            return
+        if self._skip_node(a.get("value"), str(target), params):
             return
         self._set_target(target, self._rn(a.get("value"), params))
 
@@ -420,6 +541,8 @@ class Interpreter:
 
     def _v_append(self, a, params, depth):
         path = a["append"]
+        if self._skip_node(a.get("value"), str(path), params):
+            return
         cur = get_path(self.state, path)
         if not isinstance(cur, list):
             cur = []
@@ -428,6 +551,8 @@ class Interpreter:
 
     def _v_extend(self, a, params, depth):
         path = a["extend"]
+        if self._skip_node(a.get("value"), str(path), params):
+            return
         cur = get_path(self.state, path)
         if not isinstance(cur, list):
             cur = []
@@ -449,6 +574,10 @@ class Interpreter:
 
     def _v_update_dict(self, a, params, depth):
         path = a["update_dict"]
+        if self._skip_node(a.get("key"), str(path), params) or self._skip_node(
+            a.get("append_values"), str(path), params
+        ):
+            return
         cur = get_path(self.state, path)
         if not isinstance(cur, dict):
             cur = {}
@@ -545,6 +674,9 @@ class Interpreter:
 
     def _v_call(self, a, params, depth):
         name = a["call"]
+        if self._skip_node(a.get("with"), f"call:{name}", params):
+            return  # ADR 008: senza scratch[return_as] il resto del comando
+            # vede il nome non legato: la contaminazione e' naturale
         fn = self._g.get(name) or self._g.get(
             re.sub(r"\W", "_", name)
         )  # helper dotted: il def compilato usa nome python safe (Codex P3)
@@ -564,6 +696,8 @@ class Interpreter:
             # Codex P4: forma espressione (ruling_expert, narrative_flow) —
             # template su riga unica, non corpo Python: render nativo nel
             # contesto del comando, poi coercizione letterale/aritmetica.
+            if self._skip_node(body, str(a["compute"]), params):
+                return
             value = self._rn(body, params)
             if isinstance(value, str):
                 try:
@@ -593,10 +727,20 @@ class Interpreter:
     def _dispatch_command(self, spec: Any, depth: int, params: dict) -> None:
         if depth >= MAX_DEPTH:
             raise DslAbort(f"ricorsione command: oltre profondita {MAX_DEPTH}")
-        spec = self._rn(spec, params)  # Codex P2: render prima di tokenizzare
         if not isinstance(spec, str):
             raise DslAbort(f"command non stringa: {spec!r}")
-        tokens = shlex.split(spec)
+        # ADR 008: i token che referenziano nomi non legati vengono scartati
+        # PRIMA del render (sennò '/inner count=None' e il wipe e' silenzioso)
+        kept: list[str] = []
+        for i, tok in enumerate(_SPEC_TOKEN_RE.findall(spec)):
+            if i > 0 and self._unresolvable(tok, params):
+                self._saltati.append(f"arg:{tok}")
+                continue
+            kept.append(tok)
+        rendered = self._rn(
+            " ".join(kept), params
+        )  # Codex P2: render prima di tokenizzare
+        tokens = shlex.split(rendered)
         if not tokens:
             return
         name = tokens[0]
@@ -625,10 +769,14 @@ class Interpreter:
 
     def _v_parse_json(self, a, params, depth):
         o = a["parse_json"]
+        if self._skip_node(o.get("input"), f"parse_json:{o.get('as')}", params):
+            return
         self.scratch[o["as"]] = json.loads(self._rs(o["input"], params))
 
     def _v_find_in(self, a, params, depth):
         f = a["find_in"]
+        if self._skip_node(f, f"find_in:{f.get('as')}", params):
+            return
         lst = self._resolve(f.get("from"), params) or []
         where = f.get("where") or {}
         equals = self._rn(where.get("equals"), params)

@@ -19,6 +19,9 @@ from typing import Any, Iterator
 
 import yaml
 
+# ADR 008: value null/assente su questi verbi = wipe silenziale dello stato.
+NULL_VALUE_VERBS = ("set", "append", "extend")
+
 ALLOWED_IMPORTS = frozenset({"re", "random", "datetime", "math", "json", "hashlib"})
 
 # builtins tolti ai helper: senza questi, open/eval/exec/globals non esistono
@@ -122,7 +125,11 @@ class Kernel:
         for fname, data in self.modules:
             for err in _walk_templates(data, env):
                 template_errori.append(f"{fname}: {err}")
-        return {"logic_errori": logic_errori, "template_errori": template_errori}
+        return {
+            "logic_errori": logic_errori,
+            "template_errori": template_errori,
+            "null_errori": _value_null_violations(self.commands),
+        }
 
 
 def _walk_templates(node: Any, env: Any, prefix: str = "") -> Iterator[str]:
@@ -140,6 +147,48 @@ def _walk_templates(node: Any, env: Any, prefix: str = "") -> Iterator[str]:
     elif isinstance(node, list):
         for i, v in enumerate(node):
             yield from _walk_templates(v, env, f"{prefix}[{i}]")
+
+
+def _walk_actions(node: Any) -> Iterator[dict]:
+    """Ogni action dict di un albero then/else/do/actions/cases (MEDIA-4:
+    il DSL scrive le liste talvolta come dict singolo)."""
+    for action in node if isinstance(node, list) else [node]:
+        if not isinstance(action, dict):
+            continue
+        yield action
+        for key in ("then", "else", "do", "actions"):
+            yield from _walk_actions(action.get(key))
+        for case in action.get("cases") or []:
+            if isinstance(case, dict):
+                yield from _walk_actions(case.get("do"))
+
+
+def _value_null_violations(commands: dict[str, dict]) -> list[str]:
+    """ADR 008 (divieto): value null/assente su verbo mutante = gate rosso.
+    Le forme YAML null / ~ / chiave vuota parsano tutte a None."""
+    out: list[str] = []
+    for name, cmd in commands.items():
+        for action in _walk_actions(cmd.get("action")):
+            target = action.get("set")
+            if isinstance(target, list):  # flow style: [{path: val}, ...]
+                for item in target:
+                    if isinstance(item, dict):
+                        out += [
+                            f"{name}: set {path}: value null"
+                            for path, val in item.items()
+                            if val is None
+                        ]
+                continue
+            for verb in NULL_VALUE_VERBS:
+                if action.get(verb) is not None and action.get("value") is None:
+                    out.append(f"{name}: {verb} {action[verb]}: value null/assente")
+            if action.get("update_dict") is not None:
+                for key in ("key", "append_values"):
+                    if key in action and action[key] is None:
+                        out.append(
+                            f"{name}: update_dict {action['update_dict']}: {key} null"
+                        )
+    return out
 
 
 def load_kernel(

@@ -36,3 +36,8 @@ Formato: contesto → decisione → conseguenze.
 - **Contesto**: servono elenchi aggiornati di classi/razze/prefissi disponibili in `src/data/builds/` per capire rapidamente i checkpoint presenti o mancanti senza interrogare l'API.
 - **Decisione**: aggiungere la flag CLI `--export-lists` a `tools/generate_build_db.py` (con `--reports-dir` personalizzabile) che scansiona i JSON locali e genera i report `reports/build_classes.json`, `reports/build_races.json` e `reports/checkpoint_coverage.json` con livelli presenti/mancanti.
 - **Conseguenze**: i report possono essere rigenerati offline in pochi secondi e committati nel repository per allineare il team sulla copertura corrente delle build.
+
+## ADR 008 — Update parziale: semantica merge nei comandi del DSL
+- **Contesto**: il binding dei comandi DSL assegnava `None` ai params dichiarati-non-passati e ogni `set` lo scriveva: `/update_build` con 2 params azzerava 8 campi (misura G1, 2026-10-27).
+- **Decisione**: semantica merge — un *param non legato* rende no-op il verbo mutante che lo legge (scansione AST statica, cache LRU); template misto = salto dell'intera action; contaminazione via scratch tracciata; token di spec di comando che leggono non-legati scartati; `None` passato esplicitamente resta una cancellazione voluta; condizioni `if`/`when`/`switch` mai scansionate (guardia None intatta). Divieto di `value: null` al caricamento. Evento aggregato per comando: `update_parziale`.
+- **Conseguenze**: gate G1 ri-pinnati (Verify-RED nello stesso PR), audit dei 18 comandi con ≥5 params, glossario `CONTEXT.md` (*param non legato*, *update parziale*). Dettaglio e alternative scartate: `planning/2026-10-27-adr-update-parziale.md`.
