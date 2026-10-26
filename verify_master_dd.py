@@ -168,6 +168,19 @@ def check_legal_filter():
     print("OK: legal_filter.py -> nessuna violazione")
 
 
+def check_oracle_gate():
+    """Gate oracolo (raccomandazione A): sonda pathmaster sul corpus locale.
+
+    SALTATO (con avviso) se il checkout pathmaster non esiste: la sonda e'
+    il suo oracolo vivono in quel repo, senza non puo' correre. Rosso = il
+    corpus ha piu' ko/unknown delle soglie in data/oracolo-gate.json.
+    """
+    res = run([".venv/Scripts/python", "tools/gate_oracolo.py"], check=False)
+    if res.returncode != 0:
+        sys.exit("ERRORE: gate oracolo rosso (sonda-noncompetenza sopra soglia)")
+    print("OK: gate oracolo -> verde o saltato (repo pathmaster assente)")
+
+
 def main():
     check_legal_filter()
     check_pytest()
@@ -179,6 +192,7 @@ def main():
     check_rag_index()
     check_rag_endpoints()
     check_build_endpoint()
+    check_oracle_gate()
     print("\n=== VERIFICA Master-DD-Taverna: TUTTO OK ===")
 
 

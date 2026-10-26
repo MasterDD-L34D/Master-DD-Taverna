@@ -1,0 +1,6 @@
+{
+  "max_ko_armi": 0,
+  "max_ko_armature": 4,
+  "max_unknown": 4,
+  "nota": "Gate oracolo (raccomandazione A, censimento 2026-10-26): la sonda-noncompetenza di pathmaster-dd corre su QUESTO corpus e il gate fallisce se i conteggi superano le soglie. Valori = fotografia 2026-10-26 post-P13 (4 ko Kinetic Knight base = dichiarati D4, 4 unknown = divinita attese owner). Abbassare solo con commit motivato (fix o cura), mai alzarli per far passare una regressione."
+}

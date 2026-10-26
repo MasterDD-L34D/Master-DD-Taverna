@@ -55,3 +55,6 @@ src/data/ml/audio/
 
 # Immagini WORM del servizio img-gen (F3): PNG + manifest sidecar, mai in git
 src/data/ml/images/
+
+# Ultima corsa del gate oracolo (artifact generato, mai in git)
+data/oracolo-gate-last.json
