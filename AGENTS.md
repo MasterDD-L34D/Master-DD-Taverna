@@ -29,7 +29,7 @@ python launch.py start    # API :8000 + frontend :8501 + browser
 
 1. **YAML validity**: tutti i `.txt` devono parsare con `yaml.safe_load` (i test NON parsano i moduli — verifica manuale puntuale; i `.md` non sono YAML e non devono esserlo)
 2. **Reindice RAG**: `tools/index_rag.py --include-local`
-3. **Test**: `python launch.py test` → TUTTE LE VERIFICHE OK prima di committare
+3. **Test**: `python launch.py test` → TUTTE LE VERIFICHE OK prima di committare (include il **gate oracolo**: sonda-noncompetenza di pathmaster-dd sul corpus build, rossa sopra le soglie in `data/oracolo-gate.json` — SALTATO con avviso se il checkout pathmaster non esiste; dipende dalla patch `SONDA_OUT`, pathmaster PR #253)
 4. **Handoff**: aggiornare `sessione-2026-07-16/HANDOFF_ATTIVO.md` ai cambi significativi
 
 ## Vincoli
