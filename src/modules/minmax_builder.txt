@@ -1,6 +1,6 @@
 module_name: MinMax Builder
-version: 5.3
-last_updated: 2026-10-26T00:00:00.000Z
+version: 5.4
+last_updated: 2026-10-27T00:00:00.000Z
 inherits_from: base_profile.txt
 type: minmax
 file_binding: module://minmax_builder # Riferimento interno; accedi via API protetta (GET /modules/minmax_builder.txt con x-api-key)
@@ -1340,7 +1340,7 @@ commands:
       - tipo
       - provenienza
     action:
-      - if: '{{ link in [f.link for f in build_state.fonti_meta] }}'
+      - if: '{{ link in (build_state.fonti_meta | map(attribute="link") | list) }}'
         then:
           - output: '⚠ Fonte meta già presente: {{link}} — non aggiunta.'
         else:
@@ -1448,8 +1448,8 @@ commands:
                     - equipment
                     - spells
               - if: >-
-                  {{ result and result.link not in [f.link for f in
-                  build_state.fonti_meta] }}
+                  {{ result and result.link not in (build_state.fonti_meta |
+                  map(attribute="link") | list) }}
                 then:
                   - set: local.level
                     value: '{{result.level or ''META_COMMUNITY''}}'
@@ -1610,7 +1610,7 @@ commands:
         value: '{{_hm}}'
       - set: build_state.benchmarks.risk_top3
         value: '{{_top3}}'
-      - output: "\U0001F525 Risk Heatmap\n• Feat: {{_hm.feats or {}} \n• Spell: {{_hm.spells or {}}}\n⭐ Top-3 (≥2): Feat → {{_top3.feats or []}} · Spell → {{_top3.spells or []}}\n➜ Usa /dpr_choice_loop per testare alternative su elementi ad alto rischio.\n"
+      - output: "\U0001F525 Risk Heatmap\n• Feat: {{_hm.feats or dict()}} \n• Spell: {{_hm.spells or dict()}}\n⭐ Top-3 (≥2): Feat → {{_top3.feats or []}} · Spell → {{_top3.spells or []}}\n➜ Usa /dpr_choice_loop per testare alternative su elementi ad alto rischio.\n"
   /set_profile:
     description: >-
       Imposta anagrafica base (allineamento/divinità/taglia/xp/lingue/punti

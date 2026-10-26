@@ -168,3 +168,32 @@ git status
 ---
 
 *Handoff generato il 2026-07-16. Sessione chiusa in attesa di ripresa.*
+
+---
+
+## 2026-10-27 — Cantiere 0: cura comprehension e dict vuoto nei moduli (ES1)
+
+**Cosa**: 5 referti G3 curati su moduli reali, pin G3 23 -> 18.
+- `minmax_builder.txt`: `/add_meta_source` e `/run_benchmark` — comprehension
+  Python in condizione `if` riscritte con `map(attribute="link") | list`
+  (robuste anche a fonti_meta assente); `/risk_heatmap` — `or {}` -> `or dict()`
+  (dict vuoto non parseggia in Jinja).
+- `Taverna_NPC.txt`: bank MaxDiff di `/quiz_start` e `/quiz_bestworst` —
+  comprehension spostata nel nuovo helper `Quiz.build_bank` (la comprehension
+  vive in Python, non nei template); le action ora chiamano il helper via
+  `call:` e passano `bank: "{{ bank }}"`.
+- `tests/test_dsl_interpreter.py`: pin G3 aggiornato a 18 (restano 13 @var@
+  state_machine + 5 doc brew meta_doc, fuori perimetro fino a decisione ES2).
+
+**Rituale**: YAML validity OK (loader), reindice RAG fatto
+(13509 chunk reference), pytest 731 passed + 8 skipped AMBIENTALI
+(7 clone PCGen assente, 1 LLM live opt-in) — atteso 0 skipped del verificatore
+NON raggiungibile su questa macchina, condizione preesistente.
+Suite DSL 22/22, legal_filter 24/24, smoke semantico quiz/add_meta_source/
+risk_heatmap verde.
+
+**Limite noto emerso** (scope ES2): `/quiz_bestworst` dopo il bank fallisce su
+`Mapping.from_maxdiff(MDS)` — helper dotted chiamato dentro un template Jinja:
+i nomi dotted non risolvono in Jinja. Gia' in scope ES2 ("helper dotted").
+
+**Per riprendere**: ES2 sessione per-modulo (`planning/2026-10-27-esecutore-dsl-es2-scope.md`).

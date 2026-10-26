@@ -1,6 +1,6 @@
 module_name: Taverna NPC
-version: 3.6
-last_updated: 2026-07-18
+version: 3.7
+last_updated: 2026-10-27
 type: module
 
 description: >
@@ -880,10 +880,15 @@ commands:
       - set: tavern_state.quiz.axes_scores
         value: {}
       # calcola subito il primo set da mostrare
+      - call: Quiz.build_bank
+        with:
+          sets: "{{ quiz.maxdiff_sets }}"
+          picks: "{{ tavern_state.quiz.picks }}"
+        return_as: bank
       - call: Quiz.select_next_cat_item
         with:
           posterior: "{{ tavern_state.quiz.axes_scores }}"
-          bank: "{{ [{'id': s.id, 'options': s.options, 'asked': 0} for s in quiz.maxdiff_sets] }}"
+          bank: "{{ bank }}"
         return_as: NEXT
       - output_template: ui_templates_quiz_pro.quiz_pro_maxdiff_card
 
@@ -911,10 +916,15 @@ commands:
         return_as: MDS
       - set: tavern_state.quiz.axes_scores
         value: "{{ Mapping.from_maxdiff(MDS) }}"
+      - call: Quiz.build_bank
+        with:
+          sets: "{{ quiz.maxdiff_sets }}"
+          picks: "{{ tavern_state.quiz.picks }}"
+        return_as: bank
       - call: Quiz.select_next_cat_item
         with:
           posterior: "{{ tavern_state.quiz.axes_scores }}"
-          bank: "{{ [{'id': s.id, 'options': s.options, 'asked': (1 if s.id in (tavern_state.quiz.picks | map(attribute='set') | list) else 0)} for s in quiz.maxdiff_sets] }}"
+          bank: "{{ bank }}"
         return_as: NEXT
       - if: "{{ (tavern_state.quiz.picks | length) >= (quiz.flow.maxdiff_to_pairwise or 2) }}"
         then:
@@ -2756,6 +2766,17 @@ helpers:
   # QUIZ PROFESSIONALE (helpers)
   # =========================
   Quiz:
+    # Bank MaxDiff per il CAT: una riga per set, asked=1 se gia' scelto.
+    # Cantiere 0: la comprehension vive in Python (helper), non in Jinja.
+    build_bank:
+      params: [sets, picks]
+      logic: |
+        asked = {p.get('set') for p in (picks or [])}
+        return [
+            {'id': s.get('id'), 'options': s.get('options'),
+             'asked': 1 if s.get('id') in asked else 0}
+            for s in (sets or [])
+        ]
     # MaxDiff: punteggi grezzi per opzione (best +1, worst -1)
     maxdiff_score:
       params: [sets, picks]
