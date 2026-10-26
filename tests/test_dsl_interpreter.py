@@ -123,13 +123,11 @@ def test_copertura_comandi(kernel: Kernel, tmp_path):
 
 
 # ---- G3 statico: compile logic + parse template ----
-# Lista nominale pinna i 23 referti attesi (misura 2026-10-26): sono fuori
-# dai percorsi eseguiti da ES1 — documentazione brew (meta_doc), mini-lingua
-# @var@ dello state_machine e condizioni con comprehension python dei moduli
-# (latenti, mai eseguite dal modello; fix modulo = fuori scope D2).
+# Lista nominale pinna i 18 referti attesi (misura 2026-10-27, cantiere 0):
+# documentazione brew di meta_doc (5) e mini-lingua @var@ dello state_machine
+# di Taverna_NPC (13) — fuori perimetro fino a decisione ES2. Le comprehension
+# Python (4) e il dict vuoto di /risk_heatmap sono stati curati in cantiere 0.
 G3_PIN = {
-    'Taverna_NPC.txt: commands./quiz_bestworst <set_id> best="<opzione>" worst="<opzione>".action[3].with.bank',
-    "Taverna_NPC.txt: commands./quiz_start.action[6].with.bank",
     "Taverna_NPC.txt: state_machine.GameMode.BackgroundTraits.items.actions[1].params.gp",
     "Taverna_NPC.txt: state_machine.GameMode.BackgroundTraits.traits.guards[0].condition",
     "Taverna_NPC.txt: state_machine.GameMode.BackgroundTraits.traits.when",
@@ -148,9 +146,6 @@ G3_PIN = {
     "meta_doc.txt: commands./render_brew_example.action[0].cases[14].do[0].output",
     "meta_doc.txt: commands./render_brew_example.action[0].cases[15].do[0].output",
     "meta_doc.txt: commands./render_brew_example.action[0].cases[17].do[0].output",
-    "minmax_builder.txt: commands./add_meta_source.action[0].if",
-    "minmax_builder.txt: commands./risk_heatmap.action[4].output",
-    "minmax_builder.txt: commands./run_benchmark.action[3].then[2].actions[2].if",
 }
 
 
