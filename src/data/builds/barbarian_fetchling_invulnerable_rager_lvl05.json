@@ -71,7 +71,7 @@
       "classi": [
         {
           "nome": "Barbarian",
-          "livelli": 1,
+          "livelli": 5,
           "archetipi": [
             "Invulnerable Rager"
           ]
@@ -86,7 +86,7 @@
         "CAR": 8,
         "attacco": "+4",
         "danni": "1d8+3",
-        "ca": 13
+        "ca": 18
       },
       "statistiche_chiave": {
         "attacco": "+4",
@@ -116,7 +116,8 @@
       },
       "skill_points": 20,
       "talenti": [
-        "Colpo possente"
+        "Colpo possente",
+        "Iniziativa migliorata"
       ],
       "capacita_classe": [
         "Addestramento marziale",
@@ -125,7 +126,8 @@
         "Tecnica distintiva Invulnerable Rager"
       ],
       "equipaggiamento": [
-        "Arma preferita"
+        "Arma preferita",
+        "Armatura leggera"
       ],
       "inventario": [
         "Arma preferita",
@@ -1000,5 +1002,21 @@
       "checkpoint": 1,
       "source": "barbarian_fetchling_invulnerable_rager"
     }
-  ]
+  ],
+  "_normalized": {
+    "fusioneArchivio": {
+      "livello": {
+        "da": 1,
+        "a": 5
+      },
+      "statistiche": "dal blocco archiviato",
+      "talenti": {
+        "da": 1,
+        "a": 2
+      },
+      "equipaggiamentoAggiunto": [
+        "Armatura leggera"
+      ]
+    }
+  }
 }

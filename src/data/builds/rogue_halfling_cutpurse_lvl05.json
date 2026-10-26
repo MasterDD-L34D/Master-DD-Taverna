@@ -74,7 +74,7 @@
       "classi": [
         {
           "nome": "Rogue",
-          "livelli": 1,
+          "livelli": 5,
           "archetipi": [
             "Cutpurse"
           ]
@@ -87,9 +87,9 @@
         "INT": 14,
         "SAG": 10,
         "CAR": 8,
-        "attacco": "+6 (pugnale) / +5 (fionda)",
-        "danni": "1d4+2 (pugnale) / 1d3+2 (fionda)",
-        "ca": 16
+        "attacco": "+11/+11 (pugnali)",
+        "danni": "1d4+4 (pugnale) +3d6 furtivo",
+        "ca": 21
       },
       "statistiche_chiave": {
         "attacco": "+6 (pugnale) / +5 (fionda)",
@@ -128,7 +128,12 @@
       },
       "skill_points": 50,
       "talenti": [
-        "Skill Focus (Sleight of Hand)"
+        "Skill Focus (Sleight of Hand)",
+        "Arma accurata",
+        "Arma focalizzata (pugnale)",
+        "Combattere con due armi",
+        "Schivare",
+        "Schivare prodigioso"
       ],
       "capacita_classe": [
         "Attacco furtivo +1d6",
@@ -137,7 +142,11 @@
         "Percepire trappole +1"
       ],
       "equipaggiamento": [
-        "Armatura di cuoio borchiato"
+        "Armatura di cuoio borchiato",
+        "Anello di protezione +1",
+        "Attrezzi da scasso di qualità",
+        "Cappa elfica grigia",
+        "Cintura dell'agilità +2"
       ],
       "inventario": [
         "Armatura di cuoio borchiato",
@@ -145,7 +154,15 @@
         "Fionda con 20 proiettili",
         "Kit da avventuriero",
         "Pozione di cura x2",
-        "Pugnale bilanciato"
+        "Pugnale bilanciato",
+        "Anello di protezione +1",
+        "Cappa elfica grigia",
+        "Cintura dell'agilità +2",
+        "Giaco di maglia ombreggiato",
+        "Guanti da ladro",
+        "Mantello della resistenza +1",
+        "Pugnale +1",
+        "Pugnale masterwork"
       ],
       "slot_incantesimi": "Non incantatore",
       "ac_breakdown": {
@@ -1078,5 +1095,34 @@
       "checkpoint": 1,
       "source": "rogue_halfling_cutpurse"
     }
-  ]
+  ],
+  "_normalized": {
+    "fusioneArchivio": {
+      "livello": {
+        "da": 1,
+        "a": 5
+      },
+      "statistiche": "dal blocco archiviato",
+      "talenti": {
+        "da": 1,
+        "a": 6
+      },
+      "equipaggiamentoAggiunto": [
+        "Anello di protezione +1",
+        "Attrezzi da scasso di qualità",
+        "Cappa elfica grigia",
+        "Cintura dell'agilità +2"
+      ],
+      "inventarioAggiunto": [
+        "Anello di protezione +1",
+        "Cappa elfica grigia",
+        "Cintura dell'agilità +2",
+        "Giaco di maglia ombreggiato",
+        "Guanti da ladro",
+        "Mantello della resistenza +1",
+        "Pugnale +1",
+        "Pugnale masterwork"
+      ]
+    }
+  }
 }

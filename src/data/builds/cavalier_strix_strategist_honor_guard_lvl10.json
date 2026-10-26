@@ -357,7 +357,7 @@
       "classi": [
         {
           "nome": "Cavalier",
-          "livelli": 1,
+          "livelli": 10,
           "archetipi": [
             "Strategist",
             "Honor Guard"
@@ -365,15 +365,15 @@
         }
       ],
       "statistiche": {
-        "FOR": 17,
-        "DES": 13,
-        "COS": 14,
+        "FOR": 22,
+        "DES": 16,
+        "COS": 18,
         "INT": 12,
-        "SAG": 10,
-        "CAR": 12,
-        "attacco": "+6",
-        "danni": "lancia lunga 1d8+6",
-        "ca": 12
+        "SAG": 12,
+        "CAR": 10,
+        "attacco": "+21",
+        "danni": "3d8+30 (carica volante)",
+        "ca": 34
       },
       "statistiche_chiave": {
         "attacco": "+6",
@@ -402,7 +402,9 @@
       ],
       "equipaggiamento": [
         "Lancia da cavalleria",
-        "Armatura lamellare"
+        "Armatura lamellare",
+        "Lancia pesante volante",
+        "Armatura a scaglie strix"
       ],
       "ledger_movimenti": [
         {
@@ -546,5 +548,18 @@
   "citation": {
     "sources": [],
     "reference_urls": []
+  },
+  "_normalized": {
+    "fusioneArchivio": {
+      "livello": {
+        "da": 1,
+        "a": 10
+      },
+      "statistiche": "dal blocco archiviato",
+      "equipaggiamentoAggiunto": [
+        "Lancia pesante volante",
+        "Armatura a scaglie strix"
+      ]
+    }
   }
 }

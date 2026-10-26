@@ -73,22 +73,22 @@
       "classi": [
         {
           "nome": "Gunslinger",
-          "livelli": 1,
+          "livelli": 5,
           "archetipi": [
             "Gun Tank"
           ]
         }
       ],
       "statistiche": {
-        "FOR": 13,
-        "DES": 17,
+        "FOR": 14,
+        "DES": 20,
         "COS": 14,
         "INT": 10,
-        "SAG": 14,
+        "SAG": 12,
         "CAR": 8,
-        "attacco": "+6",
-        "danni": "1d12+4",
-        "ca": 14
+        "attacco": "+13",
+        "danni": "1d12+11",
+        "ca": 26
       },
       "benchmarks": {
         "meta_tier": "T3"
@@ -111,7 +111,11 @@
         "Musket pesante forgiato in mithral",
         "Buckler rinforzato Gun Tank",
         "Corazza lamellare alata (custom per volo strix)",
-        "Cartucce alchemiche e mirino telescopico leggero"
+        "Cartucce alchemiche e mirino telescopico leggero",
+        "Musket pesante in mithral con baionetta a scatto",
+        "Scudo torre pieghevole per difese aeree",
+        "Corazza lamellare +1 con cinghie aerodinamiche",
+        "Cartucce concussive e polvere nera raffinata"
       ],
       "equipment_summary": {
         "peso_totale": "medio",
@@ -593,5 +597,20 @@
       "local-refresh"
     ],
     "reference_urls": []
+  },
+  "_normalized": {
+    "fusioneArchivio": {
+      "livello": {
+        "da": 1,
+        "a": 5
+      },
+      "statistiche": "dal blocco archiviato",
+      "equipaggiamentoAggiunto": [
+        "Musket pesante in mithral con baionetta a scatto",
+        "Scudo torre pieghevole per difese aeree",
+        "Corazza lamellare +1 con cinghie aerodinamiche",
+        "Cartucce concussive e polvere nera raffinata"
+      ]
+    }
   }
 }

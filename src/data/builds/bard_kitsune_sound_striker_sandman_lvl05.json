@@ -102,7 +102,7 @@
       "classi": [
         {
           "nome": "Bard",
-          "livelli": 1,
+          "livelli": 5,
           "archetipi": [
             "Sound Striker",
             "Sandman"
@@ -111,15 +111,15 @@
       ],
       "razza": "Kitsune",
       "statistiche": {
-        "FOR": 8,
-        "DES": 14,
-        "COS": 13,
+        "FOR": 10,
+        "DES": 18,
+        "COS": 12,
         "INT": 12,
         "SAG": 10,
-        "CAR": 18,
-        "attacco": "+5",
-        "danni": "lira sonica 1d6+CAR",
-        "ca": 13
+        "CAR": 20,
+        "attacco": "+9",
+        "danni": "ululato sonico 2d6+CAR",
+        "ca": 21
       },
       "hp": {
         "totali": 38,
@@ -147,12 +147,18 @@
         }
       },
       "talenti": [
-        "Focalizzazione Abilità: Intrattenere"
+        "Focalizzazione Abilità: Intrattenere",
+        "Melodic Casting",
+        "Lingering Performance",
+        "Focus: Suoni di Sabbia"
       ],
       "equipaggiamento": [
         "lira accordata",
         "mantello dell'ombra kitsune",
-        "dagger"
+        "dagger",
+        "cornamusa sonica",
+        "mantello elusivo",
+        "anello di protezione +1"
       ],
       "benchmarks": {
         "meta_tier": "T3",
@@ -237,7 +243,8 @@
         "data": "2026-07-27",
         "livello": 5,
         "decisione": "31 -> 25pb, CAR primaria bard. Difetto latente: 3 talenti su 1; tenuta Focalizzazione Abilità: Intrattenere (Skill Focus Perform, centrale, nessun prereq); droppati Armonia Letale (Sound Striker) e Scacciare Sogni (Sandman): prereq Perform 5/3 gradi, illegali al lv1 (reintegrabili a lv5/lv3)"
-      }
+      },
+      "default_armor_by_class": true
     },
     "sheet_markdown": "### Kitsune Bard (Sound Striker + Sandman) — Livello 1\nFocus su danni sonici e debuff di sonno/illusione."
   },
@@ -707,5 +714,27 @@
   "citation": {
     "sources": [],
     "reference_urls": []
+  },
+  "_normalized": {
+    "fusioneArchivio": {
+      "livello": {
+        "da": 1,
+        "a": 5
+      },
+      "statistiche": "dal blocco archiviato",
+      "talenti": {
+        "da": 1,
+        "a": 4
+      },
+      "equipaggiamentoAggiunto": [
+        "cornamusa sonica",
+        "mantello elusivo",
+        "anello di protezione +1"
+      ]
+    },
+    "defaultArmorByClass": {
+      "from": "comportamento implicito del converter fino al 2026-08-19",
+      "reason": "la build non dichiara ne armatura ne categoria: la stima di classe era applicata in silenzio"
+    }
   }
 }

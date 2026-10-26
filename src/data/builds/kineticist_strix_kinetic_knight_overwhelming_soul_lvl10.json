@@ -72,7 +72,7 @@
       "classi": [
         {
           "nome": "Kineticist",
-          "livelli": 1,
+          "livelli": 10,
           "archetipi": [
             "Kinetic Knight",
             "Overwhelming Soul"
@@ -81,14 +81,14 @@
       ],
       "statistiche": {
         "FOR": 12,
-        "DES": 16,
-        "COS": 13,
+        "DES": 22,
+        "COS": 14,
         "INT": 10,
-        "SAG": 10,
-        "CAR": 16,
-        "attacco": "+6",
-        "danni": "lancia di forza 2d6+6",
-        "ca": 14
+        "SAG": 12,
+        "CAR": 20,
+        "attacco": "+19",
+        "danni": "blast doppio 6d6+26",
+        "ca": 31
       },
       "statistiche_chiave": {
         "attacco": "+6",
@@ -128,7 +128,8 @@
       "equipaggiamento": [
         "Lancia di forza cinetica",
         "Corazza di piastre leggermente rinforzata",
-        "Scudo pesante in adamantio"
+        "Scudo pesante in adamantio",
+        "Mantello resistente +3"
       ],
       "ledger_movimenti": [
         {
@@ -584,5 +585,17 @@
   "citation": {
     "sources": [],
     "reference_urls": []
+  },
+  "_normalized": {
+    "fusioneArchivio": {
+      "livello": {
+        "da": 1,
+        "a": 10
+      },
+      "statistiche": "dal blocco archiviato",
+      "equipaggiamentoAggiunto": [
+        "Mantello resistente +3"
+      ]
+    }
   }
 }

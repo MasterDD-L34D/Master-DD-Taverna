@@ -72,7 +72,7 @@
       "classi": [
         {
           "nome": "Witch",
-          "livelli": 1,
+          "livelli": 10,
           "archetipi": [
             "Gravewalker",
             "Hedge Witch"
@@ -81,14 +81,14 @@
       ],
       "statistiche": {
         "FOR": 8,
-        "DES": 14,
-        "COS": 12,
-        "INT": 18,
+        "DES": 18,
+        "COS": 14,
+        "INT": 22,
         "SAG": 12,
-        "CAR": 10,
-        "attacco": "+3",
-        "danni": "raggio di gelo + hex",
-        "ca": 13
+        "CAR": 14,
+        "attacco": "+13",
+        "danni": "cone of cold 10d6+10",
+        "ca": 22
       },
       "statistiche_chiave": {
         "attacco": "+3",
@@ -135,7 +135,10 @@
       "equipaggiamento": [
         "Feticcio necromantico",
         "Mantello del vento",
-        "Grimoire di spine"
+        "Grimoire di spine",
+        "Feticcio necromantico maggiore",
+        "Mantello del vento tempestoso",
+        "Libro degli incantesimi runico avanzato"
       ],
       "ledger_movimenti": [
         {
@@ -171,7 +174,8 @@
         "data": "2026-07-27",
         "livello": 10,
         "decisione": "34 -> 24pb, INT primaria witch (sylph +2 DES/+2 INT)"
-      }
+      },
+      "default_armor_by_class": true
     }
   },
   "body_params": {
@@ -605,5 +609,23 @@
   "citation": {
     "sources": [],
     "reference_urls": []
+  },
+  "_normalized": {
+    "fusioneArchivio": {
+      "livello": {
+        "da": 1,
+        "a": 10
+      },
+      "statistiche": "dal blocco archiviato",
+      "equipaggiamentoAggiunto": [
+        "Feticcio necromantico maggiore",
+        "Mantello del vento tempestoso",
+        "Libro degli incantesimi runico avanzato"
+      ]
+    },
+    "defaultArmorByClass": {
+      "from": "comportamento implicito del converter fino al 2026-08-19",
+      "reason": "la build non dichiara ne armatura ne categoria: la stima di classe era applicata in silenzio"
+    }
   }
 }

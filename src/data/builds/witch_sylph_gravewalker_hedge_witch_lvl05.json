@@ -72,7 +72,7 @@
       "classi": [
         {
           "nome": "Witch",
-          "livelli": 1,
+          "livelli": 5,
           "archetipi": [
             "Gravewalker",
             "Hedge Witch"
@@ -81,14 +81,14 @@
       ],
       "statistiche": {
         "FOR": 8,
-        "DES": 14,
+        "DES": 18,
         "COS": 12,
-        "INT": 18,
+        "INT": 20,
         "SAG": 12,
-        "CAR": 10,
-        "attacco": "+3",
-        "danni": "raggio di gelo + hex",
-        "ca": 13
+        "CAR": 14,
+        "attacco": "+8",
+        "danni": "snowball 5d6+5",
+        "ca": 20
       },
       "statistiche_chiave": {
         "attacco": "+3",
@@ -135,7 +135,9 @@
       "equipaggiamento": [
         "Feticcio necromantico",
         "Mantello del vento",
-        "Grimoire di spine"
+        "Grimoire di spine",
+        "Mantello del vento leggero",
+        "Libro degli incantesimi runico"
       ],
       "ledger_movimenti": [
         {
@@ -171,7 +173,8 @@
         "data": "2026-07-27",
         "livello": 5,
         "decisione": "34 -> 24pb, INT primaria witch (sylph +2 DES/+2 INT)"
-      }
+      },
+      "default_armor_by_class": true
     }
   },
   "body_params": {
@@ -605,5 +608,22 @@
   "citation": {
     "sources": [],
     "reference_urls": []
+  },
+  "_normalized": {
+    "fusioneArchivio": {
+      "livello": {
+        "da": 1,
+        "a": 5
+      },
+      "statistiche": "dal blocco archiviato",
+      "equipaggiamentoAggiunto": [
+        "Mantello del vento leggero",
+        "Libro degli incantesimi runico"
+      ]
+    },
+    "defaultArmorByClass": {
+      "from": "comportamento implicito del converter fino al 2026-08-19",
+      "reason": "la build non dichiara ne armatura ne categoria: la stima di classe era applicata in silenzio"
+    }
   }
 }

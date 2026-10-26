@@ -71,22 +71,22 @@
       "classi": [
         {
           "nome": "Ranger",
-          "livelli": 1,
+          "livelli": 10,
           "archetipi": [
             "Skirmisher"
           ]
         }
       ],
       "statistiche": {
-        "FOR": 14,
-        "DES": 17,
-        "COS": 13,
+        "FOR": 16,
+        "DES": 14,
+        "COS": 14,
         "INT": 10,
-        "SAG": 14,
+        "SAG": 12,
         "CAR": 8,
         "attacco": "+4",
         "danni": "1d8+3",
-        "ca": 14
+        "ca": 18
       },
       "statistiche_chiave": {
         "attacco": "+4",
@@ -116,7 +116,8 @@
       },
       "skill_points": 60,
       "talenti": [
-        "Iniziativa migliorata"
+        "Iniziativa migliorata",
+        "Colpo possente"
       ],
       "capacita_classe": [
         "Addestramento marziale",
@@ -125,7 +126,8 @@
         "Tecnica distintiva Skirmisher"
       ],
       "equipaggiamento": [
-        "Arma preferita"
+        "Arma preferita",
+        "Armatura leggera"
       ],
       "inventario": [
         "Arma preferita",
@@ -1003,5 +1005,21 @@
       "checkpoint": 1,
       "source": "ranger_halfelf_skirmisher"
     }
-  ]
+  ],
+  "_normalized": {
+    "fusioneArchivio": {
+      "livello": {
+        "da": 1,
+        "a": 10
+      },
+      "statistiche": "dal blocco archiviato",
+      "talenti": {
+        "da": 1,
+        "a": 2
+      },
+      "equipaggiamentoAggiunto": [
+        "Armatura leggera"
+      ]
+    }
+  }
 }

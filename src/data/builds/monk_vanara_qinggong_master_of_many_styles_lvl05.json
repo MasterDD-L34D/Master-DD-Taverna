@@ -85,7 +85,7 @@
       "classi": [
         {
           "nome": "Monk",
-          "livelli": 1,
+          "livelli": 5,
           "archetipi": [
             "Qinggong",
             "Master of Many Styles"
@@ -93,18 +93,18 @@
         }
       ],
       "statistiche": {
-        "FOR": 14,
-        "DES": 16,
+        "FOR": 16,
+        "DES": 18,
         "COS": 12,
         "INT": 10,
         "SAG": 16,
         "CAR": 8,
-        "attacco": "+5",
-        "danni": "1d8+3",
-        "ca": 15,
-        "tempra": 4,
-        "riflessi": 5,
-        "volonta": 5
+        "attacco": "+11",
+        "danni": "2d6+8",
+        "ca": 22,
+        "tempra": 6,
+        "riflessi": 8,
+        "volonta": 7
       },
       "statistiche_chiave": {
         "attacco": "+5",
@@ -159,7 +159,10 @@
         }
       ],
       "equipaggiamento": [
-        "Kama bilanciati"
+        "Kama bilanciati",
+        "Amuleto dell'armatura naturale +1",
+        "Stivali del salto del vento",
+        "Handwraps +1 con Furious Focus"
       ],
       "ledger_movimenti": [
         {
@@ -199,7 +202,17 @@
       "sheet_markdown": "# \n\nTiri Salvezza:** Temp 4 / Riflessi 5 / Volontà 5\n\n**BAB:** 0 | **Iniziativa:** 4 | **Velocità:** 9\n\nStatistiche:\n**For** 14 (mod 2)\n**Des** 16 (mod 3)\n**Cos** 12 (mod 1)\n**Int** 10 (mod 0)\n**Sag** 16 (mod 3)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Acrobazia\n- Furtività\n\nEquipaggiamento:\n- Kama bilanciati\n- Corazza di seta\n- Cintura dell'agilità\n\nLedger:\n- Donazione al monastero\n- Ricompensa duello rituale\n- Equipaggiamento iniziale\n- Ricompensa per scouting su canopia",
       "talenti": [
         "Scorpion Style",
-        "Dodge"
+        "Dodge",
+        "Tiger Style",
+        "Crane Style",
+        "Mobility",
+        "Power Attack",
+        "Tiger Claws",
+        "Dragon Style",
+        "Crane Wing",
+        "Tiger Style + Crane Style",
+        "Dodge + Mobility",
+        "Power Attack + Tiger Claws"
       ],
       "capacita_classe": [
         "Flurry of Blows",
@@ -302,7 +315,8 @@
         "data": "2026-07-27",
         "livello": 5,
         "decisione": "4 talenti su 2 consentiti (1 base + 1 bonus monk). SOSTITUZIONE: Tiger Style -> Scorpion Style (stile coerente col concept Master of Many Styles; prereq Improved Unarmed Strike concesso dal monk; Tiger Style richiede Acrobatics 3 gradi, illegale al lv1); Crane Style -> Dodge (prereq DES 13 ok; Crane richiede Acrobatics 2 gradi, illegale al lv1; Dodge ne resta prerequisito per il reintegro ai livelli successivi); droppata la voce combinata 'Tiger Style + Crane Style' (assente dal catalogo: non un talento)"
-      }
+      },
+      "default_armor_by_class": true
     }
   },
   "narrative": "Vanara acrobata addestrato nei monasteri delle Scimmie Nascoste; combina le sostituzioni Qinggong con gli stili multipli del Master of Many Styles per alternare Tiger/Crane, controllare il terreno con passi di ki e colpire in salto i bersagli chiave.",
@@ -1047,5 +1061,27 @@
       "checkpoint": 1,
       "source": "monk_vanara_qinggong_master_of_many_styles"
     }
-  ]
+  ],
+  "_normalized": {
+    "fusioneArchivio": {
+      "livello": {
+        "da": 1,
+        "a": 5
+      },
+      "statistiche": "dal blocco archiviato",
+      "talenti": {
+        "da": 2,
+        "a": 12
+      },
+      "equipaggiamentoAggiunto": [
+        "Amuleto dell'armatura naturale +1",
+        "Stivali del salto del vento",
+        "Handwraps +1 con Furious Focus"
+      ]
+    },
+    "defaultArmorByClass": {
+      "from": "comportamento implicito del converter fino al 2026-08-19",
+      "reason": "la build non dichiara ne armatura ne categoria: la stima di classe era applicata in silenzio"
+    }
+  }
 }

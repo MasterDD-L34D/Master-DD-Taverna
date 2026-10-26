@@ -73,7 +73,7 @@
       "classi": [
         {
           "nome": "Gunslinger",
-          "livelli": 1,
+          "livelli": 5,
           "archetipi": [
             "Pistolero",
             "Bolt Ace"
@@ -82,14 +82,14 @@
       ],
       "statistiche": {
         "FOR": 12,
-        "DES": 18,
-        "COS": 13,
+        "DES": 20,
+        "COS": 14,
         "INT": 10,
-        "SAG": 14,
-        "CAR": 8,
-        "attacco": "+7",
-        "danni": "1d8+5",
-        "ca": 15
+        "SAG": 12,
+        "CAR": 10,
+        "attacco": "+12",
+        "danni": "1d8+13",
+        "ca": 22
       },
       "benchmarks": {
         "meta_tier": "T3"
@@ -638,5 +638,14 @@
       "local-refresh"
     ],
     "reference_urls": []
+  },
+  "_normalized": {
+    "fusioneArchivio": {
+      "livello": {
+        "da": 1,
+        "a": 5
+      },
+      "statistiche": "dal blocco archiviato"
+    }
   }
 }

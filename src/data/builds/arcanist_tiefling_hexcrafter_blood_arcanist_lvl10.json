@@ -73,7 +73,7 @@
       "classi": [
         {
           "nome": "Arcanist",
-          "livelli": 1,
+          "livelli": 10,
           "archetipi": [
             "Hexcrafter",
             "Blood Arcanist"
@@ -83,13 +83,13 @@
       "statistiche": {
         "FOR": 10,
         "DES": 14,
-        "COS": 12,
-        "INT": 18,
+        "COS": 14,
+        "INT": 22,
         "SAG": 12,
         "CAR": 8,
-        "attacco": "+4",
-        "danni": "raggio di gelo 1d3+INT",
-        "ca": 13
+        "attacco": "+9",
+        "danni": "raggio occulto 3d6+INT",
+        "ca": 18
       },
       "statistiche_chiave": {
         "attacco": "+4",
@@ -149,7 +149,11 @@
       },
       "notes": "Profilo aggiornato con doppi archetipi sinergici e slot flessibili per hex + magie di sangue.",
       "talenti": [
-        "Spell Focus (maledizioni)"
+        "Spell Focus (maledizioni)",
+        "Accuratezza Magica",
+        "Metamagia Rapida",
+        "Spell Focus (necromanzia)",
+        "Raggi Potenziati"
       ],
       "capacita_classe": [
         "Arcane Reservoir",
@@ -159,12 +163,15 @@
       ],
       "equipaggiamento": [
         "Bastone scuro con rune",
-        "Mantello da apprendista"
+        "Mantello da apprendista",
+        "Mantello di resistenza +1",
+        "Anello di protezione +1"
       ],
       "inventario": [
         "Componenti arcane",
         "Diario di formula arcanist",
-        "Pozione di cura moderata"
+        "Pozione di cura moderata",
+        "Pozione di invisibilità"
       ],
       "magia": {
         "0": [
@@ -239,7 +246,8 @@
         "data": "2026-07-27",
         "livello": 10,
         "decisione": "tenuto Spell Focus (maledizioni) (centrale: hex del hexcrafter); droppato Accuratezza Magica (accessorio)"
-      }
+      },
+      "default_armor_by_class": true
     }
   },
   "narrative": {
@@ -789,5 +797,29 @@
   "citation": {
     "sources": [],
     "reference_urls": []
+  },
+  "_normalized": {
+    "fusioneArchivio": {
+      "livello": {
+        "da": 1,
+        "a": 10
+      },
+      "statistiche": "dal blocco archiviato",
+      "talenti": {
+        "da": 1,
+        "a": 5
+      },
+      "equipaggiamentoAggiunto": [
+        "Mantello di resistenza +1",
+        "Anello di protezione +1"
+      ],
+      "inventarioAggiunto": [
+        "Pozione di invisibilità"
+      ]
+    },
+    "defaultArmorByClass": {
+      "from": "comportamento implicito del converter fino al 2026-08-19",
+      "reason": "la build non dichiara ne armatura ne categoria: la stima di classe era applicata in silenzio"
+    }
   }
 }
