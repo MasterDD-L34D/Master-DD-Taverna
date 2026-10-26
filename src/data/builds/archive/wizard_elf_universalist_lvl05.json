@@ -123,12 +123,10 @@
         "Privilegio 5"
       ],
       "equipaggiamento": [
-        "Arma preferita",
-        "Armatura leggera"
+        "Arma preferita"
       ],
       "inventario": [
         "Arma preferita",
-        "Armatura leggera",
         "Kit da avventuriero",
         "Pozione di cura x2"
       ],
@@ -279,7 +277,7 @@
         "1": 4,
         "2": 3
       },
-      "sheet_markdown": "# \n\nTiri Salvezza:** Temp 4 / Riflessi 3 / Volontà 4\n\n**BAB:** 0 | **Iniziativa:** 2 | **Velocità:** 9\n\nStatistiche:\n**For** 16 (mod 3)\n**Des** 14 (mod 2)\n**Cos** 14 (mod 2)\n**Int** 10 (mod 0)\n**Sag** 12 (mod 1)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Percezione\n\nEquipaggiamento:\n- Arma preferita\n- Armatura leggera\n\nLedger:\n- Equipaggiamento iniziale\n- Ricompensa missione",
+      "sheet_markdown": "# \n\nTiri Salvezza:** Temp 4 / Riflessi 3 / Volontà 4\n\n**BAB:** 0 | **Iniziativa:** 2 | **Velocità:** 9\n\nStatistiche:\n**For** 16 (mod 3)\n**Des** 14 (mod 2)\n**Cos** 14 (mod 2)\n**Int** 10 (mod 0)\n**Sag** 12 (mod 1)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Percezione\n\nEquipaggiamento:\n- Arma preferita\n\nLedger:\n- Equipaggiamento iniziale\n- Ricompensa missione",
       "print_mode": false,
       "show_minmax": true,
       "show_vtt": true,
@@ -312,7 +310,7 @@
     }
   },
   "narrative": "Elf Universalist pronta/o per il campo, specializzata/o in tattiche da Wizard.",
-  "sheet": "# \n\nTiri Salvezza:** Temp 4 / Riflessi 3 / Volontà 4\n\n**BAB:** 0 | **Iniziativa:** 2 | **Velocità:** 9\n\nStatistiche:\n**For** 16 (mod 3)\n**Des** 14 (mod 2)\n**Cos** 14 (mod 2)\n**Int** 10 (mod 0)\n**Sag** 12 (mod 1)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Percezione\n\nEquipaggiamento:\n- Arma preferita\n- Armatura leggera\n\nLedger:\n- Equipaggiamento iniziale\n- Ricompensa missione",
+  "sheet": "# \n\nTiri Salvezza:** Temp 4 / Riflessi 3 / Volontà 4\n\n**BAB:** 0 | **Iniziativa:** 2 | **Velocità:** 9\n\nStatistiche:\n**For** 16 (mod 3)\n**Des** 14 (mod 2)\n**Cos** 14 (mod 2)\n**Int** 10 (mod 0)\n**Sag** 12 (mod 1)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Percezione\n\nEquipaggiamento:\n- Arma preferita\n\nLedger:\n- Equipaggiamento iniziale\n- Ricompensa missione",
   "ledger": {
     "movimenti": [
       {
@@ -459,12 +457,10 @@
             "Privilegio 5"
           ],
           "equipaggiamento": [
-            "Arma preferita",
-            "Armatura leggera"
+            "Arma preferita"
           ],
           "inventario": [
             "Arma preferita",
-            "Armatura leggera",
             "Kit da avventuriero",
             "Pozione di cura x2"
           ],
@@ -615,7 +611,7 @@
             "1": 4,
             "2": 3
           },
-          "sheet_markdown": "# \n\nTiri Salvezza:** Temp 4 / Riflessi 3 / Volontà 4\n\n**BAB:** 0 | **Iniziativa:** 2 | **Velocità:** 9\n\nStatistiche:\n**For** 16 (mod 3)\n**Des** 14 (mod 2)\n**Cos** 14 (mod 2)\n**Int** 10 (mod 0)\n**Sag** 12 (mod 1)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Percezione\n\nEquipaggiamento:\n- Arma preferita\n- Armatura leggera\n\nLedger:\n- Equipaggiamento iniziale\n- Ricompensa missione",
+          "sheet_markdown": "# \n\nTiri Salvezza:** Temp 4 / Riflessi 3 / Volontà 4\n\n**BAB:** 0 | **Iniziativa:** 2 | **Velocità:** 9\n\nStatistiche:\n**For** 16 (mod 3)\n**Des** 14 (mod 2)\n**Cos** 14 (mod 2)\n**Int** 10 (mod 0)\n**Sag** 12 (mod 1)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Percezione\n\nEquipaggiamento:\n- Arma preferita\n\nLedger:\n- Equipaggiamento iniziale\n- Ricompensa missione",
           "print_mode": false,
           "show_minmax": true,
           "show_vtt": true,
@@ -727,12 +723,10 @@
           "Privilegio 5"
         ],
         "equipaggiamento": [
-          "Arma preferita",
-          "Armatura leggera"
+          "Arma preferita"
         ],
         "inventario": [
           "Arma preferita",
-          "Armatura leggera",
           "Kit da avventuriero",
           "Pozione di cura x2"
         ],
@@ -883,7 +877,7 @@
           "1": 4,
           "2": 3
         },
-        "sheet_markdown": "# \n\nTiri Salvezza:** Temp 4 / Riflessi 3 / Volontà 4\n\n**BAB:** 0 | **Iniziativa:** 2 | **Velocità:** 9\n\nStatistiche:\n**For** 16 (mod 3)\n**Des** 14 (mod 2)\n**Cos** 14 (mod 2)\n**Int** 10 (mod 0)\n**Sag** 12 (mod 1)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Percezione\n\nEquipaggiamento:\n- Arma preferita\n- Armatura leggera\n\nLedger:\n- Equipaggiamento iniziale\n- Ricompensa missione",
+        "sheet_markdown": "# \n\nTiri Salvezza:** Temp 4 / Riflessi 3 / Volontà 4\n\n**BAB:** 0 | **Iniziativa:** 2 | **Velocità:** 9\n\nStatistiche:\n**For** 16 (mod 3)\n**Des** 14 (mod 2)\n**Cos** 14 (mod 2)\n**Int** 10 (mod 0)\n**Sag** 12 (mod 1)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Percezione\n\nEquipaggiamento:\n- Arma preferita\n\nLedger:\n- Equipaggiamento iniziale\n- Ricompensa missione",
         "print_mode": false,
         "show_minmax": true,
         "show_vtt": true,
@@ -916,7 +910,7 @@
       }
     },
     "narrative": "Elf Universalist pronta/o per il campo, specializzata/o in tattiche da Wizard.",
-    "sheet": "# \n\nTiri Salvezza:** Temp 4 / Riflessi 3 / Volontà 4\n\n**BAB:** 0 | **Iniziativa:** 2 | **Velocità:** 9\n\nStatistiche:\n**For** 16 (mod 3)\n**Des** 14 (mod 2)\n**Cos** 14 (mod 2)\n**Int** 10 (mod 0)\n**Sag** 12 (mod 1)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Percezione\n\nEquipaggiamento:\n- Arma preferita\n- Armatura leggera\n\nLedger:\n- Equipaggiamento iniziale\n- Ricompensa missione",
+    "sheet": "# \n\nTiri Salvezza:** Temp 4 / Riflessi 3 / Volontà 4\n\n**BAB:** 0 | **Iniziativa:** 2 | **Velocità:** 9\n\nStatistiche:\n**For** 16 (mod 3)\n**Des** 14 (mod 2)\n**Cos** 14 (mod 2)\n**Int** 10 (mod 0)\n**Sag** 12 (mod 1)\n**Car** 8 (mod -1)\n\nCompetenze:\n- Percezione\n\nEquipaggiamento:\n- Arma preferita\n\nLedger:\n- Equipaggiamento iniziale\n- Ricompensa missione",
     "ledger": {
       "movimenti": [
         {
@@ -1076,5 +1070,25 @@
       "checkpoint": 5,
       "source": "wizard_elf_universalist"
     }
-  ]
+  ],
+  "_normalized": {
+    "curaArmaturaStub": {
+      "voce_rimossa": "Armatura leggera",
+      "da": [
+        "src/data/builds/archive/wizard_elf_universalist_lvl05.json: composite.build.export.sheet_payload.equipaggiamento",
+        "src/data/builds/archive/wizard_elf_universalist_lvl05.json: composite.build.export.sheet_payload.inventario",
+        "src/data/builds/archive/wizard_elf_universalist_lvl05.json: composite.build.export.sheet_payload.sheet_markdown (markdown)",
+        "src/data/builds/archive/wizard_elf_universalist_lvl05.json: composite.build.sheet_payload.equipaggiamento",
+        "src/data/builds/archive/wizard_elf_universalist_lvl05.json: composite.build.sheet_payload.inventario",
+        "src/data/builds/archive/wizard_elf_universalist_lvl05.json: composite.build.sheet_payload.sheet_markdown (markdown)",
+        "src/data/builds/archive/wizard_elf_universalist_lvl05.json: composite.sheet (markdown)",
+        "src/data/builds/archive/wizard_elf_universalist_lvl05.json: export.sheet_payload.equipaggiamento",
+        "src/data/builds/archive/wizard_elf_universalist_lvl05.json: export.sheet_payload.inventario",
+        "src/data/builds/archive/wizard_elf_universalist_lvl05.json: export.sheet_payload.sheet_markdown (markdown)",
+        "src/data/builds/archive/wizard_elf_universalist_lvl05.json: sheet (markdown)"
+      ],
+      "motivo": "fallback stub inventava armatura per classe non competente (PR #545)",
+      "verifica": "liste equip/inventario identiche all'output attuale di build_stub_payload"
+    }
+  }
 }
