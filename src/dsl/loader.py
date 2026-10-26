@@ -72,8 +72,11 @@ class Kernel:
                 self.helper_compile_errors.append(f"{name}: {exc!r}")
 
     def helper_funcs(self, g: dict) -> dict[str, Any]:
-        return {n: g[h["py"]] for n, h in self.helpers.items()
-                if "py" in h and callable(g.get(h["py"]))}
+        return {
+            n: g[h["py"]]
+            for n, h in self.helpers.items()
+            if "py" in h and callable(g.get(h["py"]))
+        }
 
     def static_check(self) -> dict[str, list[str]]:
         """G3: compile di ogni logic + parse di ogni stringa template."""
@@ -105,8 +108,9 @@ def _walk_templates(node: Any, env: Any, prefix: str = "") -> Iterator[str]:
             yield from _walk_templates(v, env, f"{prefix}[{i}]")
 
 
-def load_kernel(modules_dir: Path, kernel_name: str = "base_profile.txt",
-                only: tuple[str, ...] = ()) -> Kernel:
+def load_kernel(
+    modules_dir: Path, kernel_name: str = "base_profile.txt", only: tuple[str, ...] = ()
+) -> Kernel:
     """Carica kernel + moduli. ``only`` limita i moduli extra (replay
     per-modulo: evita collisioni di nome comando tra moduli diversi)."""
     k = Kernel()
@@ -126,7 +130,8 @@ def load_kernel(modules_dir: Path, kernel_name: str = "base_profile.txt",
             k.commands[name] = spec
         for key, val in data.items():  # dati top-level (meta_reference, ecc.)
             if key in ("commands", "helpers", "functions") or (
-                    isinstance(val, dict) and "template" in key):
+                isinstance(val, dict) and "template" in key
+            ):
                 continue
             k.data[key] = val
         for key in ("helpers", "functions"):

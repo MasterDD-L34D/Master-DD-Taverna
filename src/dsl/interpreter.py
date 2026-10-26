@@ -60,8 +60,9 @@ def _none_safe(env: Any) -> None:
             value = (_attr(x, attribute) for x in value)
         return sum(value)
 
-    env.filters.update(length=length, count=length, join=join,
-                       map=map_filter, sum=sum_filter)
+    env.filters.update(
+        length=length, count=length, join=join, map=map_filter, sum=sum_filter
+    )
 
 
 class DslAbort(Exception):
@@ -101,35 +102,99 @@ class _NativeNoneUndefined(jinja2.Undefined):
         return ""
 
 
-ESEGUIBILI = frozenset({
-    "set", "append", "extend", "clear", "copy", "increment", "update_dict",
-    "if", "when", "foreach", "for", "switch", "set_mode",
-    "output", "output_template",
-    "call", "compute", "command", "call_command", "route",
-    "parse_json", "find_in", "guard_all", "error", "abort",
-})
+ESEGUIBILI = frozenset(
+    {
+        "set",
+        "append",
+        "extend",
+        "clear",
+        "copy",
+        "increment",
+        "update_dict",
+        "if",
+        "when",
+        "foreach",
+        "for",
+        "switch",
+        "set_mode",
+        "output",
+        "output_template",
+        "call",
+        "compute",
+        "command",
+        "call_command",
+        "route",
+        "parse_json",
+        "find_in",
+        "guard_all",
+        "error",
+        "abort",
+    }
+)
 
 # ES1: no-op dichiarati (ES2 = sessione/flow; dominio = ES3; RAG = banco)
-NO_OP = frozenset({
-    "input", "export", "emit_event", "goto_state", "save_session",
-    "load_session", "list_session_keys", "replace_placeholder", "roll",
-    "match", "match_any", "invoke", "search_meta_sources",
-    "find_in_list", "find_and_consume_item", "find_and_update_item",
-    "run_qagates", "cross_reference_class",
-    # dominio Encounter_Designer / benchmark (ES3 o mai)
-    "generate_enemies_from_biome", "compute_xp_budget_estimate",
-    "compute_effective_cr_from_enemies", "classify_balance_label",
-    "estimate_party_benchmarks", "estimate_enemy_benchmarks",
-    "detect_risks", "build_buylist", "analyze_meta_results",
-    "build_risk_heatmap", "build_top_risks",
-})
+NO_OP = frozenset(
+    {
+        "input",
+        "export",
+        "emit_event",
+        "goto_state",
+        "save_session",
+        "load_session",
+        "list_session_keys",
+        "replace_placeholder",
+        "roll",
+        "match",
+        "match_any",
+        "invoke",
+        "search_meta_sources",
+        "find_in_list",
+        "find_and_consume_item",
+        "find_and_update_item",
+        "run_qagates",
+        "cross_reference_class",
+        # dominio Encounter_Designer / benchmark (ES3 o mai)
+        "generate_enemies_from_biome",
+        "compute_xp_budget_estimate",
+        "compute_effective_cr_from_enemies",
+        "classify_balance_label",
+        "estimate_party_benchmarks",
+        "estimate_enemy_benchmarks",
+        "detect_risks",
+        "build_buylist",
+        "analyze_meta_results",
+        "build_risk_heatmap",
+        "build_top_risks",
+    }
+)
 
-STRUCTURAL = frozenset({
-    "value", "with", "then", "else", "actions", "do", "cases", "when",
-    "loop_as", "return_as", "as", "to", "from", "where", "equals", "input",
-    "key", "append_values", "on_fail", "requires", "passthrough", "by",
-    "logic",
-})
+STRUCTURAL = frozenset(
+    {
+        "value",
+        "with",
+        "then",
+        "else",
+        "actions",
+        "do",
+        "cases",
+        "when",
+        "loop_as",
+        "return_as",
+        "as",
+        "to",
+        "from",
+        "where",
+        "equals",
+        "input",
+        "key",
+        "append_values",
+        "on_fail",
+        "requires",
+        "passthrough",
+        "by",
+        "logic",
+    }
+)
 
 _BUILTINS = {}
 
@@ -138,10 +203,29 @@ def _builtins() -> dict[str, Any]:
     if not _BUILTINS:
         import builtins
 
-        for name in ("str", "int", "float", "len", "any", "all", "sum",
-                     "max", "min", "sorted", "round", "list", "dict", "set",
-                     "tuple", "enumerate", "zip", "range", "reversed",
-                     "abs", "bool"):
+        for name in (
+            "str",
+            "int",
+            "float",
+            "len",
+            "any",
+            "all",
+            "sum",
+            "max",
+            "min",
+            "sorted",
+            "round",
+            "list",
+            "dict",
+            "set",
+            "tuple",
+            "enumerate",
+            "zip",
+            "range",
+            "reversed",
+            "abs",
+            "bool",
+        ):
             _BUILTINS[name] = getattr(builtins, name)
     return _BUILTINS
 
@@ -151,9 +235,18 @@ class Interpreter:
         self.kernel = kernel
         self.state: dict[str, Any] = {
             root: {}
-            for root in ("build_state", "local", "runtime", "benchmarks",
-                         "loot_state", "tavern_state", "encounter_state",
-                         "story_state", "doc_state", "qa_result")
+            for root in (
+                "build_state",
+                "local",
+                "runtime",
+                "benchmarks",
+                "loot_state",
+                "tavern_state",
+                "encounter_state",
+                "story_state",
+                "doc_state",
+                "qa_result",
+            )
         }
         self.scratch: dict[str, Any] = {}
         self.output_log: list[str] = []
@@ -301,8 +394,9 @@ class Interpreter:
 
     def _v_increment(self, a, params, depth):
         path = a["increment"]
-        set_path(self.state, path, (get_path(self.state, path) or 0)
-                 + int(a.get("by") or 1))
+        set_path(
+            self.state, path, (get_path(self.state, path) or 0) + int(a.get("by") or 1)
+        )
 
     def _v_update_dict(self, a, params, depth):
         path = a["update_dict"]
@@ -345,7 +439,9 @@ class Interpreter:
     def _v_switch(self, a, params, depth):
         value = self._rn(a["switch"], params)
         for case in a.get("cases") or []:
-            if isinstance(case, dict) and str(self._rn(case.get("when"), params)) == str(value):
+            if isinstance(case, dict) and str(
+                self._rn(case.get("when"), params)
+            ) == str(value):
                 self._run_actions(case.get("do") or [], params, depth)
                 return
 
@@ -355,17 +451,23 @@ class Interpreter:
     def _v_output_template(self, a, params, depth):
         name = a["output_template"]
         if "{{" in name or "{%" in name:  # template inline, non un nome
-            self.output_log.append(self._std.from_string(name).render(self._ctx(params, output=True)))
+            self.output_log.append(
+                self._std.from_string(name).render(self._ctx(params, output=True))
+            )
             return
         tmpl = self.kernel.templates.get(name)
         if tmpl is None:
             raise DslAbort(f"template mancante: {name}")
-        self.output_log.append(self._std.from_string(tmpl).render(self._ctx(params, output=True)))
+        self.output_log.append(
+            self._std.from_string(tmpl).render(self._ctx(params, output=True))
+        )
 
     def _v_call(self, a, params, depth):
         fn = self._g.get(a["call"])
         if not callable(fn):
-            self.noop_log.append({"verb": f"call:{a['call']}", "motivo": "helper non compilato"})
+            self.noop_log.append(
+                {"verb": f"call:{a['call']}", "motivo": "helper non compilato"}
+            )
             return
         kwargs = {k: self._rn(v, params) for k, v in (a.get("with") or {}).items()}
         result = fn(**kwargs)
@@ -379,8 +481,9 @@ class Interpreter:
         set_path(self.state, a["compute"], self._g["__compute"]())
 
     def _v_command(self, a, params, depth):
-        self._dispatch_command(a.get("command") or a.get("route")
-                               or a.get("call_command"), depth)
+        self._dispatch_command(
+            a.get("command") or a.get("route") or a.get("call_command"), depth
+        )
 
     def _v_call_command(self, a, params, depth):
         self._dispatch_command(a.get("call_command") or a.get("command"), depth)
@@ -412,8 +515,14 @@ class Interpreter:
         lst = self._resolve(f.get("from"), params) or []
         where = f.get("where") or {}
         equals = self._rn(where.get("equals"), params)
-        found = next((it for it in lst
-                      if isinstance(it, dict) and it.get(where.get("field")) == equals), None)
+        found = next(
+            (
+                it
+                for it in lst
+                if isinstance(it, dict) and it.get(where.get("field")) == equals
+            ),
+            None,
+        )
         self.scratch[f["as"]] = found
 
     def _v_guard_all(self, a, params, depth):
@@ -430,19 +539,32 @@ class Interpreter:
     # -- report di copertura (G2) ----------------------------------------
 
     def coverage_report(self) -> dict[str, Any]:
-        report: dict[str, Any] = {"totale": 0, "eseguibile": 0, "no_op": 0,
-                                  "no_op_cmds": [], "errore": []}
+        report: dict[str, Any] = {
+            "totale": 0,
+            "eseguibile": 0,
+            "no_op": 0,
+            "no_op_cmds": [],
+            "errore": [],
+        }
         for name, cmd in self.kernel.commands.items():
             report["totale"] += 1
             verbs: set[str] = set()
             self._collect_verbs(cmd.get("action") or [], verbs)
             unknown = verbs - ESEGUIBILI - NO_OP
-            missing_tmpl = [t for t in self._templates_in(cmd.get("action") or [])
-                            if t not in self.kernel.templates]
+            missing_tmpl = [
+                t
+                for t in self._templates_in(cmd.get("action") or [])
+                if t not in self.kernel.templates
+            ]
             if unknown or missing_tmpl:
                 report["errore"].append(
-                    {"comando": name, "verbi_sconosciuti": sorted(unknown),
-                     "template_mancanti": missing_tmpl, "origin": cmd.get("origin")})
+                    {
+                        "comando": name,
+                        "verbi_sconosciuti": sorted(unknown),
+                        "template_mancanti": missing_tmpl,
+                        "origin": cmd.get("origin"),
+                    }
+                )
             elif verbs & NO_OP:
                 report["no_op"] += 1
                 report["no_op_cmds"].append(name)
@@ -458,7 +580,9 @@ class Interpreter:
                 if key in ESEGUIBILI or key in NO_OP:
                     verbs.add(key)
                 elif key not in STRUCTURAL:
-                    verbs.add(key)  # candidato sconosciuto: la classificazione lo rivela
+                    verbs.add(
+                        key
+                    )  # candidato sconosciuto: la classificazione lo rivela
             for key in ("then", "else", "actions", "do"):
                 if isinstance(action.get(key), list):
                     self._collect_verbs(action[key], verbs)
