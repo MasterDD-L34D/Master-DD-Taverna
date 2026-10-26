@@ -1,6 +1,6 @@
 module_name: MinMax Builder
-version: 5.3
-last_updated: 2026-10-26T00:00:00.000Z
+version: 5.4
+last_updated: 2026-10-27T00:00:00.000Z
 inherits_from: base_profile.txt
 type: minmax
 file_binding: module://minmax_builder # Riferimento interno; accedi via API protetta (GET /modules/minmax_builder.txt con x-api-key)
