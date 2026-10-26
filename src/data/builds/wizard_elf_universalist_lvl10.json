@@ -129,7 +129,6 @@
       ],
       "inventario": [
         "Arma preferita",
-        "Armatura leggera",
         "Kit da avventuriero",
         "Pozione di cura x2"
       ],
@@ -443,7 +442,6 @@
           ],
           "inventario": [
             "Arma preferita",
-            "Armatura leggera",
             "Kit da avventuriero",
             "Pozione di cura x2"
           ],
@@ -679,7 +677,6 @@
         ],
         "inventario": [
           "Arma preferita",
-          "Armatura leggera",
           "Kit da avventuriero",
           "Pozione di cura x2"
         ],
@@ -1000,5 +997,17 @@
       "checkpoint": 1,
       "source": "wizard_elf_universalist"
     }
-  ]
+  ],
+  "_normalized": {
+    "curaArmaturaStub": {
+      "voce_rimossa": "Armatura leggera",
+      "da": [
+        "src/data/builds/wizard_elf_universalist_lvl10.json: composite.build.export.sheet_payload.inventario",
+        "src/data/builds/wizard_elf_universalist_lvl10.json: composite.build.sheet_payload.inventario",
+        "src/data/builds/wizard_elf_universalist_lvl10.json: export.sheet_payload.inventario"
+      ],
+      "motivo": "fallback stub inventava armatura per classe non competente (PR #545)",
+      "verifica": "liste equip/inventario identiche all'output attuale di build_stub_payload"
+    }
+  }
 }
