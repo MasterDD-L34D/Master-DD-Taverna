@@ -48,9 +48,9 @@ Verifica a valle: sonda-noncompetenza su corpus Taverna attesa **8 → 4 ko**
 e launch.py test verde. Attenzione al rituale AGENTS.md (pytest e' lento,
 ~4,5 min; gli 8 skipped ML sono ambientali).
 
-### P13-3 — vincoli nel modulo minmax_builder (generazione futura)
+### P13-3 — vincoli nel modulo minmax_builder (generazione futura) ✅ FATTA (2026-10-26)
 
-Tre patch puntuali a `src/modules/minmax_builder.txt` (poi reindice RAG):
+Tre vincoli in `constraints:` (versione 5.3), poi reindice RAG eseguita:
 1. **Checklist competenza equipaggiamento**: prima di `/add_item` di
    armature/scudi, verifica competenza classe+archetipo+talenti; se non
    competente, dichiarare il ko nella build invece di inserire in silenzio
