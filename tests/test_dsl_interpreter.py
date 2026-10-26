@@ -6,12 +6,13 @@ Replay deterministico di comandi reali di minmax_builder + copertura G2
 
 import copy
 import json
+import re
 from pathlib import Path
 
 import pytest
 
 from src.dsl.loader import Kernel, load_kernel
-from src.dsl.interpreter import Interpreter
+from src.dsl.interpreter import DslAbort, Interpreter
 
 MODULES = Path(__file__).resolve().parent.parent / "src" / "modules"
 
@@ -156,8 +157,133 @@ G3_PIN = {
 def test_g3_statico(kernel: Kernel):
     esiti = kernel.static_check()
     assert esiti["logic_errori"] == [], esiti["logic_errori"][:5]
-    prefissi = {t.split(": TemplateSyntaxError")[0] for t in esiti["template_errori"]}
-    assert prefissi == G3_PIN, (
-        f"nuovi referti non pinna: {sorted(prefissi - G3_PIN)[:5]}; "
-        f"scomparsi: {sorted(G3_PIN - prefissi)[:5]}"
+    # BASSA-13: pin normalizzato — gli indici degli array non contano
+    # (fix modulo che sposta una action non deve far saltare il gate);
+    # vige il vincolo "nessun referto nuovo e conteggio non cresce"
+    # (evita il treadmill da indici senza perdere la segnalazione).
+    norm = lambda s: re.sub(r"\[\d+\]", "[]", s)
+    pin = {norm(t) for t in G3_PIN}
+    prefissi = {
+        norm(t.split(": TemplateSyntaxError")[0]) for t in esiti["template_errori"]
+    }
+    assert prefissi <= pin, f"nuovi referti non pinna: {sorted(prefissi - pin)[:5]}"
+    assert len(esiti["template_errori"]) <= len(
+        G3_PIN
+    ), f"referti cresciuti: {len(esiti['template_errori'])} > {len(G3_PIN)}"
+
+
+# ---- difese (rilevi ALTA/MEDIA della review Claude su PR #550) ----
+# Kernel sintetici in tmp_path: load_kernel prende una directory, quindi
+# un mini modulo YAML basta per isolare ogni difesa.
+
+
+def _mini(tmp_path: Path, yaml_text: str) -> Kernel:
+    (tmp_path / "mini.txt").write_text(yaml_text, encoding="utf-8")
+    return load_kernel(tmp_path)
+
+
+RECURSIVI = """
+commands:
+  /a:
+    action: [{command: /b}]
+  /b:
+    action: [{command: /a}]
+"""
+
+
+def test_ricorsione_command_abortisce(tmp_path):
+    # ALTA-2: /a <-> /b devono abortire con DslAbort, non con RecursionError
+    with pytest.raises(DslAbort):
+        Interpreter(_mini(tmp_path, RECURSIVI)).run_command("/a")
+
+
+def test_helper_import_non_permesso(tmp_path):
+    # ALTA-1: la whitelist import deve mordere davvero (import os -> ImportError)
+    k = _mini(
+        tmp_path,
+        "helpers:\n  bad:\n    logic: |\n      import os\n      return 1\n"
+        "commands:\n  /go:\n    action: [{call: bad}]\n",
     )
+    with pytest.raises(ImportError):
+        Interpreter(k).run_command("/go")
+
+
+def test_helper_eval_negato(tmp_path):
+    # ALTA-1: senza builtins veri nel globals, eval non esiste -> NameError
+    k = _mini(
+        tmp_path,
+        "helpers:\n  bad:\n    logic: |\n      return eval('1+1')\n"
+        "commands:\n  /go:\n    action: [{call: bad}]\n",
+    )
+    with pytest.raises(NameError):
+        Interpreter(k).run_command("/go")
+
+
+def test_foreach_su_nome_scratch_e_stato(tmp_path):
+    # ALTA-3: foreach su nome senza punto risolve nello stato (non i caratteri)
+    k = _mini(
+        tmp_path,
+        "commands:\n  /go:\n    action:\n"
+        "      - set: items\n        value: [1, 2]\n"
+        "      - foreach: items\n        actions:\n"
+        "          - output: '{{ item }}'\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go")
+    assert it.output_log == ["1", "2"]
+
+
+def test_foreach_nome_mancante_evento_e_stato_intatto(tmp_path):
+    k = _mini(
+        tmp_path,
+        "commands:\n  /go:\n    action:\n"
+        "      - foreach: nome_mancante\n        actions:\n"
+        "          - set: build_state.colpito\n            value: 1\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go")
+    assert it.events and "foreach_non_risolto" in it.events[0]
+    assert "colpito" not in it.state["build_state"]
+
+
+def test_parse_json_in_scratch_e_foreach(tmp_path):
+    # ALTA-3: lo scratch e' consultato dal foreach (parse_json -> as -> loop)
+    k = _mini(
+        tmp_path,
+        "commands:\n  /go:\n    action:\n"
+        '      - parse_json: {input: \'[{"v": 1}, {"v": 2}]\', as: rows}\n'
+        "      - foreach: rows\n        actions:\n"
+        "          - output: '{{ item.v }}'\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go")
+    assert it.output_log == ["1", "2"]
+
+
+def test_action_dict_singolo_normalizzato(tmp_path):
+    # MEDIA-4: then: {command: /x} (dict invece di lista) non e' piu' silenzioso
+    k = _mini(
+        tmp_path,
+        "commands:\n  /go:\n    action:\n"
+        "      - if: '{{ 1 }}'\n        then: {command: /inner}\n"
+        "  /inner:\n    action: [{set: build_state.x, value: ok}]\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go")
+    assert it.state["build_state"]["x"] == "ok"
+
+
+def test_argomenti_posizionali_legati_e_extra_segnalati(tmp_path):
+    # MEDIA-5: /bench -q lega -q al primo param dichiarato; l'extra e' evento
+    k = _mini(
+        tmp_path,
+        "commands:\n  /inner:\n    params: [q]\n"
+        "    action: [{set: build_state.q, value: '{{ q }}'}]\n"
+        "  /bare:\n    action: [{output: x}]\n"
+        "  /go:\n    action:\n      - command: /inner -q\n"
+        "      - command: /bare extra\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go")
+    assert it.state["build_state"]["q"] == "-q"
+    assert any("argomento_posizionale_scolto" in e for e in it.events)

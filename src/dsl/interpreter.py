@@ -7,6 +7,7 @@ registrati in ``noop_log`` — mai silenziosi.
 
 from __future__ import annotations
 
+import builtins
 import copy as _copy
 import json
 import shlex
@@ -16,10 +17,20 @@ from typing import Any
 import jinja2
 from jinja2.nativetypes import NativeEnvironment
 
-from .loader import Kernel, _safe_import
+from .loader import DENIED_BUILTINS, Kernel, _safe_import
 from .state import get_path, set_path
 
 MAX_DEPTH = 8
+_MISSING = object()
+
+
+def _declared(cmd: dict, name: str) -> list[str]:
+    """Params del comando: lista dichiarata, altrimenti i placeholder
+    ``<...>`` del nome (comandi con firma nel nome, es. /quiz_bestworst)."""
+    p = cmd.get("params")
+    if p:
+        return p
+    return [t.strip("<>") for t in str(name).split()[1:] if t.startswith("<")]
 
 
 def _attr(value: Any, attribute: str) -> Any:
@@ -88,9 +99,9 @@ class LenientUndefined(jinja2.ChainableUndefined):
 
 
 class _NativeNoneUndefined(jinja2.Undefined):
-    """Env native per value/if: nomi liberi sconosciuti restano un errore
-    (typo = segnale), ma una chiave mancante su un dict esistente degrada a
-    None — nello stato del DSL 'assente' significa 'non ancora valorizzato'."""
+    """Env native per value/if: QUALUNQUE nome non risolto degrada a None —
+    typo inclusi (lo segnalano i gate G2/G3, non un crash a runtime).
+    'assente' nello stato del DSL significa 'non ancora valorizzato'."""
 
     def __getattr__(self, name: str) -> None:
         return None
@@ -252,7 +263,14 @@ class Interpreter:
         self.output_log: list[str] = []
         self.noop_log: list[dict[str, str]] = []
         self.events: list[dict[str, Any]] = []
-        self._g: dict[str, Any] = {"__import__": _safe_import, **_builtins()}
+        # ALTA-1 (review Claude): senza __builtins__ esplicito, Python
+        # inietta i builtin veri e la whitelist import e' teatro (eval/open
+        # esisterebbero lo stesso). Qui i builtin negati spariscono davvero.
+        safe_builtins = {
+            k: v for k, v in vars(builtins).items() if k not in DENIED_BUILTINS
+        }
+        safe_builtins["__import__"] = _safe_import  # import statement -> whitelist
+        self._g: dict[str, Any] = {"__builtins__": safe_builtins, **_builtins()}
         self._sync()
         kernel.bind_globals(self._g)
         self._native = NativeEnvironment(undefined=_NativeNoneUndefined)  # value/if
@@ -281,10 +299,10 @@ class Interpreter:
             return {k: v for k, v in d.items() if v is not None} if output else dict(d)
 
         ctx: dict[str, Any] = {}
-        for root in self.state.values():
+        ctx.update(clean(self.kernel.data))  # MEDIA-6: i dati del modulo
+        for root in self.state.values():  # cedono alle chiavi di stato
             if isinstance(root, dict):
                 ctx.update(clean(root))
-        ctx.update(clean(self.kernel.data))
         ctx.update(self.state)
         ctx.update(clean(self.scratch))
         ctx.update(clean(params))
@@ -316,9 +334,13 @@ class Interpreter:
         return self._std.from_string(value).render(self._ctx(params, output=True))
 
     def _resolve(self, ref: Any, params: dict) -> Any:
-        """Risolve un riferimento: template, poi path nello stato, poi dati modulo."""
+        """Risolve un riferimento: template, poi scratch, poi path nello
+        stato, poi dati modulo (ordine = precedenza del DSL)."""
         value = self._rn(ref, params)
-        if isinstance(value, str) and "." in value:
+        if isinstance(value, str):
+            head, _, rest = value.partition(".")
+            if head in self.scratch:  # ALTA-3: lo scratch prima dello stato
+                return _attr(self.scratch[head], rest) if rest else self.scratch[head]
             found = get_path(self.state, value, None)
             if found is not None:
                 return found
@@ -327,16 +349,22 @@ class Interpreter:
 
     # -- esecuzione comandi ----------------------------------------------
 
-    def run_command(self, name: str, **params: Any) -> None:
+    def run_command(self, name: str, _depth: int = 0, **params: Any) -> None:
         cmd = self.kernel.commands.get(name)
         if cmd is None:
             raise DslAbort(f"comando sconosciuto: {name}")
-        declared = cmd.get("params") or []
-        bound = {p: params.get(p) for p in declared}  # D8: mancanti -> None
-        self._run_actions(cmd.get("action") or [], bound, 0)
+        bound = {p: params.get(p) for p in _declared(cmd, name)}  # D8: mancanti -> None
+        snap = dict(self.scratch)
+        try:
+            self._run_actions(cmd.get("action") or [], bound, _depth)
+        finally:  # MEDIA-8: lo scratch di un comando non tracima al chiamante
+            self.scratch.clear()
+            self.scratch.update(snap)
         self._sync()
 
     def _run_actions(self, actions: list, params: dict, depth: int) -> None:
+        if isinstance(actions, dict):  # MEDIA-4: then: {command: /x} -> [dict]
+            actions = [actions]
         for action in actions or []:
             if not isinstance(action, dict):
                 continue
@@ -417,21 +445,53 @@ class Interpreter:
             self._run_actions(a.get("do") or [], params, depth)
 
     def _v_foreach(self, a, params, depth):
-        items = self._resolve(a["foreach"], params) or []
-        loop_as = a.get("loop_as") or "item"
-        for item in items:
-            self.scratch[loop_as] = item
-            self._run_actions(a.get("actions") or [], params, depth)
+        ref = a["foreach"]
+        items = self._resolve(ref, params)
+        if self._unresolved_foreach(ref, items):
+            return
+        self._loop(
+            items or [],
+            a.get("loop_as") or "item",
+            a.get("actions") or [],
+            params,
+            depth,
+        )
 
     def _v_for(self, a, params, depth):
         # forma: for: e in "{{ expr }}"  (+ do:)
         spec = str(a["for"])
         var, _, expr = spec.partition(" in ")
         var = var.strip()
-        items = self._resolve(expr.strip(), params) or []
-        for item in items:
-            self.scratch[var] = item
-            self._run_actions(a.get("do") or [], params, depth)
+        ref = expr.strip()
+        items = self._resolve(ref, params)
+        if self._unresolved_foreach(ref, items):
+            return
+        self._loop(items or [], var, a.get("do") or [], params, depth)
+
+    def _unresolved_foreach(self, ref: Any, items: Any) -> bool:
+        """ALTA-3: nome non risolto (stringa o None da nome nudo) = evento,
+        mai iterazione di caratteri e mai skip silenzioso. Un template che
+        rende None e' invece una collezione vuota legittima."""
+        if not isinstance(ref, str) or "{{" in ref or "{%" in ref:
+            return False
+        if isinstance(items, str) or items is None:
+            self.events.append({"foreach_non_risolto": ref[:80]})
+            return True
+        return False
+
+    def _loop(
+        self, items: Any, var: str, actions: list, params: dict, depth: int
+    ) -> None:
+        saved = self.scratch.get(var, _MISSING)
+        try:
+            for item in items:
+                self.scratch[var] = item
+                self._run_actions(actions, params, depth)
+        finally:  # ALTA-3: la var di loop non sopravvive al ciclo
+            if saved is _MISSING:
+                self.scratch.pop(var, None)
+            else:
+                self.scratch[var] = saved
 
     def _v_set_mode(self, a, params, depth):
         set_path(self.state, "runtime.mode", self._rn(a["set_mode"], params))
@@ -499,12 +559,29 @@ class Interpreter:
         tokens = shlex.split(spec)
         if not tokens:
             return
-        name, kv = tokens[0], {}
+        name = tokens[0]
+        if name not in self.kernel.commands:
+            # BASSA-13: nomi comando con firma ("/quiz_bestworst <set_id>"):
+            # il dizionario chiave per la stringa intera, il modello scrive
+            # il primo token -> prova il match sul primo token
+            name = next(
+                (n for n in self.kernel.commands if n.split(" ", 1)[0] == tokens[0]),
+                name,
+            )
+        cmd = self.kernel.commands.get(name) or {}
+        declared = _declared(cmd, name)
+        kv: dict[str, Any] = {}
+        pos = 0
         for tok in tokens[1:]:
             if "=" in tok:
                 k, v = tok.split("=", 1)
                 kv[k] = v
-        self.run_command(name, **kv)
+            elif pos < len(declared):  # MEDIA-5: posizionali sui params dichiarati
+                kv[declared[pos]] = tok
+                pos += 1
+            else:
+                self.events.append({"argomento_posizionale_scolto": tok[:60]})
+        self.run_command(name, _depth=depth + 1, **kv)  # ALTA-2: depth si propaga
 
     def _v_parse_json(self, a, params, depth):
         o = a["parse_json"]
@@ -573,6 +650,8 @@ class Interpreter:
         return report
 
     def _collect_verbs(self, actions: list, verbs: set) -> None:
+        if isinstance(actions, dict):  # MEDIA-4: dict singolo -> lista
+            actions = [actions]
         for action in actions or []:
             if not isinstance(action, dict):
                 continue
@@ -592,6 +671,8 @@ class Interpreter:
 
     def _templates_in(self, actions: list) -> list[str]:
         found: list[str] = []
+        if isinstance(actions, dict):  # MEDIA-4
+            actions = [actions]
         for action in actions or []:
             if isinstance(action, dict):
                 name = action.get("output_template")
@@ -600,4 +681,7 @@ class Interpreter:
                 for key in ("then", "else", "actions", "do"):
                     if isinstance(action.get(key), list):
                         found.extend(self._templates_in(action[key]))
+                for case in action.get("cases") or []:  # BASSA-10
+                    if isinstance(case, dict) and isinstance(case.get("do"), list):
+                        found.extend(self._templates_in(case["do"]))
         return found

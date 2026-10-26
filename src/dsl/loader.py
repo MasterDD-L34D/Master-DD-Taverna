@@ -19,7 +19,27 @@ from typing import Any, Iterator
 
 import yaml
 
-ALLOWED_IMPORTS = frozenset({"re", "random", "datetime", "math", "json"})
+ALLOWED_IMPORTS = frozenset({"re", "random", "datetime", "math", "json", "hashlib"})
+
+# builtins tolti ai helper: senza questi, open/eval/exec/globals non esistono
+# nel namespace dei logic: (i moduli sono fidati, ma un riferimento errato
+# a 'open' deve rompere forte, non aprire il file system)
+DENIED_BUILTINS = frozenset(
+    {
+        "open",
+        "exec",
+        "eval",
+        "compile",
+        "__import__",
+        "input",
+        "breakpoint",
+        "exit",
+        "quit",
+        "globals",
+        "locals",
+        "vars",
+    }
+)
 
 TEMPLATE_KEYS = ("ui_templates", "qa_templates", "export_templates")
 
