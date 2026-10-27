@@ -961,6 +961,23 @@ def test_load_e_list_vedono_save_di_altra_istanza(tmp_path):
     assert prima.list("build_") == ["build_Esterno"]
 
 
+def test_save_di_radice_stato_creata_dinamicamente(tmp_path):
+    # P2 review Codex #554 giro 6: forked_build (/fork_build) e forked
+    # (/fork_encounter) sono radici create dal comando stesso — _ctx le
+    # espone a render, lo skip statico non deve trattarle come non legate
+    k = _mini(
+        tmp_path,
+        "commands:\n  /go:\n    params: [variant_id]\n    action:\n"
+        "      - set: forked_build.variant_id\n        value: '{{ variant_id }}'\n"
+        "      - save_session:\n"
+        "          key: 'build_{{ variant_id }}'\n"
+        "          value: '{{ forked_build }}'\n",
+    )
+    port = FakePort()
+    Interpreter(k, port=port).run_command("/go", variant_id="variant1")
+    assert port.data == {"build_variant1": {"variant_id": "variant1"}}
+
+
 def test_valore_non_serializzabile_fallisce_esplicito(tmp_path):
     # ADR 009: mai str() silenzioso — evento e nessuna scrittura
     from src.dsl.store import JsonFilePort

@@ -503,11 +503,22 @@ class Interpreter:
         stato (il param ha precedenza concettuale, l'evento deve dire il
         vero); (2) nome libero non dichiarato e non in known/scratch/stato/
         params (contaminazione scratch, refusi). Un verbo mutante su questi
-        nomi e' no-op: scriverebbe un valore falso (None reso)."""
+        nomi e' no-op: scriverebbe un valore falso (None reso).
+
+        set(self.state) oltre a _known/_state_keys: le radici create
+        DINAMICAMENTE dai comandi (forked_build di /fork_build, forked di
+        /fork_encounter) vivono in self.state e _ctx le espone a render —
+        lo skip statico deve riconoscere cio' che il render risolve davvero
+        (review Codex P2 #554 giro 6)."""
         refs = _referenced_vars(node)
         liberi = refs - self._unbound
         return (refs & self._unbound) | (
-            liberi - self._known - self._state_keys() - set(self.scratch) - set(params)
+            liberi
+            - self._known
+            - set(self.state)
+            - self._state_keys()
+            - set(self.scratch)
+            - set(params)
         )
 
     def _guard_ctx(self, params: dict) -> dict:
