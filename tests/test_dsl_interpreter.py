@@ -1698,3 +1698,46 @@ commands:
     it.run_input("segreta")
     assert get_path(it.state, "game_mode.shared.hit") is None
     assert get_path(it.state, "game_mode.shared.preso") == "segreta"
+
+
+def test_run_input_command_params_game_mode_alias_e_omesso(tmp_path):
+    # Codex P2 #559 giro 5: '@GameMode.' normalizzato anche nell'analisi
+    # dei ref — sennò il parse fallisce, espone zero refs e il None reso
+    # aggira la protezione unbound del comando nested
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {suffix: ok}
+commands:
+  /outer: {action: [{command: /inner, params: {value: "{{ missing }}{{ @GameMode.shared.suffix }}"}}]}
+  /inner:
+    params: [value]
+    action:
+      - set: existing
+        value: "{{value}}"
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.state["existing"] = "salvato"
+    it.run_command("/outer")
+    assert it.state["existing"] == "salvato"
+
+
+def test_run_input_command_params_game_mode_alias_sano(tmp_path):
+    # controllo: params SOLO @GameMode. (senza nomi omessi) NON si droppa
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {money_gp: 25}
+commands:
+  /outer: {action: [{command: /inner, params: {value: "{{ @GameMode.shared.money_gp }}"}}]}
+  /inner:
+    params: [value]
+    action:
+      - set: existing
+        value: "{{value}}"
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/outer")
+    assert it.state["existing"] == 25

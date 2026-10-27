@@ -104,7 +104,10 @@ def _referenced_vars(node: Any) -> set:
     out: set = set()
     if isinstance(node, str):
         if "{{" in node or "{%" in node:
-            out |= _tmpl_exposed(node)
+            # Codex P2 #559 giro 5: normalizzato l'alias come in _rn —
+            # sennò '@GameMode.' e' errore di parse, espone zero refs e
+            # il None reso aggira la protezione unbound
+            out |= _tmpl_exposed(node.replace("@GameMode.", "GameMode."))
     elif isinstance(node, dict):
         for v in node.values():
             out |= _referenced_vars(v)
@@ -419,6 +422,7 @@ class Interpreter:
             | set(kernel.data)
             | {h.split(".")[0] for h in kernel.helpers}
             | set(self.state)
+            | {"GameMode"}  # ADR 014: alias di stato game_mode, sempre nel ctx
         )
         self._saltati: list[str] = []  # target/arg saltati nel frame corrente
         self._unbound: set[str] = set()  # params dichiarati-non passati (frame)
