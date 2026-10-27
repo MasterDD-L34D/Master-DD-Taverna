@@ -104,7 +104,10 @@ def _referenced_vars(node: Any) -> set:
     out: set = set()
     if isinstance(node, str):
         if "{{" in node or "{%" in node:
-            out |= _tmpl_exposed(node)
+            # Codex P2 #559 giro 5: normalizzato l'alias come in _rn —
+            # sennò '@GameMode.' e' errore di parse, espone zero refs e
+            # il None reso aggira la protezione unbound
+            out |= _tmpl_exposed(node.replace("@GameMode.", "GameMode."))
     elif isinstance(node, dict):
         for v in node.values():
             out |= _referenced_vars(v)
@@ -249,6 +252,8 @@ ESEGUIBILI = frozenset(
         "export",
         # ES2-b (ADR 012): goto_state — atterra + renderizza, validato
         "goto_state",
+        # ES3-2 (ADR 014): chiusura wizard come action (`- end: true`)
+        "end",
     }
 )
 
@@ -395,6 +400,16 @@ class Interpreter:
         }
         # ADR 010: porta export iniettata come la porta sessione (ADR 009)
         self.export_port = export_port if export_port is not None else ExportDirPort()
+        # ADR 014: stato condiviso GameMode = deepcopy di GameMode.shared
+        # (mai kernel.data: statico e condiviso tra interpreti). Target
+        # `@GameMode.` risolti qui via Interpreter._tp.
+        _gm_shared = (
+            kernel.data.get("state_machine", {}).get("GameMode", {}).get("shared")
+        )
+        if isinstance(_gm_shared, dict):
+            # Codex P1 #559: un livello `shared` — letture e scritture
+            # usano entrambe game_mode.shared.* (@GameMode.shared -> _tp)
+            self.state["game_mode"] = {"shared": _copy.deepcopy(_gm_shared)}
         self.scratch: dict[str, Any] = {}
         self.output_log: list[str] = []
         self.noop_log: list[dict[str, str]] = []
@@ -407,6 +422,7 @@ class Interpreter:
             | set(kernel.data)
             | {h.split(".")[0] for h in kernel.helpers}
             | set(self.state)
+            | {"GameMode"}  # ADR 014: alias di stato game_mode, sempre nel ctx
         )
         self._saltati: list[str] = []  # target/arg saltati nel frame corrente
         self._unbound: set[str] = set()  # params dichiarati-non passati (frame)
@@ -465,6 +481,9 @@ class Interpreter:
         # Gli skip restano statici e precedenti al render: qui non salvano.
         if not output:
             ctx.update(self._guards)
+        # ADR 014: alias GameMode per i template dei nodi wizard
+        # (@GameMode. normalizzato a GameMode. prima del render)
+        ctx["GameMode"] = self.state.get("game_mode") or {}
         ctx.update(clean(params))
         ctx.update(self.kernel.helper_funcs(self._g))
         return ctx
@@ -481,6 +500,8 @@ class Interpreter:
             return [self._rn(v, params) for v in value]
         if not isinstance(value, str) or ("{{" not in value and "{%" not in value):
             return value
+        if "@" in value:  # ADR 014: @GameMode. -> GameMode. (alias in ctx)
+            value = value.replace("@GameMode.", "GameMode.")
         result = self._native.from_string(value).render(self._ctx(params))
         return None if isinstance(result, jinja2.Undefined) else result
 
@@ -498,6 +519,8 @@ class Interpreter:
         """Render stringa (output/template): testo invariato."""
         if not isinstance(value, str):
             return str(value)
+        if "@" in value:  # ADR 014: alias @GameMode.
+            value = value.replace("@GameMode.", "GameMode.")
         return self._std.from_string(value).render(self._ctx(params, output=True))
 
     def _resolve(self, ref: Any, params: dict) -> Any:
@@ -565,6 +588,177 @@ class Interpreter:
             self._saltati.append(target)
             return True
         return False
+
+    # ---- Wizard input routing (ADR 014) --------------------------------
+
+    _MATCH_NO_ACTION = object()  # parse match senza entry-action (regex)
+
+    def run_input(self, text: str, _depth: int = 0) -> None:
+        """Input libero utente: se runtime.current_state punta a un nodo
+        wizard, match parse -> entry action -> guards -> node actions ->
+        next/end -> prompt. Il DSL resta sincrono: il game loop e'
+        dell'host (chi chiama run_input). Mai silenzioso."""
+        cur = get_path(self.state, "runtime.current_state")
+        if not isinstance(cur, str) or not cur or "." not in cur:
+            self.events.append({"input_fuori_wizard": str(text)[:80]})
+            return
+        head = cur.split(".", 1)[0]
+        sm = self.kernel.data.get("state_machine") or {}
+        node = get_path(sm, cur)  # i path wizard sono relativi a state_machine
+        if head != "GameMode" or not isinstance(node, dict):
+            self.events.append({"nodo_wizard_mancante": cur})
+            return
+        if text.startswith("/"):
+            head = text.split()[0]
+            known = head in self.kernel.commands or any(
+                n.split(" ", 1)[0] == head for n in self.kernel.commands
+            )
+            if known:
+                # Codex P2 #559 giro 3: l'input intero va al dispatcher —
+                # gli argomenti dopo il nome arrivano al comando (spec
+                # parser quote-aware), non si scarta tutto dopo il nome.
+                # Codex P1 #559 giro 7: render=False — l'input utente NON
+                # e' un template del repo: mai _rn (Jinja non sandboxed),
+                # gli argomenti restano letterali.
+                self._dispatch_command(text, _depth, {"input": text}, render=False)
+                return
+            # comando sconosciuto: il nodo lo consuma come testo (ES4
+            # aggiungera' il router davanti)
+        params: dict[str, Any] = {"input": text}
+        entry = self._match_parse(node.get("parse") or {}, text, params)
+        if entry is None:
+            self.events.append({"parse_non_riconosciuto": str(text)[:80], "nodo": cur})
+            return
+        if entry is not self._MATCH_NO_ACTION:
+            actions = entry if isinstance(entry, list) else [entry]
+            self._run_actions(actions, params, _depth)
+        for g in node.get("guards") or []:
+            if isinstance(g, dict) and not self._cond(g.get("condition"), params):
+                self.output_log.append(str(g.get("on_fail") or "guard fallita"))
+                return  # si resta sul nodo, nessuna azione/avanzamento
+        self._run_actions(node.get("actions") or [], params, _depth)
+        # Codex P2 #559: un'action (end/command/goto) puo' aver spostato
+        # lo stato: onorata, il next del nodo NON la sovrascrive
+        if get_path(self.state, "runtime.current_state") != cur:
+            return
+        nxt = node.get("next")
+        if node.get("end") or nxt in (None, ""):
+            set_path(self.state, "runtime.current_state", "IDLE")
+            return
+        self._advance(sm, cur, node, params, _depth + 1)
+
+    def _advance(self, sm: dict, cur: str, node: dict, params: dict, depth: int) -> None:
+        """Transizione di arrivo sul next del nodo. Prompt -> si ferma;
+        end -> actions all'arrivo poi IDLE; action-only (Codex P1 #559
+        giro 2) -> actions subito e avanzamento ricorsivo col suo next."""
+        if depth > 20:  # ponytail: guard profondita' contro cicli action-only
+            self.events.append({"avanzamento_profondita_max": cur})
+            return
+        nxt = node.get("next")
+        if nxt in (None, ""):
+            set_path(self.state, "runtime.current_state", "IDLE")
+            return
+        target = str(nxt)
+        if target.startswith("@"):
+            target = target[1:]
+        else:  # fratello: stesso tema, altro nodo
+            target = ".".join(cur.split(".")[:-1] + [target])
+        nnode = get_path(sm, target)
+        if not isinstance(nnode, dict):
+            self.events.append({"nodo_wizard_mancante": target})
+            return
+        if nnode.get("when") is not None and not self._cond(nnode.get("when"), params):
+            self.events.append({"wizard_guard_falso": target})
+            return  # si resta sul nodo corrente
+        # Codex P2 #559 giro 8: guard anche sul TEMA genitore — nei moduli
+        # reali (KingdomTurn, MassCombat) il when vive sul tema, non sul
+        # nodo entry; senza questo check il tema guardato esegue lo stesso
+        theme = get_path(sm, ".".join(target.split(".")[:-1]))
+        if (
+            isinstance(theme, dict)
+            and theme.get("when") is not None
+            and not self._cond(theme["when"], params)
+        ):
+            self.events.append({"wizard_guard_falso": target})
+            return
+        set_path(self.state, "runtime.current_state", target)
+        if nnode.get("prompt"):
+            self.output_log.append(self._rs(str(nnode["prompt"]), params))
+            return
+        if nnode.get("end"):
+            # nodo terminale: le actions girano all'arrivo, poi IDLE
+            self._run_actions(nnode.get("actions") or [], params, depth)
+            set_path(self.state, "runtime.current_state", "IDLE")
+            return
+        # nodo action-only: le actions girano all'arrivo, poi il suo next
+        self._run_actions(nnode.get("actions") or [], params, depth)
+        if get_path(self.state, "runtime.current_state") != target:
+            return  # action end/goto/command ha gia' spostato lo stato
+        self._advance(sm, target, nnode, params, depth + 1)
+
+    def _match_parse(self, parse: dict, text: str, params: dict) -> Any:
+        """Gerarchia ADR 014: map esatta > regex (ordine) > any/any_list.
+        Groups regex legati in params. None = nessun match."""
+        reserved = ("regex", "groups", "any", "any_list", "yes_no")
+        for key, action in parse.items():
+            if key in reserved:
+                continue
+            if str(key) == text:
+                # Codex P2 #559 giro 4: entry guardata — when falsa/non
+                # parsabile = non accettata, il match continua (catch-all)
+                if isinstance(action, dict) and "when" in action:
+                    w = self._cond(action["when"], params)
+                    if not w:
+                        continue
+                    # giro 6: la guardia e' metadata — tolta prima del
+                    # dispatch, sennò _dispatch invocherebbe _v_when sul
+                    # sibling set e l'ordine chiavi YAML deciderebbe tutto
+                    action = {k: v for k, v in action.items() if k != "when"}
+                return action
+        regex = parse.get("regex")
+        patterns = regex if isinstance(regex, list) else [regex] if regex else []
+        names = parse.get("groups") or []
+        for pattern in patterns:
+            m = re.match(str(pattern), text)
+            if m:
+                for i, gname in enumerate(names):
+                    if i + 1 <= (m.lastindex or 0):
+                        params[str(gname)] = m.group(i + 1)
+                return self._MATCH_NO_ACTION
+        if isinstance(parse.get("any_list"), dict):
+            spec = parse["any_list"]
+            sep = str(spec.get("sep") or ",")
+            params[str(spec.get("as") or "items")] = [
+                s.strip() for s in text.split(sep)
+            ]
+            return self._MATCH_NO_ACTION
+        yn = parse.get("yes_no")
+        if isinstance(yn, dict):
+            # Codex P1 #559: nodo portrait — sì/no legato come boolean
+            # al param dichiarato (key), consumato dalle actions via if
+            key = str(yn.get("key") or "yes_no")
+            t = text.strip().lower()
+            if t in ("sì", "si", "sí", "yes", "y", "true", "1"):
+                params[key] = True
+                return self._MATCH_NO_ACTION
+            if t in ("no", "n", "false", "0"):
+                params[key] = False
+                return self._MATCH_NO_ACTION
+            return None
+        if parse.get("any") is not None:
+            action = parse["any"]
+            # stessa guardia delle entry map: any con when falsa non consuma
+            if isinstance(action, dict) and "when" in action:
+                if not self._cond(action["when"], params):
+                    return None
+                return {k: v for k, v in action.items() if k != "when"}
+            return action
+        return None
+
+    def _v_end(self, a, params, depth):
+        # `- end: true` come action: chiude il wizard (node property end:
+        # gestita da run_input)
+        set_path(self.state, "runtime.current_state", "IDLE")
 
     def run_command(self, name: str, _depth: int = 0, **params: Any) -> None:
         cmd = self.kernel.commands.get(name)
@@ -644,8 +838,17 @@ class Interpreter:
             return
         self._set_target(target, self._rn(a.get("value"), params))
 
+    @staticmethod
+    def _tp(path: Any) -> Any:
+        """ADR 014: target `@GameMode.` -> root di stato `game_mode.`
+        (GameMode.shared vive in stato, mai in kernel.data statico)."""
+        if isinstance(path, str) and path.startswith("@GameMode."):
+            return "game_mode." + path[len("@GameMode.") :]
+        return path
+
     def _set_target(self, path: str, value: Any) -> None:
         # set su variabile di loop: "e.stato" muta l'item puntato, non lo stato
+        path = self._tp(path)
         head, _, rest = path.partition(".")
         if rest and isinstance(self.scratch.get(head), dict):
             set_path(self.scratch[head], rest, value)
@@ -653,7 +856,7 @@ class Interpreter:
         set_path(self.state, path, value)
 
     def _v_append(self, a, params, depth):
-        path = a["append"]
+        path = self._tp(a["append"])
         if self._skip_node(a.get("value"), str(path), params):
             return
         cur = get_path(self.state, path)
@@ -663,7 +866,7 @@ class Interpreter:
         cur.append(self._rn(a.get("value"), params))
 
     def _v_extend(self, a, params, depth):
-        path = a["extend"]
+        path = self._tp(a["extend"])
         if self._skip_node(a.get("value"), str(path), params):
             return
         cur = get_path(self.state, path)
@@ -674,19 +877,23 @@ class Interpreter:
         cur.extend(value if isinstance(value, list) else [value])
 
     def _v_clear(self, a, params, depth):
-        set_path(self.state, a["clear"], [])
+        set_path(self.state, self._tp(a["clear"]), [])
 
     def _v_copy(self, a, params, depth):
-        set_path(self.state, a["to"], _copy.deepcopy(get_path(self.state, a["copy"])))
+        set_path(
+            self.state,
+            self._tp(a["to"]),
+            _copy.deepcopy(get_path(self.state, self._tp(a["copy"]))),
+        )
 
     def _v_increment(self, a, params, depth):
-        path = a["increment"]
+        path = self._tp(a["increment"])
         set_path(
             self.state, path, (get_path(self.state, path) or 0) + int(a.get("by") or 1)
         )
 
     def _v_update_dict(self, a, params, depth):
-        path = a["update_dict"]
+        path = self._tp(a["update_dict"])
         if self._skip_node(a.get("key"), str(path), params) or self._skip_node(
             a.get("append_values"), str(path), params
         ):
@@ -713,7 +920,9 @@ class Interpreter:
 
     def _v_foreach(self, a, params, depth):
         ref = a["foreach"]
-        items = self._resolve(ref, params)
+        # Codex P2 #559 giro 2: i binding del parse (any_list ecc.) vivono
+        # in params — un nome nudo li trova prima di scratch/stato/kernel
+        items = params.get(ref) if str(ref) in params else self._resolve(ref, params)
         if self._unresolved_foreach(ref, items):
             return
         self._loop(
@@ -730,7 +939,7 @@ class Interpreter:
         var, _, expr = spec.partition(" in ")
         var = var.strip()
         ref = expr.strip()
-        items = self._resolve(ref, params)
+        items = params.get(ref) if ref in params else self._resolve(ref, params)
         if self._unresolved_foreach(ref, items):
             return
         self._loop(items or [], var, a.get("do") or [], params, depth)
@@ -787,10 +996,36 @@ class Interpreter:
         if motivo:
             self.events.append({"stato_non_valido": str(target)[:80], "motivo": motivo})
             return
-        set_path(self.state, "runtime.current_state", target)
         node = get_path(sm, target)  # flat -> None; dotted -> nodo wizard
+        if isinstance(node, dict):
+            # Codex P2 #559 giri 9-10: guard del nodo E del tema PRIMA di
+            # OGNI atterraggio goto (interattivo o action-only) — falso =
+            # wizard_guard_falso e si resta sul nodo corrente
+            if node.get("when") is not None and not self._cond(node["when"], params):
+                self.events.append({"wizard_guard_falso": target})
+                return
+            theme = get_path(sm, ".".join(target.split(".")[:-1]))
+            if (
+                isinstance(theme, dict)
+                and theme.get("when") is not None
+                and not self._cond(theme["when"], params)
+            ):
+                self.events.append({"wizard_guard_falso": target})
+                return
+        set_path(self.state, "runtime.current_state", target)
         if isinstance(node, dict) and node.get("prompt"):
             self.output_log.append(self._rs(node["prompt"], params))
+        elif isinstance(node, dict):
+            # Codex P2 #559 giro 7: atterraggio action-only via comando
+            # (/chase_start, /gamble) — le actions girano all'arrivo e si
+            # avanza (stesso _advance dei nodi end/action-only); depth+1
+            # contro self-goto e cicli action-only (mai RecursionError)
+            if depth + 1 > 20:
+                self.events.append({"avanzamento_profondita_max": target})
+                return
+            self._run_actions(node.get("actions") or [], params, depth + 1)
+            if get_path(self.state, "runtime.current_state") == target:
+                self._advance(sm, target, node, params, depth + 2)
 
     def _v_switch(self, a, params, depth):
         guards = self._guard_ctx(params)
@@ -909,9 +1144,29 @@ class Interpreter:
         set_path(self.state, a["compute"], self._g["__compute"]())
 
     def _v_command(self, a, params, depth):
-        self._dispatch_command(
-            a.get("command") or a.get("route") or a.get("call_command"), depth, params
-        )
+        extra: dict = {}
+        ap = a.get("params")
+        if isinstance(ap, dict) and ap:
+            # Codex P2 #559 giro 2 (end-to-end): i params dichiarati
+            # sull'action erano ignorati — il comando girava senza kwargs
+            # ("Oggetto aggiunto: ."). Resi nel contesto del chiamante
+            # (scratch di loop incluso), vincolati da run_command ai
+            # params dichiarati del comando.
+            # Codex P2 #559 giro 4: una chiave che referenzia un param del
+            # chiamante omesso si OMETTE prima del render — sennò '{{x}}'
+            # reso None diventerebbe "legato" e aggirerebbe la protezione
+            # unbound (wipe silenzioso, come i token stringa del dispatcher).
+            ok = {}
+            for k, v in ap.items():
+                if self._unresolvable(v, params):
+                    self._saltati.append(f"param:{k}")
+                    continue
+                ok[k] = v
+            extra = self._rn(ok, params)
+        spec = a.get("command") or a.get("route") or a.get("call_command")
+        if extra:
+            params = {**params, **extra}
+        self._dispatch_command(spec, depth, params, extra or None)
 
     def _v_call_command(self, a, params, depth):
         self._dispatch_command(a.get("call_command") or a.get("command"), depth, params)
@@ -919,7 +1174,14 @@ class Interpreter:
     def _v_route(self, a, params, depth):
         self._dispatch_command(a.get("route"), depth, params)
 
-    def _dispatch_command(self, spec: Any, depth: int, params: dict) -> None:
+    def _dispatch_command(
+        self,
+        spec: Any,
+        depth: int,
+        params: dict,
+        extra: dict | None = None,
+        render: bool = True,
+    ) -> None:
         if depth >= MAX_DEPTH:
             raise DslAbort(f"ricorsione command: oltre profondita {MAX_DEPTH}")
         if not isinstance(spec, str):
@@ -943,16 +1205,21 @@ class Interpreter:
             if not _is_named_arg(tok):
                 slot = pos
                 pos += 1
-            if self._unresolvable(tok, params):
+            if render and self._unresolvable(tok, params):
                 self._saltati.append(f"arg:{tok[:80]}")
                 continue
             kept.append(tok)
             if slot >= 0:
                 slots.append(slot)
-        rendered = self._rn(
-            " ".join([head, *kept]), params
-        )  # Codex P2: render prima di tokenizzare
-        tokens = shlex.split(rendered)
+        rendered = (
+            self._rn(" ".join([head, *kept]), params) if render else " ".join([head, *kept])
+        )  # Codex P2: render prima di tokenizzare; giro 7: solo per i
+        # comandi del repo — l'input utente arriva letterale (render=False)
+        try:
+            tokens = shlex.split(rendered)
+        except ValueError as e:  # quoting malformato (input utente)
+            self.events.append({"tokenizzazione_fallita": str(e)[:80]})
+            return
         if not tokens:
             return
         name = tokens[0]
@@ -986,7 +1253,9 @@ class Interpreter:
                     next_slot += 1
                 else:
                     self.events.append({"argomento_posizionale_scolto": tok[:60]})
-        self.run_command(name, _depth=depth + 1, **kv)  # ALTA-2: depth si propaga
+        self.run_command(
+            name, _depth=depth + 1, **{**kv, **(extra or {})}
+        )  # ALTA-2: depth si propaga; params action dichiarati > token stringa
 
     def _v_parse_json(self, a, params, depth):
         o = a["parse_json"]

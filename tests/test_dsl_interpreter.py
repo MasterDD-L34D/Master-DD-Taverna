@@ -1349,3 +1349,620 @@ commands:
     it.run_command("/tagga", nome="spada")
     assert it.state["loot_state"]["inventory"][0]["tagged"] is True
     assert it.output_log == ["ok=True"]
+
+
+# ---- Wizard input routing (ADR 014) ------------------------------------
+
+WIZARD_MINI = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared:
+      profile: {name: "", lang: ""}
+    Test:
+      entry:
+        prompt: "Nome?"
+        parse:
+          any: {set: "@GameMode.shared.profile.name", value: "{{input}}"}
+        next: lang
+      lang:
+        prompt: "Lingua 1/2?"
+        parse:
+          "1": {set: "@GameMode.shared.profile.lang", value: "fr"}
+          "2": {set: "@GameMode.shared.profile.lang", value: "en"}
+          regex: "^(it|en)$"
+          groups: [lingua]
+          any: {set: "@GameMode.shared.profile.lang", value: "{{input}}"}
+        actions:
+          # sulla via regex il group lingua e' legato; sulle via map/any
+          # e' non-legato -> set no-op ADR 008 (lang gia' scritto)
+          - set: "@GameMode.shared.profile.lang"
+            value: "{{lingua}}"
+        guards:
+          - condition: "{{ GameMode.shared.profile.lang != 'xx' }}"
+            on_fail: "lingua vietata"
+        next: done
+      done:
+        actions:
+          - output: "Fatto {{GameMode.shared.profile.name}}"
+        end: true
+commands:
+  /start: {action: [{goto_state: GameMode.Test.entry}]}
+  /status: {action: [{output: "stato ok"}]}
+"""
+
+
+def _wiz(tmp_path) -> Interpreter:
+    it = Interpreter(_mini(tmp_path, WIZARD_MINI))
+    it.run_command("/start")
+    return it
+
+
+def test_run_input_any_e_avanza_con_prompt(tmp_path):
+    it = _wiz(tmp_path)
+    it.run_input("Grog")
+    assert get_path(it.state, "game_mode.shared.profile.name") == "Grog"
+    assert get_path(it.state, "runtime.current_state") == "GameMode.Test.lang"
+    assert it.output_log[-1] == "Lingua 1/2?"
+
+
+def test_run_input_map_esatta_vince_su_regex(tmp_path):
+    it = _wiz(tmp_path)
+    it.run_input("Grog")
+    it.run_input("2")
+    assert get_path(it.state, "game_mode.shared.profile.lang") == "en"
+
+
+def test_run_input_regex_e_groups(tmp_path):
+    it = _wiz(tmp_path)
+    it.run_input("Grog")
+    it.run_input("it")  # regex ^(it|en)$ -> groups[lingua], map non matcha
+    assert get_path(it.state, "game_mode.shared.profile.lang") == "it"
+
+
+def test_run_input_guard_fallito_rimane_sul_nodo(tmp_path):
+    it = _wiz(tmp_path)
+    it.run_input("Grog")
+    it.run_input("xx")  # any lo scrive, guard lo rifiuta -> stay
+    assert get_path(it.state, "runtime.current_state") == "GameMode.Test.lang"
+    assert it.output_log[-1] == "lingua vietata"
+
+
+def test_run_input_end_ripristina_idle(tmp_path):
+    it = _wiz(tmp_path)
+    it.run_input("Grog")
+    it.run_input("2")
+    assert get_path(it.state, "runtime.current_state") == "IDLE"
+    assert it.output_log[-1] == "Fatto Grog"
+
+
+def test_run_input_senza_wizard_evento(tmp_path):
+    it = Interpreter(_mini(tmp_path, WIZARD_MINI))
+    it.run_input("ciao")
+    assert [e.get("input_fuori_wizard") for e in it.events] == ["ciao"]
+
+
+def test_run_input_comando_vince_sul_nodo(tmp_path):
+    it = _wiz(tmp_path)
+    it.run_input("/status")
+    assert it.output_log[-1] == "stato ok"
+    # il wizard non ha consumato l'input: si resta sul nodo entry
+    assert get_path(it.state, "runtime.current_state") == "GameMode.Test.entry"
+
+
+def test_run_input_modulo_reale_play_game(tmp_path):
+    # ADR 014 pin: /play_game poi "3" -> lang=it (map), prompt universo
+    k = load_kernel(MODULES, only=("Taverna_NPC.txt",))
+    it = Interpreter(k)
+    it.run_command("/play_game")
+    it.run_input("3")
+    assert get_path(it.state, "game_mode.shared.profile.lang") == "it"
+    assert get_path(it.state, "runtime.current_state") == (
+        "GameMode.OnboardingTheme.universe"
+    )
+    assert any("Scegli universo" in o for o in it.output_log)
+
+
+def test_run_input_yes_no_lega_boolean(tmp_path):
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {portrait_done: false}
+    T:
+      p:
+        prompt: "Ritratto?"
+        parse:
+          yes_no: {key: gen}
+        actions:
+          - if: "{{gen}}"
+            then:
+              - set: "@GameMode.shared.portrait_done"
+                value: true
+        end: true
+commands:
+  /s: {action: [{goto_state: GameMode.T.p}]}
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/s")
+    it.run_input("sì")
+    assert get_path(it.state, "game_mode.shared.portrait_done") is True
+    assert get_path(it.state, "runtime.current_state") == "IDLE"
+
+
+def test_run_input_end_action_vince_su_next(tmp_path):
+    # Codex P2 #559: un'action `- end: true` chiude il wizard; il next
+    # del nodo NON riapre il flusso (pattern Chase.turn)
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {}
+    T:
+      loop:
+        prompt: "Turno"
+        parse:
+          any: {set: risposta, value: "{{input}}"}
+        actions:
+          - if: '{{ risposta == "fine" }}'
+            then:
+              - end: true
+        next: loop
+commands:
+  /s: {action: [{goto_state: GameMode.T.loop}]}
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/s")
+    it.run_input("fine")
+    assert get_path(it.state, "runtime.current_state") == "IDLE"
+    it.run_input("ancora")  # fuori wizard: evento, nessun prompt turno
+    assert [e.get("input_fuori_wizard") for e in it.events] == ["ancora"]
+
+
+def test_run_input_action_only_avanza(tmp_path):
+    # Codex P1 #559 giro 2: nodo senza prompt (solo actions+next) esegue
+    # le actions all'arrivo e avanza subito — il flusso non si parchereggia
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {}
+    T:
+      start:
+        prompt: "Parti?"
+        parse:
+          any: {set: risposta, value: "{{input}}"}
+        next: setup
+      setup:
+        actions:
+          - set: "@GameMode.shared.ready"
+            value: true
+        next: nome
+      nome:
+        prompt: "Come ti chiami?"
+        parse:
+          any: {set: nome, value: "{{input}}"}
+        end: true
+commands:
+  /s: {action: [{goto_state: GameMode.T.start}]}
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/s")
+    it.run_input("vai")
+    assert get_path(it.state, "game_mode.shared.ready") is True
+    assert get_path(it.state, "runtime.current_state") == "GameMode.T.nome"
+    assert it.output_log[-1] == "Come ti chiami?"
+
+
+def test_run_input_foreach_legge_params_parse(tmp_path):
+    # Codex P2 #559 giro 2: any_list lega in params; foreach con nome nudo
+    # risolve il binding del parse, non solo scratch/stato/kernel
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {}
+    T:
+      items:
+        prompt: "Cosa prendi?"
+        parse:
+          any_list: {as: items, sep: ","}
+        actions:
+          - foreach: items
+            loop_as: it
+            actions:
+              - set: "@GameMode.shared.last"
+                value: "{{it}}"
+        end: true
+commands:
+  /s: {action: [{goto_state: GameMode.T.items}]}
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/s")
+    it.run_input("spada, scudo")
+    assert get_path(it.state, "game_mode.shared.last") == "scudo"
+    assert not [e for e in it.events if "foreach_non_risolto" in e]
+
+
+def test_run_input_command_params_dichiarati_vincolati(tmp_path):
+    # Codex P2 #559 giro 2 (end-to-end): i params dichiarati su `command:`
+    # erano ignorati — il comando girava con i declared unbound
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {}
+    T:
+      items:
+        prompt: "Cosa prendi?"
+        parse:
+          any_list: {as: items, sep: ","}
+        actions:
+          - foreach: items
+            loop_as: it
+            actions:
+              - command: /add_item
+                params:
+                  oggetto: "{{it | trim}}"
+        end: true
+commands:
+  /s: {action: [{goto_state: GameMode.T.items}]}
+  /add_item:
+    params: [oggetto]
+    action:
+      - set: inventario
+        value: "{{ (inventario or []) + [oggetto] }}"
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/s")
+    it.run_input("spada, scudo")
+    assert it.state.get("inventario") == ["spada", "scudo"]
+
+
+def test_run_input_slash_command_con_argomenti(tmp_path):
+    # Codex P2 #559 giro 3: durante il wizard, /comando arg=val instrada
+    # l'input intero — gli argomenti non si scartano dopo il nome
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {}
+    T:
+      p:
+        prompt: "Fermo?"
+        parse:
+          any: {set: risposta, value: "{{input}}"}
+        end: true
+commands:
+  /s: {action: [{goto_state: GameMode.T.p}]}
+  /add_item:
+    params: [oggetto]
+    action:
+      - set: inventario
+        value: "{{ (inventario or []) + [oggetto] }}"
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/s")
+    it.run_input("/add_item oggetto=spada")
+    assert it.state.get("inventario") == ["spada"]
+    assert get_path(it.state, "runtime.current_state") == "GameMode.T.p"
+
+
+def test_run_input_command_params_omessi_non_legano_none(tmp_path):
+    # Codex P2 #559 giro 4: params action che referenziano un param del
+    # chiamante omesso si omettono — il None reso aggirerebbe la protezione
+    # unbound del comando nested (wipe silenzioso di existing)
+    mini = """\
+state_machine:
+  states: [IDLE]
+commands:
+  /outer: {action: [{command: /inner, params: {value: "{{missing}}"}}]}
+  /inner:
+    params: [value]
+    action:
+      - set: existing
+        value: "{{value}}"
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.state["existing"] = "salvato"
+    it.run_command("/outer")
+    assert it.state["existing"] == "salvato"
+    assert any("param:value" in s for s in it._saltati) or [
+        e for e in it.events if "update_parziale" in e
+    ]
+
+
+def test_run_input_parse_entry_guardata_non_consuma(tmp_path):
+    # Codex P2 #559 giro 4: entry map esatta con when falsa non accettata —
+    # il match continua e il catch-all any consuma l'input
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {}
+    T:
+      p:
+        prompt: "Scelta?"
+        parse:
+          segreta:
+            when: "{{ false }}"
+            set: "@GameMode.shared.hit"
+            value: true
+          any: {set: "@GameMode.shared.preso", value: "{{input}}"}
+        end: true
+commands:
+  /s: {action: [{goto_state: GameMode.T.p}]}
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/s")
+    it.run_input("segreta")
+    assert get_path(it.state, "game_mode.shared.hit") is None
+    assert get_path(it.state, "game_mode.shared.preso") == "segreta"
+
+
+def test_run_input_command_params_game_mode_alias_e_omesso(tmp_path):
+    # Codex P2 #559 giro 5: '@GameMode.' normalizzato anche nell'analisi
+    # dei ref — sennò il parse fallisce, espone zero refs e il None reso
+    # aggira la protezione unbound del comando nested
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {suffix: ok}
+commands:
+  /outer: {action: [{command: /inner, params: {value: "{{ missing }}{{ @GameMode.shared.suffix }}"}}]}
+  /inner:
+    params: [value]
+    action:
+      - set: existing
+        value: "{{value}}"
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.state["existing"] = "salvato"
+    it.run_command("/outer")
+    assert it.state["existing"] == "salvato"
+
+
+def test_run_input_command_params_game_mode_alias_sano(tmp_path):
+    # controllo: params SOLO @GameMode. (senza nomi omessi) NON si droppa
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {money_gp: 25}
+commands:
+  /outer: {action: [{command: /inner, params: {value: "{{ @GameMode.shared.money_gp }}"}}]}
+  /inner:
+    params: [value]
+    action:
+      - set: existing
+        value: "{{value}}"
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/outer")
+    assert it.state["existing"] == 25
+
+
+def test_run_input_parse_entry_guardata_vera_esegue_sibling(tmp_path):
+    # Codex P2 #559 giro 6: when vero tolto prima del dispatch — sennò
+    # _dispatch invocherebbe _v_when e il sibling set saltava (ordine YAML)
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {}
+    T:
+      p:
+        prompt: "Scelta?"
+        parse:
+          accetta:
+            when: "{{ true }}"
+            set: "@GameMode.shared.accepted"
+            value: true
+        end: true
+commands:
+  /s: {action: [{goto_state: GameMode.T.p}]}
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/s")
+    it.run_input("accetta")
+    assert get_path(it.state, "game_mode.shared.accepted") is True
+
+
+def test_run_input_slash_utente_mai_renderizzato(tmp_path):
+    # Codex P1 #559 giro 7: l'input slash utente NON passa da _rn —
+    # Jinja non sandboxed non e' esposta all'input (RCE via template)
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {}
+    T:
+      p:
+        prompt: "Fermo?"
+        parse:
+          any: {set: risposta, value: "{{input}}"}
+        end: true
+commands:
+  /s: {action: [{goto_state: GameMode.T.p}]}
+  /segna:
+    params: [val]
+    action:
+      - set: preso
+        value: "{{val}}"
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/s")
+    it.run_input('/segna val="{{ 7 * 7 }}"')
+    assert it.state.get("preso") == "{{ 7 * 7 }}"  # letterale, non 49
+    assert get_path(it.state, "runtime.current_state") == "GameMode.T.p"
+
+
+def test_goto_su_action_only_esegue_e_avanza(tmp_path):
+    # Codex P2 #559 giro 7: goto_state su nodo senza prompt (Chase.entry,
+    # Gambling) — le actions girano all'arrivo e si avanza al nodo
+    # interattivo, non si resta parcheggiati senza parser
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {}
+    T:
+      entry:
+        actions:
+          - set: "@GameMode.shared.entrato"
+            value: true
+        next: turno
+      turno:
+        prompt: "Turno 1?"
+        parse:
+          any: {set: risposta, value: "{{input}}"}
+        end: true
+commands:
+  /chase_start: {action: [{goto_state: GameMode.T.entry}]}
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/chase_start")
+    assert get_path(it.state, "game_mode.shared.entrato") is True
+    assert get_path(it.state, "runtime.current_state") == "GameMode.T.turno"
+    assert it.output_log[-1] == "Turno 1?"
+
+
+def test_run_input_slash_quoting_malformato_evento_non_crash(tmp_path):
+    # Codex P2 #559 giro 8: quoting malformato nell'input utente -> evento
+    # diagnostico e si resta sul nodo, mai ValueError all'host
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {}
+    T:
+      p:
+        prompt: "Fermo?"
+        parse:
+          any: {set: risposta, value: "{{input}}"}
+        end: true
+commands:
+  /s: {action: [{goto_state: GameMode.T.p}]}
+  /segna:
+    params: [val]
+    action:
+      - set: preso
+        value: "{{val}}"
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/s")
+    it.run_input('/segna val="spada')  # quote non chiusa
+    assert [e for e in it.events if "tokenizzazione_fallita" in e]
+    assert get_path(it.state, "runtime.current_state") == "GameMode.T.p"
+    assert it.state.get("preso") is None
+
+
+def test_run_input_next_valuta_guard_tema_genitore(tmp_path):
+    # Codex P2 #559 giro 8: next che entra in un tema con when falso sul
+    # TEMA (non sul nodo) -> wizard_guard_falso, nessuna esecuzione
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {}
+    T:
+      start:
+        prompt: "Vai?"
+        parse:
+          any: {set: risposta, value: "{{input}}"}
+        next: "@GameMode.K.entry"
+    K:
+      when: "{{ false }}"
+      entry:
+        actions:
+          - set: "@GameMode.shared.fatto"
+            value: true
+        prompt: "Tema guardato?"
+        parse:
+          any: {set: risposta, value: "{{input}}"}
+        end: true
+commands:
+  /s: {action: [{goto_state: GameMode.T.start}]}
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/s")
+    it.run_input("vai")
+    assert [e for e in it.events if "wizard_guard_falso" in e]
+    assert get_path(it.state, "game_mode.shared.fatto") is None
+
+
+def test_goto_action_only_rispetta_guard_tema(tmp_path):
+    # Codex P2 #559 giro 9: goto_state su nodo action-only di un tema con
+    # when falso — guard valutato PRIMA delle arrival actions
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {}
+    K:
+      when: "{{ false }}"
+      entry:
+        actions:
+          - set: "@GameMode.shared.fatto"
+            value: true
+        next: p
+      p:
+        prompt: "?"
+        parse:
+          any: {set: risposta, value: "{{input}}"}
+        end: true
+commands:
+  /go: {action: [{goto_state: GameMode.K.entry}]}
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/go")
+    assert [e for e in it.events if "wizard_guard_falso" in e]
+    assert get_path(it.state, "game_mode.shared.fatto") is None
+
+
+def test_goto_self_action_only_bounded(tmp_path):
+    # Codex P2 #559 giro 9: self-goto su nodo action-only — depth cresce,
+    # evento diagnostico, mai RecursionError
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {}
+    T:
+      loop:
+        actions:
+          - set: "@GameMode.shared.n"
+            value: "{{ (game_mode.shared.n or 0) + 1 }}"
+          - goto_state: GameMode.T.loop
+commands:
+  /go: {action: [{goto_state: GameMode.T.loop}]}
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/go")
+    assert [e for e in it.events if "avanzamento_profondita_max" in e]
+
+
+def test_goto_interattivo_rispetta_guard_tema(tmp_path):
+    # Codex P2 #559 giro 10: goto su nodo CON prompt sotto tema guardato —
+    # guard valutato prima di atterrare, nessuna action del nodo
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {}
+    K:
+      when: "{{ false }}"
+      p:
+        prompt: "Tema guardato?"
+        parse:
+          any: {set: "@GameMode.shared.accepted", value: true}
+        end: true
+commands:
+  /go: {action: [{goto_state: GameMode.K.p}]}
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/go")
+    assert [e for e in it.events if "wizard_guard_falso" in e]
+    assert get_path(it.state, "game_mode.shared.accepted") is None
+    assert get_path(it.state, "runtime.current_state") != "GameMode.K.p"  # mai atterrato
