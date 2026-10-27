@@ -1646,3 +1646,55 @@ commands:
     it.run_input("/add_item oggetto=spada")
     assert it.state.get("inventario") == ["spada"]
     assert get_path(it.state, "runtime.current_state") == "GameMode.T.p"
+
+
+def test_run_input_command_params_omessi_non_legano_none(tmp_path):
+    # Codex P2 #559 giro 4: params action che referenziano un param del
+    # chiamante omesso si omettono — il None reso aggirerebbe la protezione
+    # unbound del comando nested (wipe silenzioso di existing)
+    mini = """\
+state_machine:
+  states: [IDLE]
+commands:
+  /outer: {action: [{command: /inner, params: {value: "{{missing}}"}}]}
+  /inner:
+    params: [value]
+    action:
+      - set: existing
+        value: "{{value}}"
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.state["existing"] = "salvato"
+    it.run_command("/outer")
+    assert it.state["existing"] == "salvato"
+    assert any("param:value" in s for s in it._saltati) or [
+        e for e in it.events if "update_parziale" in e
+    ]
+
+
+def test_run_input_parse_entry_guardata_non_consuma(tmp_path):
+    # Codex P2 #559 giro 4: entry map esatta con when falsa non accettata —
+    # il match continua e il catch-all any consuma l'input
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {}
+    T:
+      p:
+        prompt: "Scelta?"
+        parse:
+          segreta:
+            when: "{{ false }}"
+            set: "@GameMode.shared.hit"
+            value: true
+          any: {set: "@GameMode.shared.preso", value: "{{input}}"}
+        end: true
+commands:
+  /s: {action: [{goto_state: GameMode.T.p}]}
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/s")
+    it.run_input("segreta")
+    assert get_path(it.state, "game_mode.shared.hit") is None
+    assert get_path(it.state, "game_mode.shared.preso") == "segreta"

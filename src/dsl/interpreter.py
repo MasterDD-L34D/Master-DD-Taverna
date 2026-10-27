@@ -686,6 +686,12 @@ class Interpreter:
             if key in reserved:
                 continue
             if str(key) == text:
+                # Codex P2 #559 giro 4: entry guardata — when falsa/non
+                # parsabile = non accettata, il match continua (catch-all)
+                if isinstance(action, dict) and "when" in action:
+                    w = self._cond(action["when"], params)
+                    if not w:
+                        continue
                 return action
         regex = parse.get("regex")
         patterns = regex if isinstance(regex, list) else [regex] if regex else []
@@ -718,7 +724,12 @@ class Interpreter:
                 return self._MATCH_NO_ACTION
             return None
         if parse.get("any") is not None:
-            return parse["any"]
+            action = parse["any"]
+            # stessa guardia delle entry map: any con when falsa non consuma
+            if isinstance(action, dict) and "when" in action:
+                if not self._cond(action["when"], params):
+                    return None
+            return action
         return None
 
     def _v_end(self, a, params, depth):
@@ -1092,7 +1103,17 @@ class Interpreter:
             # ("Oggetto aggiunto: ."). Resi nel contesto del chiamante
             # (scratch di loop incluso), vincolati da run_command ai
             # params dichiarati del comando.
-            extra = self._rn(ap, params)
+            # Codex P2 #559 giro 4: una chiave che referenzia un param del
+            # chiamante omesso si OMETTE prima del render — sennò '{{x}}'
+            # reso None diventerebbe "legato" e aggirerebbe la protezione
+            # unbound (wipe silenzioso, come i token stringa del dispatcher).
+            ok = {}
+            for k, v in ap.items():
+                if self._unresolvable(v, params):
+                    self._saltati.append(f"param:{k}")
+                    continue
+                ok[k] = v
+            extra = self._rn(ok, params)
         spec = a.get("command") or a.get("route") or a.get("call_command")
         if extra:
             params = {**params, **extra}
