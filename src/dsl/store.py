@@ -32,23 +32,28 @@ class JsonFilePort:
     runtime (it.events); la firma serve ai verbi per restare indiretti."""
 
     def __init__(self, path: os.PathLike | str | None = None) -> None:
-        self.path = Path(path) if path is not None else default_path()
+        # ponytail: env prima del default repo — l'override di deployment e'
+        # un solo getenv, non una config class
+        if path is None:
+            env = os.environ.get(_ENV_PATH)
+            path = env if env else default_path()
+        self.path = Path(path)
         self._data: dict[str, Any] = {}
         self.events_log: list[dict[str, Any]] = []
         if self.path.exists():
             self._data = json.loads(self.path.read_text(encoding="utf-8"))
 
     def save(self, key: str, value: Any) -> None:
-        """Scrittura atomica (tmp + os.replace). TypeError da json.dumps
-        (valore non serializzabile) propagate: l'interprete li converte in
-        evento, mai str() silenzioso (ADR 009)."""
-        self._data[key] = value
+        """Scrittura atomica (tmp + os.replace). Il commit in memoria avviene
+        SOLO dopo la serializzazione: un valore non serializzabile (TypeError
+        da json.dumps) non resta ne' in _data ne' su disco (review Codex P2,
+        PR #554). Lo snapshot e' deepcopy del chiamante (verb), non qui."""
+        payload = json.dumps({**self._data, key: value}, ensure_ascii=False, indent=1)
         self.path.parent.mkdir(parents=True, exist_ok=True)
         tmp = self.path.with_suffix(self.path.suffix + ".tmp")
-        tmp.write_text(
-            json.dumps(self._data, ensure_ascii=False, indent=1), encoding="utf-8"
-        )
+        tmp.write_text(payload, encoding="utf-8")
         os.replace(tmp, self.path)
+        self._data[key] = value
 
     def load(self, key: str) -> Any:
         return self._data.get(key)

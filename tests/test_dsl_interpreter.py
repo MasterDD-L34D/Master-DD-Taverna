@@ -901,6 +901,31 @@ def test_porta_json_persiste_su_disco(tmp_path):
     assert p2.load("mancante") is None
 
 
+def test_save_e_snapshot_indipendente_dallo_stato_vivo(tmp_path):
+    # P1 review Codex #554: la entry salvata non deve mutare quando il
+    # build_state vivo viene modificato dopo il save
+    k = _mini(tmp_path, SESSIONE_MINI)
+    port = FakePort()
+    it = Interpreter(k, port=port)
+    it.state["build_state"]["punteggi"] = {"for": 16}
+    it.run_command("/save", nome="Grog")
+    it.state["build_state"]["punteggi"]["for"] = 99
+    assert port.data["build_Grog"]["punteggi"]["for"] == 16
+
+
+def test_porta_onora_env_path(tmp_path, monkeypatch):
+    # P2 review Codex #554: MASTERS_DD_SESSIONS_PATH e' l'override di
+    # deployment promesso dall'ADR 009, non decorazione
+    from src.dsl.store import JsonFilePort
+
+    target = tmp_path / "altro" / "store.json"
+    monkeypatch.setenv("MASTERS_DD_SESSIONS_PATH", str(target))
+    port = JsonFilePort()
+    port.save("build_X", {"a": 1})
+    assert target.exists()
+    assert JsonFilePort().load("build_X") == {"a": 1}
+
+
 def test_valore_non_serializzabile_fallisce_esplicito(tmp_path):
     # ADR 009: mai str() silenzioso — evento e nessuna scrittura
     from src.dsl.store import JsonFilePort

@@ -919,7 +919,10 @@ class Interpreter:
             return
         value = self._rn(s.get("value"), params)
         try:
-            self.port.save(key, value)
+            # P1 (review Codex #554): snapshot indipendente — senza deepcopy
+            # la porta trattiene il dict vivo dello stato e le modifiche
+            # successive al build mutano l'entry gia' salvata
+            self.port.save(key, _copy.deepcopy(value))
         except (TypeError, ValueError) as exc:
             # mai str() silenzioso: un valore non serializzabile e' un
             # evento e nessuna scrittura
