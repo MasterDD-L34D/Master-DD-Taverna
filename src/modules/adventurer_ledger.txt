@@ -1374,6 +1374,12 @@ commands:
         then:
           - set: local.qty
             value: '{{ int(qty) }}'
+      # review Codex P2 #558 giro 4: qty<1 non tocca l'inventario
+      # (take = min(q, curq) con q negativa CREA oggetti)
+      - if: '{{ local.qty < 1 }}'
+        then:
+          - output: "⚠️ Quantità non valida: {{local.qty}}. Uso: /sell <item> [qty≥1] [rate]"
+          - abort: E-SELL-QTY
       - find_and_consume_item:
           from_list: loot_state.inventory
           filter: { by: 'name_or_id', value: '{{item_name_or_id}}' }
