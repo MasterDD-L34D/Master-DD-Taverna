@@ -1,6 +1,6 @@
 module_name: Libro Mastro dell’Avventuriero
-version: 1.7
-last_updated: 2026-07-18
+version: 1.8
+last_updated: 2026-10-27
 inherits_from: base_profile.txt
 type: economy/loot/crafting
 
@@ -1787,6 +1787,13 @@ flow:
     policy: "Dopo ogni azione mostra 1 CTA utile (es. /audit_wbl o /export_loot)."
 
 changelog:
+  - version: 1.8
+    date: 2026-10-27
+    notes: >
+      • ADR 013 (ES3): allineati args dei verbi dominio alla firma helper —
+        `/sell` e `/remove_item` passano `from_list:` a `find_and_consume_item`
+        (era `from:`, TypeError al call-time).  
+
   - version: 1.2
     date: 2025-08-15
     notes: >
