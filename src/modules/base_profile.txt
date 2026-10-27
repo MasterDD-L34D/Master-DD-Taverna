@@ -1,6 +1,6 @@
 module_name: "Master-DD-Taverna - Base Profile"
-version: "3.8-kernel"
-last_updated: "2026-07-18T00:00:00.000Z"
+version: "3.9-kernel"
+last_updated: "2026-10-27T00:00:00.000Z"
 visibility: "internal_only"
 type: "core_internal"
 
@@ -635,7 +635,7 @@ helpers:
 postprocessors:
   - name: "__echo_receipt"
     order: 9998
-    when: "context and context.module == 'Taverna NPC' and context.quality_score is not None"
+    when: "context and context.module == 'Taverna NPC' and context.quality_score is not none"
     run: |
       receipt = helpers.build_quality_receipt(context.quality_score, context.rubric_breakdown or {}, context.session_id or 0)
       return output_text + "\n\n" + receipt
@@ -718,6 +718,10 @@ notes:
     - "Rinfresca dataset Sigilli nel runner per evitare ripetizioni."
 
 changelog:
+  - version: "3.9-kernel (Fix guard qualita' receipt)"
+    date: "2026-10-27T00:00:00.000Z"
+    items:
+      - "Hook __echo_receipt: 'quality_score is not None' corretto in 'is not none' — 'None' maiuscolo non e' un test jinja valido, la condizione era morta sempre falsa e il receipt non veniva mai emesso (review Codex PR #554 giro 4)."
   - version: "3.8-kernel (Rebrand Master-DD-Taverna + retrieval local-first)"
     date: "2026-07-18T00:00:00.000Z"
     items:

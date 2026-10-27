@@ -735,3 +735,276 @@ def test_template_che_espande_in_piu_argomenti_mantiene_slot(tmp_path):
     assert it.state["build_state"]["f"] == "one"
     assert it.state["build_state"]["s"] == "two"
     assert it.state["build_state"]["t"] == "tail"
+
+
+# ---- ES2-a1: archivio sessione (ADR 009) ----
+
+
+class FakePort:
+    """Porta in-memory (ADR 009): i verbi non toccano disco/bus diretti."""
+
+    def __init__(self):
+        self.data: dict = {}
+        self.events_log: list = []
+
+    def save(self, key, value):
+        self.data[key] = value
+
+    def load(self, key):
+        return self.data.get(key)
+
+    def list(self, prefix):
+        return sorted(k for k in self.data if k.startswith(prefix))
+
+    def emit(self, topic, payload):
+        self.events_log.append({"topic": topic, "payload": payload})
+
+
+SESSIONE_MINI = """
+commands:
+  /save:
+    params: [nome]
+    action:
+      - set: build_state.nome
+        value: '{{ nome }}'
+      - save_session:
+          key: 'build_{{ nome }}'
+          value: '{{ build_state }}'
+  /load:
+    params: [nome]
+    action:
+      - load_session:
+          key: 'build_{{ nome }}'
+          as: loaded
+      - if: '{{ loaded is not none }}'
+        then:
+          - set: build_state.riportato
+            value: '{{ loaded.nome }}'
+  /list:
+    action:
+      - list_session_keys:
+          prefix: build_
+          as: keys
+      - set: build_state.n_keys
+        value: '{{ keys | length }}'
+"""
+
+
+def test_save_e_load_session_via_porta(tmp_path):
+    # ADR 009: save scrive il nodo reso sulla porta, load lo riporta e la
+    # guardia 'is not None' dei moduli funziona
+    k = _mini(tmp_path, SESSIONE_MINI)
+    port = FakePort()
+    it = Interpreter(k, port=port)
+    it.state["build_state"]["punteggi"] = {"for": 16}
+    it.run_command("/save", nome="Grog")
+    assert port.data["build_Grog"]["punteggi"] == {"for": 16}
+    it.run_command("/load", nome="Grog")
+    assert it.state["build_state"]["riportato"] == "Grog"
+
+
+def test_load_assente_da_none_e_nessun_evento_difetto(tmp_path):
+    k = _mini(tmp_path, SESSIONE_MINI)
+    port = FakePort()
+    it = Interpreter(k, port=port)
+    it.run_command("/load", nome="Mancante")
+    assert "riportato" not in it.state["build_state"]
+    assert not [e for e in it.events if "load" in str(e)]
+
+
+def test_list_session_keys_filtra_per_prefisso(tmp_path):
+    k = _mini(tmp_path, SESSIONE_MINI)
+    port = FakePort()
+    port.data = {"build_A": {}, "build_B": {}, "enc_C": {}}
+    it = Interpreter(k, port=port)
+    it.run_command("/list")
+    assert it.state["build_state"]["n_keys"] == 2
+
+
+def test_chiave_sessione_non_valida_rifiutata(tmp_path):
+    # ADR 009 (confine fiducia): la chiave resa e' whitelist; il rifiuto e'
+    # un evento, mai una sanificazione silenziosa
+    k = _mini(
+        tmp_path,
+        "commands:\n  /go:\n    params: [nome]\n    action:\n"
+        "      - save_session:\n"
+        "          key: 'build_{{ nome }}'\n          value: x\n",
+    )
+    port = FakePort()
+    it = Interpreter(k, port=port)
+    it.run_command("/go", nome="../escape")
+    assert not port.data
+    assert any("chiave" in str(e) for e in it.events)
+
+
+def test_emit_event_su_porta(tmp_path):
+    k = _mini(
+        tmp_path,
+        "commands:\n  /go:\n    params: [termine]\n    action:\n"
+        "      - emit_event:\n"
+        "          topic: explain.theme\n"
+        "          payload: {termine: '{{ termine }}', from: Test}\n",
+    )
+    port = FakePort()
+    Interpreter(k, port=port).run_command("/go", termine="Attacco")
+    assert port.events_log == [
+        {"topic": "explain.theme", "payload": {"termine": "Attacco", "from": "Test"}}
+    ]
+
+
+def test_replace_placeholder_nella_variabile_di_loop(tmp_path):
+    # forma reale di minmax_builder /run_benchmark: il pattern contiene il
+    # placeholder letterale <classe>, risolto prima della search
+    k = _mini(
+        tmp_path,
+        "commands:\n  /go:\n    action:\n"
+        "      - set: local.classe\n        value: chierico\n"
+        "      - foreach: meta_reference.patterns\n        loop_as: pattern\n"
+        "        actions:\n"
+        "          - replace_placeholder: <classe>\n"
+        "            with: '{{ local.classe }}'\n"
+        "          - output: '{{ pattern }}'\n",
+    )
+    k.data["meta_reference"] = {"patterns": ["DPR <classe> build", "<classe> tier"]}
+    it = Interpreter(k)
+    it.run_command("/go")
+    assert it.output_log == ["DPR chierico build", "chierico tier"]
+
+
+def test_goto_state_rimane_no_op_rumoroso(tmp_path):
+    # ADR 009: goto_state resta NO_OP fino alla fetta b, ma la traccia e'
+    # dichiarata e testabile (mai silenzioso)
+    k = _mini(
+        tmp_path,
+        "commands:\n  /go:\n    action: [{goto_state: READY}]\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go")
+    assert it.noop_log == [{"verb": "goto_state"}]
+    assert "runtime" not in it.state or "state_machine" not in it.state.get(
+        "runtime", {}
+    )
+
+
+def test_porta_json_persiste_su_disco(tmp_path):
+    # ADR 009: JsonFilePort reale — round-trip tra due istanze, scrittura
+    # atomica (tmp + os.replace), override del percorso via env
+    from src.dsl.store import JsonFilePort
+
+    path = tmp_path / "var" / "sessions" / "store.json"
+    p1 = JsonFilePort(path)
+    p1.save("build_Grog", {"punteggi": {"for": 16}})
+    assert path.exists()
+    p2 = JsonFilePort(path)
+    assert p2.load("build_Grog") == {"punteggi": {"for": 16}}
+    assert p2.list("build_") == ["build_Grog"]
+    assert p2.load("mancante") is None
+
+
+def test_save_e_snapshot_indipendente_dallo_stato_vivo(tmp_path):
+    # P1 review Codex #554: la entry salvata non deve mutare quando il
+    # build_state vivo viene modificato dopo il save
+    k = _mini(tmp_path, SESSIONE_MINI)
+    port = FakePort()
+    it = Interpreter(k, port=port)
+    it.state["build_state"]["punteggi"] = {"for": 16}
+    it.run_command("/save", nome="Grog")
+    it.state["build_state"]["punteggi"]["for"] = 99
+    assert port.data["build_Grog"]["punteggi"]["for"] == 16
+
+
+def test_porta_onora_env_path(tmp_path, monkeypatch):
+    # P2 review Codex #554: MASTERS_DD_SESSIONS_PATH e' l'override di
+    # deployment promesso dall'ADR 009, non decorazione
+    from src.dsl.store import JsonFilePort
+
+    target = tmp_path / "altro" / "store.json"
+    monkeypatch.setenv("MASTERS_DD_SESSIONS_PATH", str(target))
+    port = JsonFilePort()
+    port.save("build_X", {"a": 1})
+    assert target.exists()
+    assert JsonFilePort().load("build_X") == {"a": 1}
+
+
+def test_save_con_param_omesso_non_fabbrica_chiave(tmp_path):
+    # P2 review Codex #554 giro 2: il param omesso non deve rendere la
+    # chiave valida 'build_None' — la scrittura e' saltata con evento
+    k = _mini(tmp_path, SESSIONE_MINI)
+    port = FakePort()
+    it = Interpreter(k, port=port)
+    it.run_command("/save")  # nome omesso
+    assert not port.data
+    assert any("update_parziale" in str(e) for e in it.events)
+
+
+def test_due_porte_stesso_file_non_si_sovrascrivono(tmp_path):
+    # P1 review Codex #554 giro 2: read-modify-write — il save di B non
+    # cancella l'entry scritta da A sulla stessa path
+    from src.dsl.store import JsonFilePort
+
+    path = tmp_path / "store.json"
+    JsonFilePort(path).save("build_A", {"x": 1})
+    JsonFilePort(path).save("build_B", {"x": 2})
+    data = json.loads(path.read_text(encoding="utf-8"))
+    assert data == {"build_A": {"x": 1}, "build_B": {"x": 2}}
+
+
+def test_load_e_list_vedono_save_di_altra_istanza(tmp_path):
+    # P2 review Codex #554 giro 5: load/list rinfrescano dal disco — una
+    # porta inizializzata PRIMA del save altrui non resta cieca all'entry
+    from src.dsl.store import JsonFilePort
+
+    path = tmp_path / "store.json"
+    prima = JsonFilePort(path)
+    JsonFilePort(path).save("build_Esterno", {"x": 1})
+    assert prima.load("build_Esterno") == {"x": 1}
+    assert prima.list("build_") == ["build_Esterno"]
+
+
+def test_save_di_radice_stato_creata_dinamicamente(tmp_path):
+    # P2 review Codex #554 giro 6: forked_build (/fork_build) e forked
+    # (/fork_encounter) sono radici create dal comando stesso — _ctx le
+    # espone a render, lo skip statico non deve trattarle come non legate
+    k = _mini(
+        tmp_path,
+        "commands:\n  /go:\n    params: [variant_id]\n    action:\n"
+        "      - set: forked_build.variant_id\n        value: '{{ variant_id }}'\n"
+        "      - save_session:\n"
+        "          key: 'build_{{ variant_id }}'\n"
+        "          value: '{{ forked_build }}'\n",
+    )
+    port = FakePort()
+    Interpreter(k, port=port).run_command("/go", variant_id="variant1")
+    assert port.data == {"build_variant1": {"variant_id": "variant1"}}
+
+
+def test_valore_non_serializzabile_fallisce_esplicito(tmp_path):
+    # ADR 009: mai str() silenzioso — evento e nessuna scrittura
+    from src.dsl.store import JsonFilePort
+
+    k = _mini(
+        tmp_path,
+        "commands:\n  /go:\n    action:\n"
+        "      - call: bad\n        return_as: raw\n"
+        "      - save_session:\n"
+        "          key: build_x\n"
+        "          value: '{{ raw }}'\n",
+    )
+    # helper che rende un oggetto non JSON-serializzabile
+    k.helpers["bad"] = {"params": [], "logic": "return object()", "origin": "t"}
+    port = JsonFilePort(tmp_path / "store.json")
+    it = Interpreter(k, port=port)
+    it.run_command("/go")
+    assert not (tmp_path / "store.json").exists()
+    assert any("serializ" in str(e) for e in it.events)
+
+
+def test_moduli_template_senza_is_not_None_maiuscolo():
+    # P2 review Codex #554 giro 3: 'is not None' non e' un test jinja valido
+    # ("No test named 'None'") — la guardia e' morta sempre falsa. I helper
+    # python (logic) possono usare 'is not None' legitimo: si scansionano
+    # solo le righe con template {{ ... }}
+    for f in sorted(MODULES.glob("*.txt")):
+        for i, line in enumerate(f.read_text(encoding="utf-8").splitlines(), 1):
+            if "{{" in line and "is not None" in line:
+                pytest.fail(f"{f.name}:{i}: 'is not None' in template jinja")
