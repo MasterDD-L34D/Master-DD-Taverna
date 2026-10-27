@@ -33,6 +33,9 @@
     "sheet": {
       "$ref": "#/$defs/textual_block"
     },
+    "pc_draft": {
+      "$ref": "#/$defs/pc_draft"
+    },
     "ledger": {
       "$ref": "#/$defs/ledger"
     },
@@ -474,6 +477,100 @@
         "array",
         "null"
       ]
+    },
+    "pc_draft": {
+      "description": "Draft 1:1 con src/pc CharacterDraft per il banco di ricalcolo meccanico (A2-a). Mai 'sheet': gia' usata con altro significato.",
+      "type": "object",
+      "required": [
+        "name",
+        "method",
+        "campaign_type",
+        "abilities",
+        "race",
+        "class",
+        "favored_class_bonus",
+        "level",
+        "hp_method",
+        "skills",
+        "feats",
+        "equipment"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "method": {
+          "const": "point-buy"
+        },
+        "campaign_type": {
+          "type": "string"
+        },
+        "abilities": {
+          "type": "object",
+          "required": ["str", "dex", "con", "int", "wis", "cha"],
+          "additionalProperties": false,
+          "properties": {
+            "str": {"type": "integer", "minimum": 7, "maximum": 18},
+            "dex": {"type": "integer", "minimum": 7, "maximum": 18},
+            "con": {"type": "integer", "minimum": 7, "maximum": 18},
+            "int": {"type": "integer", "minimum": 7, "maximum": 18},
+            "wis": {"type": "integer", "minimum": 7, "maximum": 18},
+            "cha": {"type": "integer", "minimum": 7, "maximum": 18}
+          }
+        },
+        "race": {
+          "type": "string"
+        },
+        "class": {
+          "type": "string"
+        },
+        "race_bonus_ability": {
+          "enum": ["str", "dex", "con", "int", "wis", "cha", null]
+        },
+        "favored_class_bonus": {
+          "enum": ["hp", "skill"]
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20
+        },
+        "hp_method": {
+          "enum": ["average", "max"]
+        },
+        "skills": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "feats": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "traits": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "equipment": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "spells": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
     },
     "ledger": {
       "oneOf": [

@@ -137,7 +137,15 @@ def _make_prompt(request: dict, context_chunks: list[dict], references: list[dic
         "Tutti i source_id in catalog_references DEVONO corrispondere ESATTAMENTE a uno degli source_id elencati nel catalogo fornito. "
         "NON usare abbreviazioni di libro come PHB, CRB, APG come source_id. "
         "step_audit.client_fingerprint_hash DEVE essere una stringa esadecimale di 32 caratteri (esempio: a1b2c3d4e5f6789012345678abcdef01). "
-        "Le statistiche in benchmark.statistics DEVONO essere realistiche per il livello e rispettare i target sopra.\n\n"
+        "Le statistiche in benchmark.statistics DEVONO essere realistiche per il livello e rispettare i target sopra.\n"
+        "Includi anche la sezione pc_draft: la scheda meccanica completa 1:1 con questa forma — "
+        "name (stringa), method (sempre \"point-buy\"), campaign_type (es. \"Standard Fantasy\"), "
+        "abilities con chiavi str/dex/con/int/wis/cha e PUNTEGGI BASE point-buy 7-18 (non i finali: i bonus razziali li somma il ricalcolatore), "
+        "race e class con nomi ESATTI dal catalogo, race_bonus_ability (una tra str/dex/con/int/wis/cha; obbligatoria solo se la razza ha bonus a scelta), "
+        "favored_class_bonus (\"hp\" o \"skill\"), level, hp_method (\"average\" o \"max\"), "
+        "skills (nome: ranks), feats (array di stringhe, es. \"Weapon Focus (Longsword)\"), "
+        "traits, equipment (nomi ESATTI dal catalogo), spells (array di nomi o vuoto). "
+        "Usa SOLO nomi presenti nel catalogo reference; se un nome non e' in catalogo, omettilo — non inventare.\n\n"
         "Contesto dai moduli:\n"
         f"{chunks_text}\n\n"
         "Catalogo reference disponibile:\n"
@@ -370,6 +378,44 @@ def _validate(payload: dict) -> list[str]:
     return [error] if error else []
 
 
+def _fallback_pc_draft(request: dict) -> dict:
+    """Draft minimo valido per il banco di ricalcolo (A2-a1): nomi dal
+    catalogo src/pc, punteggi base point-buy. Il fallback resta sottoposto
+    al banco — nessuna via libera."""
+    from ..pc import catalogs
+
+    race = request.get("race") or "Human"
+    if catalogs.get_race(race) is None:
+        race = "Human"
+    class_name = request.get("class") or "Fighter"
+    if catalogs.get_class(class_name) is None:
+        class_name = "Fighter"
+    level = request.get("level", 5)
+    if not isinstance(level, int) or not 1 <= level <= 20:
+        level = 5
+    draft: dict[str, Any] = {
+        "name": "Generated build (fallback)",
+        "method": "point-buy",
+        "campaign_type": "Standard Fantasy",
+        # costo 11/15 punti: valido per ogni classe, nessun prerequisito
+        "abilities": {"str": 13, "dex": 13, "con": 13, "int": 12, "wis": 10, "cha": 10},
+        "race": race,
+        "class": class_name,
+        "favored_class_bonus": "hp",
+        "level": level,
+        "hp_method": "average",
+        "skills": {},
+        "feats": [],
+        "traits": [],
+        "equipment": [],
+        "spells": [],
+    }
+    race_entry = catalogs.get_race(race) or {}
+    if race_entry.get("mechanics", {}).get("ability_mods", {}).get("any"):
+        draft["race_bonus_ability"] = "con"
+    return draft
+
+
 def _build_fallback(request: dict, references: list[dict]) -> dict:
     """Fallback deterministico/mock che produce un payload valido coerente con i benchmark."""
     now = datetime.now(timezone.utc).isoformat()
@@ -470,6 +516,7 @@ def _build_fallback(request: dict, references: list[dict]) -> dict:
             "backoff_reason": None
         },
         "validation_status": "passed",
+        "pc_draft": _fallback_pc_draft(request),
     }
     payload = _ensure_fingerprint(payload)
     payload = _resolve_catalog_references(payload, ref_dir)
