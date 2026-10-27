@@ -1,6 +1,6 @@
 module_name: "Master-DD-Taverna - Base Profile"
-version: "3.9-kernel"
-last_updated: "2026-10-27T00:00:00.000Z"
+version: "3.10-kernel"
+last_updated: "2026-10-27T20:30:00.000Z"
 visibility: "internal_only"
 type: "core_internal"
 
@@ -200,7 +200,7 @@ router:
 
       # RULING — hard gate
       - match_any:
-          - "\\b(grapple|afferrato|pinned|condizione|condition|attacco|attack|ac|ca|cmb|cmd|aoo|AoO|copertura|occultamento|concealment|soft cover|copertura superiore|flanking|carica|charge|full attack|attacco completo|incantesimo|spell|concentrazione|concentration|talento|feat|raw|rai|pfs|faq|errata|azione|swift|immediate|azione immediata|azione veloce|stack|cumulabile|bonus|interazione|sovrapposizione|pounce|vital strike|iterative attacks|two-weapon fighting|twf|trip|disarm|sunder|bull rush|overrun|reposition|dirty trick|sneak attack|attacco furtivo|line of sight|line of effect|linea di vista|linea di effetto|prone|flat[- ]footed|flatfooted|impreparato|entangled|staggered|dazed|provoke|provoca\\s*ao)\\b"
+          - "\\b(grapple|afferrato|pinned|condizione|condition|attacco|attack|ac|ca|cmb|cmd|aoo|AoO|copertura|occultamento|concealment|soft cover|copertura superiore|flanking|carica|charge|full attack|attacco completo|incantesimo|spell|concentrazione|concentration|talento|feat|raw|rai|pfs|faq|errata|azione|swift|immediate|azione immediata|azione veloce|stack|cumulabile|bonus|interazione|sovrapposizione|pounce|vital strike|iterative attacks|two[- ]weapon fighting|twf|trip|disarm|sunder|bull rush|overrun|reposition|dirty trick|sneak attack|attacco furtivo|line of sight|line of effect|linea di vista|linea di effetto|prone|flat[- ]footed|flatfooted|impreparato|entangled|staggered|dazed|provoke|provoca\\s*ao)\\b"
         embedding: true
         rerank: true
         set:
@@ -263,6 +263,7 @@ router:
 
       # Disambiguazione
       - condition: "runtime.intent_candidates && runtime.intent_candidates.length > 1"
+        after_segments: true   # una sola reply sui candidati finali, non per segmento
         reply: |
           🤔 Possibili moduli: {{ runtime.intent_candidates | join(', ') }}.
           Preferisci **Ruling** (regole), **Archivist** (lore) o altro?
@@ -718,6 +719,11 @@ notes:
     - "Rinfresca dataset Sigilli nel runner per evitare ripetizioni."
 
 changelog:
+  - version: "3.10-kernel (Router ES4: pattern punct + disambiguazione a input intero)"
+    date: "2026-10-27T20:30:00.000Z"
+    items:
+      - "Hard-gate Ruling: two-weapon fighting -> two[- ]weapon fighting — strip_punct normalizza il trattino a spazio; la classe accetta entrambe le forme (convenzione gia' usata da flat[- ]footed). Review Codex PR #560 giro 3."
+      - "Rule disambiguazione marcata after_segments: la reply viene emessa una sola volta sui candidati finali dell'input intero, non parziale per ogni segmento (input multi-segmento emetteva prompt ripetuti e crescenti). Review Codex PR #560 giro 4."
   - version: "3.9-kernel (Fix guard qualita' receipt)"
     date: "2026-10-27T00:00:00.000Z"
     items:

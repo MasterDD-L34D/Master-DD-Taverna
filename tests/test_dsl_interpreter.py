@@ -1966,3 +1966,230 @@ commands:
     assert [e for e in it.events if "wizard_guard_falso" in e]
     assert get_path(it.state, "game_mode.shared.accepted") is None
     assert get_path(it.state, "runtime.current_state") != "GameMode.K.p"  # mai atterrato
+
+
+# ---- Router input libero (ADR 015, ES4) --------------------------------
+
+# raw string: i pattern regex con \b restano letterali fino a re
+_ROUTER_MINI = r"""
+router:
+  intent_detection:
+    normalize: {lowercase: true, strip_punct: true, fold_accents: true, regex_flags: "i"}
+    segmenter:
+      enabled: true
+      split_regex: '(?:,?\s*(?:e poi|poi|quindi|;)\s+)'
+      per_segment_routing: true
+      merge_same_module: true
+  rules:
+    - match: ['^/help\b']
+      route_to: "Documentazione"
+      short_circuit: true
+    - match_any:
+        - '\b(talento|feat|regola)\b'
+        - '\btwo[- ]weapon fighting\b'
+      not_match: ['\b(storia)\b']
+      route_to: "Ruling Expert"
+    - match_any:
+        - '\b(storia|golarion)\b'
+      route_to: "Archivist"
+    - match_any:
+        - '\b(npc|quiz)\b'
+      embedding: true
+      rerank: true
+      route_to: "Taverna NPC"
+    - condition: "runtime.intent_candidates && runtime.intent_candidates.length > 1"
+      after_segments: true
+      reply: "Quale modulo?"
+      stop: true
+    - fallback: "Ruling Expert"
+  fallback_policy:
+    multi_match: "ask_clarification"
+    no_match: "Ruling Expert"
+    clarification_prompt: "Dimmi il tuo intento."
+  decorators:
+    pre_routing:
+      - if: "!runtime.preload_done"
+        then:
+          - invoke: "orchestration.pipeline.Preload_Warmup"
+          - set: [runtime.preload_done: true]
+    post_routing:
+      - if: "route_to"
+        then:
+          - set: [runtime.mode_attivo: "{{ route_to }}"]
+"""
+
+
+def test_route_input_match_regex(tmp_path):
+    it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    rt = it.route_input("cosa fa il talento Pounce?")
+    assert rt == "Ruling Expert"
+    assert get_path(it.state, "runtime.route_to") == "Ruling Expert"
+    assert get_path(it.state, "runtime.mode_attivo") == "Ruling Expert"
+
+
+def test_route_input_short_circuit_primo_vince(tmp_path):
+    it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    assert it.route_input("/help qualcosa") == "Documentazione"
+
+
+def test_route_input_not_match_esclude(tmp_path):
+    # 'storia' matcha Archivist; la regola Ruling ha not_match su 'storia'
+    it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    assert it.route_input("parlami della storia di Golarion") == "Archivist"
+
+
+def test_route_input_normalize_accenti_e_maiuscole(tmp_path):
+    it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    assert it.route_input("TALENTO Àèì") == "Ruling Expert"
+
+
+def test_route_input_multi_match_chiede_chiarimento(tmp_path):
+    # 'talento' + 'npc': due moduli diversi -> clarification, niente route
+    it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    assert it.route_input("talento npc") is None
+    assert "Quale modulo?" in it.output_log
+    assert "Dimmi il tuo intento." not in it.output_log  # una sola reply (g4)
+    cands = get_path(it.state, "runtime.intent_candidates")
+    assert set(cands) == {"Ruling Expert", "Taverna NPC"}
+
+
+def test_route_input_fallback_no_match(tmp_path):
+    it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    assert it.route_input("xyzzy pinco pallino") == "Ruling Expert"
+
+
+def test_route_input_embedding_rerank_noop_log(tmp_path):
+    it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    assert it.route_input("genera npc") == "Taverna NPC"
+    assert any(
+        n.get("reason") == "pipeline_non_implementata"
+        for n in it.noop_log
+        if n.get("verb") in ("embedding", "rerank")
+    )
+
+
+def test_route_input_invoke_noop_pipeline(tmp_path):
+    it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    it.route_input("cosa fa il talento Pounce?")
+    assert any(
+        n.get("verb") == "invoke"
+        and n.get("reason") == "pipeline_non_implementata"
+        for n in it.noop_log
+    )
+    # i set dei decorators invece si applicano
+    assert get_path(it.state, "runtime.preload_done") is True
+
+
+def test_route_input_segmenter_merge_stesso_modulo(tmp_path):
+    it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    rt = it.route_input("spiegami il talento Pounce; poi una regola")
+    assert rt == "Ruling Expert"
+    cands = get_path(it.state, "runtime.intent_candidates")
+    assert cands == ["Ruling Expert"]
+
+
+def test_route_input_condition_sintassi_authored(tmp_path):
+    # '!' tradotto: la condition authored non e' falsa per sintassi — la
+    # rule non matcha il regex ma non deve neanche dichiarare l'evento
+    mini = _ROUTER_MINI.replace(
+        '- condition: "runtime.intent_candidates && runtime.intent_candidates.length > 1"',
+        '- condition: "!runtime.preload_done"\n'
+        "      match: ['^__mai__']\n"
+        "      continue: true",
+    )
+    it = Interpreter(_mini(tmp_path, mini))
+    it.route_input("talento")
+    assert not [e for e in it.events if "condizione" in str(e)]
+
+
+def test_route_input_condition_falsa_valutata(tmp_path):
+    # Codex P1 #560: condition bare valutata come ESPRESSIONE ({{ }}), non
+    # truthy di una stringa non vuota — decorator condizionale non scatta
+    mini = _ROUTER_MINI.replace(
+        """    post_routing:
+      - if: "route_to"
+        then:
+          - set: [runtime.mode_attivo: "{{ route_to }}"]""",
+        """    post_routing:
+      - if: "route_to"
+        then:
+          - set: [runtime.mode_attivo: "{{ route_to }}"]
+      - if: "route_to == 'Archivist'"
+        then:
+          - set: [runtime.solo_archivist: true]""",
+    )
+    it = Interpreter(_mini(tmp_path, mini))
+    assert it.route_input("talento Pounce") == "Ruling Expert"
+    assert get_path(it.state, "runtime.mode_attivo") == "Ruling Expert"
+    assert get_path(it.state, "runtime.solo_archivist") is None
+    it.route_input("storia di Absalom")
+    assert get_path(it.state, "runtime.solo_archivist") is True
+
+
+def test_route_input_fallback_solo_a_candidato_zero(tmp_path):
+    # Codex P2 #560: un match unico NON diventa multi-match col fallback
+    it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    assert it.route_input("genera npc") == "Taverna NPC"
+    assert get_path(it.state, "runtime.intent_candidates") == ["Taverna NPC"]
+    assert "Dimmi il tuo intento." not in it.output_log
+
+
+def test_route_input_disambiguazione_vede_candidati_correnti(tmp_path):
+    # Codex P2 #560: la rule disambiguazione legge i candidati del turno
+    # corrente (non quelli precedenti) nel reply
+    mini = _ROUTER_MINI.replace(
+        'reply: "Quale modulo?"',
+        'reply: "Candidati: {{ runtime.intent_candidates | join(\', \') }}"',
+    )
+    it = Interpreter(_mini(tmp_path, mini))
+    assert it.route_input("talento npc") is None
+    assert "Candidati: Ruling Expert, Taverna NPC" in it.output_log
+    it.output_log.clear()
+    assert it.route_input("storia") == "Archivist"
+    assert not [o for o in it.output_log if o.startswith("Candidati:")]
+
+
+def test_route_input_fallback_indipendente_da_ordine_segmenti(tmp_path):
+    # Codex P2 #560 g2: il fallback e' default dell'input intero — un
+    # segmento non riconosciuto accanto a uno riconosciuto non lo attiva
+    # in nessun ordine
+    it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    assert it.route_input("xyzzy; poi storia di golarion") == "Archivist"
+    it2 = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    assert it2.route_input("storia di golarion; poi xyzzy") == "Archivist"
+
+
+def test_route_input_clarification_resetta_route_to(tmp_path):
+    # Codex P2 #560 g2: turno non risolto (clarification) -> route_to
+    # azzerato, non resta quello del turno precedente
+    it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    assert it.route_input("talento Pounce") == "Ruling Expert"
+    assert get_path(it.state, "runtime.route_to") == "Ruling Expert"
+    assert it.route_input("talento npc") is None
+    assert get_path(it.state, "runtime.route_to") is None
+
+
+def test_route_input_segmenter_rispetta_regex_flags(tmp_path):
+    # Codex P2 #560 g3: "POI" maiuscolo deve splittare come "poi" —
+    # sennò "/help" short-circuit consuma anche il segmento successivo
+    it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    assert it.route_input("/HELP POI TALENTO") is None
+    assert len(get_path(it.state, "runtime.intent_candidates")) == 2
+
+
+def test_route_input_strip_punct_pattern_classe_carattere(tmp_path):
+    # Codex P2 #560 g3: strip_punct trasforma "two-weapon" in "two weapon" —
+    # nei pattern la punteggiatura va data come classe ([- ]), come gia'
+    # faceva flat[- ]footed in base_profile.txt
+    it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    assert it.route_input("spiega il TWO-WEAPON FIGHTING") == "Ruling Expert"
+
+
+def test_route_input_disambiguazione_dopo_tutti_i_segmenti(tmp_path):
+    # Codex P2 #560 g4: la reply disambiguazione va emessa UNA volta sui
+    # candidati finali — non una parziale per ogni segmento (input
+    # multi-segmento emetteva prompt ripetuti e crescenti)
+    it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    assert it.route_input("storia; poi talento; poi npc") is None
+    assert [o for o in it.output_log if o == "Quale modulo?"].count("Quale modulo?") == 1
+    assert len(get_path(it.state, "runtime.intent_candidates")) == 3
