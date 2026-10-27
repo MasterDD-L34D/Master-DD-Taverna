@@ -5,6 +5,7 @@ riporta quattro esiti distinti (concorda/diverge/non_verificabile/rifiutato).
 Gate: corpus smoke deterministico (seed fisso), livello 1 sempre presente e
 separato, DPR dichiarato non verificabile, exit 0 (D6: riporta non giudica).
 """
+
 import sys
 from pathlib import Path
 
@@ -33,7 +34,9 @@ def test_corpus_smoke_deterministico_e_stratificato():
         return (p["request"]["class"], p["request"]["race"], p["pc_draft"]["level"])
 
     a, b = corpus_smoke(), corpus_smoke()
-    assert [triple(p) for p in a] == [triple(p) for p in b]  # seed fisso: niente scelta a mano (P3)
+    assert [triple(p) for p in a] == [
+        triple(p) for p in b
+    ]  # seed fisso: niente scelta a mano (P3)
     assert len(a) == 20
     livelli = {p["pc_draft"]["level"] for p in a}
     assert livelli == {1, 2, 3, 4, 5}
@@ -69,11 +72,21 @@ def test_exit_sempre_zero_su_smoke():
 
 def _draft_pc(equipment=None, race="Human", class_="Fighter"):
     return {
-        "name": "t", "method": "point-buy", "campaign_type": "Standard Fantasy",
+        "name": "t",
+        "method": "point-buy",
+        "campaign_type": "Standard Fantasy",
         "abilities": {"str": 13, "dex": 13, "con": 13, "int": 12, "wis": 10, "cha": 10},
-        "race": race, "class": class_, "favored_class_bonus": "hp", "level": 5,
-        "hp_method": "average", "skills": {}, "feats": [], "traits": [],
-        "equipment": equipment or [], "spells": [], "race_bonus_ability": "con",
+        "race": race,
+        "class": class_,
+        "favored_class_bonus": "hp",
+        "level": 5,
+        "hp_method": "average",
+        "skills": {},
+        "feats": [],
+        "traits": [],
+        "equipment": equipment or [],
+        "spells": [],
+        "race_bonus_ability": "con",
     }
 
 
@@ -90,8 +103,14 @@ def test_equip_non_modellato_rende_ca_non_verificabile():
     # confrontabile anche se la tolleranza +-1 coprirebbe la differenza
     payload = {
         "pc_draft": _draft_pc(equipment=["Ring of Protection +3"]),
-        "benchmark": {"statistics": {"PF": 49, "CA": 14, "DPR": 9,
-                                     "saves": {"Tempra": 6, "Riflessi": 2, "Volonta": 1}}},
+        "benchmark": {
+            "statistics": {
+                "PF": 49,
+                "CA": 14,
+                "DPR": 9,
+                "saves": {"Tempra": 6, "Riflessi": 2, "Volonta": 1},
+            }
+        },
     }
     r = confronta(payload)
     assert r["dettaglio"]["CA"]["esito"] == "non_verificabile"
@@ -132,26 +151,49 @@ def test_bonus_razziale_ca_non_verificabile():
     # P2 Codex g3: Sahuagin ha +3 natural armor non modellato dall'engine —
     # CA corretta dichiarata verrebbe classificata diverge: non_verificabile.
     # Dwarf/Gnome hanno dodge SOLO condizionale (against giants): verificabili
-    r = confronta({
-        "pc_draft": _draft_pc(race="Sahuagin"),
-        "benchmark": {"statistics": {"PF": 49, "CA": 14, "DPR": 9,
-                                     "saves": {"Tempra": 6, "Riflessi": 2, "Volonta": 1}}},
-    })
+    r = confronta(
+        {
+            "pc_draft": _draft_pc(race="Sahuagin"),
+            "benchmark": {
+                "statistics": {
+                    "PF": 49,
+                    "CA": 14,
+                    "DPR": 9,
+                    "saves": {"Tempra": 6, "Riflessi": 2, "Volonta": 1},
+                }
+            },
+        }
+    )
     assert r["dettaglio"]["CA"]["esito"] == "non_verificabile"
     assert "CA" in r["dettaglio"]["CA"]["motivo"]
     for razza_condizionale in ("Dwarf", "Gnome"):
         payload = {
             "pc_draft": _draft_pc(race=razza_condizionale),
-            "benchmark": {"statistics": {"PF": 49, "CA": 11, "DPR": 9,
-                                         "saves": {"Tempra": 6, "Riflessi": 2, "Volonta": 1}}},
+            "benchmark": {
+                "statistics": {
+                    "PF": 49,
+                    "CA": 11,
+                    "DPR": 9,
+                    "saves": {"Tempra": 6, "Riflessi": 2, "Volonta": 1},
+                }
+            },
         }
         # CA 11 = 10 + dex 1: senza bonus condizionali il confronto resta valido
         assert confronta(payload)["dettaglio"]["CA"]["esito"] in ("concorda", "diverge")
 
 
 def _payload_pc(draft, ca):
-    return {"pc_draft": draft, "benchmark": {"statistics": {
-        "PF": 49, "CA": ca, "DPR": 9, "saves": {"Tempra": 6, "Riflessi": 2, "Volonta": 1}}}}
+    return {
+        "pc_draft": draft,
+        "benchmark": {
+            "statistics": {
+                "PF": 49,
+                "CA": ca,
+                "DPR": 9,
+                "saves": {"Tempra": 6, "Riflessi": 2, "Volonta": 1},
+            }
+        },
+    }
 
 
 def test_bonus_classe_ts_e_ca_monk_non_verificabili():
@@ -166,13 +208,20 @@ def test_bonus_classe_ts_e_ca_monk_non_verificabili():
     pal1 = _draft_pc(class_="Paladin")
     pal1["level"] = 1
     assert confronta(_payload_pc(pal1, ca=11))["dettaglio"]["TS Tempra"]["esito"] in (
-        "concorda", "diverge")
+        "concorda",
+        "diverge",
+    )
     # Monk senza armatura: CA non verificabile; con armatura: confrontabile
     monk = _draft_pc(class_="Monk")
-    assert confronta(_payload_pc(monk, ca=11))["dettaglio"]["CA"]["esito"] == "non_verificabile"
+    assert (
+        confronta(_payload_pc(monk, ca=11))["dettaglio"]["CA"]["esito"]
+        == "non_verificabile"
+    )
     monk["equipment"] = ["Chainmail"]
     assert confronta(_payload_pc(monk, ca=16))["dettaglio"]["CA"]["esito"] in (
-        "concorda", "diverge")
+        "concorda",
+        "diverge",
+    )
 
 
 def test_statistiche_null_non_rompe_il_corpus():

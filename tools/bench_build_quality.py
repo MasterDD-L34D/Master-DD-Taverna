@@ -11,6 +11,7 @@ Uso:
     python tools/bench_build_quality.py --json out.json
     python tools/bench_build_quality.py --corpus file.jsonl   # fixture LLM future
 """
+
 import argparse
 import json
 import random
@@ -78,17 +79,33 @@ def confronta(payload):
     draft_raw = payload.get("pc_draft")
     level = (draft_raw or {}).get("level") or payload.get("request", {}).get("level")
     if not draft_raw:
-        return {"esito": "non_verificabile", "motivo": "pc_draft assente", "level": level}
+        return {
+            "esito": "non_verificabile",
+            "motivo": "pc_draft assente",
+            "level": level,
+        }
     try:
         draft = CharacterDraft.from_dict(draft_raw)
     except Exception as exc:  # bozza incompatibile = engine rifiuta
-        return {"esito": "rifiutato", "motivo": f"draft rifiutato: {exc}", "level": level}
+        return {
+            "esito": "rifiutato",
+            "motivo": f"draft rifiutato: {exc}",
+            "level": level,
+        }
     try:
         sheet = build_character(draft)
     except Exception as exc:  # bozza malformata che l'engine non gestisce
-        return {"esito": "rifiutato", "motivo": f"engine: {type(exc).__name__}: {exc}", "level": level}
+        return {
+            "esito": "rifiutato",
+            "motivo": f"engine: {type(exc).__name__}: {exc}",
+            "level": level,
+        }
     if sheet["errors"]:
-        return {"esito": "rifiutato", "motivo": "; ".join(sheet["errors"]), "level": level}
+        return {
+            "esito": "rifiutato",
+            "motivo": "; ".join(sheet["errors"]),
+            "level": level,
+        }
 
     # razza deve essere COMPLETA (ability_mods+size+speed), non solo presente:
     # l'engine accetta le entry incomplete con default e falserebbe il confronto
@@ -103,7 +120,9 @@ def confronta(payload):
 
     # oggetti fuori catalogo: apply_equipment li ignora con warning — la CA
     # risultante non e' confrontabile (piano: oggetti magici = non_verificabile)
-    equip_non_modellato = [w for w in sheet["warnings"] if w.endswith("non in catalogo (valutato a mano)")]
+    equip_non_modellato = [
+        w for w in sheet["warnings"] if w.endswith("non in catalogo (valutato a mano)")
+    ]
 
     # bonus razziali ai TS non applicati dall'engine (piano): se un trait
     # della razza concede un bonus diretto ai saving throws, i TS non sono
@@ -115,7 +134,9 @@ def confronta(payload):
         for f in re.split(r"\.", t.get("text", ""))
     ]
     ts_non_verificabili = any(
-        re.search(r"gain[^.]*?bonus[^.]*?saving throws", t.get("text", ""), re.IGNORECASE)
+        re.search(
+            r"gain[^.]*?bonus[^.]*?saving throws", t.get("text", ""), re.IGNORECASE
+        )
         for t in catalogs.get_race(draft.race)["mechanics"].get("traits", [])
     )
     # stesso limite per la CA: bonus di armatura naturale o dodge non
@@ -125,7 +146,9 @@ def confronta(payload):
         re.search(r"bonus", f, re.IGNORECASE)
         and re.search(r"natural armor|(\bAC\b|Armor Class)", f, re.IGNORECASE)
         and not re.search(
-            r"against|resist|penalty|while|each time|can choose|assumes", f, re.IGNORECASE
+            r"against|resist|penalty|while|each time|can choose|assumes",
+            f,
+            re.IGNORECASE,
         )
         for f in frasi_traits
     )
@@ -149,7 +172,9 @@ def confronta(payload):
         it["mechanics"].get("armor_bonus") for it in sheet.get("equipment", [])
     )
     ca_classe_non_verificabile = not indossa_armatura and any(
-        re.search(r"unarmored[^.]{0,120}(Wisdom|\bAC\b)", f.get("text", ""), re.IGNORECASE)
+        re.search(
+            r"unarmored[^.]{0,120}(Wisdom|\bAC\b)", f.get("text", ""), re.IGNORECASE
+        )
         for f in feat_attive
     )
 
@@ -158,7 +183,11 @@ def confronta(payload):
     for label, calc in (("PF", sheet.get("hp")), ("CA", sheet.get("ac"))):
         val = dich.get(label)
         if val is None or calc is None:
-            dettaglio[label] = {"esito": "non_verificabile", "dichiarato": val, "ricalcolato": calc}
+            dettaglio[label] = {
+                "esito": "non_verificabile",
+                "dichiarato": val,
+                "ricalcolato": calc,
+            }
         elif label == "PF":
             # PF esatto richiede favored_class_bonus noto (D2)
             dettaglio[label] = {
@@ -173,11 +202,17 @@ def confronta(payload):
                 else "bonus alla CA non modellato dall'engine"
             )
             non_verificabile_ca = (
-                bool(equip_non_modellato) or ca_non_verificabile or ca_classe_non_verificabile
+                bool(equip_non_modellato)
+                or ca_non_verificabile
+                or ca_classe_non_verificabile
             )
             dettaglio[label] = (
-                {"esito": "non_verificabile", "dichiarato": val, "ricalcolato": calc,
-                 "motivo": motivo_ca}
+                {
+                    "esito": "non_verificabile",
+                    "dichiarato": val,
+                    "ricalcolato": calc,
+                    "motivo": motivo_ca,
+                }
                 if non_verificabile_ca
                 else {
                     "esito": "concorda" if abs(calc - val) <= 1 else "diverge",
@@ -193,18 +228,27 @@ def confronta(payload):
         # ma se la razza concede un bonus ai TS dichiarato nel trait, la
         # tolleranza non basta: tutto il gruppo TS e' non_verificabile
         dettaglio[f"TS {ita}"] = (
-            {"esito": "non_verificabile", "dichiarato": val, "ricalcolato": calc,
-             "motivo": "bonus ai TS non modellato dall'engine"}
-            if ts_non_verificabili
-            else {"esito": "non_verificabile", "dichiarato": val, "ricalcolato": calc}
-            if val is None or calc is None
-            else {
-                "esito": "concorda" if abs(calc - val) <= 1 else "diverge",
+            {
+                "esito": "non_verificabile",
                 "dichiarato": val,
                 "ricalcolato": calc,
+                "motivo": "bonus ai TS non modellato dall'engine",
             }
+            if ts_non_verificabili
+            else (
+                {"esito": "non_verificabile", "dichiarato": val, "ricalcolato": calc}
+                if val is None or calc is None
+                else {
+                    "esito": "concorda" if abs(calc - val) <= 1 else "diverge",
+                    "dichiarato": val,
+                    "ricalcolato": calc,
+                }
+            )
         )
-    dettaglio["DPR"] = {"esito": "non_verificabile", "motivo": "engine non calcola danno atteso"}
+    dettaglio["DPR"] = {
+        "esito": "non_verificabile",
+        "motivo": "engine non calcola danno atteso",
+    }
 
     verificabili = [d for k, d in dettaglio.items() if k != "DPR"]
     if any(d["esito"] == "non_verificabile" for d in verificabili):
@@ -236,15 +280,22 @@ def report(risultati):
         if grp == "senza livello":
             gruppo = [r for r in risultati if not r.get("level")]
         else:
-            gruppo = [r for r in risultati if r.get("level") and bucket(r["level"]) == grp]
+            gruppo = [
+                r for r in risultati if r.get("level") and bucket(r["level"]) == grp
+            ]
         if not gruppo:
             continue
         if grp == "senza livello":  # bozze rifiutate/assenti: solo conteggi esito
             esiti_build = {e: sum(1 for r in gruppo if r["esito"] == e) for e in esiti}
-            righe.append(f"== senza livello ({len(gruppo)} build: rifiutate o bozza assente) ==")
+            righe.append(
+                f"== senza livello ({len(gruppo)} build: rifiutate o bozza assente) =="
+            )
             righe.append(
                 "ESITO BUILD    "
-                + " ".join(f"{e}={esiti_build[e]}" for e in ("concorda", "diverge", "non_verificabile", "rifiutato"))
+                + " ".join(
+                    f"{e}={esiti_build[e]}"
+                    for e in ("concorda", "diverge", "non_verificabile", "rifiutato")
+                )
             )
             for r in gruppo:
                 righe.append(f"  - {r.get('esito')}: {r.get('motivo', '')[:120]}")
@@ -266,7 +317,10 @@ def report(risultati):
         esiti_build = {e: sum(1 for r in gruppo if r["esito"] == e) for e in esiti}
         righe.append(
             "ESITO BUILD    "
-            + " ".join(f"{e}={esiti_build[e]}" for e in ("concorda", "diverge", "non_verificabile", "rifiutato"))
+            + " ".join(
+                f"{e}={esiti_build[e]}"
+                for e in ("concorda", "diverge", "non_verificabile", "rifiutato")
+            )
         )
         righe.append("")
     righe.append("NOTE: tier/meta_tier NON verificato (3 statistiche su 4 misurabili).")
@@ -284,10 +338,16 @@ def main(argv=None):
     if args.corpus == "smoke":
         corpus = corpus_smoke(n=args.n)
     else:
-        corpus = [json.loads(l) for l in Path(args.corpus).read_text(encoding="ascii").splitlines() if l.strip()]
+        corpus = [
+            json.loads(l)
+            for l in Path(args.corpus).read_text(encoding="ascii").splitlines()
+            if l.strip()
+        ]
 
     risultati = [confronta(p) for p in corpus]
-    print(f"Censimento: classi complete={len(classi_complete())}/40, razze complete={len(razze_complete())}/77")
+    print(
+        f"Censimento: classi complete={len(classi_complete())}/40, razze complete={len(razze_complete())}/77"
+    )
     print(f"Corpus: {len(risultati)} build (seed fisso {SEED})")
     print()
     print(report(risultati))
