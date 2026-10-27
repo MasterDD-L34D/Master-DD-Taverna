@@ -80,3 +80,36 @@ class JsonFilePort:
 
     def emit(self, topic: str, payload: Any) -> None:
         self.events_log.append({"topic": topic, "payload": payload})
+
+
+_ENV_EXPORTS_PATH = "MASTERS_DD_EXPORTS_PATH"
+
+# ADR 010: estensioni che il verbo export puo' produrre — il formato e'
+# reso da template (quindi influenzabile da input utente): mai un nome
+# file arbitrario, mai path traversal.
+EXPORT_EXTENSIONS = frozenset(
+    {"json", "md", "markdown", "txt", "brew", "zip", "pdf", "canvas"}
+)
+
+
+def default_exports_path() -> Path:
+    return Path(__file__).resolve().parents[2] / "var" / "exports"
+
+
+class ExportDirPort:
+    """Porta export (ADR 010): directory di file testuali, scrittura
+    atomica. Il NOME del file lo decide il chiamante (verbo), gia'
+    whitelistato — la porta si fida come JsonFilePort (in-process)."""
+
+    def __init__(self, path: os.PathLike | str | None = None) -> None:
+        if path is None:
+            env = os.environ.get(_ENV_EXPORTS_PATH)
+            path = env if env else default_exports_path()
+        self.path = Path(path)
+
+    def write(self, name: str, content: str) -> str:
+        self.path.mkdir(parents=True, exist_ok=True)
+        tmp = self.path / (name + ".tmp")
+        tmp.write_text(content, encoding="utf-8")
+        os.replace(tmp, self.path / name)
+        return name
