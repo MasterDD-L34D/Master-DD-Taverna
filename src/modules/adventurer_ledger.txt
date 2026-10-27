@@ -1359,10 +1359,21 @@ commands:
     description: Vende item al sell_rate (qty, guard non trovato, rounding, vendor cap).
     params: [item_name_or_id, qty, rate]
     action:
+      # ADR 008: default prima, override condizionale — riferire un param
+      # opzionale non passato in un set mutante lo rende no-op (e il
+      # consume dell'item avverrebbe senza pagamento)
       - set: local.rate
-        value: '{{ float(rate) if rate is not none else float(policies.sell_rate) }}'
+        value: '{{ float(policies.sell_rate) }}'
+      - if: '{{ rate is not none }}'
+        then:
+          - set: local.rate
+            value: '{{ float(rate) }}'
       - set: local.qty
-        value: '{{ int(qty or 1) }}'
+        value: 1
+      - if: '{{ qty is not none }}'
+        then:
+          - set: local.qty
+            value: '{{ int(qty) }}'
       - find_and_consume_item:
           from_list: loot_state.inventory
           filter: { by: 'name_or_id', value: '{{item_name_or_id}}' }

@@ -22,7 +22,9 @@ import yaml
 # ADR 008: value null/assente su questi verbi = wipe silenziale dello stato.
 NULL_VALUE_VERBS = ("set", "append", "extend")
 
-ALLOWED_IMPORTS = frozenset({"re", "random", "datetime", "math", "json", "hashlib"})
+ALLOWED_IMPORTS = frozenset(
+    {"re", "random", "datetime", "math", "json", "hashlib", "uuid"}
+)
 
 # builtins tolti ai helper: senza questi, open/eval/exec/globals non esistono
 # nel namespace dei logic: (i moduli sono fidati, ma un riferimento errato
