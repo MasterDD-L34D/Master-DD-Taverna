@@ -13,6 +13,7 @@ import pytest
 
 from src.dsl.loader import Kernel, load_kernel
 from src.dsl.interpreter import DslAbort, Interpreter
+from src.dsl.state import get_path
 
 MODULES = Path(__file__).resolve().parent.parent / "src" / "modules"
 
@@ -871,17 +872,19 @@ def test_replace_placeholder_nella_variabile_di_loop(tmp_path):
     assert it.output_log == ["DPR chierico build", "chierico tier"]
 
 
-def test_goto_state_rimane_no_op_rumoroso(tmp_path):
-    # ADR 009: goto_state resta NO_OP fino alla fetta b, ma la traccia e'
-    # dichiarata e testabile (mai silenzioso)
+def test_goto_state_senza_state_machine_evento_e_nessuna_scrittura(tmp_path):
+    # ADR 012: senza state_machine dichiarato il flat non e' validabile —
+    # evento, mai silenzioso, nessuna scrittura (v4 del test ADR 009:
+    # goto_state e' ora eseguibile, il rifiuto resta rendicontato)
     k = _mini(
         tmp_path,
         "commands:\n  /go:\n    action: [{goto_state: READY}]\n",
     )
     it = Interpreter(k)
     it.run_command("/go")
-    assert it.noop_log == [{"verb": "goto_state"}]
-    assert "runtime" not in it.state or "state_machine" not in it.state.get(
+    assert it.noop_log == []
+    assert [e.get("stato_non_valido") for e in it.events] == ["READY"]
+    assert "runtime" not in it.state or "current_state" not in it.state.get(
         "runtime", {}
     )
 
@@ -1168,3 +1171,65 @@ def test_coverage_report_espose_shadowed(kernel):
     report = Interpreter(kernel).coverage_report()
     assert len(report["shadowed"]) == 22
     assert "/update_build" in report["shadowed"]
+
+
+# ---- goto_state eseguibile (ADR 012) -------------------------------------
+
+GOTO_MINI = """\
+state_machine:
+  states: [IDLE, QUIZ, READY]
+  transitions: []
+  GameMode:
+    TestWiz:
+      start: {prompt: "Scegli: 1/2", parse: {"1": {set: x, value: a}}, next: end}
+commands:
+  /go_quiz: {action: [{goto_state: QUIZ}]}
+  /go_bad: {action: [{goto_state: BOGUS}]}
+  /go_wiz: {action: [{goto_state: GameMode.TestWiz.start}]}
+  /go_badwiz: {action: [{goto_state: GameMode.Nope.start}]}
+  /go_empty: {action: [{goto_state: ""}]}
+"""
+
+
+def test_goto_state_flat_scrive_runtime_current_state(tmp_path):
+    it = Interpreter(_mini(tmp_path, GOTO_MINI))
+    it.run_command("/go_quiz")
+    assert get_path(it.state, "runtime.current_state") == "QUIZ"
+    assert it.events == []
+
+
+def test_goto_state_flat_non_valido_evento_e_nessuna_scrittura(tmp_path):
+    it = Interpreter(_mini(tmp_path, GOTO_MINI))
+    it.run_command("/go_bad")
+    assert get_path(it.state, "runtime.current_state") is None
+    assert [e.get("stato_non_valido") for e in it.events] == ["BOGUS"]
+
+
+def test_goto_state_wizard_scrive_e_emette_prompt(tmp_path):
+    it = Interpreter(_mini(tmp_path, GOTO_MINI))
+    it.run_command("/go_wiz")
+    assert get_path(it.state, "runtime.current_state") == "GameMode.TestWiz.start"
+    assert it.output_log == ["Scegli: 1/2"]
+
+
+def test_goto_state_wizard_primo_segmento_sconosciuto(tmp_path):
+    it = Interpreter(_mini(tmp_path, GOTO_MINI))
+    it.run_command("/go_badwiz")
+    assert get_path(it.state, "runtime.current_state") is None
+    assert [e.get("stato_non_valido") for e in it.events] == ["GameMode.Nope.start"]
+
+
+def test_goto_state_target_vuoto_evento(tmp_path):
+    it = Interpreter(_mini(tmp_path, GOTO_MINI))
+    it.run_command("/go_empty")
+    assert it.events and all("stato_non_valido" in e for e in it.events)
+
+
+def test_goto_state_moduli_reali(kernel: Kernel):
+    # ADR 012 pin: /play_game (Taverna_NPC) fa goto wizard con prompt
+    it = Interpreter(kernel)
+    it.run_command("/play_game")
+    assert (
+        get_path(it.state, "runtime.current_state") == "GameMode.OnboardingTheme.lang"
+    )
+    assert any("Scegli lingua" in o for o in it.output_log)
