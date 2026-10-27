@@ -1349,3 +1349,115 @@ commands:
     it.run_command("/tagga", nome="spada")
     assert it.state["loot_state"]["inventory"][0]["tagged"] is True
     assert it.output_log == ["ok=True"]
+
+
+# ---- Wizard input routing (ADR 014) ------------------------------------
+
+WIZARD_MINI = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared:
+      profile: {name: "", lang: ""}
+    Test:
+      entry:
+        prompt: "Nome?"
+        parse:
+          any: {set: "@GameMode.shared.profile.name", value: "{{input}}"}
+        next: lang
+      lang:
+        prompt: "Lingua 1/2?"
+        parse:
+          "1": {set: "@GameMode.shared.profile.lang", value: "fr"}
+          "2": {set: "@GameMode.shared.profile.lang", value: "en"}
+          regex: "^(it|en)$"
+          groups: [lingua]
+          any: {set: "@GameMode.shared.profile.lang", value: "{{input}}"}
+        actions:
+          # sulla via regex il group lingua e' legato; sulle via map/any
+          # e' non-legato -> set no-op ADR 008 (lang gia' scritto)
+          - set: "@GameMode.shared.profile.lang"
+            value: "{{lingua}}"
+        guards:
+          - condition: "{{ GameMode.shared.profile.lang != 'xx' }}"
+            on_fail: "lingua vietata"
+        next: done
+      done:
+        actions:
+          - output: "Fatto {{GameMode.shared.profile.name}}"
+        end: true
+commands:
+  /start: {action: [{goto_state: GameMode.Test.entry}]}
+  /status: {action: [{output: "stato ok"}]}
+"""
+
+
+def _wiz(tmp_path) -> Interpreter:
+    it = Interpreter(_mini(tmp_path, WIZARD_MINI))
+    it.run_command("/start")
+    return it
+
+
+def test_run_input_any_e_avanza_con_prompt(tmp_path):
+    it = _wiz(tmp_path)
+    it.run_input("Grog")
+    assert get_path(it.state, "game_mode.shared.profile.name") == "Grog"
+    assert get_path(it.state, "runtime.current_state") == "GameMode.Test.lang"
+    assert it.output_log[-1] == "Lingua 1/2?"
+
+
+def test_run_input_map_esatta_vince_su_regex(tmp_path):
+    it = _wiz(tmp_path)
+    it.run_input("Grog")
+    it.run_input("2")
+    assert get_path(it.state, "game_mode.shared.profile.lang") == "en"
+
+
+def test_run_input_regex_e_groups(tmp_path):
+    it = _wiz(tmp_path)
+    it.run_input("Grog")
+    it.run_input("it")  # regex ^(it|en)$ -> groups[lingua], map non matcha
+    assert get_path(it.state, "game_mode.shared.profile.lang") == "it"
+
+
+def test_run_input_guard_fallito_rimane_sul_nodo(tmp_path):
+    it = _wiz(tmp_path)
+    it.run_input("Grog")
+    it.run_input("xx")  # any lo scrive, guard lo rifiuta -> stay
+    assert get_path(it.state, "runtime.current_state") == "GameMode.Test.lang"
+    assert it.output_log[-1] == "lingua vietata"
+
+
+def test_run_input_end_ripristina_idle(tmp_path):
+    it = _wiz(tmp_path)
+    it.run_input("Grog")
+    it.run_input("2")
+    assert get_path(it.state, "runtime.current_state") == "IDLE"
+    assert it.output_log[-1] == "Fatto Grog"
+
+
+def test_run_input_senza_wizard_evento(tmp_path):
+    it = Interpreter(_mini(tmp_path, WIZARD_MINI))
+    it.run_input("ciao")
+    assert [e.get("input_fuori_wizard") for e in it.events] == ["ciao"]
+
+
+def test_run_input_comando_vince_sul_nodo(tmp_path):
+    it = _wiz(tmp_path)
+    it.run_input("/status")
+    assert it.output_log[-1] == "stato ok"
+    # il wizard non ha consumato l'input: si resta sul nodo entry
+    assert get_path(it.state, "runtime.current_state") == "GameMode.Test.entry"
+
+
+def test_run_input_modulo_reale_play_game(tmp_path):
+    # ADR 014 pin: /play_game poi "3" -> lang=it (map), prompt universo
+    k = load_kernel(MODULES, only=("Taverna_NPC.txt",))
+    it = Interpreter(k)
+    it.run_command("/play_game")
+    it.run_input("3")
+    assert get_path(it.state, "game_mode.shared.profile.lang") == "it"
+    assert get_path(it.state, "runtime.current_state") == (
+        "GameMode.OnboardingTheme.universe"
+    )
+    assert any("Scegli universo" in o for o in it.output_log)
