@@ -593,6 +593,13 @@ class Interpreter:
 
     _MATCH_NO_ACTION = object()  # parse match senza entry-action (regex)
 
+    def route_input(self, text: str) -> str | None:
+        """Input libero fuori wizard: routing deterministico (ADR 015).
+        Ritorna il route_to e registra runtime.route_to/mode_attivo."""
+        from .router import Router  # pigro: solo chi routa paga l'import
+
+        return Router(self).route(text)
+
     def run_input(self, text: str, _depth: int = 0) -> None:
         """Input libero utente: se runtime.current_state punta a un nodo
         wizard, match parse -> entry action -> guards -> node actions ->

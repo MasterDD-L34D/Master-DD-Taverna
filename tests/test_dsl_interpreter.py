@@ -1970,7 +1970,8 @@ commands:
 
 # ---- Router input libero (ADR 015, ES4) --------------------------------
 
-_ROUTER_MINI = """\
+# raw string: i pattern regex con \b restano letterali fino a re
+_ROUTER_MINI = r"""
 router:
   intent_detection:
     normalize: {lowercase: true, strip_punct: true, fold_accents: true, regex_flags: "i"}
@@ -1980,18 +1981,18 @@ router:
       per_segment_routing: true
       merge_same_module: true
   rules:
-    - match: ["^/help\b"]
+    - match: ['^/help\b']
       route_to: "Documentazione"
       short_circuit: true
     - match_any:
-        - "\b(talento|feat|regola)\b"
-      not_match: ["\b(storia)\b"]
+        - '\b(talento|feat|regola)\b'
+      not_match: ['\b(storia)\b']
       route_to: "Ruling Expert"
     - match_any:
-        - "\b(storia|golarion)\b"
+        - '\b(storia|golarion)\b'
       route_to: "Archivist"
     - match_any:
-        - "\b(npc|quiz)\b"
+        - '\b(npc|quiz)\b'
       embedding: true
       rerank: true
       route_to: "Taverna NPC"
@@ -2085,17 +2086,14 @@ def test_route_input_segmenter_merge_stesso_modulo(tmp_path):
 
 
 def test_route_input_condition_sintassi_authored(tmp_path):
-    # '!' e '&&' tradotti: la rule di disambiguazione scatta solo con
-    # piu' candidati (covered da multi_match); qui verifica che una
-    # condition authored non sia falsa per sintassi
+    # '!' tradotto: la condition authored non e' falsa per sintassi — la
+    # rule non matcha il regex ma non deve neanche dichiarare l'evento
     mini = _ROUTER_MINI.replace(
         '- condition: "runtime.intent_candidates && runtime.intent_candidates.length > 1"',
         '- condition: "!runtime.preload_done"\n'
-        '      match: ["^__mai__"]\n'
-        '      continue: true',
+        "      match: ['^__mai__']\n"
+        "      continue: true",
     )
     it = Interpreter(_mini(tmp_path, mini))
-    # la rule non matcha il regex, ma la condition deve valutarsi senza
-    # evento "condizione non parsabile"
     it.route_input("talento")
     assert not [e for e in it.events if "condizione" in str(e)]
