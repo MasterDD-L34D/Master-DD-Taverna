@@ -90,6 +90,10 @@ class Kernel:
     templates: dict[str, str] = field(default_factory=dict)
     data: dict[str, Any] = field(default_factory=dict)
     helper_compile_errors: list[str] = field(default_factory=list)
+    # ADR 011: nomi comando sovrascritti dal loader (ultimo file sorted vince);
+    # rendicontati, mai silenziosi. Solo comandi: helpers/templates/data hanno
+    # fusione voluta o gate dedicati (G2/G3).
+    shadowed: dict[str, list[str]] = field(default_factory=dict)
 
     def bind_globals(self, g: dict) -> None:
         """Compila ogni helper come ``def`` dentro il dict globals condiviso."""
@@ -195,7 +199,12 @@ def load_kernel(
     modules_dir: Path, kernel_name: str = "base_profile.txt", only: tuple[str, ...] = ()
 ) -> Kernel:
     """Carica kernel + moduli. ``only`` limita i moduli extra (replay
-    per-modulo: evita collisioni di nome comando tra moduli diversi)."""
+    per-modulo: evita collisioni di nome comando tra moduli diversi).
+
+    Perimetro ADR 011: l'esecuzione reale e' per-modulo (``only=``), il kernel
+    pieno serve solo ai gate G2/G3. Quando due file definiscono lo stesso
+    comando, l'ultimo in ordine sorted vince e l'override e' rendicontato in
+    ``k.shadowed`` (mai silenzioso)."""
     k = Kernel()
     files = sorted(Path(modules_dir).glob("*.txt"))
     kernel_files = [f for f in files if f.name == kernel_name]
@@ -210,6 +219,12 @@ def load_kernel(
         for name, spec in _norm_commands(data.get("commands")):
             spec = dict(spec)
             spec["origin"] = path.name
+            if name in k.commands:  # ADR 011: override rendicontato
+                prev = k.commands[name]["origin"]
+                seen = k.shadowed.setdefault(name, [])
+                if prev not in seen:
+                    seen.append(prev)
+                seen.append(path.name)
             k.commands[name] = spec
         for key, val in data.items():  # dati top-level (meta_reference, ecc.)
             if key in ("commands", "helpers", "functions") or (

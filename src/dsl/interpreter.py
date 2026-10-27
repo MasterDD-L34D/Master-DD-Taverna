@@ -1025,6 +1025,8 @@ class Interpreter:
             "no_op": 0,
             "no_op_cmds": [],
             "errore": [],
+            # ADR 011: comandi sovrascritti in caricamento pieno (gate)
+            "shadowed": sorted(self.kernel.shadowed),
         }
         for name, cmd in self.kernel.commands.items():
             report["totale"] += 1
