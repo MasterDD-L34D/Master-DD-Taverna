@@ -1741,3 +1741,29 @@ commands:
     it = Interpreter(_mini(tmp_path, mini))
     it.run_command("/outer")
     assert it.state["existing"] == 25
+
+
+def test_run_input_parse_entry_guardata_vera_esegue_sibling(tmp_path):
+    # Codex P2 #559 giro 6: when vero tolto prima del dispatch — sennò
+    # _dispatch invocherebbe _v_when e il sibling set saltava (ordine YAML)
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {}
+    T:
+      p:
+        prompt: "Scelta?"
+        parse:
+          accetta:
+            when: "{{ true }}"
+            set: "@GameMode.shared.accepted"
+            value: true
+        end: true
+commands:
+  /s: {action: [{goto_state: GameMode.T.p}]}
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/s")
+    it.run_input("accetta")
+    assert get_path(it.state, "game_mode.shared.accepted") is True

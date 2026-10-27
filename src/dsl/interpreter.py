@@ -696,6 +696,10 @@ class Interpreter:
                     w = self._cond(action["when"], params)
                     if not w:
                         continue
+                    # giro 6: la guardia e' metadata — tolta prima del
+                    # dispatch, sennò _dispatch invocherebbe _v_when sul
+                    # sibling set e l'ordine chiavi YAML deciderebbe tutto
+                    action = {k: v for k, v in action.items() if k != "when"}
                 return action
         regex = parse.get("regex")
         patterns = regex if isinstance(regex, list) else [regex] if regex else []
@@ -733,6 +737,7 @@ class Interpreter:
             if isinstance(action, dict) and "when" in action:
                 if not self._cond(action["when"], params):
                     return None
+                return {k: v for k, v in action.items() if k != "when"}
             return action
         return None
 
