@@ -1,6 +1,6 @@
 module_name: "Master-DD-Taverna - Base Profile"
-version: "3.8-kernel"
-last_updated: "2026-07-18T00:00:00.000Z"
+version: "3.9-kernel"
+last_updated: "2026-10-27T00:00:00.000Z"
 visibility: "internal_only"
 type: "core_internal"
 
@@ -635,7 +635,7 @@ helpers:
 postprocessors:
   - name: "__echo_receipt"
     order: 9998
-    when: "context and context.module == 'Taverna NPC' and context.quality_score is not None"
+    when: "context and context.module == 'Taverna NPC' and context.quality_score is not none"
     run: |
       receipt = helpers.build_quality_receipt(context.quality_score, context.rubric_breakdown or {}, context.session_id or 0)
       return output_text + "\n\n" + receipt

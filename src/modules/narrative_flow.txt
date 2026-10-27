@@ -1,6 +1,6 @@
 module_name: Narrativa
-version: 2.4
-last_updated: 2026-07-18
+version: 2.5
+last_updated: 2026-10-27T00:00:00.000Z
 inherits_from: base_profile.txt
 type: module
 
@@ -220,7 +220,7 @@ commands:
     params: [titolo]
     action:
       - load_session: { key: 'story_{{titolo}}', as: loaded_story }
-      - if: '{{loaded_story is not None}}'
+      - if: '{{loaded_story is not none}}'
         then:
           - set: story_state
             value: '{{loaded_story}}'

@@ -968,3 +968,14 @@ def test_valore_non_serializzabile_fallisce_esplicito(tmp_path):
     it.run_command("/go")
     assert not (tmp_path / "store.json").exists()
     assert any("serializ" in str(e) for e in it.events)
+
+
+def test_moduli_template_senza_is_not_None_maiuscolo():
+    # P2 review Codex #554 giro 3: 'is not None' non e' un test jinja valido
+    # ("No test named 'None'") — la guardia e' morta sempre falsa. I helper
+    # python (logic) possono usare 'is not None' legitimo: si scansionano
+    # solo le righe con template {{ ... }}
+    for f in sorted(MODULES.glob("*.txt")):
+        for i, line in enumerate(f.read_text(encoding="utf-8").splitlines(), 1):
+            if "{{" in line and "is not None" in line:
+                pytest.fail(f"{f.name}:{i}: 'is not None' in template jinja")
