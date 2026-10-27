@@ -61,3 +61,7 @@ data/oracolo-gate-last.json
 
 # Archivio sessione locale (ADR 009): git clean -fdx lo cancella
 var/
+
+# Sessioni agente locale e appoggio operativo: mai in git (policy sessione)
+.claude/
+tmp/
