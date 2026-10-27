@@ -8,7 +8,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "tools"))
 
-from check_instruction_guards import CHECKS, evaluate
+from check_instruction_guards import CHECKS, evaluate, load_documents
 
 RELS = [rel for _, rel, _, _ in CHECKS]
 
@@ -83,3 +83,11 @@ def test_file_mancante_fallisce():
         results[n] is False for n in results if n.startswith("agents_")
     )
     assert results["router_rz1"] is True  # i doc presenti restano validi
+
+
+def test_documenti_reali_del_repo_passano():
+    # Codex P2 #561: i synthetic da soli non bastano — se un ADR vero o una
+    # frase canonica sparisce dai documenti del repo, questo test va in rosso
+    root = Path(__file__).resolve().parent.parent
+    results = evaluate(load_documents(root))
+    assert all(results.values()), [n for n, ok in results.items() if not ok]
