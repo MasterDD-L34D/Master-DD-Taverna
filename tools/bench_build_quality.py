@@ -153,7 +153,7 @@ def confronta(payload):
         for f in feat_attive
     )
 
-    dich = payload.get("benchmark", {}).get("statistics", {})
+    dich = payload.get("benchmark", {}).get("statistics") or {}
     dettaglio = {}
     for label, calc in (("PF", sheet.get("hp")), ("CA", sheet.get("ac"))):
         val = dich.get(label)

@@ -173,3 +173,11 @@ def test_bonus_classe_ts_e_ca_monk_non_verificabili():
     monk["equipment"] = ["Chainmail"]
     assert confronta(_payload_pc(monk, ca=16))["dettaglio"]["CA"]["esito"] in (
         "concorda", "diverge")
+
+
+def test_statistiche_null_non_rompe_il_corpus():
+    # P2 Codex g5: benchmark.statistics: null e' ammesso dallo schema —
+    # tutte le statistiche diventano non_verificabili, la build e' rapportata
+    r = confronta({"pc_draft": _draft_pc(), "benchmark": {"statistics": None}})
+    assert r["esito"] == "non_verificabile"
+    assert r["dettaglio"]["PF"]["esito"] == "non_verificabile"
