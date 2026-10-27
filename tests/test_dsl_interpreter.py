@@ -1966,3 +1966,136 @@ commands:
     assert [e for e in it.events if "wizard_guard_falso" in e]
     assert get_path(it.state, "game_mode.shared.accepted") is None
     assert get_path(it.state, "runtime.current_state") != "GameMode.K.p"  # mai atterrato
+
+
+# ---- Router input libero (ADR 015, ES4) --------------------------------
+
+_ROUTER_MINI = """\
+router:
+  intent_detection:
+    normalize: {lowercase: true, strip_punct: true, fold_accents: true, regex_flags: "i"}
+    segmenter:
+      enabled: true
+      split_regex: '(?:,?\s*(?:e poi|poi|quindi|;)\s+)'
+      per_segment_routing: true
+      merge_same_module: true
+  rules:
+    - match: ["^/help\b"]
+      route_to: "Documentazione"
+      short_circuit: true
+    - match_any:
+        - "\b(talento|feat|regola)\b"
+      not_match: ["\b(storia)\b"]
+      route_to: "Ruling Expert"
+    - match_any:
+        - "\b(storia|golarion)\b"
+      route_to: "Archivist"
+    - match_any:
+        - "\b(npc|quiz)\b"
+      embedding: true
+      rerank: true
+      route_to: "Taverna NPC"
+    - condition: "runtime.intent_candidates && runtime.intent_candidates.length > 1"
+      reply: "Quale modulo?"
+      stop: true
+    - fallback: "Ruling Expert"
+  fallback_policy:
+    multi_match: "ask_clarification"
+    no_match: "Ruling Expert"
+    clarification_prompt: "Dimmi il tuo intento."
+  decorators:
+    pre_routing:
+      - if: "!runtime.preload_done"
+        then:
+          - invoke: "orchestration.pipeline.Preload_Warmup"
+          - set: [runtime.preload_done: true]
+    post_routing:
+      - if: "route_to"
+        then:
+          - set: [runtime.mode_attivo: "{{ route_to }}"]
+"""
+
+
+def test_route_input_match_regex(tmp_path):
+    it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    rt = it.route_input("cosa fa il talento Pounce?")
+    assert rt == "Ruling Expert"
+    assert get_path(it.state, "runtime.route_to") == "Ruling Expert"
+    assert get_path(it.state, "runtime.mode_attivo") == "Ruling Expert"
+
+
+def test_route_input_short_circuit_primo_vince(tmp_path):
+    it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    assert it.route_input("/help qualcosa") == "Documentazione"
+
+
+def test_route_input_not_match_esclude(tmp_path):
+    # 'storia' matcha Archivist; la regola Ruling ha not_match su 'storia'
+    it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    assert it.route_input("parlami della storia di Golarion") == "Archivist"
+
+
+def test_route_input_normalize_accenti_e_maiuscole(tmp_path):
+    it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    assert it.route_input("TALENTO Àèì") == "Ruling Expert"
+
+
+def test_route_input_multi_match_chiede_chiarimento(tmp_path):
+    # 'talento' + 'npc': due moduli diversi -> clarification, niente route
+    it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    assert it.route_input("talento npc") is None
+    assert "Dimmi il tuo intento." in it.output_log
+    cands = get_path(it.state, "runtime.intent_candidates")
+    assert set(cands) == {"Ruling Expert", "Taverna NPC"}
+
+
+def test_route_input_fallback_no_match(tmp_path):
+    it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    assert it.route_input("xyzzy pinco pallino") == "Ruling Expert"
+
+
+def test_route_input_embedding_rerank_noop_log(tmp_path):
+    it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    assert it.route_input("genera npc") == "Taverna NPC"
+    assert any(
+        n.get("reason") == "pipeline_non_implementata"
+        for n in it.noop_log
+        if n.get("verb") in ("embedding", "rerank")
+    )
+
+
+def test_route_input_invoke_noop_pipeline(tmp_path):
+    it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    it.route_input("cosa fa il talento Pounce?")
+    assert any(
+        n.get("verb") == "invoke"
+        and n.get("reason") == "pipeline_non_implementata"
+        for n in it.noop_log
+    )
+    # i set dei decorators invece si applicano
+    assert get_path(it.state, "runtime.preload_done") is True
+
+
+def test_route_input_segmenter_merge_stesso_modulo(tmp_path):
+    it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    rt = it.route_input("spiegami il talento Pounce; poi una regola")
+    assert rt == "Ruling Expert"
+    cands = get_path(it.state, "runtime.intent_candidates")
+    assert cands == ["Ruling Expert"]
+
+
+def test_route_input_condition_sintassi_authored(tmp_path):
+    # '!' e '&&' tradotti: la rule di disambiguazione scatta solo con
+    # piu' candidati (covered da multi_match); qui verifica che una
+    # condition authored non sia falsa per sintassi
+    mini = _ROUTER_MINI.replace(
+        '- condition: "runtime.intent_candidates && runtime.intent_candidates.length > 1"',
+        '- condition: "!runtime.preload_done"\n'
+        '      match: ["^__mai__"]\n'
+        '      continue: true',
+    )
+    it = Interpreter(_mini(tmp_path, mini))
+    # la rule non matcha il regex, ma la condition deve valutarsi senza
+    # evento "condizione non parsabile"
+    it.route_input("talento")
+    assert not [e for e in it.events if "condizione" in str(e)]
