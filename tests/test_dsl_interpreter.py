@@ -1826,3 +1826,67 @@ commands:
     assert get_path(it.state, "game_mode.shared.entrato") is True
     assert get_path(it.state, "runtime.current_state") == "GameMode.T.turno"
     assert it.output_log[-1] == "Turno 1?"
+
+
+def test_run_input_slash_quoting_malformato_evento_non_crash(tmp_path):
+    # Codex P2 #559 giro 8: quoting malformato nell'input utente -> evento
+    # diagnostico e si resta sul nodo, mai ValueError all'host
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {}
+    T:
+      p:
+        prompt: "Fermo?"
+        parse:
+          any: {set: risposta, value: "{{input}}"}
+        end: true
+commands:
+  /s: {action: [{goto_state: GameMode.T.p}]}
+  /segna:
+    params: [val]
+    action:
+      - set: preso
+        value: "{{val}}"
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/s")
+    it.run_input('/segna val="spada')  # quote non chiusa
+    assert [e for e in it.events if "tokenizzazione_fallita" in e]
+    assert get_path(it.state, "runtime.current_state") == "GameMode.T.p"
+    assert it.state.get("preso") is None
+
+
+def test_run_input_next_valuta_guard_tema_genitore(tmp_path):
+    # Codex P2 #559 giro 8: next che entra in un tema con when falso sul
+    # TEMA (non sul nodo) -> wizard_guard_falso, nessuna esecuzione
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {}
+    T:
+      start:
+        prompt: "Vai?"
+        parse:
+          any: {set: risposta, value: "{{input}}"}
+        next: "@GameMode.K.entry"
+    K:
+      when: "{{ false }}"
+      entry:
+        actions:
+          - set: "@GameMode.shared.fatto"
+            value: true
+        prompt: "Tema guardato?"
+        parse:
+          any: {set: risposta, value: "{{input}}"}
+        end: true
+commands:
+  /s: {action: [{goto_state: GameMode.T.start}]}
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/s")
+    it.run_input("vai")
+    assert [e for e in it.events if "wizard_guard_falso" in e]
+    assert get_path(it.state, "game_mode.shared.fatto") is None

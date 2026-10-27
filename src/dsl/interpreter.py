@@ -670,6 +670,17 @@ class Interpreter:
         if nnode.get("when") is not None and not self._cond(nnode.get("when"), params):
             self.events.append({"wizard_guard_falso": target})
             return  # si resta sul nodo corrente
+        # Codex P2 #559 giro 8: guard anche sul TEMA genitore — nei moduli
+        # reali (KingdomTurn, MassCombat) il when vive sul tema, non sul
+        # nodo entry; senza questo check il tema guardato esegue lo stesso
+        theme = get_path(sm, ".".join(target.split(".")[:-1]))
+        if (
+            isinstance(theme, dict)
+            and theme.get("when") is not None
+            and not self._cond(theme["when"], params)
+        ):
+            self.events.append({"wizard_guard_falso": target})
+            return
         set_path(self.state, "runtime.current_state", target)
         if nnode.get("prompt"):
             self.output_log.append(self._rs(str(nnode["prompt"]), params))
@@ -1185,7 +1196,11 @@ class Interpreter:
             self._rn(" ".join([head, *kept]), params) if render else " ".join([head, *kept])
         )  # Codex P2: render prima di tokenizzare; giro 7: solo per i
         # comandi del repo — l'input utente arriva letterale (render=False)
-        tokens = shlex.split(rendered)
+        try:
+            tokens = shlex.split(rendered)
+        except ValueError as e:  # quoting malformato (input utente)
+            self.events.append({"tokenizzazione_fallita": str(e)[:80]})
+            return
         if not tokens:
             return
         name = tokens[0]
