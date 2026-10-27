@@ -247,6 +247,8 @@ ESEGUIBILI = frozenset(
         "replace_placeholder",
         # ES2-a3 (ADR 010): export — persiste l'ultimo output su porta
         "export",
+        # ES2-b (ADR 012): goto_state — atterra + renderizza, validato
+        "goto_state",
     }
 )
 
@@ -256,7 +258,6 @@ ESEGUIBILI = frozenset(
 NO_OP = frozenset(
     {
         "input",
-        "goto_state",
         "roll",
         "match",
         "match_any",
@@ -733,6 +734,35 @@ class Interpreter:
 
     def _v_set_mode(self, a, params, depth):
         set_path(self.state, "runtime.mode", self._rn(a["set_mode"], params))
+
+    def _v_goto_state(self, a, params, depth):
+        # ADR 012: atterra + renderizza. Validazione a due vie, rifiuto a
+        # evento mai silenzioso. La tabella transitions e' metadato
+        # dichiarativo per il planner, NON enforced (goto imperativo e
+        # tabella dichiarativa sono ortogonali; ~30% dei goto reali non
+        # hanno transizione dichiarata).
+        target = self._rn(a.get("goto_state"), params)
+        sm = self.kernel.data.get("state_machine") or {}
+        motivo = ""
+        if not isinstance(target, str) or not target:
+            motivo = "target vuoto/non stringa"
+        elif "." not in target:
+            if target not in (sm.get("states") or []):
+                motivo = "non in state_machine.states"
+        else:
+            segs = target.split(".")
+            sub = sm.get(segs[0])
+            # container (GameMode) e tema (es. Gambling) dichiarati; il nodo
+            # foglia no (YAGNI: niente registro statico dei ~20 nodi)
+            if not isinstance(sub, dict) or segs[1] not in sub:
+                motivo = "percorso wizard non dichiarato"
+        if motivo:
+            self.events.append({"stato_non_valido": str(target)[:80], "motivo": motivo})
+            return
+        set_path(self.state, "runtime.current_state", target)
+        node = get_path(sm, target)  # flat -> None; dotted -> nodo wizard
+        if isinstance(node, dict) and node.get("prompt"):
+            self.output_log.append(self._rs(node["prompt"], params))
 
     def _v_switch(self, a, params, depth):
         guards = self._guard_ctx(params)
