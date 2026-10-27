@@ -2097,3 +2097,50 @@ def test_route_input_condition_sintassi_authored(tmp_path):
     it = Interpreter(_mini(tmp_path, mini))
     it.route_input("talento")
     assert not [e for e in it.events if "condizione" in str(e)]
+
+
+def test_route_input_condition_falsa_valutata(tmp_path):
+    # Codex P1 #560: condition bare valutata come ESPRESSIONE ({{ }}), non
+    # truthy di una stringa non vuota — decorator condizionale non scatta
+    mini = _ROUTER_MINI.replace(
+        """    post_routing:
+      - if: "route_to"
+        then:
+          - set: [runtime.mode_attivo: "{{ route_to }}"]""",
+        """    post_routing:
+      - if: "route_to"
+        then:
+          - set: [runtime.mode_attivo: "{{ route_to }}"]
+      - if: "route_to == 'Archivist'"
+        then:
+          - set: [runtime.solo_archivist: true]""",
+    )
+    it = Interpreter(_mini(tmp_path, mini))
+    assert it.route_input("talento Pounce") == "Ruling Expert"
+    assert get_path(it.state, "runtime.mode_attivo") == "Ruling Expert"
+    assert get_path(it.state, "runtime.solo_archivist") is None
+    it.route_input("storia di Absalom")
+    assert get_path(it.state, "runtime.solo_archivist") is True
+
+
+def test_route_input_fallback_solo_a_candidato_zero(tmp_path):
+    # Codex P2 #560: un match unico NON diventa multi-match col fallback
+    it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    assert it.route_input("genera npc") == "Taverna NPC"
+    assert get_path(it.state, "runtime.intent_candidates") == ["Taverna NPC"]
+    assert "Dimmi il tuo intento." not in it.output_log
+
+
+def test_route_input_disambiguazione_vede_candidati_correnti(tmp_path):
+    # Codex P2 #560: la rule disambiguazione legge i candidati del turno
+    # corrente (non quelli precedenti) nel reply
+    mini = _ROUTER_MINI.replace(
+        'reply: "Quale modulo?"',
+        'reply: "Candidati: {{ runtime.intent_candidates | join(\', \') }}"',
+    )
+    it = Interpreter(_mini(tmp_path, mini))
+    assert it.route_input("talento npc") is None
+    assert "Candidati: Ruling Expert, Taverna NPC" in it.output_log
+    it.output_log.clear()
+    assert it.route_input("storia") == "Archivist"
+    assert not [o for o in it.output_log if o.startswith("Candidati:")]

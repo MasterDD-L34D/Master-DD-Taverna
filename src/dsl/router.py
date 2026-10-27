@@ -32,10 +32,11 @@ class Router:
         idt = self.spec.get("intent_detection") or {}
         self._decorators("pre_routing", {})
         candidates: list[str] = []
+        set_path(self.it.state, "runtime.intent_candidates", [])  # reset di turno
         for seg in self._segments(text, idt.get("segmenter") or {}):
-            for cand in self._route_segment(self._normalize(seg, idt.get("normalize") or {})):
-                if cand not in candidates:
-                    candidates.append(cand)  # merge_same_module
+            self._route_segment(
+                self._normalize(seg, idt.get("normalize") or {}), candidates
+            )
         policy = self.spec.get("fallback_policy") or {}
         set_path(self.it.state, "runtime.intent_candidates", candidates)
         if len(candidates) > 1:
@@ -75,18 +76,30 @@ class Router:
 
     # -- rules ------------------------------------------------------------
 
-    def _route_segment(self, text_n: str) -> list[str]:
-        candidates: list[str] = []
+    def _route_segment(self, text_n: str, candidates: list) -> list[str]:
         for rule in self.spec.get("rules") or []:
             if not isinstance(rule, dict) or not self._matches(rule, text_n):
                 continue
+            # Codex P2 #560: fallback = destinazione di default, vale solo
+            # a candidato zero — non si aggiunge accanto a un match vero
+            # (sennò un match unico diventa chiarimento spurio)
+            dest = rule.get("route_to")
+            if not dest and rule.get("fallback"):
+                if candidates:
+                    continue
+                dest = rule["fallback"]
             self._apply_set(rule.get("set"), {"route_to": None})
             for flag in ("embedding", "rerank", "eps_threshold"):
                 if flag in rule:
                     self.it.noop_log.append({"verb": flag, "reason": _PIPELINE_NOOP})
-            dest = rule.get("route_to") or rule.get("fallback")
-            if dest and dest not in candidates:
+            if dest and str(dest) not in candidates:
                 candidates.append(str(dest))
+                # Codex P2 #560: pubblicati PRIMA della rule successiva —
+                # la disambiguazione authored li legge nel turno corrente,
+                # non di quello prima
+                set_path(
+                    self.it.state, "runtime.intent_candidates", list(candidates)
+                )
             if rule.get("reply"):
                 self.it.output_log.append(self.it._rs(str(rule["reply"]), {}))
             if rule.get("stop") or rule.get("short_circuit"):
@@ -114,14 +127,19 @@ class Router:
     def _cond_router(self, expr: Any, extra: dict) -> bool:
         """Condition authored della tabella: sintassi JS minimale tradotta
         (!x, &&, ||, .length) prima del parse — sennò ogni guard del
-        router morirebbe come 'non parseggiabile' (vale falso + evento)."""
+        router morirebbe come 'non parseggiabile' (vale falso + evento).
+        Avvolta in {{ }} perche' _cond/_rn valutano SOLO template con
+        delimitatori: una espressione bare resterebbe stringa non vuota =
+        truthy TRUE sempre (Codex P1 #560)."""
         s = (
             str(expr)
             .replace("&&", " and ")
             .replace("||", " or ")
             .replace(".length", " | length")
         )
-        s = re.sub(r"!(?!=)", " not ", s)
+        s = re.sub(r"!(?!=)", " not ", s).strip()
+        if not (s.startswith("{{") and s.endswith("}}")):
+            s = "{{ " + s + " }}"
         return self.it._cond(s, extra)
 
     # -- decorators / set ---------------------------------------------------
