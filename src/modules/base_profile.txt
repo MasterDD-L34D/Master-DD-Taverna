@@ -200,7 +200,7 @@ router:
 
       # RULING — hard gate
       - match_any:
-          - "\\b(grapple|afferrato|pinned|condizione|condition|attacco|attack|ac|ca|cmb|cmd|aoo|AoO|copertura|occultamento|concealment|soft cover|copertura superiore|flanking|carica|charge|full attack|attacco completo|incantesimo|spell|concentrazione|concentration|talento|feat|raw|rai|pfs|faq|errata|azione|swift|immediate|azione immediata|azione veloce|stack|cumulabile|bonus|interazione|sovrapposizione|pounce|vital strike|iterative attacks|two-weapon fighting|twf|trip|disarm|sunder|bull rush|overrun|reposition|dirty trick|sneak attack|attacco furtivo|line of sight|line of effect|linea di vista|linea di effetto|prone|flat[- ]footed|flatfooted|impreparato|entangled|staggered|dazed|provoke|provoca\\s*ao)\\b"
+          - "\\b(grapple|afferrato|pinned|condizione|condition|attacco|attack|ac|ca|cmb|cmd|aoo|AoO|copertura|occultamento|concealment|soft cover|copertura superiore|flanking|carica|charge|full attack|attacco completo|incantesimo|spell|concentrazione|concentration|talento|feat|raw|rai|pfs|faq|errata|azione|swift|immediate|azione immediata|azione veloce|stack|cumulabile|bonus|interazione|sovrapposizione|pounce|vital strike|iterative attacks|two[- ]weapon fighting|twf|trip|disarm|sunder|bull rush|overrun|reposition|dirty trick|sneak attack|attacco furtivo|line of sight|line of effect|linea di vista|linea di effetto|prone|flat[- ]footed|flatfooted|impreparato|entangled|staggered|dazed|provoke|provoca\\s*ao)\\b"
         embedding: true
         rerank: true
         set:

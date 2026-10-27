@@ -1986,6 +1986,7 @@ router:
       short_circuit: true
     - match_any:
         - '\b(talento|feat|regola)\b'
+        - '\btwo[- ]weapon fighting\b'
       not_match: ['\b(storia)\b']
       route_to: "Ruling Expert"
     - match_any:
@@ -2164,3 +2165,19 @@ def test_route_input_clarification_resetta_route_to(tmp_path):
     assert get_path(it.state, "runtime.route_to") == "Ruling Expert"
     assert it.route_input("talento npc") is None
     assert get_path(it.state, "runtime.route_to") is None
+
+
+def test_route_input_segmenter_rispetta_regex_flags(tmp_path):
+    # Codex P2 #560 g3: "POI" maiuscolo deve splittare come "poi" —
+    # sennò "/help" short-circuit consuma anche il segmento successivo
+    it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    assert it.route_input("/HELP POI TALENTO") is None
+    assert len(get_path(it.state, "runtime.intent_candidates")) == 2
+
+
+def test_route_input_strip_punct_pattern_classe_carattere(tmp_path):
+    # Codex P2 #560 g3: strip_punct trasforma "two-weapon" in "two weapon" —
+    # nei pattern la punteggiatura va data come classe ([- ]), come gia'
+    # faceva flat[- ]footed in base_profile.txt
+    it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    assert it.route_input("spiega il TWO-WEAPON FIGHTING") == "Ruling Expert"

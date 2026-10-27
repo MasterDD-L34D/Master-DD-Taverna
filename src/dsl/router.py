@@ -61,10 +61,23 @@ class Router:
 
     # -- segmenter / normalize -------------------------------------------
 
+    def _regex_flags(self) -> int:
+        return re.IGNORECASE if "i" in str(
+            (self.spec.get("intent_detection") or {}).get("normalize", {}).get("regex_flags", "")
+        ) else 0
+
     def _segments(self, text: str, seg: dict) -> list[str]:
         if not seg.get("enabled"):
             return [text]
-        parts = [p for p in re.split(str(seg.get("split_regex") or "$^"), text) if p.strip()]
+        # Codex P2 #560 g3: lo split rispetta regex_flags configurate —
+        # sennò "POI" maiuscolo non splitta e un short_circuit perde pezzi
+        parts = [
+            p
+            for p in re.split(
+                str(seg.get("split_regex") or "$^"), text, flags=self._regex_flags()
+            )
+            if p.strip()
+        ]
         if len(parts) > MAX_SEGMENTS:
             self.it.events.append({"segmenter_troppi_segmenti": len(parts)})
             return [text]
@@ -114,9 +127,7 @@ class Router:
         return candidates
 
     def _matches(self, rule: dict, text_n: str) -> bool:
-        flags = re.IGNORECASE if "i" in str(
-            (self.spec.get("intent_detection") or {}).get("normalize", {}).get("regex_flags", "")
-        ) else 0
+        flags = self._regex_flags()
         pats = rule.get("match") or rule.get("match_any") or []
         pats = pats if isinstance(pats, list) else [pats]
         if pats and not any(re.search(str(p), text_n, flags) for p in pats):
