@@ -54,6 +54,7 @@ Uso:
   --raw-dir PATH   (default data/reference/pi_local_only/pathbuilder)
   --out-dir PATH   (default <pathmaster sibling>/packages/rules-engine-v2/src/data)
 """
+
 from __future__ import annotations
 
 import argparse
@@ -66,8 +67,9 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_RAW_DIR = REPO_ROOT / "data/reference/pi_local_only/pathbuilder"
-DEFAULT_OUT_DIR = (REPO_ROOT.parent / "pathmaster-dd"
-                   / "packages/rules-engine-v2/src/data")
+DEFAULT_OUT_DIR = (
+    REPO_ROOT.parent / "pathmaster-dd" / "packages/rules-engine-v2/src/data"
+)
 
 # Alias di classe DICHIARATI (artefatti del dato grezzo, non interpretazioni):
 # - 'magusUM': suffisso-libro UM (Ultimate Magic) residuo dello scrape
@@ -137,8 +139,7 @@ def _descriptors(row: ET.Element) -> list[str]:
 def import_spells(raw_dir: Path) -> list[dict]:
     out = []
     for row in ET.parse(raw_dir / "data_spells.xml").getroot().findall("Row"):
-        levels, unparsed = parse_spell_levels(
-            row.findtext("spellLevelsDisplay") or "")
+        levels, unparsed = parse_spell_levels(row.findtext("spellLevelsDisplay") or "")
         entry = {
             "name": (row.findtext("name") or "").strip(),
             "source": _text(row, "source"),
@@ -190,11 +191,14 @@ def _column_crosscheck(raw_dir: Path, spells: list[dict]) -> dict:
                 columns[_class_id(child.tag.replace("_", " "))] = int(text)
         for cid, level in columns.items():
             if cid in spell["spellLevels"] and spell["spellLevels"][cid] != level:
-                mismatches.append({
-                    "spell": spell["name"], "class": cid,
-                    "displayLevel": spell["spellLevels"][cid],
-                    "columnLevel": level,
-                })
+                mismatches.append(
+                    {
+                        "spell": spell["name"],
+                        "class": cid,
+                        "displayLevel": spell["spellLevels"][cid],
+                        "columnLevel": level,
+                    }
+                )
         for cid in spell["spellLevels"]:
             if cid not in columns and cid != "sorcerer":
                 display_without_column += 1
@@ -203,11 +207,11 @@ def _column_crosscheck(raw_dir: Path, spells: list[dict]) -> dict:
         "mismatches": mismatches,
         "displayClassesWithoutColumn": display_without_column,
         "note": "Le colonne per classe del dataset PB sono STALE per le "
-                "spell dei manuali recenti (223 classi in display senza "
-                "colonna; 5 livelli di colonna discordanti). NON esportate: "
-                "spellLevelsDisplay e' la dichiarazione autorevole. "
-                "'sorcerer' non ha mai colonna propria nel dato grezzo "
-                "(condivide la lista wizard): non conteggiato.",
+        "spell dei manuali recenti (223 classi in display senza "
+        "colonna; 5 livelli di colonna discordanti). NON esportate: "
+        "spellLevelsDisplay e' la dichiarazione autorevole. "
+        "'sorcerer' non ha mai colonna propria nel dato grezzo "
+        "(condivide la lista wizard): non conteggiato.",
     }
 
 
@@ -224,7 +228,8 @@ def main(argv=None) -> int:
     duplicates = sorted(n for n, c in name_counts.items() if c > 1)
     unparsed = [
         {"spell": s["name"], "segment": seg}
-        for s in spells for seg in s.get("unparsedLevelSegments", [])
+        for s in spells
+        for seg in s.get("unparsedLevelSegments", [])
     ]
     crosscheck = _column_crosscheck(raw_dir, spells)
 
@@ -234,19 +239,19 @@ def main(argv=None) -> int:
             "generated_by": "Master-DD-Taverna/tools/import_pathbuilder_spells.py",
             "generated_at": datetime.now(timezone.utc).isoformat(),
             "license": "Pathbuilder 1e raw data (APK da BlueStacks utente, permesso "
-                       "concesso 2026-08-02). Meccaniche e nomi: OGL 1.0a. Description "
-                       "e testo mythic: Product Identity — MAI esportati (restano "
-                       "nel dataset PI local-only, gitignored).",
+            "concesso 2026-08-02). Meccaniche e nomi: OGL 1.0a. Description "
+            "e testo mythic: Product Identity — MAI esportati (restano "
+            "nel dataset PI local-only, gitignored).",
             "desc_policy": "Solo nomi + meccaniche strutturate, MAI la <description> "
-                           "ne' il testo <mythic> (solo il flag hasMythic). "
-                           "domain/bloodline/patron esportati grezzi.",
+            "ne' il testo <mythic> (solo il flag hasMythic). "
+            "domain/bloodline/patron esportati grezzi.",
             "levels_policy": "spellLevels e' parsato da <spellLevelsDisplay> "
-                             "(dichiarazione autorevole PB): segmenti 'classe N', "
-                             "classi combinate splittate su '/'. Segmenti non "
-                             "regolari preservati RAW in unparsedLevelSegments, "
-                             "MAI parsati a tentativi. Le colonne per classe "
-                             "(stale) NON sono esportate: cross-check nel report. "
-                             "Alias di classe DICHIARATI in report.classAliases.",
+            "(dichiarazione autorevole PB): segmenti 'classe N', "
+            "classi combinate splittate su '/'. Segmenti non "
+            "regolari preservati RAW in unparsedLevelSegments, "
+            "MAI parsati a tentativi. Le colonne per classe "
+            "(stale) NON sono esportate: cross-check nel report. "
+            "Alias di classe DICHIARATI in report.classAliases.",
             "format_notes_doc": "tools/import_pathbuilder_spells.py (docstring)",
         },
         "counts": {
@@ -264,19 +269,24 @@ def main(argv=None) -> int:
         "spells": spells,
     }
 
-    print(f"incantesimi: {len(spells)} (nomi duplicati: {len(duplicates)}; "
-          f"segmenti livello irregolari preservati raw: {len(unparsed)} su "
-          f"{len({u['spell'] for u in unparsed})} spell)")
-    print(f"cross-check colonne: {crosscheck['columnLevelMismatches']} livelli "
-          f"discordanti, {crosscheck['displayClassesWithoutColumn']} classi "
-          f"display senza colonna (dichiarate)")
+    print(
+        f"incantesimi: {len(spells)} (nomi duplicati: {len(duplicates)}; "
+        f"segmenti livello irregolari preservati raw: {len(unparsed)} su "
+        f"{len({u['spell'] for u in unparsed})} spell)"
+    )
+    print(
+        f"cross-check colonne: {crosscheck['columnLevelMismatches']} livelli "
+        f"discordanti, {crosscheck['displayClassesWithoutColumn']} classi "
+        f"display senza colonna (dichiarate)"
+    )
 
     if not args.report_only:
         out_dir = Path(args.out_dir)
         out_dir.mkdir(parents=True, exist_ok=True)
         path = out_dir / "pathbuilder-spells.json"
-        path.write_text(json.dumps(payload, indent=1, ensure_ascii=False) + "\n",
-                        encoding="utf-8")
+        path.write_text(
+            json.dumps(payload, indent=1, ensure_ascii=False) + "\n", encoding="utf-8"
+        )
         print(f"scritto {path}")
     return 0
 

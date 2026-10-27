@@ -11,6 +11,7 @@ Copre:
 - smoke sulla catena reale (dump pathmaster-dd presente): nessun esito
   inatteso (ERROR/TAVERNA_ERR/classi difetto) — skip se il dump manca.
 """
+
 import json
 import sys
 from pathlib import Path
@@ -26,21 +27,38 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 
 # ---------------------------------------------------------------- helpers
 
+
 def _rec(file, abilities=None, v1=None, v2=None, **draft_kw):
-    draft = {"name": file, "race": "Human", "class": "Fighter",
-             "feats": [], "baseAbilities": abilities
-             or {"str": 14, "dex": 12, "con": 13, "int": 10, "wis": 10, "cha": 8},
-             "sheetAbilities": None, "flexDeclared": None}
+    draft = {
+        "name": file,
+        "race": "Human",
+        "class": "Fighter",
+        "feats": [],
+        "baseAbilities": abilities
+        or {"str": 14, "dex": 12, "con": 13, "int": 10, "wis": 10, "cha": 8},
+        "sheetAbilities": None,
+        "flexDeclared": None,
+    }
     draft.update(draft_kw)
-    return {"file": file, "draft": draft, "v1": v1, "v2": v2,
-            "v1Error": None, "v2Error": None}
+    return {
+        "file": file,
+        "draft": draft,
+        "v1": v1,
+        "v2": v2,
+        "v1Error": None,
+        "v2Error": None,
+    }
 
 
 def _sheet(**over):
-    sheet = {"errors": [], "hp": 12, "bab": 1, "initiative": 1,
-             "saves": {"fort": 4, "ref": 1, "will": 0},
-             "abilities": {"str": 16, "dex": 12, "con": 14,
-                           "int": 10, "wis": 10, "cha": 8}}
+    sheet = {
+        "errors": [],
+        "hp": 12,
+        "bab": 1,
+        "initiative": 1,
+        "saves": {"fort": 4, "ref": 1, "will": 0},
+        "abilities": {"str": 16, "dex": 12, "con": 14, "int": 10, "wis": 10, "cha": 8},
+    }
     sheet.update(over)
     return sheet
 
@@ -63,6 +81,7 @@ def harness(tmp_path, monkeypatch):
         return value
 
     import src.pc.engine
+
     monkeypatch.setattr(src.pc.engine, "build_character", fake_build)
 
     def run(dump, argv=()):
@@ -80,6 +99,7 @@ def harness(tmp_path, monkeypatch):
 
 # ------------------------------------------------------------ funzioni pure
 
+
 def test_norm_name():
     assert ot._norm_name("Half Orc") == ot._norm_name("half-orc")
     assert ot._norm_name("Halfelf") == ot._norm_name("Half-Elf")
@@ -88,9 +108,10 @@ def test_norm_name():
 
 def test_canon(tmp_path):
     catalog = tmp_path / "races.json"
-    catalog.write_text(json.dumps({"entries": [{"name": "Half-Orc"},
-                                               {"name": "Strix"}]}),
-                       encoding="utf-8")
+    catalog.write_text(
+        json.dumps({"entries": [{"name": "Half-Orc"}, {"name": "Strix"}]}),
+        encoding="utf-8",
+    )
     assert ot._canon(catalog, "half orc") == "Half-Orc"
     assert ot._canon(catalog, "STRIX") == "Strix"
     assert ot._canon(catalog, "Gnomo") is None
@@ -98,9 +119,9 @@ def test_canon(tmp_path):
 
 def test_sheet_scores():
     assert ot._sheet_scores(None) is None
-    assert ot._sheet_scores({"FOR": 16, "DES": 12, "COS": 14, "INT": 10,
-                             "SAG": 10, "CAR": 8}) == {
-        "str": 16, "dex": 12, "con": 14, "int": 10, "wis": 10, "cha": 8}
+    assert ot._sheet_scores(
+        {"FOR": 16, "DES": 12, "COS": 14, "INT": 10, "SAG": 10, "CAR": 8}
+    ) == {"str": 16, "dex": 12, "con": 14, "int": 10, "wis": 10, "cha": 8}
     assert ot._sheet_scores({"FOR": "16", "altro": 3}) is None
 
 
@@ -115,21 +136,47 @@ def test_flex_choice():
 def test_compare():
     sheet = _sheet()
     diffs = []
-    ot._compare(sheet, {"hp": 12, "bab": 1, "fort": 4, "ref": 1, "will": 0,
-                        "abilities": sheet["abilities"]}, "vX", diffs)
+    ot._compare(
+        sheet,
+        {
+            "hp": 12,
+            "bab": 1,
+            "fort": 4,
+            "ref": 1,
+            "will": 0,
+            "abilities": sheet["abilities"],
+        },
+        "vX",
+        diffs,
+    )
     assert diffs == []
-    ot._compare(sheet, {"hp": 99, "bab": None, "fort": 2, "ref": None,
-                        "will": 0, "abilities": {"str": 10}}, "vX", diffs)
+    ot._compare(
+        sheet,
+        {
+            "hp": 99,
+            "bab": None,
+            "fort": 2,
+            "ref": None,
+            "will": 0,
+            "abilities": {"str": 10},
+        },
+        "vX",
+        diffs,
+    )
     # hp e fort divergono; bab/ref None = campo non calcolato (non divergenza);
     # abilities riporta solo str: si confronta solo quella.
-    assert diffs == ["vX hp: taverna 12 vs 99", "vX fort: taverna 4 vs 2",
-                     "vX str: taverna 16 vs 10"]
+    assert diffs == [
+        "vX hp: taverna 12 vs 99",
+        "vX fort: taverna 4 vs 2",
+        "vX str: taverna 16 vs 10",
+    ]
     diffs = []
     ot._compare(sheet, None, "vX", diffs)
     assert diffs == []  # motore assente: mai divergenza
 
 
 # -------------------------------------------------- classificazione esiti
+
 
 def test_status_concorde_e_diverge(harness, capsys):
     harness.sheets.update({"a.json": _sheet(), "b.json": _sheet()})
@@ -153,23 +200,36 @@ def test_status_error_dal_dump(harness, capsys):
 
 
 def test_status_fuori_budget(harness, capsys):
-    dump = [_rec("ricca.json",
-                 abilities={"str": 18, "dex": 18, "con": 18,
-                            "int": 18, "wis": 18, "cha": 18})]
+    dump = [
+        _rec(
+            "ricca.json",
+            abilities={
+                "str": 18,
+                "dex": 18,
+                "con": 18,
+                "int": 18,
+                "wis": 18,
+                "cha": 18,
+            },
+        )
+    ]
     harness(dump)
     out = capsys.readouterr().out
     assert "| ricca | FUORI_BUDGET_GPT | point-buy 102 > 25" in out
 
 
 def test_status_classi_difetto_dal_builder(harness, capsys):
-    harness.sheets.update({
-        "feat.json": _sheet(errors=["feat: 4 selezionati su 2 consentiti al lv1"]),
-        "prereq.json": _sheet(errors=["talento Arma accurata: prerequisito non soddisfatto (BAB +1)"]),
-        "flex.json": _sheet(errors=["race_bonus_ability obbligatorio per Human"]),
-        "altra.json": _sheet(errors=["errore non classificato"]),
-    })
-    harness([_rec(f) for f in ("feat.json", "prereq.json",
-                               "flex.json", "altra.json")])
+    harness.sheets.update(
+        {
+            "feat.json": _sheet(errors=["feat: 4 selezionati su 2 consentiti al lv1"]),
+            "prereq.json": _sheet(
+                errors=["talento Arma accurata: prerequisito non soddisfatto (BAB +1)"]
+            ),
+            "flex.json": _sheet(errors=["race_bonus_ability obbligatorio per Human"]),
+            "altra.json": _sheet(errors=["errore non classificato"]),
+        }
+    )
+    harness([_rec(f) for f in ("feat.json", "prereq.json", "flex.json", "altra.json")])
     out = capsys.readouterr().out
     assert "| feat | FEAT_ILLEGALE_GPT |" in out
     assert "| prereq | PREREQ_ILLEGALE_GPT |" in out
@@ -199,16 +259,28 @@ def test_flex_dichiarato_e_invalido(harness, capsys, monkeypatch):
 
 # ------------------------------------------------------------------ CLI I/O
 
+
 def test_write_rigenera_report_e_registry(harness):
-    harness.sheets.update({
-        "sana.json": _sheet(),
-        "feat.json": _sheet(errors=["feat: 4 selezionati su 2 consentiti al lv1"]),
-    })
+    harness.sheets.update(
+        {
+            "sana.json": _sheet(),
+            "feat.json": _sheet(errors=["feat: 4 selezionati su 2 consentiti al lv1"]),
+        }
+    )
     dump = [
         _rec("sana.json", v2={"hp": 12}),
         _rec("feat.json"),
-        _rec("ricca.json", abilities={"str": 18, "dex": 18, "con": 18,
-                                      "int": 18, "wis": 18, "cha": 18}),
+        _rec(
+            "ricca.json",
+            abilities={
+                "str": 18,
+                "dex": 18,
+                "con": 18,
+                "int": 18,
+                "wis": 18,
+                "cha": 18,
+            },
+        ),
     ]
     assert harness(dump, ["--write"]) == 0
     report = harness.report_path.read_text(encoding="utf-8")
@@ -233,8 +305,9 @@ def test_check_ok_e_drift(harness, capsys):
     assert harness.defects_path.read_text(encoding="utf-8") == before
     capsys.readouterr()
     # Drift: registry manomesso.
-    harness.defects_path.write_text(json.dumps({"defects": {"x.json": {}}}),
-                                    encoding="utf-8")
+    harness.defects_path.write_text(
+        json.dumps({"defects": {"x.json": {}}}), encoding="utf-8"
+    )
     assert harness(dump, ["--check"]) == 1
     assert "CHECK FALLITO" in capsys.readouterr().out
 
@@ -245,6 +318,7 @@ def test_check_e_write_mutuamente_esclusivi(harness):
 
 
 # ------------------------------------------------- smoke sulla catena reale
+
 
 def test_catena_reale_nessun_esito_inatteso(capsys):
     """Smoke: il dump reale (28 build base, post lotto A/ENG-19) non produce

@@ -1,5 +1,6 @@
 """Test per tools/item_forge_flavor.py — layer flavor con LLM iniettato
 (niente Ollama nei test)."""
+
 import json
 import sys
 from pathlib import Path
@@ -10,14 +11,18 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tools.item_forge import forge_from_spell
 from tools.item_forge_flavor import (
-    _parse_flavor, build_flavor_prompt, generate_flavor, render_tournament)
+    _parse_flavor,
+    build_flavor_prompt,
+    generate_flavor,
+    render_tournament,
+)
 
 FORGED = forge_from_spell("resist energy", 5, "1/day", slot="anello")
 
 GOOD_FLAVOR = {
     "name": "Anello della Brace Guardiana",
     "description": "Forgiato nelle ceneri di un faro caduto, questo anello "
-                   "trattiene un alito di brace che avvolge il dito senza scottare.",
+    "trattiene un alito di brace che avvolge il dito senza scottare.",
     "details": [
         "Protegge da un solo tipo di energia scelto alla creazione.",
         "L'effetto si attiva solo al primo contatto con l'energia.",

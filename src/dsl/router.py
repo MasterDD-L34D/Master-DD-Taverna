@@ -6,6 +6,7 @@ decorators) viene valutata sull'input normalizzato. Le flag di pipeline
 mai competenza finta (RZ1). Wizard e / restano a run_input (ADR 014):
 l'host chiama route_input solo per input libero fuori wizard.
 """
+
 from __future__ import annotations
 
 import re
@@ -76,9 +77,16 @@ class Router:
     # -- segmenter / normalize -------------------------------------------
 
     def _regex_flags(self) -> int:
-        return re.IGNORECASE if "i" in str(
-            (self.spec.get("intent_detection") or {}).get("normalize", {}).get("regex_flags", "")
-        ) else 0
+        return (
+            re.IGNORECASE
+            if "i"
+            in str(
+                (self.spec.get("intent_detection") or {})
+                .get("normalize", {})
+                .get("regex_flags", "")
+            )
+            else 0
+        )
 
     def _segments(self, text: str, seg: dict) -> list[str]:
         if not seg.get("enabled"):
@@ -102,7 +110,9 @@ class Router:
         out = text
         if norm.get("fold_accents"):
             out = "".join(
-                c for c in unicodedata.normalize("NFD", out) if unicodedata.category(c) != "Mn"
+                c
+                for c in unicodedata.normalize("NFD", out)
+                if unicodedata.category(c) != "Mn"
             )
         if norm.get("lowercase"):
             out = out.lower()
@@ -132,9 +142,7 @@ class Router:
                 # Codex P2 #560: pubblicati PRIMA della rule successiva —
                 # la disambiguazione authored li legge nel turno corrente,
                 # non di quello prima
-                set_path(
-                    self.it.state, "runtime.intent_candidates", list(candidates)
-                )
+                set_path(self.it.state, "runtime.intent_candidates", list(candidates))
             if rule.get("reply"):
                 self.it.output_log.append(self.it._rs(str(rule["reply"]), {}))
             if rule.get("stop") or rule.get("short_circuit"):
@@ -186,7 +194,9 @@ class Router:
                 if not isinstance(act, dict):
                     continue
                 if act.get("invoke"):
-                    self.it.noop_log.append({"verb": "invoke", "reason": _PIPELINE_NOOP})
+                    self.it.noop_log.append(
+                        {"verb": "invoke", "reason": _PIPELINE_NOOP}
+                    )
                 elif "set" in act:
                     self._apply_set(act["set"], extra)
 

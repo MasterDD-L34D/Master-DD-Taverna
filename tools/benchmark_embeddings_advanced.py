@@ -44,33 +44,143 @@ DEFAULT_MD = DEFAULT_REPORT_DIR / "EMBEDDING_ADVANCED_BENCHMARK_2026-07-16.md"
 # tutto il catalogo OGC attuale.
 QUERIES = [
     # feats
-    {"lang": "it", "category": "feats", "text": "quali sono i prerequisiti del talento Furious Focus", "target": "reference::feats::Furious Focus"},
-    {"lang": "it", "category": "feats", "text": "cosa fa il talento Power Attack", "target": "reference::feats::Power Attack"},
-    {"lang": "it", "category": "feats", "text": "talento per attacco con due armi", "target": "reference::feats::Two-Weapon Fighting"},
-    {"lang": "en", "category": "feats", "text": "prerequisites of Furious Focus", "target": "reference::feats::Furious Focus"},
-    {"lang": "en", "category": "feats", "text": "what does Power Attack do", "target": "reference::feats::Power Attack"},
-    {"lang": "en", "category": "feats", "text": "two weapon fighting feat", "target": "reference::feats::Two-Weapon Fighting"},
+    {
+        "lang": "it",
+        "category": "feats",
+        "text": "quali sono i prerequisiti del talento Furious Focus",
+        "target": "reference::feats::Furious Focus",
+    },
+    {
+        "lang": "it",
+        "category": "feats",
+        "text": "cosa fa il talento Power Attack",
+        "target": "reference::feats::Power Attack",
+    },
+    {
+        "lang": "it",
+        "category": "feats",
+        "text": "talento per attacco con due armi",
+        "target": "reference::feats::Two-Weapon Fighting",
+    },
+    {
+        "lang": "en",
+        "category": "feats",
+        "text": "prerequisites of Furious Focus",
+        "target": "reference::feats::Furious Focus",
+    },
+    {
+        "lang": "en",
+        "category": "feats",
+        "text": "what does Power Attack do",
+        "target": "reference::feats::Power Attack",
+    },
+    {
+        "lang": "en",
+        "category": "feats",
+        "text": "two weapon fighting feat",
+        "target": "reference::feats::Two-Weapon Fighting",
+    },
     # spells
-    {"lang": "it", "category": "spells", "text": "incantesimo per curare ferite", "target": "reference::spells::Cure Light Wounds"},
-    {"lang": "it", "category": "spells", "text": "palla di fuoco pathfinder", "target": "reference::spells::Fireball"},
-    {"lang": "en", "category": "spells", "text": "heal wounds spell", "target": "reference::spells::Cure Light Wounds"},
-    {"lang": "en", "category": "spells", "text": "fireball spell", "target": "reference::spells::Fireball"},
+    {
+        "lang": "it",
+        "category": "spells",
+        "text": "incantesimo per curare ferite",
+        "target": "reference::spells::Cure Light Wounds",
+    },
+    {
+        "lang": "it",
+        "category": "spells",
+        "text": "palla di fuoco pathfinder",
+        "target": "reference::spells::Fireball",
+    },
+    {
+        "lang": "en",
+        "category": "spells",
+        "text": "heal wounds spell",
+        "target": "reference::spells::Cure Light Wounds",
+    },
+    {
+        "lang": "en",
+        "category": "spells",
+        "text": "fireball spell",
+        "target": "reference::spells::Fireball",
+    },
     # classes
-    {"lang": "it", "category": "classes", "text": "come funziona la classe Magus in Pathfinder 1E", "target": "reference::classes::Magus"},
-    {"lang": "it", "category": "classes", "text": "classe chierico pathfinder", "target": "reference::classes::Cleric"},
-    {"lang": "en", "category": "classes", "text": "how does the Magus class work", "target": "reference::classes::Magus"},
-    {"lang": "en", "category": "classes", "text": "Cleric class Pathfinder", "target": "reference::classes::Cleric"},
+    {
+        "lang": "it",
+        "category": "classes",
+        "text": "come funziona la classe Magus in Pathfinder 1E",
+        "target": "reference::classes::Magus",
+    },
+    {
+        "lang": "it",
+        "category": "classes",
+        "text": "classe chierico pathfinder",
+        "target": "reference::classes::Cleric",
+    },
+    {
+        "lang": "en",
+        "category": "classes",
+        "text": "how does the Magus class work",
+        "target": "reference::classes::Magus",
+    },
+    {
+        "lang": "en",
+        "category": "classes",
+        "text": "Cleric class Pathfinder",
+        "target": "reference::classes::Cleric",
+    },
     # races
-    {"lang": "it", "category": "races", "text": "razza elfo pathfinder bonus", "target": "reference::races::Elf"},
-    {"lang": "it", "category": "races", "text": "tratti del nano pathfinder", "target": "reference::races::Dwarf"},
-    {"lang": "en", "category": "races", "text": "elf race traits Pathfinder", "target": "reference::races::Elf"},
-    {"lang": "en", "category": "races", "text": "dwarf racial traits Pathfinder", "target": "reference::races::Dwarf"},
+    {
+        "lang": "it",
+        "category": "races",
+        "text": "razza elfo pathfinder bonus",
+        "target": "reference::races::Elf",
+    },
+    {
+        "lang": "it",
+        "category": "races",
+        "text": "tratti del nano pathfinder",
+        "target": "reference::races::Dwarf",
+    },
+    {
+        "lang": "en",
+        "category": "races",
+        "text": "elf race traits Pathfinder",
+        "target": "reference::races::Elf",
+    },
+    {
+        "lang": "en",
+        "category": "races",
+        "text": "dwarf racial traits Pathfinder",
+        "target": "reference::races::Dwarf",
+    },
     # archetypes
-    {"lang": "it", "category": "archetypes", "text": "archetipo fighter arciere pathfinder", "target": "reference::archetypes::Fighter (Archer)"},
-    {"lang": "en", "category": "archetypes", "text": "Fighter Archer archetype Pathfinder", "target": "reference::archetypes::Fighter (Archer)"},
+    {
+        "lang": "it",
+        "category": "archetypes",
+        "text": "archetipo fighter arciere pathfinder",
+        "target": "reference::archetypes::Fighter (Archer)",
+    },
+    {
+        "lang": "en",
+        "category": "archetypes",
+        "text": "Fighter Archer archetype Pathfinder",
+        "target": "reference::archetypes::Fighter (Archer)",
+    },
     # items
-    {"lang": "it", "category": "items", "text": "amuleto armatura naturale +1", "target": "reference::items::Amulet of Natural Armor +1"},
-    {"lang": "en", "category": "items", "text": "amulet of natural armor plus one", "target": "reference::items::Amulet of Natural Armor +1"},
+    {
+        "lang": "it",
+        "category": "items",
+        "text": "amuleto armatura naturale +1",
+        "target": "reference::items::Amulet of Natural Armor +1",
+    },
+    {
+        "lang": "en",
+        "category": "items",
+        "text": "amulet of natural armor plus one",
+        "target": "reference::items::Amulet of Natural Armor +1",
+    },
 ]
 
 
@@ -106,7 +216,11 @@ def load_reference_entries() -> list[dict]:
 
         with open(path, encoding="utf-8") as fh:
             data = json.load(fh)
-        items = data.get("entries", []) if isinstance(data, dict) else (data if isinstance(data, list) else [])
+        items = (
+            data.get("entries", [])
+            if isinstance(data, dict)
+            else (data if isinstance(data, list) else [])
+        )
         kind = catalog.get("kind") or path.stem
 
         for idx, entry in enumerate(items):
@@ -180,6 +294,7 @@ def _hf_cache_dir() -> Path:
     """Ritorna la directory cache HF attuale."""
     try:
         from huggingface_hub.constants import HF_HUB_CACHE
+
         return Path(HF_HUB_CACHE)
     except Exception:
         pass
@@ -222,7 +337,9 @@ def _load_model_info(model_name: str) -> dict:
     }
 
 
-def search(query_emb: np.ndarray, doc_embs: np.ndarray, sources: list[str], top_k: int = 5):
+def search(
+    query_emb: np.ndarray, doc_embs: np.ndarray, sources: list[str], top_k: int = 5
+):
     sim = (doc_embs @ query_emb.T).flatten()
     top_idx = np.argsort(sim)[::-1][:top_k]
     return [
@@ -261,7 +378,9 @@ def evaluate_model(
     print(f"  tempo indicizzazione: {indexing_time:.2f}s per {len(entries)} entry")
 
     if max_indexing_time and indexing_time > max_indexing_time:
-        raise TimeoutError(f"Indicizzazione troppo lenta: {indexing_time:.2f}s > {max_indexing_time}s")
+        raise TimeoutError(
+            f"Indicizzazione troppo lenta: {indexing_time:.2f}s > {max_indexing_time}s"
+        )
 
     results = []
     for q in QUERIES:
@@ -271,33 +390,39 @@ def evaluate_model(
             query_time = time.perf_counter() - (deadline - per_query_timeout)
         except Exception as exc:
             print(f"  ERRORE encode query [{q['lang']}] {q['text'][:40]}: {exc}")
-            results.append({
-                "lang": q["lang"],
-                "category": q["category"],
-                "query": q["text"],
-                "target": q["target"],
-                "target_rank": None,
-                "target_score": None,
-                "top_5": [],
-                "query_time_seconds": None,
-                "error": str(exc),
-            })
+            results.append(
+                {
+                    "lang": q["lang"],
+                    "category": q["category"],
+                    "query": q["text"],
+                    "target": q["target"],
+                    "target_rank": None,
+                    "target_score": None,
+                    "top_5": [],
+                    "query_time_seconds": None,
+                    "error": str(exc),
+                }
+            )
             continue
 
         q_emb = q_emb / np.linalg.norm(q_emb)
         top = search(q_emb, doc_embs, sources, top_k=5)
         target_rank = next((r["rank"] for r in top if r["source"] == q["target"]), None)
-        target_score = next((r["score"] for r in top if r["source"] == q["target"]), None)
-        results.append({
-            "lang": q["lang"],
-            "category": q["category"],
-            "query": q["text"],
-            "target": q["target"],
-            "target_rank": target_rank,
-            "target_score": round(target_score, 4) if target_score else None,
-            "top_5": top,
-            "query_time_seconds": round(query_time, 3),
-        })
+        target_score = next(
+            (r["score"] for r in top if r["source"] == q["target"]), None
+        )
+        results.append(
+            {
+                "lang": q["lang"],
+                "category": q["category"],
+                "query": q["text"],
+                "target": q["target"],
+                "target_rank": target_rank,
+                "target_score": round(target_score, 4) if target_score else None,
+                "top_5": top,
+                "query_time_seconds": round(query_time, 3),
+            }
+        )
         status = f"rank={target_rank}" if target_rank else "MISS"
         print(f"  [{q['lang']}] {q['text'][:45]:<45} -> {status}")
 
@@ -321,7 +446,9 @@ def evaluate_model(
         "mrr": round(mrr_overall, 4) if mrr_overall is not None else None,
         "mrr_it": round(mrr_it, 4) if mrr_it is not None else None,
         "mrr_en": round(mrr_en, 4) if mrr_en is not None else None,
-        "mrr_by_category": {k: round(v, 4) if v is not None else None for k, v in category_mrr.items()},
+        "mrr_by_category": {
+            k: round(v, 4) if v is not None else None for k, v in category_mrr.items()
+        },
         "queries": results,
     }
 
@@ -366,14 +493,23 @@ def _build_markdown(report: dict, args: argparse.Namespace) -> str:
             f"{m.get('mrr', 'N/A')} | {m.get('mrr_it', 'N/A')} | {m.get('mrr_en', 'N/A')} |"
         )
 
-    lines.extend([
-        "",
-        "### MRR per categoria",
-        "",
-    ])
+    lines.extend(
+        [
+            "",
+            "### MRR per categoria",
+            "",
+        ]
+    )
 
     # Tabella pivot modello x categoria
-    categories = sorted({cat for m in report["models"] if "mrr_by_category" in m for cat in m["mrr_by_category"]})
+    categories = sorted(
+        {
+            cat
+            for m in report["models"]
+            if "mrr_by_category" in m
+            for cat in m["mrr_by_category"]
+        }
+    )
     if categories:
         header = "| Modello | " + " | ".join(categories) + " |"
         sep = "|" + "|".join(["---"] * (1 + len(categories))) + "|"
@@ -387,28 +523,32 @@ def _build_markdown(report: dict, args: argparse.Namespace) -> str:
             lines.append(row)
         lines.append("")
 
-    lines.extend([
-        "## Dettaglio per modello",
-        "",
-    ])
+    lines.extend(
+        [
+            "## Dettaglio per modello",
+            "",
+        ]
+    )
 
     for m in report["models"]:
         lines.append(f"### {m['model']}")
         if "error" in m:
             lines.extend([f"- **Errore:** {m['error']}", ""])
             continue
-        lines.extend([
-            f"- **Encoder:** {m['encoder_type']}",
-            f"- **Dimensione cache:** {m.get('cache_size_gb', 'N/A')} GB ({m.get('cache_size_mb', 'N/A')} MB)",
-            f"- **Dimensione embedding:** {m.get('embedding_dim', 'N/A')}",
-            f"- **Tempo indicizzazione:** {m.get('indexing_time_seconds', 'N/A')} s",
-            f"- **MRR complessivo:** {m.get('mrr', 'N/A')}",
-            f"- **MRR IT:** {m.get('mrr_it', 'N/A')}",
-            f"- **MRR EN:** {m.get('mrr_en', 'N/A')}",
-            "",
-            "| Lingua | Categoria | Query | Rank target | Score target |",
-            "|--------|-----------|-------|-------------|--------------|",
-        ])
+        lines.extend(
+            [
+                f"- **Encoder:** {m['encoder_type']}",
+                f"- **Dimensione cache:** {m.get('cache_size_gb', 'N/A')} GB ({m.get('cache_size_mb', 'N/A')} MB)",
+                f"- **Dimensione embedding:** {m.get('embedding_dim', 'N/A')}",
+                f"- **Tempo indicizzazione:** {m.get('indexing_time_seconds', 'N/A')} s",
+                f"- **MRR complessivo:** {m.get('mrr', 'N/A')}",
+                f"- **MRR IT:** {m.get('mrr_it', 'N/A')}",
+                f"- **MRR EN:** {m.get('mrr_en', 'N/A')}",
+                "",
+                "| Lingua | Categoria | Query | Rank target | Score target |",
+                "|--------|-----------|-------|-------------|--------------|",
+            ]
+        )
         for q in m.get("queries", []):
             rank = q.get("target_rank")
             score = q.get("target_score")
@@ -419,30 +559,38 @@ def _build_markdown(report: dict, args: argparse.Namespace) -> str:
             )
         lines.append("")
 
-    lines.extend([
-        "## Osservazioni",
-        "",
-        "- I modelli E5 usano i prefissi ufficiali `query:` e `passage:` rispettivamente per query e documenti; gli altri modelli non usano prefissi.",
-        "- Il benchmark è eseguito su CPU; i tempi di indicizzazione su GPU sarebbero significativamente inferiori.",
-        "- I cataloghi OGC usati sono quelli dichiarati in `data/reference/manifest.json`; `pi_local_only/` è escluso.",
-        "- Eventuali modelli marcati come ERRORE non sono stati valutati (timeout, spazio insufficiente o problema di download/caricamento).",
-        "",
-        "## Prossimi passi",
-        "",
-        "1. Se i modelli più grandi (in particolare `BAAI/bge-m3`) falliscono per timeout su CPU, ripetere il benchmark su workstation con GPU per ottenere tempi realistici.",
-        "2. Valutare il trade-off MRR vs. latenza query per scegliere il modello da usare in produzione; il default `paraphrase-multilingual-MiniLM-L12-v2` resta la scelta conservativa per bassa latenza.",
-        "3. Se il modello vincitore in MRR introduce latenza eccessiva, considerare un indice ibrido (BM25 + embedding) o quantizzazione.",
-        "4. Aggiornare `src/config.py` e `.env.example` con il modello embedding scelto solo dopo approvazione esplicita.",
-        "",
-    ])
+    lines.extend(
+        [
+            "## Osservazioni",
+            "",
+            "- I modelli E5 usano i prefissi ufficiali `query:` e `passage:` rispettivamente per query e documenti; gli altri modelli non usano prefissi.",
+            "- Il benchmark è eseguito su CPU; i tempi di indicizzazione su GPU sarebbero significativamente inferiori.",
+            "- I cataloghi OGC usati sono quelli dichiarati in `data/reference/manifest.json`; `pi_local_only/` è escluso.",
+            "- Eventuali modelli marcati come ERRORE non sono stati valutati (timeout, spazio insufficiente o problema di download/caricamento).",
+            "",
+            "## Prossimi passi",
+            "",
+            "1. Se i modelli più grandi (in particolare `BAAI/bge-m3`) falliscono per timeout su CPU, ripetere il benchmark su workstation con GPU per ottenere tempi realistici.",
+            "2. Valutare il trade-off MRR vs. latenza query per scegliere il modello da usare in produzione; il default `paraphrase-multilingual-MiniLM-L12-v2` resta la scelta conservativa per bassa latenza.",
+            "3. Se il modello vincitore in MRR introduce latenza eccessiva, considerare un indice ibrido (BM25 + embedding) o quantizzazione.",
+            "4. Aggiornare `src/config.py` e `.env.example` con il modello embedding scelto solo dopo approvazione esplicita.",
+            "",
+        ]
+    )
 
     return "\n".join(lines)
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Benchmark embeddings multilingue avanzati")
-    parser.add_argument("--json", type=Path, default=DEFAULT_JSON, help="Path output JSON")
-    parser.add_argument("--md", type=Path, default=DEFAULT_MD, help="Path output Markdown")
+    parser = argparse.ArgumentParser(
+        description="Benchmark embeddings multilingue avanzati"
+    )
+    parser.add_argument(
+        "--json", type=Path, default=DEFAULT_JSON, help="Path output JSON"
+    )
+    parser.add_argument(
+        "--md", type=Path, default=DEFAULT_MD, help="Path output Markdown"
+    )
     parser.add_argument(
         "--models",
         nargs="+",
@@ -509,16 +657,20 @@ def main():
             report["models"].append(result)
         except Exception as exc:
             print(f"  ERRORE con {model_name}: {exc}")
-            report["models"].append({
-                "model": model_name,
-                "encoder_type": "sentence-transformers",
-                "error": str(exc),
-            })
+            report["models"].append(
+                {
+                    "model": model_name,
+                    "encoder_type": "sentence-transformers",
+                    "error": str(exc),
+                }
+            )
 
     args.json.parent.mkdir(parents=True, exist_ok=True)
     args.md.parent.mkdir(parents=True, exist_ok=True)
 
-    args.json.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    args.json.write_text(
+        json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
     print(f"\nReport JSON salvato in: {args.json}")
 
     md_content = _build_markdown(report, args)

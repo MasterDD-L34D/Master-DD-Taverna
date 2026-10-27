@@ -10,6 +10,7 @@ RequiredSpecial1-2/LevelAP/Description/Source/Ref.
 Policy: i JSON committati dei FEAT non includono mai la Description (testo
 Paizo PI); il dataset grezzo resta in pi_local_only (gitignored).
 """
+
 import json
 import sys
 from pathlib import Path
@@ -19,7 +20,6 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tools import import_pathbuilder_raw as pb
-
 
 # ---------------------------------------------------------------------------
 # Fixture: forma reale (campi nell'ordine osservato nei file veri).
@@ -120,6 +120,7 @@ SPECIALS_XML = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 # Parser dei requisiti strutturati (r*)
 # ---------------------------------------------------------------------------
 
+
 def test_parse_rstat_mappa_indice_caratteristica():
     assert pb.parse_rstat("1£13") == {"DEX": 13}
     assert pb.parse_rstat("3£13") == {"INT": 13}
@@ -138,18 +139,22 @@ def test_parse_lista_ampersand():
 def test_parse_class_level():
     assert pb.parse_class_level("Rogue£3&Unchained Rogue£3") == [
         {"class": "Rogue", "level": 3},
-        {"class": "Unchained Rogue", "level": 3}]
+        {"class": "Unchained Rogue", "level": 3},
+    ]
     assert pb.parse_class_level("Wizard£1") == [{"class": "Wizard", "level": 1}]
     assert pb.parse_class_level(None) == []
 
 
 def test_parse_feat_with_info():
     assert pb.parse_feat_with_info("Skill Focus£Stealth") == [
-        {"feat": "Skill Focus", "info": "Stealth"}]
+        {"feat": "Skill Focus", "info": "Stealth"}
+    ]
     assert pb.parse_feat_with_info(
-        "Spell Focus£conjuration&Spell Focus£necromancy") == [
+        "Spell Focus£conjuration&Spell Focus£necromancy"
+    ) == [
         {"feat": "Spell Focus", "info": "conjuration"},
-        {"feat": "Spell Focus", "info": "necromancy"}]
+        {"feat": "Spell Focus", "info": "necromancy"},
+    ]
     assert pb.parse_feat_with_info(None) == []
 
 
@@ -162,6 +167,7 @@ def test_parse_magic_ref():
 # ---------------------------------------------------------------------------
 # Entita': feats (senza Description, policy OGL)
 # ---------------------------------------------------------------------------
+
 
 def test_feats_from_rows_campi_decodificati():
     entries = pb.feats_from_rows(pb.iter_rows(pb.parse_xml(FEATS_XML)))
@@ -182,20 +188,21 @@ def test_feats_from_rows_campi_decodificati():
     assert bs["requirements"]["ability_mins"] == {"WIS": 13}
     assert bs["requirements"]["class_levels"] == [
         {"class": "Rogue", "level": 3},
-        {"class": "Unchained Rogue", "level": 3}]
+        {"class": "Unchained Rogue", "level": 3},
+    ]
     assert bs["requirements"]["class_features"] == ["Trap Sense"]
 
     aug = by_name["Augment Summoning"]
     assert aug["requirements"]["feats_with_info"] == [
-        {"feat": "Spell Focus", "info": "conjuration"}]
+        {"feat": "Spell Focus", "info": "conjuration"}
+    ]
 
     ac = by_name["Adept Channel"]
     assert ac["requirements"]["magic_type"] == "divine"
     assert ac["requirements"]["caster_level_min"] == 4
 
     am = by_name["Alien Mindpaths"]
-    assert am["requirements"]["races"] == [
-        "Android", "Kasatha", "Lashunta", "Triaxian"]
+    assert am["requirements"]["races"] == ["Android", "Kasatha", "Lashunta", "Triaxian"]
     assert am["requirements"]["bab_min"] == 6
     assert am["requirements"]["char_level_min"] == 10
 
@@ -215,21 +222,28 @@ def test_feats_mai_description():
 # Entita': specials (class features) — raggruppamento per classe
 # ---------------------------------------------------------------------------
 
+
 def test_class_key_da_nome_file():
     assert pb.class_key_for_specials_file(
-        "data_specials_barbarian_rage_powers.xml") == ("barbarian", "rage_powers")
+        "data_specials_barbarian_rage_powers.xml"
+    ) == ("barbarian", "rage_powers")
     assert pb.class_key_for_specials_file(
-        "data_specials_unchained_rogue_talents.xml") == (
-        "unchained_rogue", "talents")
+        "data_specials_unchained_rogue_talents.xml"
+    ) == ("unchained_rogue", "talents")
     assert pb.class_key_for_specials_file(
-        "data_specials_oracle_mystery_battle.xml") == ("oracle", "mystery_battle")
+        "data_specials_oracle_mystery_battle.xml"
+    ) == ("oracle", "mystery_battle")
     assert pb.class_key_for_specials_file(
-        "data_specials_occultist_abjuration_focus_powers.xml") == (
-        "occultist", "abjuration_focus_powers")
-    assert pb.class_key_for_specials_file(
-        "data_specials_capstones.xml") == ("_shared", "capstones")
-    assert pb.class_key_for_specials_file(
-        "data_specials_variant_channeling.xml") == ("_shared", "variant_channeling")
+        "data_specials_occultist_abjuration_focus_powers.xml"
+    ) == ("occultist", "abjuration_focus_powers")
+    assert pb.class_key_for_specials_file("data_specials_capstones.xml") == (
+        "_shared",
+        "capstones",
+    )
+    assert pb.class_key_for_specials_file("data_specials_variant_channeling.xml") == (
+        "_shared",
+        "variant_channeling",
+    )
 
 
 def test_specials_from_rows_campi():
@@ -253,14 +267,16 @@ def test_build_class_features_raggruppa(tmp_path):
     d = tmp_path / "raw"
     d.mkdir()
     (d / "data_specials_barbarian_rage_powers.xml").write_text(
-        SPECIALS_XML, encoding="utf-8")
-    (d / "data_specials_capstones.xml").write_text(
-        SPECIALS_XML, encoding="utf-8")
+        SPECIALS_XML, encoding="utf-8"
+    )
+    (d / "data_specials_capstones.xml").write_text(SPECIALS_XML, encoding="utf-8")
     payload = pb.build_class_features(d)
     classes = payload["classes"]
     assert set(classes) == {"barbarian", "_shared"}
     assert [f["name"] for f in classes["barbarian"]["rage_powers"]] == [
-        "Battle Roar", "Reckless Abandon"]
+        "Battle Roar",
+        "Reckless Abandon",
+    ]
     assert payload["counts"]["barbarian"] == 2
     assert payload["counts"]["_shared"] == 2
     prov = payload["_provenance"]
@@ -273,18 +289,20 @@ def test_build_class_features_raggruppa(tmp_path):
 # Confronto con pcgen-feats (report, non merge)
 # ---------------------------------------------------------------------------
 
+
 def test_confronto_pcgen_nuovi_e_duplicati():
     pb_entries = [
-        {"name": "Dodge"}, {"name": "Reckless Abandon"},
-        {"name": "Power Attack"}, {"name": "Acrobatic  Steps"},
+        {"name": "Dodge"},
+        {"name": "Reckless Abandon"},
+        {"name": "Power Attack"},
+        {"name": "Acrobatic  Steps"},
     ]
     pcgen_names = ["Dodge", "Power Attack", "Cleave", "acrobatic steps"]
     report = pb.compare_with_pcgen(pb_entries, pcgen_names)
     assert report["pathbuilder_count"] == 4
     assert report["pcgen_count"] == 4
     # confronto normalizzato (casefold + spazi collassati)
-    assert sorted(report["duplicates"]) == [
-        "Acrobatic  Steps", "Dodge", "Power Attack"]
+    assert sorted(report["duplicates"]) == ["Acrobatic  Steps", "Dodge", "Power Attack"]
     assert report["new_in_pathbuilder"] == ["Reckless Abandon"]
     assert report["new_count"] == 1
 
@@ -293,12 +311,14 @@ def test_confronto_pcgen_nuovi_e_duplicati():
 # main() end-to-end su radice finta
 # ---------------------------------------------------------------------------
 
+
 def _fake_raw_root(tmp_path: Path) -> Path:
     d = tmp_path / "raw"
     d.mkdir()
     (d / "data_feats.xml").write_text(FEATS_XML, encoding="utf-8")
     (d / "data_specials_barbarian_rage_powers.xml").write_text(
-        SPECIALS_XML, encoding="utf-8")
+        SPECIALS_XML, encoding="utf-8"
+    )
     return d
 
 
@@ -306,23 +326,28 @@ def test_main_scrive_i_due_json(tmp_path):
     raw = _fake_raw_root(tmp_path)
     out = tmp_path / "out"
     pcgen = {"entries": [{"name": "Dodge"}, {"name": "Power Attack"}]}
-    (tmp_path / "pcgen-feats.json").write_text(
-        json.dumps(pcgen), encoding="utf-8")
-    rc = pb.main(["--raw-dir", str(raw), "--out-dir", str(out),
-                  "--pcgen-feats", str(tmp_path / "pcgen-feats.json")])
+    (tmp_path / "pcgen-feats.json").write_text(json.dumps(pcgen), encoding="utf-8")
+    rc = pb.main(
+        [
+            "--raw-dir",
+            str(raw),
+            "--out-dir",
+            str(out),
+            "--pcgen-feats",
+            str(tmp_path / "pcgen-feats.json"),
+        ]
+    )
     assert rc == 0
 
     feats = json.loads((out / "pathbuilder-feats.json").read_text("utf-8"))
     assert len(feats["entries"]) == 6
     assert feats["_provenance"]["desc_policy"]
-    assert "description" not in {
-        k.lower() for e in feats["entries"] for k in e}
+    assert "description" not in {k.lower() for e in feats["entries"] for k in e}
     cmp_ = feats["pcgen_comparison"]
     assert cmp_["duplicates"] == ["Dodge"]
     assert cmp_["new_count"] == 5
 
-    cf = json.loads(
-        (out / "pathbuilder-class-features.json").read_text("utf-8"))
+    cf = json.loads((out / "pathbuilder-class-features.json").read_text("utf-8"))
     assert cf["counts"]["barbarian"] == 2
 
 
@@ -339,8 +364,10 @@ def test_pi_local_only_gitignored():
     assert "data/reference/pi_local_only/*" in gitignore
 
 
-@pytest.mark.skipif(not (REAL_RAW / "data_feats.xml").is_file(),
-                    reason="dataset Pathbuilder assente (pi_local_only non committato)")
+@pytest.mark.skipif(
+    not (REAL_RAW / "data_feats.xml").is_file(),
+    reason="dataset Pathbuilder assente (pi_local_only non committato)",
+)
 def test_provenance_file_dataset():
     prov = json.loads((REAL_RAW / "_provenance.json").read_text("utf-8"))
     assert "Pathbuilder" in prov["dataset"]
@@ -354,11 +381,17 @@ def test_provenance_file_dataset():
 # Smoke sui dati REALI (salta se il dataset non c'e'): conteggi e spot-check.
 # ---------------------------------------------------------------------------
 
-@pytest.mark.skipif(not (REAL_RAW / "data_feats.xml").is_file(),
-                    reason="dataset Pathbuilder assente (pi_local_only non committato)")
+
+@pytest.mark.skipif(
+    not (REAL_RAW / "data_feats.xml").is_file(),
+    reason="dataset Pathbuilder assente (pi_local_only non committato)",
+)
 def test_dati_reali_conteggi_e_spot_check():
-    feats = pb.feats_from_rows(pb.iter_rows(pb.parse_xml(
-        (REAL_RAW / "data_feats.xml").read_text(encoding="utf-8"))))
+    feats = pb.feats_from_rows(
+        pb.iter_rows(
+            pb.parse_xml((REAL_RAW / "data_feats.xml").read_text(encoding="utf-8"))
+        )
+    )
     assert len(feats) == 3320
     by_name = {e["name"]: e for e in feats}
     assert by_name["Dodge"]["requirements"]["ability_mins"] == {"DEX": 13}
@@ -374,15 +407,16 @@ def test_dati_reali_conteggi_e_spot_check():
     assert ra["description"].startswith("While raging")
 
     # una classe e una razza dai dataset dedicati
-    classes = pb.iter_rows(pb.parse_xml(
-        (REAL_RAW / "data_classes.xml").read_text(encoding="utf-8")))
+    classes = pb.iter_rows(
+        pb.parse_xml((REAL_RAW / "data_classes.xml").read_text(encoding="utf-8"))
+    )
     assert len(classes) == 163
-    barbarian = next(r for r in classes
-                     if r.findtext("Classname") == "Barbarian")
+    barbarian = next(r for r in classes if r.findtext("Classname") == "Barbarian")
     assert barbarian.findtext("Source") == "CRB"
 
-    races = pb.iter_rows(pb.parse_xml(
-        (REAL_RAW / "data_races.xml").read_text(encoding="utf-8")))
+    races = pb.iter_rows(
+        pb.parse_xml((REAL_RAW / "data_races.xml").read_text(encoding="utf-8"))
+    )
     assert len(races) == 669
     dwarf_traits = [r for r in races if r.findtext("Race") == "Dwarf"]
     assert dwarf_traits

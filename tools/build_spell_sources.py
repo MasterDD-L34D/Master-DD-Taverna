@@ -67,6 +67,7 @@ Uso:
   --taverna/--pcgen/--pb PATH  (default: posizioni note dei tre JSON)
   --out-dir PATH (default <pathmaster>/packages/rules-engine-v2/src/data)
 """
+
 from __future__ import annotations
 
 import argparse
@@ -77,8 +78,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-PATHMASTER_DATA = (REPO_ROOT.parent / "pathmaster-dd"
-                   / "packages/rules-engine-v2/src/data")
+PATHMASTER_DATA = (
+    REPO_ROOT.parent / "pathmaster-dd" / "packages/rules-engine-v2/src/data"
+)
 DEFAULT_TAVERNA = REPO_ROOT / "data/reference/ogl/spells.json"
 DEFAULT_PCGEN = PATHMASTER_DATA / "pcgen-spells.json"
 DEFAULT_PB = PATHMASTER_DATA / "pathbuilder-spells.json"
@@ -92,8 +94,13 @@ DEFAULT_PB = PATHMASTER_DATA / "pathbuilder-spells.json"
 # forme. Vedi tests).
 QUALIFIERS = (
     "greater communal",  # prima il piu' lungo: rpartition sul suffisso
-    "greater", "lesser", "mass", "communal",
-    "improved", "supreme", "giant",
+    "greater",
+    "lesser",
+    "mass",
+    "communal",
+    "improved",
+    "supreme",
+    "giant",
 )
 
 # Alias di classe DICHIARATI (vedi import_pathbuilder_spells.py).
@@ -120,61 +127,61 @@ DIVERGENCE_VERDICTS: dict[tuple[str, str], dict] = {
     ("commune with nature", "druid"): {
         "raw": "druid 5 (ranger 4, hunter 4, psychic 5, shaman 5)",
         "assessment": "Taverna e PB concordi col RAW; il valore PCGen (4) "
-                      "e' difforme (probabile errore del dato PCGen).",
+        "e' difforme (probabile errore del dato PCGen).",
         "source": "https://aonprd.com/SpellDisplay.aspx?ItemName=Commune%20with%20Nature",
     },
     ("geas (lesser)", "bard"): {
         "raw": "bard 3 (sorcerer/wizard 4, witch 4, inquisitor 4, "
-               "mesmerist 3, psychic 4, skald 3, arcanist 4)",
+        "mesmerist 3, psychic 4, skald 3, arcanist 4)",
         "assessment": "Taverna e PB concordi col RAW; il valore PCGen (4) "
-                      "e' difforme (probabile errore del dato PCGen).",
+        "e' difforme (probabile errore del dato PCGen).",
         "source": "https://aonprd.com/SpellDisplay.aspx?ItemName=Geas,%20Lesser",
     },
     ("nondetection", "ranger"): {
         "raw": "ranger 4 (quasi tutte le altre classi 3; medium 2, hunter 4)",
         "assessment": "Taverna e PB concordi col RAW; il valore PCGen (3) "
-                      "e' difforme (probabile errore del dato PCGen).",
+        "e' difforme (probabile errore del dato PCGen).",
         "source": "https://aonprd.com/SpellDisplay.aspx?ItemName=Nondetection",
     },
     ("withdraw affliction", "spiritualist"): {
         "raw": "spiritualist 5 (psychic 6, shaman 6, witch 7)",
         "assessment": "Taverna e PB concordi col RAW; il valore PCGen (6) "
-                      "e' difforme (probabile errore del dato PCGen).",
+        "e' difforme (probabile errore del dato PCGen).",
         "source": "https://aonprd.com/SpellDisplay.aspx?ItemName=Withdraw%20Affliction",
     },
     ("fool's gold", "sorcerer"): {
         "raw": "due spell OMONIME distinte: Fool's Gold (Villain Codex, "
-               "illusione, sorcerer/wizard 1) e Fool's Gold (Arcane "
-               "Anthology, trasmutazione, sorcerer/wizard 2)",
+        "illusione, sorcerer/wizard 1) e Fool's Gold (Arcane "
+        "Anthology, trasmutazione, sorcerer/wizard 2)",
         "assessment": "Taverna fonta la versione VC (illusion, 1), PB la "
-                      "versione AA (transmutation, 2): non un errore, "
-                      "un'omonimia RAW reale — classificata raw-homonym.",
+        "versione AA (transmutation, 2): non un errore, "
+        "un'omonimia RAW reale — classificata raw-homonym.",
         "source": "https://aonprd.com/SpellDisplay.aspx?ItemName=Fool%27s%20Gold%20(VC)",
     },
     ("fool's gold", "wizard"): {
         "raw": "come sorcerer (omonimia VC livello 1 vs AA livello 2)",
         "assessment": "Taverna fonta la versione VC (illusion, 1), PB la "
-                      "versione AA (transmutation, 2): omonimia RAW reale.",
+        "versione AA (transmutation, 2): omonimia RAW reale.",
         "source": "https://aonprd.com/SpellDisplay.aspx?ItemName=Fool%27s%20Gold%20(VC)",
     },
     ("soul transfer", "sorcerer"): {
         "raw": "sorcerer/wizard 7 (witch 7, cleric/oracle 7, psychic 7, "
-               "shaman 7, spiritualist 6)",
+        "shaman 7, spiritualist 6)",
         "assessment": "Taverna concorde col RAW; il valore PB (8) e' "
-                      "difforme (probabile confusione con Trap the Soul, "
-                      "livello 8, stessa pagina AoN).",
+        "difforme (probabile confusione con Trap the Soul, "
+        "livello 8, stessa pagina AoN).",
         "source": "https://aonprd.com/SpellDisplay.aspx?ItemName=Soul%20Transfer",
     },
     ("soul transfer", "wizard"): {
         "raw": "sorcerer/wizard 7",
         "assessment": "Taverna concorde col RAW; il valore PB (8) e' "
-                      "difforme (vedi sorcerer).",
+        "difforme (vedi sorcerer).",
         "source": "https://aonprd.com/SpellDisplay.aspx?ItemName=Soul%20Transfer",
     },
     ("soul transfer", "witch"): {
         "raw": "witch 7",
         "assessment": "Taverna concorde col RAW; il valore PB (8) e' "
-                      "difforme (vedi sorcerer).",
+        "difforme (vedi sorcerer).",
         "source": "https://aonprd.com/SpellDisplay.aspx?ItemName=Soul%20Transfer",
     },
 }
@@ -240,13 +247,16 @@ def load_pcgen(path: Path) -> tuple[dict[str, dict], dict]:
         if not name:
             continue
         key = canon_key(name)
-        target = out.setdefault(key, {
-            "name": str(name),
-            "levels": {},
-            "school": entry.get("school"),
-            "source": entry.get("source_book"),
-            "books": [],
-        })
+        target = out.setdefault(
+            key,
+            {
+                "name": str(name),
+                "levels": {},
+                "school": entry.get("school"),
+                "source": entry.get("source_book"),
+                "books": [],
+            },
+        )
         target["books"].append(entry.get("source_book"))
         if len(target["books"]) > 1:
             merged.add(key)
@@ -254,22 +264,25 @@ def load_pcgen(path: Path) -> tuple[dict[str, dict], dict]:
             cid = class_id(cls)
             if cid in target["levels"] and target["levels"][cid] != value:
                 # mai risolto a tentativi: segnalato, vince la PRIMA occorrenza
-                conflicts.append({
-                    "spell": key, "class": cid,
-                    "keptLevel": target["levels"][cid],
-                    "discardedLevel": value,
-                    "book": entry.get("source_book"),
-                })
+                conflicts.append(
+                    {
+                        "spell": key,
+                        "class": cid,
+                        "keptLevel": target["levels"][cid],
+                        "discardedLevel": value,
+                        "book": entry.get("source_book"),
+                    }
+                )
             else:
                 target["levels"].setdefault(cid, value)
     return out, {
         "mergedNames": sorted(merged),
         "conflicts": conflicts,
         "note": "Nomi PCGen presenti in due libri della slice: fusi a "
-                "UNIONE di classi (le classi sono complementari). Un "
-                "conflitto di livello sulla stessa classe sarebbe "
-                "segnalato in conflicts (vince la prima occorrenza, "
-                "dichiarato) — oggi zero.",
+        "UNIONE di classi (le classi sono complementari). Un "
+        "conflitto di livello sulla stessa classe sarebbe "
+        "segnalato in conflicts (vince la prima occorrenza, "
+        "dichiarato) — oggi zero.",
     }
 
 
@@ -283,8 +296,9 @@ def load_pb(path: Path) -> dict[str, dict]:
             continue
         out[canon_key(name)] = {
             "name": str(name),
-            "levels": {class_id(c): v
-                       for c, v in (entry.get("spellLevels") or {}).items()},
+            "levels": {
+                class_id(c): v for c, v in (entry.get("spellLevels") or {}).items()
+            },
             "school": entry.get("school"),
             "source": entry.get("source"),
         }
@@ -325,8 +339,11 @@ def _divergences(spells: dict[str, dict]) -> list[dict]:
         for src in sources.values():
             classes.update(src["levels"])
         for cls in sorted(classes):
-            levels = {name: src["levels"][cls]
-                      for name, src in sources.items() if cls in src["levels"]}
+            levels = {
+                name: src["levels"][cls]
+                for name, src in sources.items()
+                if cls in src["levels"]
+            }
             if len(levels) < 2 or len(set(levels.values())) == 1:
                 continue
             if key in RAW_HOMONYMS:
@@ -336,14 +353,16 @@ def _divergences(spells: dict[str, dict]) -> list[dict]:
             verdict = DIVERGENCE_VERDICTS.get((key, cls))
             if verdict is None and classification != "raw-homonym":
                 classification = "declared-unresolved"
-            out.append({
-                "spell": key,
-                "displayName": spells[key]["displayName"],
-                "class": cls,
-                "levels": levels,
-                "classification": classification,
-                "verdict": verdict,
-            })
+            out.append(
+                {
+                    "spell": key,
+                    "displayName": spells[key]["displayName"],
+                    "class": cls,
+                    "levels": levels,
+                    "classification": classification,
+                    "verdict": verdict,
+                }
+            )
     return out
 
 
@@ -356,8 +375,7 @@ def build(taverna_path: Path, pcgen_path: Path, pb_path: Path) -> dict:
     # priorita' displayName: Taverna (ampiezza) > PCGen > PB — dichiarata
     for source_name, data in (("taverna", tav), ("pcgen", pcg), ("pb", pb)):
         for key, entry in data.items():
-            slot = spells.setdefault(key, {"displayName": entry["name"],
-                                           "sources": {}})
+            slot = spells.setdefault(key, {"displayName": entry["name"], "sources": {}})
             slot["sources"][source_name] = {
                 "name": entry["name"],
                 "levels": entry["levels"],
@@ -389,47 +407,48 @@ def build(taverna_path: Path, pcgen_path: Path, pb_path: Path) -> dict:
     classification_counts: dict[str, int] = {}
     for d in divergences:
         classification_counts[d["classification"]] = (
-            classification_counts.get(d["classification"], 0) + 1)
+            classification_counts.get(d["classification"], 0) + 1
+        )
 
     return {
         "_provenance": {
             "sources": {
                 "taverna": "Master-DD-Taverna/data/reference/ogl/spells.json "
-                           "(2.820 entry OGL) — AMPIEZZA, fonte OPERATIVA del "
-                           "motore (spellLevelFor). Correzione curata Fase A "
-                           "2026-08-08: Overwhelming Presence psychic 4->9 "
-                           "(vedi commento CORREZIONI CURATE nel builder)",
+                "(2.820 entry OGL) — AMPIEZZA, fonte OPERATIVA del "
+                "motore (spellLevelFor). Correzione curata Fase A "
+                "2026-08-08: Overwhelming Presence psychic 4->9 "
+                "(vedi commento CORREZIONI CURATE nel builder)",
                 "pcgen": "pcgen-spells.json (import A1, 1.740 entry) — STRUTTURA",
                 "pathbuilder": "pathbuilder-spells.json (import D5, 2.922 entry) "
-                               "— COPERTURA per classe",
+                "— COPERTURA per classe",
             },
             "generated_by": "Master-DD-Taverna/tools/build_spell_sources.py",
             "generated_at": datetime.now(timezone.utc).isoformat(),
             "license": "Meccaniche e nomi: OGL 1.0a (Taverna OGL, PCGen data "
-                       "sets, Pathbuilder raw). Nessun testo di regole "
-                       "esportato (mai description).",
+            "sets, Pathbuilder raw). Nessun testo di regole "
+            "esportato (mai description).",
             "operative_source": "Il motore continua a usare spellLevelFor "
-                                "Taverna (catalogs/taverna-spell-data.ts) come "
-                                "UNICA fonte operativa dei livelli per il "
-                                "derivato: NESSUN cambio silenzioso — le uniche "
-                                "modifiche ai livelli operativi sono le "
-                                "correzioni curate dichiarate (vedi CORREZIONI "
-                                "CURATE nel builder; ENGINE_VERSION bump "
-                                "documentato in INTERPRETATIONS.md).",
+            "Taverna (catalogs/taverna-spell-data.ts) come "
+            "UNICA fonte operativa dei livelli per il "
+            "derivato: NESSUN cambio silenzioso — le uniche "
+            "modifiche ai livelli operativi sono le "
+            "correzioni curate dichiarate (vedi CORREZIONI "
+            "CURATE nel builder; ENGINE_VERSION bump "
+            "documentato in INTERPRETATIONS.md).",
             "conflict_policy": "Mai merge silenzioso: i livelli di ogni fonte "
-                               "restano SEPARATI per spell; le divergenze di "
-                               "livello per classe sono registrate e "
-                               "classificate in report.divergences, MAI "
-                               "risolte a tentativi. Verdetti RAW (AoN) "
-                               "dichiarati come DATO, non come correzione.",
+            "restano SEPARATI per spell; le divergenze di "
+            "livello per classe sono registrate e "
+            "classificate in report.divergences, MAI "
+            "risolte a tentativi. Verdetti RAW (AoN) "
+            "dichiarati come DATO, non come correzione.",
         },
         "normalization": {
             "nameKey": "NFKD + strip combining + casefold + apostrofo "
-                       "tipografico->dritto + collasso spazi",
+            "tipografico->dritto + collasso spazi",
             "invertedForms": "'Base, Qual' (Taverna/PB) <-> 'Base (Qual)' "
-                             "(PCGen), solo per i qualificatori dichiarati; "
-                             "le parentesi NON di qualificatore restano "
-                             "varianti separate, mai fuse",
+            "(PCGen), solo per i qualificatori dichiarati; "
+            "le parentesi NON di qualificatore restano "
+            "varianti separate, mai fuse",
             "qualifiers": list(QUALIFIERS),
             "classAliases": dict(CLASS_ALIASES),
         },
@@ -455,27 +474,38 @@ def main(argv=None) -> int:
     index = build(Path(args.taverna), Path(args.pcgen), Path(args.pb))
     counts = index["counts"]
     div_counts = index["report"]["divergenceCounts"]
-    print(f"fonti: Taverna {counts['taverna']}, PCGen {counts['pcgen']}, "
-          f"PB {counts['pb']} -> unione {counts['union']}")
-    print(f"intersezioni: T&P {counts['intersection']['tavernaPcgen']}, "
-          f"T&B {counts['intersection']['tavernaPb']}, "
-          f"P&B {counts['intersection']['pcgenPb']}, "
-          f"tutte e 3: {counts['intersection']['allThree']}")
-    print(f"solo una fonte: Taverna {counts['only']['taverna']}, "
-          f"PCGen {counts['only']['pcgen']}, PB {counts['only']['pb']}")
-    print(f"duplicati interni PCGen fusi: "
-          f"{len(index['report']['pcgenInternalDuplicates']['mergedNames'])} "
-          f"(conflitti: "
-          f"{len(index['report']['pcgenInternalDuplicates']['conflicts'])})")
-    print(f"divergenze di livello per classe: "
-          f"{len(index['report']['divergences'])} {div_counts}")
+    print(
+        f"fonti: Taverna {counts['taverna']}, PCGen {counts['pcgen']}, "
+        f"PB {counts['pb']} -> unione {counts['union']}"
+    )
+    print(
+        f"intersezioni: T&P {counts['intersection']['tavernaPcgen']}, "
+        f"T&B {counts['intersection']['tavernaPb']}, "
+        f"P&B {counts['intersection']['pcgenPb']}, "
+        f"tutte e 3: {counts['intersection']['allThree']}"
+    )
+    print(
+        f"solo una fonte: Taverna {counts['only']['taverna']}, "
+        f"PCGen {counts['only']['pcgen']}, PB {counts['only']['pb']}"
+    )
+    print(
+        f"duplicati interni PCGen fusi: "
+        f"{len(index['report']['pcgenInternalDuplicates']['mergedNames'])} "
+        f"(conflitti: "
+        f"{len(index['report']['pcgenInternalDuplicates']['conflicts'])})"
+    )
+    print(
+        f"divergenze di livello per classe: "
+        f"{len(index['report']['divergences'])} {div_counts}"
+    )
 
     if not args.report_only:
         out_dir = Path(args.out_dir)
         out_dir.mkdir(parents=True, exist_ok=True)
         path = out_dir / "spell-sources.json"
-        path.write_text(json.dumps(index, indent=1, ensure_ascii=False) + "\n",
-                        encoding="utf-8")
+        path.write_text(
+            json.dumps(index, indent=1, ensure_ascii=False) + "\n", encoding="utf-8"
+        )
         print(f"scritto {path}")
     return 0
 

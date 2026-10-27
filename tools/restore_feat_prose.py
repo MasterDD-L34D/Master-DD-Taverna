@@ -12,6 +12,7 @@ e' sanitizzato (description=True) per riapplicare il masking PI sanctioned.
 Default: dry-run. --write applica e scrive feats.json + report.
 --offline: solo cache (fallisce su miss).
 """
+
 from __future__ import annotations
 
 import argparse
@@ -68,7 +69,8 @@ MANUAL_RESTORE_TABLE = {
             "Because you have studied how to mask the recognizable elements of "
             "your spellcasting, you gain a +2 bonus on your Spellcraft checks "
             "to identify and counter an opponent's spell if it is a spell you "
-            "know or have in your spellbook."),
+            "know or have in your spellbook."
+        ),
     },
     "Hindrance Dismissal": {
         "description": (
@@ -80,13 +82,19 @@ MANUAL_RESTORE_TABLE = {
             "'wall' in their names) you cast. The spells must have a duration "
             "of at least 1 round. This ability follows the normal rules for "
             "dismissing spells, allowing you to dismiss conjured pits and "
-            "walls as a standard action."),
+            "walls as a standard action."
+        ),
     },
 }
 
-_LABEL_RE = re.compile(r"^(Prerequisites?|Benefit|Normal|Special|Note|Goal|Completion Benefit|Suggested Traits)\s*:\s*(.*)$",
-                       re.I | re.S)
-_LABEL_ONLY_RE = re.compile(r"^(Prerequisites?|Benefit|Normal|Special|Note|Goal|Completion Benefit|Suggested Traits)$", re.I)
+_LABEL_RE = re.compile(
+    r"^(Prerequisites?|Benefit|Normal|Special|Note|Goal|Completion Benefit|Suggested Traits)\s*:\s*(.*)$",
+    re.I | re.S,
+)
+_LABEL_ONLY_RE = re.compile(
+    r"^(Prerequisites?|Benefit|Normal|Special|Note|Goal|Completion Benefit|Suggested Traits)$",
+    re.I,
+)
 _LEAD_COLON_RE = re.compile(r"^:\s*")
 _PUNCT_ONLY_RE = re.compile(r"^[,;]+$")
 _SRCLINE_RE = re.compile(r"^.*\bpg\.\s*\d+.*$")
@@ -95,8 +103,11 @@ _SRCLINE_RE = re.compile(r"^.*\bpg\.\s*\d+.*$")
 def appendix_names() -> list[str]:
     """I 75 nomi dall'appendice del report triage (fonte di verita' committata)."""
     text = REPORT_SRC.read_text(encoding="utf-8")
-    m = re.search(r"<details><summary>Elenco entry \(nomi\)</summary>\s*(.*?)\s*</details>",
-                  text, re.S)
+    m = re.search(
+        r"<details><summary>Elenco entry \(nomi\)</summary>\s*(.*?)\s*</details>",
+        text,
+        re.S,
+    )
     if not m:
         sys.exit("ERRORE: appendice non trovata in " + str(REPORT_SRC))
     return [n.strip() for n in m.group(1).split(",") if n.strip()]
@@ -105,6 +116,7 @@ def appendix_names() -> list[str]:
 def parse_feat_page(html: str) -> dict:
     """Pagina FeatDisplay -> {name, source, flavor, prerequisites, benefit}."""
     from bs4 import BeautifulSoup
+
     soup = BeautifulSoup(html, "html.parser")
     h1 = soup.find("h1", class_="title")
     if not h1:
@@ -165,19 +177,25 @@ def parse_feat_page(html: str) -> dict:
         elif mode == "benefit":
             benefit_parts.append(seg)
     prereq_text = clean(" ".join(prereq_parts))
-    return {"name": name, "source": source,
-            "flavor": clean(" ".join(flavor_parts)),
-            "prerequisites": split_prereq_string(prereq_text) if prereq_text else [],
-            "benefit": clean(" ".join(benefit_parts))}
+    return {
+        "name": name,
+        "source": source,
+        "flavor": clean(" ".join(flavor_parts)),
+        "prerequisites": split_prereq_string(prereq_text) if prereq_text else [],
+        "benefit": clean(" ".join(benefit_parts)),
+    }
 
 
 def apply_restore(entry: dict, page: dict) -> dict:
     """Aggiorna l'entry con i dati della pagina (convenzione catalogo)."""
     out = dict(entry)
-    desc = page["flavor"] + "\n\n" + page["benefit"] if page["flavor"] else page["benefit"]
+    desc = (
+        page["flavor"] + "\n\n" + page["benefit"] if page["flavor"] else page["benefit"]
+    )
     out["description"] = sanitize_text(desc, description=True)
-    out["prerequisites"] = [sanitize_text(p, description=True)
-                            for p in page["prerequisites"]]
+    out["prerequisites"] = [
+        sanitize_text(p, description=True) for p in page["prerequisites"]
+    ]
     out["references"] = [f"Pathfinder PRD: {entry['name']}"]
     out["updated_at"] = date.today().isoformat() + "T00:00:00Z"
     return out
@@ -210,8 +228,9 @@ def cmd_manual(write: bool) -> int:
         applied.append(name)
     print(f"manual restore: {len(applied)} entry: {', '.join(applied)}")
     if write:
-        FEATS_PATH.write_text(json.dumps(catalog, ensure_ascii=False, indent=2),
-                              encoding="utf-8")
+        FEATS_PATH.write_text(
+            json.dumps(catalog, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
         print(f"Scritto: {FEATS_PATH}")
     else:
         print("Dry-run: nessuna modifica (usa --write)")
@@ -222,15 +241,19 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--write", action="store_true")
     ap.add_argument("--offline", action="store_true")
-    ap.add_argument("--manual", action="store_true",
-                    help="applica MANUAL_RESTORE_TABLE (feat assenti da AoN moderno)")
+    ap.add_argument(
+        "--manual",
+        action="store_true",
+        help="applica MANUAL_RESTORE_TABLE (feat assenti da AoN moderno)",
+    )
     args = ap.parse_args(argv)
 
     if args.manual:
         return cmd_manual(args.write)
 
-    names = appendix_names() + [n for n in SUPPLEMENTAL_NAMES
-                                if n not in appendix_names()]
+    names = appendix_names() + [
+        n for n in SUPPLEMENTAL_NAMES if n not in appendix_names()
+    ]
     catalog = json.loads(FEATS_PATH.read_text(encoding="utf-8"))
     by_name = {e["name"]: e for e in catalog["entries"]}
     missing = [n for n in names if n not in by_name]
@@ -246,15 +269,21 @@ def main(argv=None) -> int:
             continue
         entry = by_name[name]
         if page["source"] and entry.get("source") and page["source"] != entry["source"]:
-            src_mismatch.append(f"- **{name}**: catalogo `{entry['source']}` vs pagina `{page['source']}`")
+            src_mismatch.append(
+                f"- **{name}**: catalogo `{entry['source']}` vs pagina `{page['source']}`"
+            )
         if not page["benefit"]:
-            failures.append(f"- **{name}**: benefit vuoto (parse sospetto, entry non toccata)")
+            failures.append(
+                f"- **{name}**: benefit vuoto (parse sospetto, entry non toccata)"
+            )
             continue
         if args.write:
             entry.update(apply_restore(entry, page))
         restored.append(name)
 
-    print(f"nomi: {len(names)}; ripristinati: {len(restored)}; falliti: {len(failures)}")
+    print(
+        f"nomi: {len(names)}; ripristinati: {len(restored)}; falliti: {len(failures)}"
+    )
     for line in failures:
         print(line)
     for line in src_mismatch:
@@ -263,14 +292,24 @@ def main(argv=None) -> int:
         print("Dry-run: nessuna modifica (usa --write)")
         return 0
 
-    FEATS_PATH.write_text(json.dumps(catalog, ensure_ascii=False, indent=2),
-                          encoding="utf-8")
-    lines = ["# Ripristino prosa feats (2026-07-25)", "",
-             f"- Entry in appendice: {len(names)}",
-             f"- Ripristinate: {len(restored)}",
-             f"- Fallite (404/parse): {len(failures)}", "",
-             "## Fallite", ""] + (failures or ["(nessuna)"]) + [
-             "", "## Mismatch source catalogo/pagina (non bloccanti)", ""] + (src_mismatch or ["(nessuno)"])
+    FEATS_PATH.write_text(
+        json.dumps(catalog, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    lines = (
+        [
+            "# Ripristino prosa feats (2026-07-25)",
+            "",
+            f"- Entry in appendice: {len(names)}",
+            f"- Ripristinate: {len(restored)}",
+            f"- Fallite (404/parse): {len(failures)}",
+            "",
+            "## Fallite",
+            "",
+        ]
+        + (failures or ["(nessuna)"])
+        + ["", "## Mismatch source catalogo/pagina (non bloccanti)", ""]
+        + (src_mismatch or ["(nessuno)"])
+    )
     REPORT_PATH.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"Scritto: {FEATS_PATH}; report: {REPORT_PATH}")
     return 0

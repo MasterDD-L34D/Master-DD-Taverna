@@ -20,6 +20,7 @@ level null dichiarato.
 
 Policy OGL: il JSON committato non include MAI <Details> (testo Paizo PI).
 """
+
 import json
 import sys
 from pathlib import Path
@@ -29,7 +30,6 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tools import import_pathbuilder_archetypes as pb
-
 
 # ---------------------------------------------------------------------------
 # Fixture: forma reale (campi nell'ordine osservato nei file veri).
@@ -128,6 +128,7 @@ def _write_raw(tmp_path, files):
 # Raggruppamento blocchi archetipo (ArchetypeName solo sulla prima riga)
 # ---------------------------------------------------------------------------
 
+
 def test_group_archetype_blocks(tmp_path):
     d = _write_raw(tmp_path, {"data_archetypes_barbarian.xml": BARBARIAN_XML})
     classes = pb.import_archetypes(d)
@@ -143,7 +144,10 @@ def test_entries_forma_e_suffissi_progressivi(tmp_path):
     assert hulk["race"] is None
     entries = hulk["entries"]
     assert [e["special"] for e in entries] == [
-        "Armor Proficiency", "Indomitable Stance", "Resilience of Steel"]
+        "Armor Proficiency",
+        "Indomitable Stance",
+        "Resilience of Steel",
+    ]
     # EffectMethod dichiarato come hook interno, non effetto
     assert entries[0]["effectHook"] == "armoredHulkArmor"
     assert "effectHook" not in entries[1]
@@ -151,8 +155,7 @@ def test_entries_forma_e_suffissi_progressivi(tmp_path):
     assert entries[0]["replaced"] == []
     assert entries[1]["replaced"] == ["Fast Movement"]
     # i suffissi +N restano parte del nome (progressione onesta, non dedotta)
-    assert entries[2]["replaced"] == [
-        f"Trap Sense +{n}" for n in range(1, 7)]
+    assert entries[2]["replaced"] == [f"Trap Sense +{n}" for n in range(1, 7)]
     assert [e["level"] for e in entries] == [1, 1, 3]
 
 
@@ -195,11 +198,15 @@ def test_mai_details_pi(tmp_path):
 # main() end-to-end su radice finta
 # ---------------------------------------------------------------------------
 
+
 def test_main_scrive_il_json(tmp_path):
-    raw = _write_raw(tmp_path, {
-        "data_archetypes_barbarian.xml": BARBARIAN_XML,
-        "data_archetypes_alchemist.xml": ALCHEMIST_XML,
-    })
+    raw = _write_raw(
+        tmp_path,
+        {
+            "data_archetypes_barbarian.xml": BARBARIAN_XML,
+            "data_archetypes_alchemist.xml": ALCHEMIST_XML,
+        },
+    )
     out = tmp_path / "out"
     rc = pb.main(["--raw-dir", str(raw), "--out-dir", str(out)])
     assert rc == 0
@@ -216,7 +223,8 @@ def test_main_scrive_il_json(tmp_path):
     assert data["counts"]["entriesWithoutLevel"] == 1
     assert data["report"]["skippedCompletedSentinels"] == 1
     assert data["report"]["entriesWithoutLevel"] == [
-        {"class": "alchemist", "archetype": "Clone Master", "special": "Bomb"}]
+        {"class": "alchemist", "archetype": "Clone Master", "special": "Bomb"}
+    ]
     # nessuna Details/desc nelle voci
     for cls in data["classes"].values():
         for arch in cls.values():
@@ -234,22 +242,25 @@ REAL_RAW = REPO_ROOT / "data/reference/pi_local_only/pathbuilder"
 REAL_REASON = "dataset Pathbuilder assente (pi_local_only non committato)"
 
 
-@pytest.mark.skipif(not (REAL_RAW / "data_archetypes_barbarian.xml").is_file(),
-                    reason=REAL_REASON)
+@pytest.mark.skipif(
+    not (REAL_RAW / "data_archetypes_barbarian.xml").is_file(), reason=REAL_REASON
+)
 def test_dati_reali_conteggi():
     classes = pb.import_archetypes(REAL_RAW)
     # ricognizione 2026-08-07: 42 file, 1.361 archetipi, 5.069 righe di cui
     # 6 sentinelle Completed-only e 3 entry senza <Level>
     assert len(classes) == 42
     assert sum(len(a) for a in classes.values()) == 1361
-    entries = [e for a in classes.values() for arch in a.values()
-               for e in arch["entries"]]
+    entries = [
+        e for a in classes.values() for arch in a.values() for e in arch["entries"]
+    ]
     assert len(entries) == 5063
     assert sum(1 for e in entries if e["level"] is None) == 3
 
 
-@pytest.mark.skipif(not (REAL_RAW / "data_archetypes_barbarian.xml").is_file(),
-                    reason=REAL_REASON)
+@pytest.mark.skipif(
+    not (REAL_RAW / "data_archetypes_barbarian.xml").is_file(), reason=REAL_REASON
+)
 def test_dati_reali_spot_check_armored_hulk():
     classes = pb.import_archetypes(REAL_RAW)
     hulk = classes["barbarian"]["Armored Hulk"]
@@ -258,12 +269,14 @@ def test_dati_reali_spot_check_armored_hulk():
     assert by_special["Indomitable Stance"]["replaced"] == ["Fast Movement"]
     assert by_special["Armored Swiftness"]["replaced"] == ["Uncanny Dodge"]
     assert by_special["Resilience of Steel"]["replaced"] == [
-        f"Trap Sense +{n}" for n in range(1, 7)]
+        f"Trap Sense +{n}" for n in range(1, 7)
+    ]
     assert by_special["Armor Proficiency"]["effectHook"] == "armoredHulkArmor"
 
 
-@pytest.mark.skipif(not (REAL_RAW / "data_archetypes_oracle.xml").is_file(),
-                    reason=REAL_REASON)
+@pytest.mark.skipif(
+    not (REAL_RAW / "data_archetypes_oracle.xml").is_file(), reason=REAL_REASON
+)
 def test_dati_reali_spot_check_spirit_guide():
     classes = pb.import_archetypes(REAL_RAW)
     guide = classes["oracle"]["Spirit Guide"]
@@ -274,8 +287,9 @@ def test_dati_reali_spot_check_spirit_guide():
     assert bonded["replaced"] == ["Revelation 2", "Revelation 3", "Revelation 5"]
 
 
-@pytest.mark.skipif(not (REAL_RAW / "data_archetypes_alchemist.xml").is_file(),
-                    reason=REAL_REASON)
+@pytest.mark.skipif(
+    not (REAL_RAW / "data_archetypes_alchemist.xml").is_file(), reason=REAL_REASON
+)
 def test_dati_reali_homebrew_assente_e_razziali():
     classes = pb.import_archetypes(REAL_RAW)
     # "alchemist bombardier" e' homebrew di campagna (archetypes.ts): NON

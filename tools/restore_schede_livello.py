@@ -26,6 +26,7 @@ Uso: .venv/Scripts/python tools/restore_schede_livello.py [--dry-run]
 Richiede: pathmaster-dd raggiungibile a ../../pathmaster-dd/data/reference/builds
 (override con env PATHMASTER_BUILDS_DIR).
 """
+
 from __future__ import annotations
 
 import argparse
@@ -45,7 +46,10 @@ FAMIGLIA_WIZARD = "wizard_elf_universalist"
 
 
 def _livelli(doc) -> list:
-    return [c.get("livelli") for c in doc.get("export", {}).get("sheet_payload", {}).get("classi", [])]
+    return [
+        c.get("livelli")
+        for c in doc.get("export", {}).get("sheet_payload", {}).get("classi", [])
+    ]
 
 
 def _identita(doc) -> dict:
@@ -63,7 +67,11 @@ def _rimuovi_voce(node, rimossi: list, rel: str, path: str = "") -> None:
         for k in list(node.keys()):
             v = node[k]
             p = f"{path}.{k}" if path else k
-            if isinstance(v, list) and k in ("equipaggiamento", "inventario") and VOCE in v:
+            if (
+                isinstance(v, list)
+                and k in ("equipaggiamento", "inventario")
+                and VOCE in v
+            ):
                 node[k] = [x for x in v if x != VOCE]
                 rimossi.append(f"{rel}: {p}")
             else:
@@ -134,17 +142,23 @@ def main() -> int:
             continue
 
         if not args.dry_run:
-            ta_path.write_text(json.dumps(ta, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+            ta_path.write_text(
+                json.dumps(ta, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+            )
         scritti += 1
-        print(f"{'[dry] ' if args.dry_run else ''}ripristinato {rel_s}: livelli {_livelli(ta)}")
+        print(
+            f"{'[dry] ' if args.dry_run else ''}ripristinato {rel_s}: livelli {_livelli(ta)}"
+        )
 
     if errori:
         print("\nERRORI:", file=sys.stderr)
         for e in errori:
             print(f"  - {e}", file=sys.stderr)
         return 1
-    print(f"\n{'[dry-run] ' if args.dry_run else ''}{scritti} file ripristinati "
-          f"(candidati lvl: {visti}), 0 errori")
+    print(
+        f"\n{'[dry-run] ' if args.dry_run else ''}{scritti} file ripristinati "
+        f"(candidati lvl: {visti}), 0 errori"
+    )
     return 0
 
 

@@ -24,6 +24,7 @@ DER = (miss + false_alarm + confusion) / speaker-time reference.
 
 NON e' il gate formale REQ-010: quello richiede audio reale di sessione.
 """
+
 from __future__ import annotations
 
 import math
@@ -143,8 +144,9 @@ def compute_der(ref_segments, hyp_segments, tick=DEFAULT_TICK_SECONDS):
     tick), scored_seconds (speaker-time reference) e mapping ottimo trovato."""
     if not ref_segments:
         raise ValueError("reference vuota: niente speaker-time da misurare")
-    n_ticks = max(1, int(math.ceil(
-        max(s["end"] for s in ref_segments + hyp_segments) / tick)))
+    n_ticks = max(
+        1, int(math.ceil(max(s["end"] for s in ref_segments + hyp_segments) / tick))
+    )
     ref_grid = _grid(ref_segments, tick, n_ticks)
     hyp_grid = _grid(hyp_segments, tick, n_ticks)
     ref_labels = sorted({s["speaker"] for s in ref_segments})

@@ -1,4 +1,5 @@
 """Test del Build Agent."""
+
 import pytest
 from fastapi.testclient import TestClient
 
@@ -41,7 +42,12 @@ def test_benchmarks_level_5():
 def test_evaluate_build_tiers():
     b = compute_benchmarks(5, "DPR")
     # Statistiche green DPR
-    stats = {"PF": 50, "CA": 22, "DPR": 15, "saves": {"Tempra": 8, "Riflessi": 4, "Volonta": 4}}
+    stats = {
+        "PF": 50,
+        "CA": 22,
+        "DPR": 15,
+        "saves": {"Tempra": 8, "Riflessi": 4, "Volonta": 4},
+    }
     ev = evaluate_build(stats, b, "DPR")
     assert ev["meta_tier"] in {"T1", "T2", "T3"}
     assert ev["metrics"]["DPR"]["tier"] in {"blue", "green"}
@@ -72,7 +78,14 @@ def test_validate_catalog_references_missing():
 def test_validate_numerical_constraints():
     payload = {
         "request": {"level": 5, "focus": "DPR"},
-        "benchmark": {"statistics": {"PF": 1000, "CA": 50, "DPR": 500, "saves": {"Tempra": -10, "Riflessi": 0, "Volonta": 0}}},
+        "benchmark": {
+            "statistics": {
+                "PF": 1000,
+                "CA": 50,
+                "DPR": 500,
+                "saves": {"Tempra": -10, "Riflessi": 0, "Volonta": 0},
+            }
+        },
     }
     errors = _validate_numerical_constraints(payload)
     assert any("PF irrealisticamente alto" in e for e in errors)
@@ -100,13 +113,16 @@ def test_generate_build_mock():
     assert "benchmark_evaluation" in payload
 
 
-@pytest.mark.parametrize("cls,focus", [
-    ("Fighter", "DPR"),
-    ("Fighter", "tank"),
-    ("Wizard", "control"),
-    ("Cleric", "support"),
-    ("Rogue", "DPR"),
-])
+@pytest.mark.parametrize(
+    "cls,focus",
+    [
+        ("Fighter", "DPR"),
+        ("Fighter", "tank"),
+        ("Wizard", "control"),
+        ("Cleric", "support"),
+        ("Rogue", "DPR"),
+    ],
+)
 def test_generate_build_mock_variants(cls, focus):
     request = {"class": cls, "race": "Human", "level": 5, "focus": focus}
     payload = generate_build(request, retriever=None, provider_name="mock")
@@ -116,7 +132,9 @@ def test_generate_build_mock_variants(cls, focus):
 
 
 @pytest.mark.skipif(
-    not VectorStore(str(Path(__file__).resolve().parent.parent / "src" / "data" / "vector_store")).is_ready(),
+    not VectorStore(
+        str(Path(__file__).resolve().parent.parent / "src" / "data" / "vector_store")
+    ).is_ready(),
     reason="Indice RAG non trovato; esegui python tools/index_rag.py",
 )
 def test_rag_build_endpoint():
@@ -129,7 +147,13 @@ def test_rag_build_endpoint():
         with TestClient(app) as client:
             resp = client.post(
                 "/rag/build",
-                json={"class": "Fighter", "race": "Human", "level": 5, "focus": "DPR", "provider": "mock"},
+                json={
+                    "class": "Fighter",
+                    "race": "Human",
+                    "level": 5,
+                    "focus": "DPR",
+                    "provider": "mock",
+                },
                 headers=headers,
             )
             assert resp.status_code == 200

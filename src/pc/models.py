@@ -1,4 +1,5 @@
 """Modelli input/output del builder deterministico."""
+
 from dataclasses import dataclass, field
 
 

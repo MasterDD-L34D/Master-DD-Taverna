@@ -5,6 +5,7 @@ La cache vive in data/reference/aon_cache/ (gitignored): i dump HTML grezzi
 non si committano. Uso: `python tools/reference_fetch.py <url> [<url>...]`.
 Le funzioni sono importabili dai tool di import (fetch/cache_path).
 """
+
 import argparse
 import hashlib
 import time

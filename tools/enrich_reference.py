@@ -21,6 +21,7 @@ Note legali:
     Product Identity (lore, nomi propri, marchi) viene esclusa.
     Vedi LICENSE e NOTICE nella root del repository.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -281,7 +282,12 @@ def fetch_text(url: str, retries: int = 3, delay: float = 0.5) -> str:
     last_err: Exception | None = None
     for attempt in range(1, retries + 1):
         try:
-            resp = httpx.get(url, timeout=30, follow_redirects=True, headers={"User-Agent": "pathfinder-rag-enricher/1.0"})
+            resp = httpx.get(
+                url,
+                timeout=30,
+                follow_redirects=True,
+                headers={"User-Agent": "pathfinder-rag-enricher/1.0"},
+            )
             resp.raise_for_status()
             return resp.text
         except Exception as exc:
@@ -360,7 +366,9 @@ def _load_one_feat_file(fname: str) -> list[dict]:
     return out
 
 
-def build_feat_lookup(extended: bool = False, max_workers: int = 8) -> dict[str, dict[str, str]]:
+def build_feat_lookup(
+    extended: bool = False, max_workers: int = 8
+) -> dict[str, dict[str, str]]:
     """Costruisce lookup talenti dai JSON PFRPG_Feat_card in parallelo."""
     lookup: dict[str, dict[str, str]] = {}
     files = list(FEAT_CARD_FILES_CORE)
@@ -368,12 +376,16 @@ def build_feat_lookup(extended: bool = False, max_workers: int = 8) -> dict[str,
         files.extend(FEAT_CARD_FILES_EXTENDED)
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
-        future_to_file = {executor.submit(_load_one_feat_file, fname): fname for fname in files}
+        future_to_file = {
+            executor.submit(_load_one_feat_file, fname): fname for fname in files
+        }
         for future in concurrent.futures.as_completed(future_to_file):
             entries = future.result()
             for entry in entries:
                 key = normalize_name(entry["name"])
-                if key not in lookup or len(entry["description"]) > len(lookup[key].get("description", "")):
+                if key not in lookup or len(entry["description"]) > len(
+                    lookup[key].get("description", "")
+                ):
                     lookup[key] = entry
     return lookup
 
@@ -395,7 +407,11 @@ def build_spell_lookup() -> dict[str, dict[str, str]]:
         if not name:
             continue
         key = normalize_name(name)
-        parts = [f"{k.replace('_', ' ').title()}: {v}" for k, v in entry.items() if k != "name" and v]
+        parts = [
+            f"{k.replace('_', ' ').title()}: {v}"
+            for k, v in entry.items()
+            if k != "name" and v
+        ]
         description = "\n".join(parts)
         if description:
             lookup[key] = {"name": name, "description": description}
@@ -459,7 +475,9 @@ def enrich_entry(
     seed = manual_seed.get(kind, {}).get(name)
     if seed:
         entry["description"] = seed
-        entry.setdefault("updated_at", time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()))
+        entry.setdefault(
+            "updated_at", time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+        )
         return True
 
     # 2. lookup JSON per feats/spells
@@ -470,10 +488,18 @@ def enrich_entry(
         lookup = spell_lookup.get(key)
     if lookup and lookup.get("description"):
         entry["description"] = lookup["description"]
-        entry.setdefault("updated_at", time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()))
+        entry.setdefault(
+            "updated_at", time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+        )
         # Se il lookup fornisce prerequisiti testuali e la entry li ha vuoti, li riempiamo
-        if kind == "feats" and lookup.get("prerequisites_text") and not entry.get("prerequisites"):
-            entry["prerequisites"] = [p.strip() for p in lookup["prerequisites_text"].split(",") if p.strip()]
+        if (
+            kind == "feats"
+            and lookup.get("prerequisites_text")
+            and not entry.get("prerequisites")
+        ):
+            entry["prerequisites"] = [
+                p.strip() for p in lookup["prerequisites_text"].split(",") if p.strip()
+            ]
         return True
 
     # 3. scraping d20pfsrd (solo se esplicitamente abilitato)
@@ -484,14 +510,18 @@ def enrich_entry(
             desc = scrape_d20pfsrd_description(d20_url)
             if desc:
                 entry["description"] = desc
-                entry.setdefault("updated_at", time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()))
+                entry.setdefault(
+                    "updated_at", time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+                )
                 return True
 
     return False
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Arricchisce il catalogo reference PF1e")
+    parser = argparse.ArgumentParser(
+        description="Arricchisce il catalogo reference PF1e"
+    )
     parser.add_argument(
         "--kind",
         choices=["feats", "spells", "items", "all"],
@@ -553,7 +583,9 @@ def main() -> None:
     spell_lookup: dict = {}
     if use_json and "feats" in kinds:
         print("Caricamento lookup talenti da PFRPG_Feat_card...")
-        feat_lookup = build_feat_lookup(extended=args.extended, max_workers=args.max_workers)
+        feat_lookup = build_feat_lookup(
+            extended=args.extended, max_workers=args.max_workers
+        )
         print(f"  talenti trovati: {len(feat_lookup)}")
     if use_json and "spells" in kinds:
         print("Caricamento lookup incantesimi da spell gist...")
@@ -595,14 +627,20 @@ def main() -> None:
             out_path = args.output_dir / f"{kind}.json"
             out_path.parent.mkdir(parents=True, exist_ok=True)
             save_json(out_path, data)
-            print(f"Scritto {out_path}: arricchite {enriched}/{examined} (totale {len(data)})")
+            print(
+                f"Scritto {out_path}: arricchite {enriched}/{examined} (totale {len(data)})"
+            )
         else:
-            print(f"DRY-RUN {kind}: arricchirebbe {enriched}/{examined} (totale {len(data)})")
+            print(
+                f"DRY-RUN {kind}: arricchirebbe {enriched}/{examined} (totale {len(data)})"
+            )
 
     # Stampa riepilogo
     print("\n=== Riepilogo ===")
     for kind, s in stats.items():
-        print(f"{kind}: {s['enriched']}/{s['examined']} esaminate (catalogo {s['total']})")
+        print(
+            f"{kind}: {s['enriched']}/{s['examined']} esaminate (catalogo {s['total']})"
+        )
 
 
 if __name__ == "__main__":

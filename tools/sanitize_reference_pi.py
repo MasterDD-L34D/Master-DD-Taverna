@@ -31,12 +31,12 @@ Fix 2026-07-19 (Task 2 policy PI feats, planning/2026-07-19-pi-feats-triage.md):
   2026-07-19: evitare che "Aldori" & co. vengano neutralizzati nelle
   description di equipment/traits/... in un run indiscriminato).
 """
+
 from __future__ import annotations
 
 import json
 import re
 from pathlib import Path
-
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 OGL_DIR = REPO_ROOT / "data" / "reference" / "ogl"
@@ -260,8 +260,14 @@ DESCRIPTION_ONLY_REPLACEMENTS = [
 # Campi mai sanitizzati: il nome (policy: le entry PI-identita' vanno in
 # pi_local_only, la sanitize del nome e' vietata) e i metadati tecnici/legali.
 SKIP_FIELDS = {
-    "name", "_license", "_source", "source", "source_id", "reference_urls",
-    "updated_at", "created_at",
+    "name",
+    "_license",
+    "_source",
+    "source",
+    "source_id",
+    "reference_urls",
+    "updated_at",
+    "created_at",
 }
 
 
@@ -279,7 +285,7 @@ def _compile_rules(rules):
         lookbehind = lookahead = ""
         m = re.search(r"(?<!\w)" + re.escape(old) + r"(?!\w)", new, re.IGNORECASE)
         if m:
-            prefix, suffix = new[:m.start()], new[m.end():]
+            prefix, suffix = new[: m.start()], new[m.end() :]
             if prefix:
                 lookbehind = "(?<!" + re.escape(prefix) + ")"
             if suffix:
@@ -316,7 +322,9 @@ def _sanitize_value(value, description: bool = False):
     if isinstance(value, list):
         return [_sanitize_value(item, description=description) for item in value]
     if isinstance(value, dict):
-        return {k: _sanitize_value(v, description=description) for k, v in value.items()}
+        return {
+            k: _sanitize_value(v, description=description) for k, v in value.items()
+        }
     return value
 
 
@@ -346,8 +354,10 @@ def _sanitize(obj, is_root: bool = True, description_only: bool = False):
     if isinstance(obj, str):
         return sanitize_text(obj)
     if isinstance(obj, list):
-        return [_sanitize(item, is_root=False, description_only=description_only)
-                for item in obj]
+        return [
+            _sanitize(item, is_root=False, description_only=description_only)
+            for item in obj
+        ]
     if isinstance(obj, dict):
         result = {}
         for key, value in obj.items():
@@ -356,8 +366,9 @@ def _sanitize(obj, is_root: bool = True, description_only: bool = False):
             elif key == "description":
                 result[key] = _sanitize_value(value, description=description_only)
             else:
-                result[key] = _sanitize(value, is_root=False,
-                                        description_only=description_only)
+                result[key] = _sanitize(
+                    value, is_root=False, description_only=description_only
+                )
         return result
     return obj
 
@@ -371,7 +382,9 @@ def main() -> int:
         data = json.loads(path.read_text(encoding="utf-8"))
         sanitized = _sanitize(data, is_root=True, description_only=False)
         if sanitized != data:
-            path.write_text(json.dumps(sanitized, ensure_ascii=False, indent=2), encoding="utf-8")
+            path.write_text(
+                json.dumps(sanitized, ensure_ascii=False, indent=2), encoding="utf-8"
+            )
             changed_files += 1
             print(f"Sanitizzato: {path.name}")
     print(f"File modificati: {changed_files}")

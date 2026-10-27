@@ -11,6 +11,7 @@ Fixture XML inline (MAI rete): forma reale dei file (ricognizione
 separati da '&', stessa codifica di data_armor.xml/data_weapons.xml),
 <Damage> opzionale solo su alcune weapon effects (es. "(2d6 v Lawful)").
 """
+
 import sys
 from pathlib import Path
 
@@ -58,8 +59,7 @@ WEAPON_XML = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
 def _raw_dir(tmp_path: Path) -> Path:
     (tmp_path / "data_armor_magic.xml").write_text(ARMOR_XML, encoding="utf-8")
-    (tmp_path / "data_weapon_effects.xml").write_text(WEAPON_XML,
-                                                      encoding="utf-8")
+    (tmp_path / "data_weapon_effects.xml").write_text(WEAPON_XML, encoding="utf-8")
     return tmp_path
 
 
@@ -73,7 +73,11 @@ def test_import_armor_magic_categorie_etichettate(tmp_path):
     assert animated["categoryLabels"] == ["shield", "tower-shield"]
     # 5 = accessorio magico (Bracers of Armor), stessa mappa D4
     assert entries[2]["categoryLabels"] == [
-        "light", "medium", "heavy", "magic-accessory"]
+        "light",
+        "medium",
+        "heavy",
+        "magic-accessory",
+    ]
     # MAI description/danno sulle qualita' armatura (non esistono nel dato)
     for e in entries:
         assert "description" not in {k.lower() for k in e}
@@ -85,7 +89,11 @@ def test_import_weapon_effects_damage_grezzo_strutturato(tmp_path):
     assert [e["name"] for e in entries] == ["Advancing", "Anarchic", "Bane"]
     advancing = entries[0]
     assert advancing["categoryLabels"] == [
-        "light", "one-handed", "two-handed", "natural"]
+        "light",
+        "one-handed",
+        "two-handed",
+        "natural",
+    ]
     # il Damage e' presente SOLO dove nel dato (13 righe su 97 reali):
     # stringa grezza strutturata, MAI parsata a effetto meccanico
     assert "damage" not in advancing
@@ -110,8 +118,10 @@ def test_main_scrive_il_json(tmp_path):
     rc = mq.main(["--raw-dir", str(_raw_dir(tmp_path)), "--out-dir", str(out)])
     assert rc == 0
     import json
+
     data = json.loads(
-        (out / "pathbuilder-magic-qualities.json").read_text(encoding="utf-8"))
+        (out / "pathbuilder-magic-qualities.json").read_text(encoding="utf-8")
+    )
     assert data["armorMagic"] and data["weaponEffects"]
 
 
@@ -119,11 +129,19 @@ def test_main_scrive_il_json(tmp_path):
 # Smoke sui dati REALI (skip se il dataset PI locale non c'e')
 # ---------------------------------------------------------------------------
 
-REAL_RAW = Path(__file__).resolve().parents[1] / "data" / "reference" / "pi_local_only" / "pathbuilder"
+REAL_RAW = (
+    Path(__file__).resolve().parents[1]
+    / "data"
+    / "reference"
+    / "pi_local_only"
+    / "pathbuilder"
+)
 
 
-@pytest.mark.skipif(not (REAL_RAW / "data_armor_magic.xml").is_file(),
-                    reason="dataset PI Pathbuilder assente")
+@pytest.mark.skipif(
+    not (REAL_RAW / "data_armor_magic.xml").is_file(),
+    reason="dataset PI Pathbuilder assente",
+)
 def test_dati_reali_conteggi_e_spot_check():
     payload = mq.build(REAL_RAW)
     assert payload["counts"]["armorMagic"] == 68
@@ -134,7 +152,11 @@ def test_dati_reali_conteggi_e_spot_check():
     assert armor["Animated"]["categoryLabels"] == ["shield", "tower-shield"]
     assert armor["Bashing"]["categoryLabels"] == ["shield"]
     assert weapons["Keen"]["categoryLabels"] == [
-        "light", "one-handed", "two-handed", "natural"]
+        "light",
+        "one-handed",
+        "two-handed",
+        "natural",
+    ]
     assert weapons["Anarchic"]["damage"] == "(2d6 v Lawful)"
     # il Damage e' raro: 13 righe su 97 (misurato 2026-08-08)
     with_damage = [e for e in payload["weaponEffects"] if "damage" in e]

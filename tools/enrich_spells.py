@@ -14,6 +14,7 @@ Nota copertura: spell_resistance e descriptors sono limitati dalle fonti
 
 Default: solo report. Con --write aggiunge `mechanics` alle entry.
 """
+
 import argparse
 import json
 import re
@@ -33,9 +34,21 @@ GIST_GLOB = "*PathfinderSpellsJSON*"
 # Chiavi di header nelle description; quelle multi-parola prima delle singole.
 # Effect/Area/Targets/Source/Description/Italiano servono solo da delimitatori.
 _HEADER_KEYS = [
-    "Casting Time", "Saving Throw", "Spell Resistance", "Spell Level",
-    "School", "Level", "Components", "Range", "Duration",
-    "Effect", "Area", "Targets", "Source", "Description", "Italiano",
+    "Casting Time",
+    "Saving Throw",
+    "Spell Resistance",
+    "Spell Level",
+    "School",
+    "Level",
+    "Components",
+    "Range",
+    "Duration",
+    "Effect",
+    "Area",
+    "Targets",
+    "Source",
+    "Description",
+    "Italiano",
 ]
 _KEY_RE = re.compile(
     r"(?<![A-Za-z])(" + "|".join(_HEADER_KEYS) + r")(?![A-Za-z])\s*:?\s*"
@@ -65,7 +78,7 @@ def _split_header_fields(description: str) -> dict:
     """
     prose = _PROSE_START_RE.search(description)
     if prose:
-        description = description[:prose.start()]
+        description = description[: prose.start()]
     matches = list(_KEY_RE.finditer(description))
     fields = {}
     for i, m in enumerate(matches):
@@ -140,7 +153,9 @@ def _gist_entry(gist: dict, name: str):
             if cand in exact:
                 return exact[cand]
     for cand in candidates:
-        entry = gist.get(cand) or gist.get(cand.lower()) or gist.get(normalize_name(cand))
+        entry = (
+            gist.get(cand) or gist.get(cand.lower()) or gist.get(normalize_name(cand))
+        )
         if entry:
             return entry
     return None
@@ -153,8 +168,16 @@ def merge_mechanics(entry: dict, gist: dict) -> dict:
     if not g:
         return mech
 
-    for key in ("school", "casting_time", "components", "range", "duration",
-                "saving_throw", "spell_resistance", "descriptors"):
+    for key in (
+        "school",
+        "casting_time",
+        "components",
+        "range",
+        "duration",
+        "saving_throw",
+        "spell_resistance",
+        "descriptors",
+    ):
         value = g.get(key)
         if value is not None and value != "":
             mech[key] = value.strip() if isinstance(value, str) else value
@@ -201,10 +224,14 @@ def load_gist_cache(cache_dir: Path) -> GistLookup:
 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--write", action="store_true",
-                        help="scrive `mechanics` in spells.json (default: solo report)")
-    parser.add_argument("--spells", type=Path, default=SPELLS_PATH,
-                        help="path del catalogo spells.json")
+    parser.add_argument(
+        "--write",
+        action="store_true",
+        help="scrive `mechanics` in spells.json (default: solo report)",
+    )
+    parser.add_argument(
+        "--spells", type=Path, default=SPELLS_PATH, help="path del catalogo spells.json"
+    )
     args = parser.parse_args(argv)
 
     data = json.loads(args.spells.read_text(encoding="utf-8"))
@@ -232,12 +259,22 @@ def main(argv=None) -> int:
         else:
             unmatched.append(entry.get("name", "?"))
 
-    print(f"mechanics: {len(matched)}/{len(entries)} entry "
-          f"(di cui {n_school} con school), unmatched: {len(unmatched)}")
+    print(
+        f"mechanics: {len(matched)}/{len(entries)} entry "
+        f"(di cui {n_school} con school), unmatched: {len(unmatched)}"
+    )
     print("copertura per campo:")
-    for field in ("school", "descriptors", "spell_level", "casting_time",
-                  "components", "range", "duration", "saving_throw",
-                  "spell_resistance"):
+    for field in (
+        "school",
+        "descriptors",
+        "spell_level",
+        "casting_time",
+        "components",
+        "range",
+        "duration",
+        "saving_throw",
+        "spell_resistance",
+    ):
         print(f"  {field}: {field_counts.get(field, 0)}/{len(entries)}")
     if unmatched:
         sample = ", ".join(unmatched[:20])

@@ -20,6 +20,7 @@ scrivere nulla. `--write` rigenera report + registry difetti.
 coincide con quello ricalcolato dal dump corrente (drift).
 Test: tests/test_oracle_three_way.py.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -31,8 +32,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-DUMP_PATH = (ROOT.parent / "pathmaster-dd" / "data" / "reference"
-             / "oracle-three-way.json")
+DUMP_PATH = (
+    ROOT.parent / "pathmaster-dd" / "data" / "reference" / "oracle-three-way.json"
+)
 REPORT_PATH = ROOT / "reports" / "oracle_three_way.md"
 DEFECTS_PATH = ROOT / "src" / "data" / "builds" / "_oracle_defects.json"
 
@@ -47,8 +49,14 @@ _DEFECT_CLASSES = {
 }
 
 _ABILITIES = ["str", "dex", "con", "int", "wis", "cha"]
-_STAT_KEYS = {"FOR": "str", "DES": "dex", "COS": "con",
-              "INT": "int", "SAG": "wis", "CAR": "cha"}
+_STAT_KEYS = {
+    "FOR": "str",
+    "DES": "dex",
+    "COS": "con",
+    "INT": "int",
+    "SAG": "wis",
+    "CAR": "cha",
+}
 
 
 def _norm_name(name: str) -> str:
@@ -90,7 +98,10 @@ def _flex_choice(draft_abilities: dict, mods: dict, sheet_scores: dict) -> str |
     if not sheet_scores:
         return None
     for ability in _ABILITIES:
-        final = {a: draft_abilities.get(a, 10) + (2 if a == ability else 0) for a in _ABILITIES}
+        final = {
+            a: draft_abilities.get(a, 10) + (2 if a == ability else 0)
+            for a in _ABILITIES
+        }
         if all(final[a] == sheet_scores.get(a) for a in _ABILITIES):
             return ability
     return None
@@ -151,15 +162,19 @@ def _defects_payload(rows: list) -> dict:
         if "prerequisito non soddisfatto" in " ".join(r["diffs"]):
             classes.append("prerequisito_non_soddisfatto")
         if classes:
-            defects[r["file"]] = {"classes": sorted(set(classes)),
-                                  "diffs": r["diffs"][:3]}
+            defects[r["file"]] = {
+                "classes": sorted(set(classes)),
+                "diffs": r["diffs"][:3],
+            }
     return {
-        "_comment": ("Flag difetti corpus GPT-A (decisione C 2026-07-25; lotto A "
-                     "rebuild 2026-07-27): rigenerato da tools/oracle_three_way.py "
-                     "--write. Le build NON presenti qui sono il sottoinsieme "
-                     "legale per i test dei motori. Le build ricostruite dal "
-                     "lotto A (tools/rebuild_corpus_gpt_a.py) portano il blocco "
-                     "di provenance sheet_payload.rebuild_gpt_a."),
+        "_comment": (
+            "Flag difetti corpus GPT-A (decisione C 2026-07-25; lotto A "
+            "rebuild 2026-07-27): rigenerato da tools/oracle_three_way.py "
+            "--write. Le build NON presenti qui sono il sottoinsieme "
+            "legale per i test dei motori. Le build ricostruite dal "
+            "lotto A (tools/rebuild_corpus_gpt_a.py) portano il blocco "
+            "di provenance sheet_payload.rebuild_gpt_a."
+        ),
         "defects": defects,
     }
 
@@ -167,11 +182,17 @@ def _defects_payload(rows: list) -> dict:
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     mode = ap.add_mutually_exclusive_group()
-    mode.add_argument("--write", action="store_true",
-                      help="rigenera report e registry difetti su disco")
-    mode.add_argument("--check", action="store_true",
-                      help="read-only: exit 1 se il registry su disco e' "
-                           "in drift rispetto al ricalcolo dal dump")
+    mode.add_argument(
+        "--write",
+        action="store_true",
+        help="rigenera report e registry difetti su disco",
+    )
+    mode.add_argument(
+        "--check",
+        action="store_true",
+        help="read-only: exit 1 se il registry su disco e' "
+        "in drift rispetto al ricalcolo dal dump",
+    )
     args = ap.parse_args(argv)
 
     from src.pc.engine import build_character
@@ -179,13 +200,31 @@ def main(argv=None) -> int:
 
     dump = json.loads(DUMP_PATH.read_text(encoding="utf-8"))
     rows = []
-    COST = {7: -4, 8: -2, 9: -1, 10: 0, 11: 1, 12: 2, 13: 3,
-            14: 5, 15: 7, 16: 10, 17: 13, 18: 17}
-    BUDGETS = [(10, "Low Fantasy"), (15, "Standard Fantasy"),
-               (20, "High Fantasy"), (25, "Epic Fantasy")]
+    COST = {
+        7: -4,
+        8: -2,
+        9: -1,
+        10: 0,
+        11: 1,
+        12: 2,
+        13: 3,
+        14: 5,
+        15: 7,
+        16: 10,
+        17: 13,
+        18: 17,
+    }
+    BUDGETS = [
+        (10, "Low Fantasy"),
+        (15, "Standard Fantasy"),
+        (20, "High Fantasy"),
+        (25, "Epic Fantasy"),
+    ]
     for rec in dump:
         if rec.get("error"):
-            rows.append({"file": rec["file"], "status": "ERROR", "diffs": [rec["error"]]})
+            rows.append(
+                {"file": rec["file"], "status": "ERROR", "diffs": [rec["error"]]}
+            )
             continue
         d = rec["draft"]
         race_canon, mods = _race_mods(d["race"])
@@ -194,8 +233,15 @@ def main(argv=None) -> int:
         budget = next((name for pts, name in BUDGETS if cost <= pts), None)
         if budget is None:
             # Finding oracolo: stats oltre Epic Fantasy 25 (GPT-A fuori RAW)
-            rows.append({"file": rec["file"], "status": "FUORI_BUDGET_GPT",
-                         "diffs": [f"point-buy {cost} > 25 (Epic Fantasy): stats illegali nel corpus"]})
+            rows.append(
+                {
+                    "file": rec["file"],
+                    "status": "FUORI_BUDGET_GPT",
+                    "diffs": [
+                        f"point-buy {cost} > 25 (Epic Fantasy): stats illegali nel corpus"
+                    ],
+                }
+            )
             continue
         race_bonus = None
         declared = d.get("flexDeclared")
@@ -205,12 +251,21 @@ def main(argv=None) -> int:
             # indovina piu' dallo sheet, si legge la dichiarazione.
             race_bonus = _STAT_KEYS.get(str(declared).upper())
             if race_bonus is None:
-                rows.append({"file": rec["file"], "status": "TAVERNA_ERR",
-                             "diffs": [f"bonus_razziale_flessibile non valido: {declared}"]})
+                rows.append(
+                    {
+                        "file": rec["file"],
+                        "status": "TAVERNA_ERR",
+                        "diffs": [f"bonus_razziale_flessibile non valido: {declared}"],
+                    }
+                )
                 continue
         elif mods.get("any") and abilities:
-            race_bonus = _flex_choice(abilities, mods, _sheet_scores(d.get("sheetAbilities")))
-        class_canon = _canon(ROOT / "data" / "reference" / "ogl" / "classes.json", d["class"])
+            race_bonus = _flex_choice(
+                abilities, mods, _sheet_scores(d.get("sheetAbilities"))
+            )
+        class_canon = _canon(
+            ROOT / "data" / "reference" / "ogl" / "classes.json", d["class"]
+        )
         draft = {
             "name": d["name"],
             "method": "point-buy",
@@ -225,7 +280,13 @@ def main(argv=None) -> int:
         try:
             sheet = build_character(CharacterDraft.from_dict(draft))
         except Exception as exc:
-            rows.append({"file": rec["file"], "status": "TAVERNA_ERR", "diffs": [str(exc)[:120]]})
+            rows.append(
+                {
+                    "file": rec["file"],
+                    "status": "TAVERNA_ERR",
+                    "diffs": [str(exc)[:120]],
+                }
+            )
             continue
         if sheet.get("errors"):
             errs = sheet["errors"]
@@ -234,48 +295,81 @@ def main(argv=None) -> int:
                 # Il builder e' l'unico motore che applica il limite RAW di
                 # talenti: errore del CORPUS (classe di difetto gia' trovata
                 # dallo spike 2026-07-19, adottata come warning in v1/v2).
-                rows.append({"file": rec["file"], "status": "FEAT_ILLEGALE_GPT",
-                             "diffs": errs[:2]})
+                rows.append(
+                    {
+                        "file": rec["file"],
+                        "status": "FEAT_ILLEGALE_GPT",
+                        "diffs": errs[:2],
+                    }
+                )
             elif "race_bonus_ability obbligatorio" in first:
-                rows.append({"file": rec["file"], "status": "FLEX_INDETERMINATO",
-                             "diffs": [f"sheet GPT incoerente con ogni scelta +2: {first}"]})
+                rows.append(
+                    {
+                        "file": rec["file"],
+                        "status": "FLEX_INDETERMINATO",
+                        "diffs": [f"sheet GPT incoerente con ogni scelta +2: {first}"],
+                    }
+                )
             elif "prerequisito non soddisfatto" in " ".join(errs):
                 # Prerequisito talento non soddisfatto (es. Arma accurata con
                 # BAB 0 su rogue lv1): difetto del corpus, classe FEAT_ILLEGALE
                 # in variante prerequisito (investigazione A3 2026-07-25).
-                rows.append({"file": rec["file"], "status": "PREREQ_ILLEGALE_GPT",
-                             "diffs": errs[:2]})
+                rows.append(
+                    {
+                        "file": rec["file"],
+                        "status": "PREREQ_ILLEGALE_GPT",
+                        "diffs": errs[:2],
+                    }
+                )
             else:
-                rows.append({"file": rec["file"], "status": "TAVERNA_ERR",
-                             "diffs": errs[:2]})
+                rows.append(
+                    {"file": rec["file"], "status": "TAVERNA_ERR", "diffs": errs[:2]}
+                )
             continue
         diffs: list[str] = []
         _compare(sheet, rec.get("v1"), "v1", diffs)
         _compare(sheet, rec.get("v2"), "v2", diffs)
         status = "CONCORDE" if not diffs else "DIVERGE"
-        rows.append({"file": rec["file"], "status": status, "diffs": diffs,
-                     "race_bonus": race_bonus, "budget": budget})
+        rows.append(
+            {
+                "file": rec["file"],
+                "status": status,
+                "diffs": diffs,
+                "race_bonus": race_bonus,
+                "budget": budget,
+            }
+        )
 
     text = _render_report(rows)
     print(text[:3000])
     if args.check:
         payload = _defects_payload(rows)
-        current = (json.loads(DEFECTS_PATH.read_text(encoding="utf-8"))
-                   if DEFECTS_PATH.exists() else None)
+        current = (
+            json.loads(DEFECTS_PATH.read_text(encoding="utf-8"))
+            if DEFECTS_PATH.exists()
+            else None
+        )
         if current == payload:
-            print(f"CHECK OK: registry difetti allineato "
-                  f"({len(payload['defects'])} build flaggate).")
+            print(
+                f"CHECK OK: registry difetti allineato "
+                f"({len(payload['defects'])} build flaggate)."
+            )
             return 0
-        print("CHECK FALLITO: registry difetti in drift rispetto al dump "
-              "corrente — rilanciare con --write e investigare il delta.")
+        print(
+            "CHECK FALLITO: registry difetti in drift rispetto al dump "
+            "corrente — rilanciare con --write e investigare il delta."
+        )
         return 1
     if args.write:
         REPORT_PATH.write_text(text, encoding="utf-8")
         payload = _defects_payload(rows)
-        DEFECTS_PATH.write_text(json.dumps(payload, ensure_ascii=False, indent=2),
-                                encoding="utf-8")
+        DEFECTS_PATH.write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
         print(f"Report: {REPORT_PATH}")
-        print(f"Registry difetti: {DEFECTS_PATH} ({len(payload['defects'])} build flaggate)")
+        print(
+            f"Registry difetti: {DEFECTS_PATH} ({len(payload['defects'])} build flaggate)"
+        )
     return 0
 
 

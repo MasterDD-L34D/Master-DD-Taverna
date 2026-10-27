@@ -1,6 +1,7 @@
 """Test per tools/import_talents.py — parser offline su fixture HTML reali
 (cache AoN 2026-07-26, estratti in tests/fixtures/) + invarianti del
 catalogo talents.json importato. Nessuna rete."""
+
 import json
 import sys
 from pathlib import Path
@@ -8,9 +9,17 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tools.import_talents import (
-    _category_from_h2, _parse_added_skills, _split_name_kind,
-    collect_entries, parse_bloodline_page, parse_ki_powers,
-    parse_mystery_page, parse_order_page, parse_talent_tables, talent_entry)
+    _category_from_h2,
+    _parse_added_skills,
+    _split_name_kind,
+    collect_entries,
+    parse_bloodline_page,
+    parse_ki_powers,
+    parse_mystery_page,
+    parse_order_page,
+    parse_talent_tables,
+    talent_entry,
+)
 
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
 TALENTS_PATH = Path("data/reference/ogl/talents.json")
@@ -30,7 +39,9 @@ def test_parse_mercies_markup_b_level_sections():
     assert r0["name"] == "Deceived" and r0["kind"] is None
     assert r0["level"] == 3 and r0["category"] is None
     assert r0["source"] == "Healer's Handbook"
-    assert r0["text"].startswith("The target can immediately attempt a new saving throw")
+    assert r0["text"].startswith(
+        "The target can immediately attempt a new saving throw"
+    )
     # seconda sezione h2 della stessa pagina -> level 6
     assert rows[3]["name"] == "Dazed" and rows[3]["level"] == 6
     assert rows[3]["source"] == "PRPG Core Rulebook"
@@ -39,8 +50,9 @@ def test_parse_mercies_markup_b_level_sections():
 def test_parse_rage_offensive_markup_i_category():
     """Rage powers: nome in <i> con (Ex)/(Su), category dalla sottopagina
     (config), kind tolto dal nome."""
-    rows = parse_talent_tables(_fixture("talents_rage_offensive.html"),
-                               page_category="offensive")
+    rows = parse_talent_tables(
+        _fixture("talents_rage_offensive.html"), page_category="offensive"
+    )
     assert len(rows) == 3
     assert rows[0]["name"] == "Animal Fury" and rows[0]["kind"] == "Ex"
     assert rows[0]["category"] == "offensive"
@@ -58,7 +70,9 @@ def test_parse_ki_powers_inline_section():
     names = [r["name"] for r in rows]
     assert names == ["Abundant Step", "Cobra Breath", "Diamond Body"]
     assert all(r["kind"] == "Su" for r in rows)
-    assert rows[1]["text"].startswith("Whenever a monk with this ki power uses diamond body")
+    assert rows[1]["text"].startswith(
+        "Whenever a monk with this ki power uses diamond body"
+    )
     # regressione 2026-07-26: gli <i> inline (spell citate) NON aprono entry
     # e NON troncano il testo — Abundant Step arriva fino al punto finale
     assert not any("dimension door" in n.lower() for n in names)
@@ -83,8 +97,11 @@ def test_parse_ninja_tricks_h1_pools():
     dei rogue talents)."""
     rows = parse_talent_tables(
         _fixture("talents_ninja.html"),
-        {"Ninja Tricks": "ninja trick",
-         "Advanced Ninja Tricks": "advanced ninja trick"})
+        {
+            "Ninja Tricks": "ninja trick",
+            "Advanced Ninja Tricks": "advanced ninja trick",
+        },
+    )
     assert len(rows) == 2
     assert rows[0]["name"] == "Acrobatic Master" and rows[0]["kind"] == "Su"
     assert rows[0]["pool"] == "ninja trick"
@@ -102,10 +119,13 @@ def test_parse_vigilante_hidden_strike_e_category_ridondante():
     talent') e' ridondante -> None."""
     rows = parse_talent_tables(
         _fixture("talents_vigilante.html"),
-        {"Social Talents": "social talent",
-         "Vigilante Talents": "vigilante talent",
-         "Vigilante Talents - Hidden Strike": "vigilante talent"},
-        h1_categories={"Vigilante Talents - Hidden Strike": "hidden strike"})
+        {
+            "Social Talents": "social talent",
+            "Vigilante Talents": "vigilante talent",
+            "Vigilante Talents - Hidden Strike": "vigilante talent",
+        },
+        h1_categories={"Vigilante Talents - Hidden Strike": "hidden strike"},
+    )
     assert len(rows) == 3
     social = rows[0]
     assert social["name"] == "Case the Joint"
@@ -134,17 +154,31 @@ def test_category_from_h2():
 
 
 def test_talent_entry_catalog_shape():
-    row = {"name": "Animal Fury", "kind": "Ex", "source": "PRPG Core Rulebook",
-           "text": "While raging, the barbarian gains a bite attack.",
-           "pool": "rage power", "category": "offensive", "level": None}
-    e = talent_entry(row, "rage power", "Barbarian",
-                     "AoN: Rage Powers (Barbarian)",
-                     "https://aonprd.com/BarbarianRagePowers.aspx?Type=Offensive")
+    row = {
+        "name": "Animal Fury",
+        "kind": "Ex",
+        "source": "PRPG Core Rulebook",
+        "text": "While raging, the barbarian gains a bite attack.",
+        "pool": "rage power",
+        "category": "offensive",
+        "level": None,
+    }
+    e = talent_entry(
+        row,
+        "rage power",
+        "Barbarian",
+        "AoN: Rage Powers (Barbarian)",
+        "https://aonprd.com/BarbarianRagePowers.aspx?Type=Offensive",
+    )
     assert e["source_id"] == "talent:rage_power_animal_fury"
     assert e["prerequisites"] == []
     assert e["tags"] == ["talent", "rage-power", "barbarian", "animal-fury"]
-    assert e["mechanics"] == {"class": "Barbarian", "pool": "rage power",
-                              "kind": "Ex", "category": "offensive"}
+    assert e["mechanics"] == {
+        "class": "Barbarian",
+        "pool": "rage power",
+        "kind": "Ex",
+        "category": "offensive",
+    }
     # level assente in fonte -> chiave assente (nessun campo inventato)
     assert "level" not in e["mechanics"]
 
@@ -157,15 +191,20 @@ def test_parse_mystery_page_battle():
     assert mystery["name"] == "Battle"
     assert mystery["source"] == "Advanced Player's Guide"
     assert mystery["mechanics_extra"]["class_skills"] == [
-        "Intimidate", "Knowledge (engineering)", "Perception", "Ride"]
+        "Intimidate",
+        "Knowledge (engineering)",
+        "Perception",
+        "Ride",
+    ]
     spells = mystery["mechanics_extra"]["bonus_spells"]
     assert len(spells) == 9 and spells[0] == {"name": "enlarge person", "level": 2}
     assert "avatar of battle" in mystery["mechanics_extra"]["final_revelation"]
     assert mystery["text"].startswith("Class Skills:")
     assert "Gorum" not in mystery["text"] and "Rovagug" not in mystery["text"]
     assert len(revelations) == 10
-    assert all(r["pool"] == "revelation" and r["category"] == "battle"
-               for r in revelations)
+    assert all(
+        r["pool"] == "revelation" and r["category"] == "battle" for r in revelations
+    )
     assert revelations[0]["name"] == "Battlecry" and revelations[0]["kind"] == "Ex"
     assert revelations[0]["text"].startswith("As a standard action")
 
@@ -188,7 +227,8 @@ def test_parse_bloodline_page_aberrant():
         {"name": "Long Limbs", "kind": "Ex"},
         {"name": "Unusual Anatomy", "kind": "Ex"},
         {"name": "Alien Resistance", "kind": "Su"},
-        {"name": "Aberrant Form", "kind": "Ex"}]
+        {"name": "Aberrant Form", "kind": "Ex"},
+    ]
 
 
 def test_parse_order_page_asp():
@@ -205,10 +245,12 @@ def test_parse_added_skills_variants():
     """Le tre formulazioni reali della sezione Skills/Class Skills."""
     assert _parse_added_skills(
         "An order of the x cavalier adds Knowledge (local) and Survival "
-        "to his class skills. Whenever...") == ["Knowledge (local)", "Survival"]
+        "to his class skills. Whenever..."
+    ) == ["Knowledge (local)", "Survival"]
     assert _parse_added_skills(
         "An order of the Green cavalier gains Knowledge (nature) and "
-        "Survival as class skills. In addition,...") == ["Knowledge (nature)", "Survival"]
+        "Survival as class skills. In addition,..."
+    ) == ["Knowledge (nature)", "Survival"]
     assert _parse_added_skills("Nessuna frase skill.") == []
 
 
@@ -220,20 +262,43 @@ def test_collect_entries_offline_pools():
     pools = {}
     for e in entries:
         pools[e["mechanics"]["pool"]] = pools.get(e["mechanics"]["pool"], 0) + 1
-    expected = {"rage power", "mercy", "rogue talent", "advanced rogue talent",
-                "discovery", "grand discovery", "hex", "major hex",
-                "grand hex", "deed", "ki power",
-                "ninja trick", "advanced ninja trick",
-                "slayer talent", "advanced slayer talent",
-                "social talent", "vigilante talent",
-                "magus arcana", "mystery", "revelation", "bloodline", "order"}
+    expected = {
+        "rage power",
+        "mercy",
+        "rogue talent",
+        "advanced rogue talent",
+        "discovery",
+        "grand discovery",
+        "hex",
+        "major hex",
+        "grand hex",
+        "deed",
+        "ki power",
+        "ninja trick",
+        "advanced ninja trick",
+        "slayer talent",
+        "advanced slayer talent",
+        "social talent",
+        "vigilante talent",
+        "magus arcana",
+        "mystery",
+        "revelation",
+        "bloodline",
+        "order",
+    }
     assert set(pools) == expected
     assert dupes == 0 and not anomalies
-    keys = [(e["mechanics"]["pool"], e["name"].lower()) for e in entries
-            if e["mechanics"]["pool"] != "revelation"]
+    keys = [
+        (e["mechanics"]["pool"], e["name"].lower())
+        for e in entries
+        if e["mechanics"]["pool"] != "revelation"
+    ]
     assert len(keys) == len(set(keys))
-    rkeys = [(e["mechanics"].get("category"), e["name"].lower()) for e in entries
-             if e["mechanics"]["pool"] == "revelation"]
+    rkeys = [
+        (e["mechanics"].get("category"), e["name"].lower())
+        for e in entries
+        if e["mechanics"]["pool"] == "revelation"
+    ]
     assert len(rkeys) == len(set(rkeys))
 
 
@@ -251,12 +316,16 @@ def test_talents_catalog_invariants():
         if e["mechanics"]["pool"] == "revelation":
             # la stessa revelation e' offerta da piu' mystery: unicita' su
             # (category, name) — source_id gia' disambiguato dalla category
-            key = (e["mechanics"]["pool"], e["mechanics"].get("category"),
-                   e["name"].lower())
+            key = (
+                e["mechanics"]["pool"],
+                e["mechanics"].get("category"),
+                e["name"].lower(),
+            )
         assert key not in keys, f"(pool, name) duplicato: {key}"
         keys.add(key)
-        assert e["mechanics"]["kind"] in ALLOWED_KINDS, (
-            f"{e['name']}: kind {e['mechanics']['kind']!r} non ammesso")
+        assert (
+            e["mechanics"]["kind"] in ALLOWED_KINDS
+        ), f"{e['name']}: kind {e['mechanics']['kind']!r} non ammesso"
         assert e["description"], f"{e['name']}: description vuota"
         assert e["mechanics"]["class"] and e["mechanics"]["pool"]
     print(f"OK: {len(entries)} talenti, invarianti rispettate")

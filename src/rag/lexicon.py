@@ -5,6 +5,7 @@ Il lessico vive in `data/it_en_lexicon.json` (estendibile senza toccare il
 codice). La traduzione preserva il case del testo non tradotto: il boost
 nome del retriever e' case-sensitive sui nomi propri inglesi.
 """
+
 from __future__ import annotations
 
 import json

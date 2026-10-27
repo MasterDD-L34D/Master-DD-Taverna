@@ -19,13 +19,13 @@ path dei <Ref> (traits/combat-traits, traits/faith-traits, traits/drawbacks,
 Policy OGL: il JSON committato non include MAI <Description> (testo Paizo
 PI) ne' <Ref>: solo nome + categoria.
 """
+
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tools import import_pathbuilder_traits as pb
-
 
 XML = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -98,7 +98,16 @@ def test_nomi_duplicati_dichiarati_non_fusi():
 def test_mappa_categorie_completa_e_onesta():
     # I 12 codici attestati nel dataset reale (ricognizione 2026-08-08).
     assert pb.TYPE_CATEGORY == {
-        0: "Combat", 1: "Faith", 2: "Magic", 3: "Social", 4: "Campaign",
-        5: "Equipment", 6: "Faction", 7: "Race", 8: "Regional",
-        9: "Religion", 10: "Drawback", 11: "Exemplar",
+        0: "Combat",
+        1: "Faith",
+        2: "Magic",
+        3: "Social",
+        4: "Campaign",
+        5: "Equipment",
+        6: "Faction",
+        7: "Race",
+        8: "Regional",
+        9: "Religion",
+        10: "Drawback",
+        11: "Exemplar",
     }

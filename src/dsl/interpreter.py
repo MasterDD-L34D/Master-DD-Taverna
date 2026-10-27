@@ -654,7 +654,9 @@ class Interpreter:
             return
         self._advance(sm, cur, node, params, _depth + 1)
 
-    def _advance(self, sm: dict, cur: str, node: dict, params: dict, depth: int) -> None:
+    def _advance(
+        self, sm: dict, cur: str, node: dict, params: dict, depth: int
+    ) -> None:
         """Transizione di arrivo sul next del nodo. Prompt -> si ferma;
         end -> actions all'arrivo poi IDLE; action-only (Codex P1 #559
         giro 2) -> actions subito e avanzamento ricorsivo col suo next."""
@@ -1219,7 +1221,9 @@ class Interpreter:
             if slot >= 0:
                 slots.append(slot)
         rendered = (
-            self._rn(" ".join([head, *kept]), params) if render else " ".join([head, *kept])
+            self._rn(" ".join([head, *kept]), params)
+            if render
+            else " ".join([head, *kept])
         )  # Codex P2: render prima di tokenizzare; giro 7: solo per i
         # comandi del repo — l'input utente arriva letterale (render=False)
         try:

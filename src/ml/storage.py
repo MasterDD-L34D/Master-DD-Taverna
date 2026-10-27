@@ -1,5 +1,6 @@
 """Storage WORM dell'audio originale (REQ-001: immutabile, dedup per sha256)
 e delle immagini generate (F3: content-addressed, write-once)."""
+
 from __future__ import annotations
 
 import hashlib
@@ -52,7 +53,8 @@ def save_image_manifest(image_id: str, meta: dict, image_dir: Path) -> Path:
             "created_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             **meta,
         }
-        path.write_text(json.dumps(payload, ensure_ascii=False, indent=2,
-                                   sort_keys=True) + "\n", encoding="utf-8")
+        path.write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
     return path
-

@@ -35,6 +35,7 @@ Uso:
   --out-dir PATH       (default <pathmaster sibling>/packages/rules-engine-v2/src/data)
   --pcgen-feats PATH   (default <out-dir>/pcgen-feats.json; se assente, niente confronto)
 """
+
 from __future__ import annotations
 
 import argparse
@@ -49,8 +50,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_RAW_DIR = REPO_ROOT / "data/reference/pi_local_only/pathbuilder"
-DEFAULT_OUT_DIR = (REPO_ROOT.parent / "pathmaster-dd"
-                   / "packages/rules-engine-v2/src/data")
+DEFAULT_OUT_DIR = (
+    REPO_ROOT.parent / "pathmaster-dd" / "packages/rules-engine-v2/src/data"
+)
 
 STAT_INDEX = {0: "STR", 1: "DEX", 2: "CON", 3: "INT", 4: "WIS", 5: "CHA"}
 
@@ -58,30 +60,102 @@ STAT_INDEX = {0: "STR", 1: "DEX", 2: "CON", 3: "INT", 4: "WIS", 5: "CHA"}
 # Il match e' longest-first, quindi le varianti (unchained_*, adaptive_shifter)
 # precedono i nomi base. Includiamo anche le classi di prestigio/3pp che
 # Pathbuilder supporta come "classe" a se' (hellknight, loremaster, ...).
-CLASS_PREFIXES = sorted([
-    # classi base e varianti
-    "unchained_barbarian", "unchained_monk", "unchained_rogue",
-    "adaptive_shifter", "alchemist", "antipaladin", "arcanist", "barbarian",
-    "bard", "bloodrager", "brawler", "cavalier", "cleric", "druid",
-    "fighter", "gunslinger", "hunter", "inquisitor", "investigator",
-    "kineticist", "kinetic", "magus", "medium", "mesmerist", "monk", "ninja",
-    "occultist", "omdura", "oracle", "paladin", "psychic", "ranger",
-    "rogue", "samurai", "shaman", "shifter", "skald", "slayer", "sorcerer",
-    "spiritualist", "summoner", "swashbuckler", "vigilante", "warpriest",
-    "witch", "wizard",
-    # classi di prestigio / 3pp supportate da Pathbuilder
-    "battle_herald", "brewkeeper", "constructed_pugilist", "cyphermage",
-    "darechaser", "dawn_anchorite", "deep_sea_pirate", "divine_scion",
-    "dragonscale_loyalist", "envoy", "field_agent", "furious_guardian",
-    "guild_agent", "guild_poisoner", "havocker", "hellknight",
-    "interrogator", "kinslayer", "lore_warden", "loremaster",
-    "malice_binder", "master_chymist", "mutation_mind", "natural_alchemist",
-    "noble_scion", "opportunist", "pain_taster", "planar_scout",
-    "psychic_duelist", "rose_warden", "runeguard", "sanguine_angel",
-    "scar_seeker", "season_witch", "stalwart_defender", "stargazer",
-    "tattooed_mystic", "toxicant", "toxitician", "vampire_hunter",
-    "vexing_dodger", "warrior_poet",
-], key=len, reverse=True)
+CLASS_PREFIXES = sorted(
+    [
+        # classi base e varianti
+        "unchained_barbarian",
+        "unchained_monk",
+        "unchained_rogue",
+        "adaptive_shifter",
+        "alchemist",
+        "antipaladin",
+        "arcanist",
+        "barbarian",
+        "bard",
+        "bloodrager",
+        "brawler",
+        "cavalier",
+        "cleric",
+        "druid",
+        "fighter",
+        "gunslinger",
+        "hunter",
+        "inquisitor",
+        "investigator",
+        "kineticist",
+        "kinetic",
+        "magus",
+        "medium",
+        "mesmerist",
+        "monk",
+        "ninja",
+        "occultist",
+        "omdura",
+        "oracle",
+        "paladin",
+        "psychic",
+        "ranger",
+        "rogue",
+        "samurai",
+        "shaman",
+        "shifter",
+        "skald",
+        "slayer",
+        "sorcerer",
+        "spiritualist",
+        "summoner",
+        "swashbuckler",
+        "vigilante",
+        "warpriest",
+        "witch",
+        "wizard",
+        # classi di prestigio / 3pp supportate da Pathbuilder
+        "battle_herald",
+        "brewkeeper",
+        "constructed_pugilist",
+        "cyphermage",
+        "darechaser",
+        "dawn_anchorite",
+        "deep_sea_pirate",
+        "divine_scion",
+        "dragonscale_loyalist",
+        "envoy",
+        "field_agent",
+        "furious_guardian",
+        "guild_agent",
+        "guild_poisoner",
+        "havocker",
+        "hellknight",
+        "interrogator",
+        "kinslayer",
+        "lore_warden",
+        "loremaster",
+        "malice_binder",
+        "master_chymist",
+        "mutation_mind",
+        "natural_alchemist",
+        "noble_scion",
+        "opportunist",
+        "pain_taster",
+        "planar_scout",
+        "psychic_duelist",
+        "rose_warden",
+        "runeguard",
+        "sanguine_angel",
+        "scar_seeker",
+        "season_witch",
+        "stalwart_defender",
+        "stargazer",
+        "tattooed_mystic",
+        "toxicant",
+        "toxitician",
+        "vampire_hunter",
+        "vexing_dodger",
+        "warrior_poet",
+    ],
+    key=len,
+    reverse=True,
+)
 
 LICENSE_TEXT = (
     "Pathbuilder 1e raw data (APK da BlueStacks utente, permesso concesso "
@@ -90,15 +164,18 @@ LICENSE_TEXT = (
     "inclusa solo come dato di supporto agli slot M4 gia' dichiarati in "
     "pathmaster (stesso criterio di src/catalogs/class-features.ts). Il "
     "dataset grezzo completo resta in data/reference/pi_local_only/ "
-    "(gitignored, mai redistribuito).")
+    "(gitignored, mai redistribuito)."
+)
 DESC_POLICY = (
     "Description dei feat omessa per policy: solo meccaniche + nomi, mai "
-    "testo di regole Paizo redistribuito (resta nel dataset PI local-only).")
+    "testo di regole Paizo redistribuito (resta nel dataset PI local-only)."
+)
 
 
 # ---------------------------------------------------------------------------
 # Parse XML generico
 # ---------------------------------------------------------------------------
+
 
 def parse_xml(text: str) -> ET.Element:
     """Radice <Root> di un dataset raw Pathbuilder."""
@@ -121,6 +198,7 @@ def _text(row: ET.Element, tag: str):
 # ---------------------------------------------------------------------------
 # Requisiti strutturati (campi r* di data_feats.xml)
 # ---------------------------------------------------------------------------
+
 
 def parse_amp_list(value):
     """Lista di nomi separati da `&` (rFeats, rRace, rClassFeature)."""
@@ -190,8 +268,7 @@ def build_requirements(row: ET.Element) -> dict:
     return {
         "ability_mins": parse_rstat(_text(row, "rStat")),
         "feats": parse_amp_list(_text(row, "rFeats")),
-        "feats_with_info": parse_feat_with_info(
-            _text(row, "rFeatsWithSpecificInfo")),
+        "feats_with_info": parse_feat_with_info(_text(row, "rFeatsWithSpecificInfo")),
         "class_features": parse_amp_list(_text(row, "rClassFeature")),
         "class_levels": parse_class_level(_text(row, "rClassLevel")),
         "races": parse_amp_list(_text(row, "rRace")),
@@ -206,6 +283,7 @@ def build_requirements(row: ET.Element) -> dict:
 # Entita': feats (SENZA description — policy OGL)
 # ---------------------------------------------------------------------------
 
+
 def feats_from_rows(rows: list) -> list:
     entries = []
     for row in rows:
@@ -213,17 +291,19 @@ def feats_from_rows(rows: list) -> list:
         if not name:
             continue
         category = _text(row, "Category") or ""
-        entries.append({
-            "name": name,
-            "category": [int(p) for p in category.split("&") if p.strip()],
-            "max_takable": _int_or_none(_text(row, "MaxTakable")),
-            "prerequisites_text": _text(row, "Prerequisites"),
-            "requirements": build_requirements(row),
-            "source": _text(row, "Source"),
-            "url": _text(row, "URL"),
-            "effect_method": _text(row, "EffectMethod"),
-            "requirement_method": _text(row, "RequirementMethod"),
-        })
+        entries.append(
+            {
+                "name": name,
+                "category": [int(p) for p in category.split("&") if p.strip()],
+                "max_takable": _int_or_none(_text(row, "MaxTakable")),
+                "prerequisites_text": _text(row, "Prerequisites"),
+                "requirements": build_requirements(row),
+                "source": _text(row, "Source"),
+                "url": _text(row, "URL"),
+                "effect_method": _text(row, "EffectMethod"),
+                "requirement_method": _text(row, "RequirementMethod"),
+            }
+        )
     return entries
 
 
@@ -231,23 +311,29 @@ def feats_from_rows(rows: list) -> list:
 # Entita': specials (class features)
 # ---------------------------------------------------------------------------
 
+
 def specials_from_rows(rows: list) -> list:
     features = []
     for row in rows:
         name = _text(row, "Special")
         if not name:
             continue
-        required = [r for r in (_text(row, "RequiredSpecial1"),
-                                _text(row, "RequiredSpecial2")) if r]
-        features.append({
-            "name": name,
-            "requirements": _text(row, "Requirements"),
-            "required_specials": required,
-            "level_ap": _int_or_none(_text(row, "LevelAP")),
-            "description": _text(row, "Description"),
-            "source": _text(row, "Source"),
-            "ref": _text(row, "Ref"),
-        })
+        required = [
+            r
+            for r in (_text(row, "RequiredSpecial1"), _text(row, "RequiredSpecial2"))
+            if r
+        ]
+        features.append(
+            {
+                "name": name,
+                "requirements": _text(row, "Requirements"),
+                "required_specials": required,
+                "level_ap": _int_or_none(_text(row, "LevelAP")),
+                "description": _text(row, "Description"),
+                "source": _text(row, "Source"),
+                "ref": _text(row, "Ref"),
+            }
+        )
     return features
 
 
@@ -257,13 +343,13 @@ def class_key_for_specials_file(filename: str) -> tuple:
     stem = filename
     for prefix in ("data_specials_",):
         if stem.startswith(prefix):
-            stem = stem[len(prefix):]
+            stem = stem[len(prefix) :]
     stem = re.sub(r"\.xml$", "", stem)
     for class_key in CLASS_PREFIXES:
         if stem == class_key:
             return class_key, "_misc"
         if stem.startswith(class_key + "_"):
-            return class_key, stem[len(class_key) + 1:]
+            return class_key, stem[len(class_key) + 1 :]
     return "_shared", stem
 
 
@@ -283,14 +369,17 @@ def build_class_features(raw_dir) -> dict:
         counts[class_key] = counts.get(class_key, 0) + len(features)
     return {
         "_provenance": {
-            "source": ("Pathbuilder 1e raw data (res/raw dell'APK), "
-                       "data_specials_*.xml"),
+            "source": (
+                "Pathbuilder 1e raw data (res/raw dell'APK), " "data_specials_*.xml"
+            ),
             "generated_by": "Master-DD-Taverna/tools/import_pathbuilder_raw.py",
             "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "license": LICENSE_TEXT,
-            "usage": ("Dato di supporto per description/alias degli slot M4 "
-                      "di pathmaster (src/catalogs/class-features.ts): NON "
-                      "applicato automaticamente."),
+            "usage": (
+                "Dato di supporto per description/alias degli slot M4 "
+                "di pathmaster (src/catalogs/class-features.ts): NON "
+                "applicato automaticamente."
+            ),
             "specials_files": files,
         },
         "counts": counts,
@@ -302,6 +391,7 @@ def build_class_features(raw_dir) -> dict:
 # Confronto con pcgen-feats (report, NON merge)
 # ---------------------------------------------------------------------------
 
+
 def _norm_name(name: str) -> str:
     return re.sub(r"\s+", " ", name).strip().casefold()
 
@@ -311,10 +401,11 @@ def compare_with_pcgen(pb_entries: list, pcgen_names: list) -> dict:
     normalizzato: casefold + spazi collassati)."""
     pcgen_norm = {_norm_name(n) for n in pcgen_names}
     duplicates = sorted(
-        {e["name"] for e in pb_entries if _norm_name(e["name"]) in pcgen_norm})
+        {e["name"] for e in pb_entries if _norm_name(e["name"]) in pcgen_norm}
+    )
     new = sorted(
-        {e["name"] for e in pb_entries
-         if _norm_name(e["name"]) not in pcgen_norm})
+        {e["name"] for e in pb_entries if _norm_name(e["name"]) not in pcgen_norm}
+    )
     return {
         "pathbuilder_count": len(pb_entries),
         "pcgen_count": len(pcgen_names),
@@ -331,8 +422,7 @@ def build_feats(raw_dir, pcgen_names=None) -> dict:
     entries = feats_from_rows(rows)
     payload = {
         "_provenance": {
-            "source": ("Pathbuilder 1e raw data (res/raw dell'APK), "
-                       "data_feats.xml"),
+            "source": ("Pathbuilder 1e raw data (res/raw dell'APK), " "data_feats.xml"),
             "generated_by": "Master-DD-Taverna/tools/import_pathbuilder_raw.py",
             "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "license": LICENSE_TEXT,
@@ -351,23 +441,29 @@ def build_feats(raw_dir, pcgen_names=None) -> dict:
 # main
 # ---------------------------------------------------------------------------
 
+
 def _print_report(feats: dict, class_features: dict) -> None:
     print(f"[feats] totale: {feats['counts']['feats']} voci")
     cmp_ = feats.get("pcgen_comparison")
     if cmp_:
-        print(f"[confronto pcgen] pathbuilder {cmp_['pathbuilder_count']} vs "
-              f"pcgen {cmp_['pcgen_count']}: "
-              f"{cmp_['duplicate_count']} duplicati, "
-              f"{cmp_['new_count']} nomi nuovi in pathbuilder")
+        print(
+            f"[confronto pcgen] pathbuilder {cmp_['pathbuilder_count']} vs "
+            f"pcgen {cmp_['pcgen_count']}: "
+            f"{cmp_['duplicate_count']} duplicati, "
+            f"{cmp_['new_count']} nomi nuovi in pathbuilder"
+        )
         print(f"  esempi nuovi: {cmp_['new_in_pathbuilder'][:10]}")
     else:
         print("[confronto pcgen] SALTATO (pcgen-feats.json non trovato)")
     total = sum(class_features["counts"].values())
     files = class_features["_provenance"]["specials_files"]
-    print(f"[class-features] {total} feature da {files} file specials, "
-          f"{len(class_features['counts'])} classi/gruppi")
-    for class_key, n in sorted(class_features["counts"].items(),
-                               key=lambda kv: -kv[1])[:10]:
+    print(
+        f"[class-features] {total} feature da {files} file specials, "
+        f"{len(class_features['counts'])} classi/gruppi"
+    )
+    for class_key, n in sorted(class_features["counts"].items(), key=lambda kv: -kv[1])[
+        :10
+    ]:
         print(f"  {class_key}: {n}")
 
 
@@ -381,14 +477,17 @@ def main(argv=None) -> int:
 
     raw_dir = Path(args.raw_dir)
     if not (raw_dir / "data_feats.xml").is_file():
-        print(f"ERRORE: dataset Pathbuilder non trovato in {raw_dir} "
-              "(pi_local_only e' local-only: vedi docs/pathbuilder-dataset.md)",
-              file=sys.stderr)
+        print(
+            f"ERRORE: dataset Pathbuilder non trovato in {raw_dir} "
+            "(pi_local_only e' local-only: vedi docs/pathbuilder-dataset.md)",
+            file=sys.stderr,
+        )
         return 1
 
     out_dir = Path(args.out_dir)
-    pcgen_path = (Path(args.pcgen_feats) if args.pcgen_feats
-                  else out_dir / "pcgen-feats.json")
+    pcgen_path = (
+        Path(args.pcgen_feats) if args.pcgen_feats else out_dir / "pcgen-feats.json"
+    )
     pcgen_names = None
     if pcgen_path.is_file():
         data = json.loads(pcgen_path.read_text(encoding="utf-8"))
@@ -401,11 +500,14 @@ def main(argv=None) -> int:
     if args.report_only:
         return 0
     out_dir.mkdir(parents=True, exist_ok=True)
-    for name, payload in (("pathbuilder-feats.json", feats),
-                          ("pathbuilder-class-features.json", class_features)):
+    for name, payload in (
+        ("pathbuilder-feats.json", feats),
+        ("pathbuilder-class-features.json", class_features),
+    ):
         path = out_dir / name
-        path.write_text(json.dumps(payload, indent=1, ensure_ascii=False) + "\n",
-                        encoding="utf-8")
+        path.write_text(
+            json.dumps(payload, indent=1, ensure_ascii=False) + "\n", encoding="utf-8"
+        )
         size = "entries" if "entries" in payload else "counts"
         print(f"scritto {path} ({len(payload[size])} {size})")
     return 0

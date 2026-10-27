@@ -48,6 +48,7 @@ Uso:
   --pcgen-repo PATH  (default %PCGEN_REPO% o C:/Users/VGit/Downloads/pcgen-repo)
   --out-dir PATH     (default <pathmaster sibling>/packages/rules-engine-v2/src/data)
 """
+
 from __future__ import annotations
 
 import argparse
@@ -60,10 +61,22 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tools.import_pcgen_lst import (  # noqa: E402
-    BOOKS, DATA_SUBDIR, DEFAULT_OUT_DIR, DEFAULT_PCGEN_REPO, DESC_POLICY,
-    LICENSE_TEXT, _bonus_stats_add, _coverage_add, _empty_bonus_stats,
-    _pcgen_commit, _split_pipes, _tag_value, _tag_values, iter_lst_records,
-    parse_bonus_tag, prereq_tree,
+    BOOKS,
+    DATA_SUBDIR,
+    DEFAULT_OUT_DIR,
+    DEFAULT_PCGEN_REPO,
+    DESC_POLICY,
+    LICENSE_TEXT,
+    _bonus_stats_add,
+    _coverage_add,
+    _empty_bonus_stats,
+    _pcgen_commit,
+    _split_pipes,
+    _tag_value,
+    _tag_values,
+    iter_lst_records,
+    parse_bonus_tag,
+    prereq_tree,
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -73,36 +86,49 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 # "mod_files": file scanditi per le righe CATEGORY=*.MOD della progressione.
 # Estensione futura = aggiungere una riga qui (e i file esistono nel clone).
 BOOK_CLASS_FILES = {
-    "CR": {"dir": BOOKS["CR"]["dir"],
-           "classes": ["cr_classes.lst"],
-           "abilities": ["cr_abilities_class.lst"],
-           "mod_files": ["cr_abilities_class.lst", "cr_abilities_globalvar.lst"]},
-    "APG": {"dir": BOOKS["APG"]["dir"],
-            "classes": ["apg_classes.lst"],
-            "abilities": ["apg_abilities_class.lst"],
-            "mod_files": ["apg_abilities_class.lst", "apg_abilities_globalvar.lst"]},
-    "ACG": {"dir": BOOKS["ACG"]["dir"],
-            "classes": ["acg_classes.lst"],
-            "abilities": ["acg_abilities_class.lst"],
-            "mod_files": ["acg_abilities_class.lst", "acg_abilities_globalvar.lst"]},
-    "ARG": {"dir": BOOKS["ARG"]["dir"],
-            "classes": [],
-            "abilities": ["arg_abilities_class.lst"],
-            "mod_files": ["arg_abilities_class.lst", "arg_abilities_globalvar.lst"]},
-    "UM": {"dir": BOOKS["UM"]["dir"],
-           "classes": ["um_classes.lst"],
-           "abilities": ["um_abilities_class.lst"],
-           "mod_files": ["um_abilities_class.lst", "um_abilities_globalvar.lst"]},
-    "UC": {"dir": BOOKS["UC"]["dir"],
-           "classes": ["uc_classes.lst"],
-           "abilities": ["uc_abilities_class.lst"],
-           "mod_files": ["uc_abilities_class.lst", "uc_abilities_globalvar.lst"]},
-    "UE": {"dir": BOOKS["UE"]["dir"], "classes": [], "abilities": [],
-           "mod_files": []},
-    "OA": {"dir": BOOKS["OA"]["dir"],
-           "classes": ["oa_classes.lst"],
-           "abilities": ["oa_abilities_class.lst"],
-           "mod_files": ["oa_abilities_class.lst"]},
+    "CR": {
+        "dir": BOOKS["CR"]["dir"],
+        "classes": ["cr_classes.lst"],
+        "abilities": ["cr_abilities_class.lst"],
+        "mod_files": ["cr_abilities_class.lst", "cr_abilities_globalvar.lst"],
+    },
+    "APG": {
+        "dir": BOOKS["APG"]["dir"],
+        "classes": ["apg_classes.lst"],
+        "abilities": ["apg_abilities_class.lst"],
+        "mod_files": ["apg_abilities_class.lst", "apg_abilities_globalvar.lst"],
+    },
+    "ACG": {
+        "dir": BOOKS["ACG"]["dir"],
+        "classes": ["acg_classes.lst"],
+        "abilities": ["acg_abilities_class.lst"],
+        "mod_files": ["acg_abilities_class.lst", "acg_abilities_globalvar.lst"],
+    },
+    "ARG": {
+        "dir": BOOKS["ARG"]["dir"],
+        "classes": [],
+        "abilities": ["arg_abilities_class.lst"],
+        "mod_files": ["arg_abilities_class.lst", "arg_abilities_globalvar.lst"],
+    },
+    "UM": {
+        "dir": BOOKS["UM"]["dir"],
+        "classes": ["um_classes.lst"],
+        "abilities": ["um_abilities_class.lst"],
+        "mod_files": ["um_abilities_class.lst", "um_abilities_globalvar.lst"],
+    },
+    "UC": {
+        "dir": BOOKS["UC"]["dir"],
+        "classes": ["uc_classes.lst"],
+        "abilities": ["uc_abilities_class.lst"],
+        "mod_files": ["uc_abilities_class.lst", "uc_abilities_globalvar.lst"],
+    },
+    "UE": {"dir": BOOKS["UE"]["dir"], "classes": [], "abilities": [], "mod_files": []},
+    "OA": {
+        "dir": BOOKS["OA"]["dir"],
+        "classes": ["oa_classes.lst"],
+        "abilities": ["oa_abilities_class.lst"],
+        "mod_files": ["oa_abilities_class.lst"],
+    },
     # Fase A (2026-08-08): manuali fuori linea core. UI/UW portano le classi
     # PC Vigilante e Shifter (corpus_missing D6). Scarti DICHIARATI:
     # - HA: il suo classes.lst definisce solo "Undead Phantom" (un phantom,
@@ -111,32 +137,48 @@ BOOK_CLASS_FILES = {
     #   come record/MOD sulle classi base);
     # - AG: il suo classes.lst definisce solo prestige class (il corpus
     #   classes.json non ne ha): classes non configurato.
-    "UI": {"dir": BOOKS["UI"]["dir"],
-           "classes": ["ui_classes.lst"],
-           "abilities": ["ui_abilities_class.lst"],
-           "mod_files": ["ui_abilities_class.lst"]},
-    "UW": {"dir": BOOKS["UW"]["dir"],
-           "classes": ["uw_classes.lst"],
-           "abilities": ["uw_abilities_class.lst"],
-           "mod_files": ["uw_abilities_class.lst"]},
-    "HA": {"dir": BOOKS["HA"]["dir"], "classes": [],
-           "abilities": ["ha_abilities_class.lst"],
-           "mod_files": ["ha_abilities_class.lst"]},
-    "PU": {"dir": BOOKS["PU"]["dir"], "classes": [],
-           "abilities": ["pu_abilities_class.lst"],
-           "mod_files": ["pu_abilities_class.lst"]},
-    "AG": {"dir": BOOKS["AG"]["dir"], "classes": [],
-           "abilities": ["ag_abilities_class.lst"],
-           "mod_files": ["ag_abilities_class.lst"]},
+    "UI": {
+        "dir": BOOKS["UI"]["dir"],
+        "classes": ["ui_classes.lst"],
+        "abilities": ["ui_abilities_class.lst"],
+        "mod_files": ["ui_abilities_class.lst"],
+    },
+    "UW": {
+        "dir": BOOKS["UW"]["dir"],
+        "classes": ["uw_classes.lst"],
+        "abilities": ["uw_abilities_class.lst"],
+        "mod_files": ["uw_abilities_class.lst"],
+    },
+    "HA": {
+        "dir": BOOKS["HA"]["dir"],
+        "classes": [],
+        "abilities": ["ha_abilities_class.lst"],
+        "mod_files": ["ha_abilities_class.lst"],
+    },
+    "PU": {
+        "dir": BOOKS["PU"]["dir"],
+        "classes": [],
+        "abilities": ["pu_abilities_class.lst"],
+        "mod_files": ["pu_abilities_class.lst"],
+    },
+    "AG": {
+        "dir": BOOKS["AG"]["dir"],
+        "classes": [],
+        "abilities": ["ag_abilities_class.lst"],
+        "mod_files": ["ag_abilities_class.lst"],
+    },
 }
 
-OUTPUT_FILES = {"progression": "pcgen-class-progression.json",
-                "abilities": "pcgen-class-abilities.json"}
+OUTPUT_FILES = {
+    "progression": "pcgen-class-progression.json",
+    "abilities": "pcgen-class-abilities.json",
+}
 
 
 # ---------------------------------------------------------------------------
 # Parse dei singoli grant
 # ---------------------------------------------------------------------------
+
 
 def parse_ability_grant(value: str) -> dict:
     """Un tag ABILITY (senza il prefisso 'ABILITY:') -> grant strutturato.
@@ -155,8 +197,7 @@ def parse_ability_grant(value: str) -> dict:
             conditions.append(seg)
         else:
             names.append(seg)
-    return {"pool": pool, "nature": nature, "names": names,
-            "conditions": conditions}
+    return {"pool": pool, "nature": nature, "names": names, "conditions": conditions}
 
 
 def parse_pool_grant(value: str) -> dict | None:
@@ -164,11 +205,14 @@ def parse_pool_grant(value: str) -> dict | None:
     segments = _split_pipes(value)
     if not segments or segments[0] != "ABILITYPOOL":
         return None
-    conditions = [s for s in segments[3:]
-                  if s.startswith("PRE") or s.startswith("!PRE")]
-    return {"pool": segments[1] if len(segments) > 1 else "",
-            "value": segments[2] if len(segments) > 2 else "",
-            "conditions": conditions}
+    conditions = [
+        s for s in segments[3:] if s.startswith("PRE") or s.startswith("!PRE")
+    ]
+    return {
+        "pool": segments[1] if len(segments) > 1 else "",
+        "value": segments[2] if len(segments) > 2 else "",
+        "conditions": conditions,
+    }
 
 
 def parse_var_pool_grant(value: str) -> dict | None:
@@ -184,11 +228,14 @@ def parse_var_pool_grant(value: str) -> dict | None:
     segments = _split_pipes(value)
     if not segments or segments[0] != "VAR":
         return None
-    conditions = [s for s in segments[3:]
-                  if s.startswith("PRE") or s.startswith("!PRE")]
-    return {"pool": segments[1] if len(segments) > 1 else "",
-            "value": segments[2] if len(segments) > 2 else "",
-            "conditions": conditions}
+    conditions = [
+        s for s in segments[3:] if s.startswith("PRE") or s.startswith("!PRE")
+    ]
+    return {
+        "pool": segments[1] if len(segments) > 1 else "",
+        "value": segments[2] if len(segments) > 2 else "",
+        "conditions": conditions,
+    }
 
 
 _LEVEL_GATE = re.compile(r"^PREVARGTEQ:[A-Za-z0-9_]+,(-?\d+)$")
@@ -216,8 +263,7 @@ def extract_level_gate(conditions: list) -> int:
     concessa dal 1° (dichiarato: le proficiency e simili non gated sono di
     1° livello).
     """
-    levels = [int(m.group(1)) for c in conditions
-              if (m := _LEVEL_GATE.match(c))]
+    levels = [int(m.group(1)) for c in conditions if (m := _LEVEL_GATE.match(c))]
     return min(levels) if levels else 1
 
 
@@ -225,8 +271,7 @@ def extract_pool_level(conditions: list) -> int:
     """Livello di un grant di pool (ABILITYPOOL): PREVARGTEQ intero come
     extract_level_gate, altrimenti gate PRECLASS:1,Classe=N (forma reale
     delle cadenze Hunter/Magus/Gunslinger), altrimenti 1 (dichiarato)."""
-    levels = [int(m.group(1)) for c in conditions
-              if (m := _LEVEL_GATE.match(c))]
+    levels = [int(m.group(1)) for c in conditions if (m := _LEVEL_GATE.match(c))]
     levels += _class_gate_levels(conditions)
     return min(levels) if levels else 1
 
@@ -240,14 +285,21 @@ def extract_var_pool_level(conditions: list):
 
 
 def _grant_key(grant: dict) -> tuple:
-    return (grant["level"], grant["kind"], grant.get("pool", ""),
-            grant.get("nature", ""), tuple(grant.get("names", [])),
-            grant.get("value", ""), tuple(grant.get("conditions", [])))
+    return (
+        grant["level"],
+        grant["kind"],
+        grant.get("pool", ""),
+        grant.get("nature", ""),
+        tuple(grant.get("names", [])),
+        grant.get("value", ""),
+        tuple(grant.get("conditions", [])),
+    )
 
 
 # ---------------------------------------------------------------------------
 # Sorgente 1: righe livello dei classes.lst
 # ---------------------------------------------------------------------------
+
 
 def progression_from_classes_text(text: str, book: str) -> list:
     """Testo classes.lst -> [{class, source_books, grants}].
@@ -265,14 +317,17 @@ def progression_from_classes_text(text: str, book: str) -> list:
         fields = [f.strip() for f in line.split("\t")]
         head = fields[0]
         if head.startswith("CLASS:"):
-            name = head[len("CLASS:"):].strip()
+            name = head[len("CLASS:") :].strip()
             if name.endswith((".MOD", ".FORGET")) or ".COPY" in name:
                 current = None
                 continue
             current = None if name.startswith("Ex-") else name
             if current and current not in by_class:
-                by_class[current] = {"class": current,
-                                     "source_books": [book], "grants": []}
+                by_class[current] = {
+                    "class": current,
+                    "source_books": [book],
+                    "grants": [],
+                }
             continue
         if current is None or not head.isdigit():
             continue
@@ -311,8 +366,10 @@ def _mod_target_class(category: str, target: str, known_classes: set):
     if cat == "class":
         for suffix in _STANDARD_SUFFIXES:
             if target.endswith(suffix):
-                candidate = target[:-len(suffix)]
-                return (candidate, "all") if candidate in known_classes else (None, None)
+                candidate = target[: -len(suffix)]
+                return (
+                    (candidate, "all") if candidate in known_classes else (None, None)
+                )
         if target in known_classes:
             return target, "all"
         return None, None
@@ -324,8 +381,12 @@ def _mod_target_class(category: str, target: str, known_classes: set):
 
 
 def _empty_mod_stats() -> dict:
-    return {"mods_skipped_other_category": 0, "mods_unmapped_target": 0,
-            "mods_without_grants": 0, "duplicates_collapsed": 0}
+    return {
+        "mods_skipped_other_category": 0,
+        "mods_unmapped_target": 0,
+        "mods_without_grants": 0,
+        "duplicates_collapsed": 0,
+    }
 
 
 def progression_from_mod_text(text: str, book: str, known_classes: set):
@@ -360,19 +421,27 @@ def progression_from_mod_text(text: str, book: str, known_classes: set):
             grant = None
             if key == "ABILITY" and capture == "all":
                 parsed = parse_ability_grant(value)
-                grant = {**parsed, "kind": "ability",
-                         "level": extract_level_gate(parsed["conditions"])}
+                grant = {
+                    **parsed,
+                    "kind": "ability",
+                    "level": extract_level_gate(parsed["conditions"]),
+                }
             elif key == "BONUS":
                 parsed = parse_pool_grant(value)
                 if parsed:
-                    grant = {**parsed, "kind": "pool",
-                             "level": extract_pool_level(parsed["conditions"])}
+                    grant = {
+                        **parsed,
+                        "kind": "pool",
+                        "level": extract_pool_level(parsed["conditions"]),
+                    }
                 elif capture == "pool":
                     parsed_var = parse_var_pool_grant(value)
                     if parsed_var:
-                        grant = {**parsed_var, "kind": "pool-var",
-                                 "level": extract_var_pool_level(
-                                     parsed_var["conditions"])}
+                        grant = {
+                            **parsed_var,
+                            "kind": "pool-var",
+                            "level": extract_var_pool_level(parsed_var["conditions"]),
+                        }
             if grant is None:
                 continue
             grant["class"] = cls
@@ -390,6 +459,7 @@ def progression_from_mod_text(text: str, book: str, known_classes: set):
 # ---------------------------------------------------------------------------
 # Class abilities (record feature di *_abilities_class.lst)
 # ---------------------------------------------------------------------------
+
 
 def _derive_class(key: str, tags, known_classes: set):
     """Classe di appartenenza: KEY `X ~ ...` con X classe nota, altrimenti
@@ -418,9 +488,12 @@ def abilities_from_records(records, book: str, known_classes: set):
     """
     by_key = {}
     order = []
-    stats = {"duplicates_overridden": 0, "class_containers_skipped": 0,
-             "prereq_coverage": {"covered": {}, "not_normalized": {}},
-             "bonus": _empty_bonus_stats()}
+    stats = {
+        "duplicates_overridden": 0,
+        "class_containers_skipped": 0,
+        "prereq_coverage": {"covered": {}, "not_normalized": {}},
+        "bonus": _empty_bonus_stats(),
+    }
     for name, tags in records:
         if not name or name.endswith((".MOD", ".FORGET")) or ".COPY=" in name:
             continue
@@ -443,7 +516,11 @@ def abilities_from_records(records, book: str, known_classes: set):
             "key": key,
             "source_book": book,
             "category": category or None,
-            "types": (_tag_value(tags, "TYPE") or "").split(".") if _tag_value(tags, "TYPE") else [],
+            "types": (
+                (_tag_value(tags, "TYPE") or "").split(".")
+                if _tag_value(tags, "TYPE")
+                else []
+            ),
             "class": _derive_class(key, tags, known_classes),
             "multiple": _tag_value(tags, "MULT") == "YES",
             "stack": (stack == "YES") if stack else None,
@@ -458,6 +535,7 @@ def abilities_from_records(records, book: str, known_classes: set):
 # ---------------------------------------------------------------------------
 # Build dei cataloghi
 # ---------------------------------------------------------------------------
+
 
 def _read_records(path: Path):
     return iter_lst_records(path.read_text(encoding="utf-8", errors="replace"))
@@ -475,22 +553,28 @@ def _known_classes(pcgen_root: Path, books=None) -> set:
             if not path.is_file():
                 raise FileNotFoundError(f"file LST mancante: {path}")
             for entry in progression_from_classes_text(
-                    path.read_text(encoding="utf-8", errors="replace"), book):
+                path.read_text(encoding="utf-8", errors="replace"), book
+            ):
                 known.add(entry["class"])
     return known
 
 
 def _provenance(pcgen_root: Path, generated_by: str, books=None) -> dict:
     return {
-        "source": ("PCGen data sets (github.com/PCGen/pcgen), "
-                   f"{DATA_SUBDIR}/roleplaying_game/*"),
+        "source": (
+            "PCGen data sets (github.com/PCGen/pcgen), "
+            f"{DATA_SUBDIR}/roleplaying_game/*"
+        ),
         "pcgen_commit": _pcgen_commit(pcgen_root),
         "generated_by": generated_by,
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "license": LICENSE_TEXT,
         "desc_policy": DESC_POLICY,
-        "books": {b: BOOKS[b]["title"] for b, cfg in BOOK_CLASS_FILES.items()
-                  if books is None or b in books},
+        "books": {
+            b: BOOKS[b]["title"]
+            for b, cfg in BOOK_CLASS_FILES.items()
+            if books is None or b in books
+        },
     }
 
 
@@ -512,7 +596,8 @@ def build_progression(pcgen_root, books=None) -> dict:
             if not path.is_file():
                 raise FileNotFoundError(f"file LST mancante: {path}")
             for entry in progression_from_classes_text(
-                    path.read_text(encoding="utf-8", errors="replace"), book):
+                path.read_text(encoding="utf-8", errors="replace"), book
+            ):
                 for grant in entry["grants"]:
                     book_grants.append({"class": entry["class"], **grant})
         book_mod_stats = _empty_mod_stats()
@@ -521,8 +606,8 @@ def build_progression(pcgen_root, books=None) -> dict:
             if not path.is_file():
                 raise FileNotFoundError(f"file LST mancante: {path}")
             grants, mod_stats = progression_from_mod_text(
-                path.read_text(encoding="utf-8", errors="replace"),
-                book, known)
+                path.read_text(encoding="utf-8", errors="replace"), book, known
+            )
             book_grants.extend(grants)
             for k, v in mod_stats.items():
                 book_mod_stats[k] += v
@@ -532,7 +617,8 @@ def build_progression(pcgen_root, books=None) -> dict:
             cls = grant["class"]
             classes_in_book.add(cls)
             entry = by_class.setdefault(
-                cls, {"class": cls, "source_books": [], "grants": []})
+                cls, {"class": cls, "source_books": [], "grants": []}
+            )
             if book not in entry["source_books"]:
                 entry["source_books"].append(book)
             gk = _grant_key(grant)
@@ -547,15 +633,24 @@ def build_progression(pcgen_root, books=None) -> dict:
     for entry in by_class.values():
         # i pool-var senza gate PRECLASS hanno level None (dichiarato):
         # in coda, non mescolati ai grant con livello derivato
-        entry["grants"].sort(key=lambda g: (
-            g["level"] is None, g["level"] or 0, g["kind"],
-            g.get("pool", ""), tuple(g.get("names", []))))
+        entry["grants"].sort(
+            key=lambda g: (
+                g["level"] is None,
+                g["level"] or 0,
+                g["kind"],
+                g.get("pool", ""),
+                tuple(g.get("names", [])),
+            )
+        )
     stats["_duplicates_collapsed_across_books"] = duplicates
-    return {"_provenance": _provenance(
-                pcgen_root, "Master-DD-Taverna/tools/import_pcgen_classes.py",
-                books),
-            "counts": counts, "stats": stats,
-            "entries": sorted(by_class.values(), key=lambda e: e["class"])}
+    return {
+        "_provenance": _provenance(
+            pcgen_root, "Master-DD-Taverna/tools/import_pcgen_classes.py", books
+        ),
+        "counts": counts,
+        "stats": stats,
+        "entries": sorted(by_class.values(), key=lambda e: e["class"]),
+    }
 
 
 def build_abilities(pcgen_root, books=None) -> dict:
@@ -573,31 +668,38 @@ def build_abilities(pcgen_root, books=None) -> dict:
             if not path.is_file():
                 raise FileNotFoundError(f"file LST mancante: {path}")
             book_records.extend(_read_records(path))
-        book_entries, book_stats = abilities_from_records(
-            book_records, book, known)
+        book_entries, book_stats = abilities_from_records(book_records, book, known)
         entries.extend(book_entries)
         counts[book] = len(book_entries)
         stats[book] = book_stats
-    return {"_provenance": _provenance(
-                pcgen_root, "Master-DD-Taverna/tools/import_pcgen_classes.py",
-                books),
-            "counts": counts, "stats": stats, "entries": entries}
+    return {
+        "_provenance": _provenance(
+            pcgen_root, "Master-DD-Taverna/tools/import_pcgen_classes.py", books
+        ),
+        "counts": counts,
+        "stats": stats,
+        "entries": entries,
+    }
 
 
 # ---------------------------------------------------------------------------
 # Report e main
 # ---------------------------------------------------------------------------
 
+
 def _print_report(progression: dict, abilities: dict) -> None:
     commit = progression["_provenance"]["pcgen_commit"][:12]
-    print(f"[progressione] {len(progression['entries'])} classi "
-          f"(commit pcgen {commit})")
+    print(
+        f"[progressione] {len(progression['entries'])} classi "
+        f"(commit pcgen {commit})"
+    )
     for book, n in progression["counts"].items():
         if n:
             print(f"  {book}: {n} classi")
     total_grants = sum(len(e["grants"]) for e in progression["entries"])
-    pool_grants = sum(1 for e in progression["entries"]
-                      for g in e["grants"] if g["kind"] == "pool")
+    pool_grants = sum(
+        1 for e in progression["entries"] for g in e["grants"] if g["kind"] == "pool"
+    )
     print(f"  grant: {total_grants} (di cui pool: {pool_grants})")
     dup = progression["stats"].get("_duplicates_collapsed_across_books", 0)
     if dup:
@@ -616,11 +718,14 @@ def _print_report(progression: dict, abilities: dict) -> None:
         for k in ("literal_value", "with_type", "recognized", "unrecognized"):
             bonus[k] += bs[k]
     total = bonus["total_tags"] or 1
-    print(f"  BONUS: {bonus['total_tags']} tag su {bonus['feats_with_bonus']} feature | "
-          f"valore letterale {bonus['literal_value']} ({bonus['literal_value'] / total:.0%}) | "
-          f"non riconosciuti {bonus['unrecognized']} ({bonus['unrecognized'] / total:.1%})")
-    skipped = sum(s.get("class_containers_skipped", 0)
-                  for s in abilities["stats"].values())
+    print(
+        f"  BONUS: {bonus['total_tags']} tag su {bonus['feats_with_bonus']} feature | "
+        f"valore letterale {bonus['literal_value']} ({bonus['literal_value'] / total:.0%}) | "
+        f"non riconosciuti {bonus['unrecognized']} ({bonus['unrecognized'] / total:.1%})"
+    )
+    skipped = sum(
+        s.get("class_containers_skipped", 0) for s in abilities["stats"].values()
+    )
     print(f"  contenitori CATEGORY:Class saltati: {skipped}")
 
 
@@ -633,8 +738,10 @@ def main(argv=None) -> int:
 
     pcgen_root = Path(args.pcgen_repo)
     if not (pcgen_root / DATA_SUBDIR).is_dir():
-        print(f"ERRORE: dataset PCGen non trovato in {pcgen_root / DATA_SUBDIR}",
-              file=sys.stderr)
+        print(
+            f"ERRORE: dataset PCGen non trovato in {pcgen_root / DATA_SUBDIR}",
+            file=sys.stderr,
+        )
         return 1
 
     progression = build_progression(pcgen_root)
@@ -645,11 +752,11 @@ def main(argv=None) -> int:
         return 0
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
-    for kind, payload in (("progression", progression),
-                          ("abilities", abilities)):
+    for kind, payload in (("progression", progression), ("abilities", abilities)):
         path = out_dir / OUTPUT_FILES[kind]
-        path.write_text(json.dumps(payload, indent=1, ensure_ascii=False) + "\n",
-                        encoding="utf-8")
+        path.write_text(
+            json.dumps(payload, indent=1, ensure_ascii=False) + "\n", encoding="utf-8"
+        )
         print(f"scritto {path} ({len(payload['entries'])} voci)")
     return 0
 

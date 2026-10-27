@@ -40,6 +40,7 @@ Non verifica le liste contro il SRD. PCGen e' una TRASCRIZIONE, e su questo
 progetto una trascrizione citata si e' gia' rivelata sbagliata 13 volte su 27
 (U28). L'oracolo sta a valle, dove il dato viene adottato.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -51,8 +52,12 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tools.import_pcgen_lst import (  # noqa: E402
-    DATA_SUBDIR, DEFAULT_OUT_DIR, DEFAULT_PCGEN_REPO, LICENSE_TEXT,
-    _pcgen_commit, iter_lst_records,
+    DATA_SUBDIR,
+    DEFAULT_OUT_DIR,
+    DEFAULT_PCGEN_REPO,
+    LICENSE_TEXT,
+    _pcgen_commit,
+    iter_lst_records,
 )
 from tools.import_pcgen_classes import BOOK_CLASS_FILES  # noqa: E402
 
@@ -85,7 +90,7 @@ def _class_from_key(key: str) -> str | None:
     if key.endswith(KEY_SUFFIX):
         return key[: -len(KEY_SUFFIX)].strip()
     if key.startswith(KEY_PREFIX):
-        return key[len(KEY_PREFIX):].strip()
+        return key[len(KEY_PREFIX) :].strip()
     if key.endswith(KEY_CORE_SUFFIX):
         return key[: -len(KEY_CORE_SUFFIX)].strip()
     if key.endswith(KEY_SHORT_SUFFIX):
@@ -105,12 +110,17 @@ def from_classes_file(text: str, book: str) -> list[dict]:
         fields = [f.strip() for f in raw.split("\t")]
         if not fields or not fields[0].startswith("CLASS:"):
             continue
-        name = fields[0][len("CLASS:"):].strip()
+        name = fields[0][len("CLASS:") :].strip()
         for field in fields[1:]:
             if field.startswith("CSKILL:"):
-                out.append({"class": name,
-                            "skills": _skills(field[len("CSKILL:"):]),
-                            "source_book": book, "shape": "class-line"})
+                out.append(
+                    {
+                        "class": name,
+                        "skills": _skills(field[len("CSKILL:") :]),
+                        "source_book": book,
+                        "shape": "class-line",
+                    }
+                )
                 break
     return out
 
@@ -134,8 +144,14 @@ def from_abilities_file(text: str, book: str) -> list[dict]:
         cls = _class_from_key(key or name)
         if cls is None:
             continue
-        out.append({"class": cls, "skills": _skills(cskill),
-                    "source_book": book, "shape": "ability-key"})
+        out.append(
+            {
+                "class": cls,
+                "skills": _skills(cskill),
+                "source_book": book,
+                "shape": "ability-key",
+            }
+        )
     return out
 
 
@@ -175,35 +191,44 @@ def build(pcgen_root: Path) -> dict:
             path = book_dir / rel
             if path.is_file():
                 found += from_classes_file(
-                    path.read_text(encoding="utf-8", errors="replace"), book)
+                    path.read_text(encoding="utf-8", errors="replace"), book
+                )
         for rel in cfg.get("abilities", []):
             path = book_dir / rel
             if path.is_file():
                 found += from_abilities_file(
-                    path.read_text(encoding="utf-8", errors="replace"), book)
+                    path.read_text(encoding="utf-8", errors="replace"), book
+                )
         entries += found
         counts[book] = len(found)
 
     extra = 0
     for etichetta, path in _extra_files(pcgen_root):
         testo = path.read_text(encoding="utf-8", errors="replace")
-        trovate = (from_classes_file(testo, etichetta) if path.name.endswith("_classes.lst")
-                   else from_abilities_file(testo, etichetta))
+        trovate = (
+            from_classes_file(testo, etichetta)
+            if path.name.endswith("_classes.lst")
+            else from_abilities_file(testo, etichetta)
+        )
         entries += trovate
         extra += len(trovate)
     counts["(altre collane)"] = extra
 
     return {
         "_provenance": {
-            "source": ("PCGen data sets (github.com/PCGen/pcgen), "
-                       f"{DATA_SUBDIR}/roleplaying_game/*"),
+            "source": (
+                "PCGen data sets (github.com/PCGen/pcgen), "
+                f"{DATA_SUBDIR}/roleplaying_game/*"
+            ),
             "pcgen_commit": _pcgen_commit(pcgen_root),
             "generated_by": "Master-DD-Taverna/tools/import_pcgen_class_skills.py",
             "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "license": LICENSE_TEXT,
-            "note": ("solo il tag CSKILL: nomi di abilita' di classe. I marcatori "
-                     "di famiglia (TYPE=Craft/Knowledge/Profession) restano come "
-                     "stanno: espanderli e' una decisione del consumatore."),
+            "note": (
+                "solo il tag CSKILL: nomi di abilita' di classe. I marcatori "
+                "di famiglia (TYPE=Craft/Knowledge/Profession) restano come "
+                "stanno: espanderli e' una decisione del consumatore."
+            ),
         },
         "counts": counts,
         "entries": entries,
@@ -224,8 +249,10 @@ def main(argv=None) -> int:
 
     payload = build(pcgen_root)
     distinte = {e["class"] for e in payload["entries"]}
-    print(f"CSKILL: {len(payload['entries'])} voci, {len(distinte)} classi distinte "
-          f"(commit pcgen {payload['_provenance']['pcgen_commit'][:12]})")
+    print(
+        f"CSKILL: {len(payload['entries'])} voci, {len(distinte)} classi distinte "
+        f"(commit pcgen {payload['_provenance']['pcgen_commit'][:12]})"
+    )
     for book, n in payload["counts"].items():
         print(f"  {book}: {n}")
 
@@ -234,8 +261,9 @@ def main(argv=None) -> int:
 
     out = Path(args.out_dir) / OUTPUT_FILE
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
-                   encoding="utf-8")
+    out.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
     print(f"scritto {out} ({len(payload['entries'])} voci)")
     return 0
 

@@ -11,6 +11,7 @@ Uso:
     python tools/item_forge_flavor.py "un anello che protegge dal fuoco" \
         --spell "resist energy" --cl 5
 """
+
 from __future__ import annotations
 
 import argparse
@@ -40,26 +41,30 @@ Rispondi SOLO con JSON valido:
 
 def build_flavor_prompt(user_idea: str, forged: dict) -> str:
     """Prompt utente: idea + blocco deterministico come fatto vincolante."""
-    return (f"Idea del GM: {user_idea}\n\n"
-            f"DATI MECCANICI VINCOLANTI (gia' calcolati, non modificarli):\n"
-            f"- incantesimo replicato: {forged['spell']} (livello {forged['spell_level']}, "
-            f"LI {forged['caster_level']}), scuola: {forged['school_it']}\n"
-            f"- prezzo: {forged['price']} mo, costo crafting: {forged['crafting_cost']} mo\n"
-            f"- aura: {forged['aura']}, rarita': {forged['rarity']}\n"
-            f"- tiro salvezza: {forged['saving_throw']}, RI: {forged['spell_resistance']}\n"
-            f"- usi: {forged['uses']}")
+    return (
+        f"Idea del GM: {user_idea}\n\n"
+        f"DATI MECCANICI VINCOLANTI (gia' calcolati, non modificarli):\n"
+        f"- incantesimo replicato: {forged['spell']} (livello {forged['spell_level']}, "
+        f"LI {forged['caster_level']}), scuola: {forged['school_it']}\n"
+        f"- prezzo: {forged['price']} mo, costo crafting: {forged['crafting_cost']} mo\n"
+        f"- aura: {forged['aura']}, rarita': {forged['rarity']}\n"
+        f"- tiro salvezza: {forged['saving_throw']}, RI: {forged['spell_resistance']}\n"
+        f"- usi: {forged['uses']}"
+    )
 
 
 def _default_llm(messages: list[dict]) -> str:
     """LLM di default: Ollama OpenAI-compatible (env OLLAMA_BASE_URL /
     OLLAMA_MODEL, come il provider RAG di produzione)."""
     import httpx
+
     base = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434").rstrip("/")
     model = os.environ.get("OLLAMA_MODEL", "qwen2.5-coder:14b")
-    resp = httpx.post(f"{base}/v1/chat/completions",
-                      json={"model": model, "messages": messages,
-                            "temperature": 0.7},
-                      timeout=120.0)
+    resp = httpx.post(
+        f"{base}/v1/chat/completions",
+        json={"model": model, "messages": messages, "temperature": 0.7},
+        timeout=120.0,
+    )
     resp.raise_for_status()
     return resp.json()["choices"][0]["message"]["content"]
 
@@ -69,7 +74,7 @@ def _parse_flavor(raw: str) -> dict:
     start, end = raw.find("{"), raw.rfind("}")
     if start == -1 or end <= start:
         raise ValueError(f"risposta LLM senza JSON: {raw[:120]!r}")
-    data = json.loads(raw[start:end + 1])
+    data = json.loads(raw[start : end + 1])
     for key in ("name", "description", "details", "playtest_note"):
         if key not in data:
             raise ValueError(f"flavor senza chiave {key!r}: {sorted(data)}")
@@ -81,8 +86,10 @@ def _parse_flavor(raw: str) -> dict:
 def generate_flavor(user_idea: str, forged: dict, llm=None) -> dict:
     """Flavor via LLM (llm: callable(messages)->str, default Ollama)."""
     call = llm or _default_llm
-    messages = [{"role": "system", "content": FLAVOR_SYSTEM},
-                {"role": "user", "content": build_flavor_prompt(user_idea, forged)}]
+    messages = [
+        {"role": "system", "content": FLAVOR_SYSTEM},
+        {"role": "user", "content": build_flavor_prompt(user_idea, forged)},
+    ]
     return _parse_flavor(call(messages))
 
 
@@ -124,17 +131,24 @@ def render_tournament(forged: dict, flavor: dict) -> str:
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("idea", help="idea dell'oggetto (lingua libera)")
-    ap.add_argument("--spell", required=True, help="incantesimo replicato (nome catalogo)")
+    ap.add_argument(
+        "--spell", required=True, help="incantesimo replicato (nome catalogo)"
+    )
     ap.add_argument("--cl", type=int, required=True, help="livello incantatore")
     ap.add_argument("--uses", default="1/day", choices=["1/day", "3/day", "unlimited"])
-    ap.add_argument("--json", action="store_true", help="stampa il blocco JSON invece del markdown")
+    ap.add_argument(
+        "--json", action="store_true", help="stampa il blocco JSON invece del markdown"
+    )
     args = ap.parse_args(argv)
 
     forged = forge_from_spell(args.spell, args.cl, args.uses)
     flavor = generate_flavor(args.idea, forged)
     if args.json:
-        print(json.dumps({"forged": forged, "flavor": flavor},
-                         ensure_ascii=False, indent=2))
+        print(
+            json.dumps(
+                {"forged": forged, "flavor": flavor}, ensure_ascii=False, indent=2
+            )
+        )
     else:
         print(render_tournament(forged, flavor))
     return 0

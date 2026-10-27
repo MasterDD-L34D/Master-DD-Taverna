@@ -16,6 +16,7 @@ cataloghi Taverna): NESSUNA description esportata — Taverna/PB sono solo
 riferimento, le description del catalogo si scrivono da noi (curated,
 file separato in pathmaster-dd).
 """
+
 from __future__ import annotations
 
 import json
@@ -28,12 +29,7 @@ from tools import build_class_feature_pools as pools
 REPO = Path(__file__).resolve().parents[1]
 TALENTS = REPO / "data" / "reference" / "ogl" / "talents.json"
 PCGEN_DIR = (
-    REPO.parent
-    / "pathmaster-dd"
-    / "packages"
-    / "rules-engine-v2"
-    / "src"
-    / "data"
+    REPO.parent / "pathmaster-dd" / "packages" / "rules-engine-v2" / "src" / "data"
 )
 
 
@@ -41,7 +37,9 @@ PCGEN_DIR = (
 def generated(tmp_path_factory):
     out_dir = tmp_path_factory.mktemp("pool-out")
     pools.main(["--out-dir", str(out_dir)])
-    return json.loads((out_dir / "class-features-pool.json").read_text(encoding="utf-8"))
+    return json.loads(
+        (out_dir / "class-features-pool.json").read_text(encoding="utf-8")
+    )
 
 
 @pytest.fixture(scope="module")
@@ -142,8 +140,7 @@ def test_copertura_dichiarata(generated):
     cov = generated["_coverage"]
     total = len(generated["entries"])
     assert (
-        cov["pcgen_matched"] + cov["pcgen_ambiguous"] + cov["pcgen_unmatched"]
-        == total
+        cov["pcgen_matched"] + cov["pcgen_ambiguous"] + cov["pcgen_unmatched"] == total
     )
     # i pool del corpus devono essere coperti dal dato PCGen nella misura
     # MISURATA e dichiarata (i dataset importati sono la linea core

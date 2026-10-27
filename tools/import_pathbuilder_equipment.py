@@ -63,6 +63,7 @@ Uso:
   --raw-dir PATH   (default data/reference/pi_local_only/pathbuilder)
   --out-dir PATH   (default <pathmaster sibling>/packages/rules-engine-v2/src/data)
 """
+
 from __future__ import annotations
 
 import argparse
@@ -74,8 +75,9 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_RAW_DIR = REPO_ROOT / "data/reference/pi_local_only/pathbuilder"
-DEFAULT_OUT_DIR = (REPO_ROOT.parent / "pathmaster-dd"
-                   / "packages/rules-engine-v2/src/data")
+DEFAULT_OUT_DIR = (
+    REPO_ROOT.parent / "pathmaster-dd" / "packages/rules-engine-v2/src/data"
+)
 
 # Mappe DICHIARATE (codici numerici PB -> etichette), derivate da ispezione
 # dei membri di ogni codice (ricognizione 2026-08-07), non da documentazione
@@ -85,15 +87,28 @@ DEFAULT_OUT_DIR = (REPO_ROOT.parent / "pathmaster-dd"
 # Longsword prof 1 (da guerra), Bastard sword prof 2 (esotica), armi da
 # fuoco prof 3, Bite/Unarmed prof -1.
 WEAPON_CATEGORIES = {
-    0: "light", 1: "one-handed", 2: "two-handed", 3: "ranged",
-    4: "firearm-one-handed", 5: "firearm-two-handed", 6: "natural",
+    0: "light",
+    1: "one-handed",
+    2: "two-handed",
+    3: "ranged",
+    4: "firearm-one-handed",
+    5: "firearm-two-handed",
+    6: "natural",
 }
 WEAPON_PROFICIENCIES = {
-    -1: "none", 0: "simple", 1: "martial", 2: "exotic", 3: "firearm",
+    -1: "none",
+    0: "simple",
+    1: "martial",
+    2: "exotic",
+    3: "firearm",
 }
 ARMOR_CATEGORIES = {
-    0: "light", 1: "medium", 2: "heavy", 3: "shield",
-    4: "tower-shield", 5: "magic-accessory",
+    0: "light",
+    1: "medium",
+    2: "heavy",
+    3: "shield",
+    4: "tower-shield",
+    5: "magic-accessory",
 }
 
 # Slot slotted: 0-11 = slot corporei PF (verificati sui membri: cinture -> 0,
@@ -105,12 +120,32 @@ ARMOR_CATEGORIES = {
 # componenti alchemici -> 20, accessori animali -> 21, pozioni -> 22,
 # pergamene -> 23, bacchette -> 24, munizioni -> 25).
 SLOT_LABELS = {
-    0: "belt", 1: "body", 2: "chest", 3: "eyes", 4: "feet", 5: "hands",
-    6: "head", 7: "headband", 8: "neck", 9: "shoulders", 10: "wrists",
-    11: "slotless", 12: "ring", 13: "rod", 14: "staff",
-    15: "adventuring-gear", 16: "book", 17: "tool", 18: "religious-item",
-    19: "outfit", 20: "alchemical-component", 21: "animal-gear",
-    22: "potion", 23: "scroll", 24: "wand", 25: "ammunition",
+    0: "belt",
+    1: "body",
+    2: "chest",
+    3: "eyes",
+    4: "feet",
+    5: "hands",
+    6: "head",
+    7: "headband",
+    8: "neck",
+    9: "shoulders",
+    10: "wrists",
+    11: "slotless",
+    12: "ring",
+    13: "rod",
+    14: "staff",
+    15: "adventuring-gear",
+    16: "book",
+    17: "tool",
+    18: "religious-item",
+    19: "outfit",
+    20: "alchemical-component",
+    21: "animal-gear",
+    22: "potion",
+    23: "scroll",
+    24: "wand",
+    25: "ammunition",
 }
 
 
@@ -159,26 +194,29 @@ def import_weapons(raw_dir: Path) -> list[dict]:
         proficiency = _int(row, "Proficiency")
         hands_code = _int(row, "Hands")
         group = (row.findtext("WeaponGroup") or "").strip()
-        out.append({
-            "name": (row.findtext("Weapon") or "").strip(),
-            "category": category,
-            "categoryLabel": WEAPON_CATEGORIES[category],
-            "proficiency": proficiency,
-            "proficiencyLabel": WEAPON_PROFICIENCIES[proficiency],
-            "damage": damage,
-            "damageType": damage_type,
-            "critRange": crit_range,
-            "critMultiplier": crit_mult,
-            **({"critMultipliers": crit_mults} if crit_mults else {}),
-            "finesse": bool(_bool(row, "Finessable")),
-            "weaponGroups": ([] if group in ("", "0")
-                             else [g for g in group.split("&") if g]),
-            # Hands PB: 0 = una mano o leggera, 1 = due mani
-            "hands": 2 if hands_code == 1 else 1,
-            "rangeIncrement": range_inc,
-            "usesAmmo": _bool(row, "UsesAmmo"),
-            "naturalWeapon": bool(_bool(row, "naturalWeapon")),
-        })
+        out.append(
+            {
+                "name": (row.findtext("Weapon") or "").strip(),
+                "category": category,
+                "categoryLabel": WEAPON_CATEGORIES[category],
+                "proficiency": proficiency,
+                "proficiencyLabel": WEAPON_PROFICIENCIES[proficiency],
+                "damage": damage,
+                "damageType": damage_type,
+                "critRange": crit_range,
+                "critMultiplier": crit_mult,
+                **({"critMultipliers": crit_mults} if crit_mults else {}),
+                "finesse": bool(_bool(row, "Finessable")),
+                "weaponGroups": (
+                    [] if group in ("", "0") else [g for g in group.split("&") if g]
+                ),
+                # Hands PB: 0 = una mano o leggera, 1 = due mani
+                "hands": 2 if hands_code == 1 else 1,
+                "rangeIncrement": range_inc,
+                "usesAmmo": _bool(row, "UsesAmmo"),
+                "naturalWeapon": bool(_bool(row, "naturalWeapon")),
+            }
+        )
     return out
 
 
@@ -194,19 +232,21 @@ def import_armor(raw_dir: Path) -> list[dict]:
             speed = None  # -1 = n/a (scudi): null dichiarato
         arcane_raw = (row.findtext("Arcane_Spell") or "0").strip()
         category = _int(row, "Category")
-        out.append({
-            "name": (row.findtext("Armor") or "").strip(),
-            "category": category,
-            "categoryLabel": ARMOR_CATEGORIES[category],
-            "acBonus": _int(row, "Bonus"),
-            "maxDex": max_dex,
-            # PB memorizza la MAGNITUDINE positiva: 5 = ACP -5 RAW
-            "armorCheckPenalty": -check_penalty,
-            # Arcane_Spell e' una frazione: 0.3 = 30%
-            "arcaneSpellFailure": round(float(arcane_raw) * 100),
-            "speed30ft": speed,
-            "weight": _int(row, "Weight1"),
-        })
+        out.append(
+            {
+                "name": (row.findtext("Armor") or "").strip(),
+                "category": category,
+                "categoryLabel": ARMOR_CATEGORIES[category],
+                "acBonus": _int(row, "Bonus"),
+                "maxDex": max_dex,
+                # PB memorizza la MAGNITUDINE positiva: 5 = ACP -5 RAW
+                "armorCheckPenalty": -check_penalty,
+                # Arcane_Spell e' una frazione: 0.3 = 30%
+                "arcaneSpellFailure": round(float(arcane_raw) * 100),
+                "speed30ft": speed,
+                "weight": _int(row, "Weight1"),
+            }
+        )
     return out
 
 
@@ -227,17 +267,19 @@ def import_slotted(raw_dir: Path) -> tuple[list[dict], int]:
         cost = float(cost_raw) if cost_raw else None
         if cost is not None and cost.is_integer():
             cost = int(cost)
-        out.append({
-            "name": name,
-            "cost": cost,  # mo, anche frazionario nel dato (es. 0.01)
-            # 11 righe con Name non hanno Slot (es. Amulet of the Bloodied):
-            # slot/slotLabel null DICHIARATI, mai dedotti
-            "slot": slot,
-            "slotLabel": SLOT_LABELS[slot] if slot is not None else None,
-            "source": source,
-            # MAI: Description (PI), Ref (URL PI), BonusType/Amount
-            # (enhancement = preset di nome, mai bonus inventato)
-        })
+        out.append(
+            {
+                "name": name,
+                "cost": cost,  # mo, anche frazionario nel dato (es. 0.01)
+                # 11 righe con Name non hanno Slot (es. Amulet of the Bloodied):
+                # slot/slotLabel null DICHIARATI, mai dedotti
+                "slot": slot,
+                "slotLabel": SLOT_LABELS[slot] if slot is not None else None,
+                "source": source,
+                # MAI: Description (PI), Ref (URL PI), BonusType/Amount
+                # (enhancement = preset di nome, mai bonus inventato)
+            }
+        )
     return out, skipped
 
 
@@ -260,29 +302,29 @@ def main(argv=None) -> int:
     payload = {
         "_provenance": {
             "source": "Pathbuilder 1e raw data (res/raw dell'APK), "
-                      "data_weapons.xml + data_armor.xml + "
-                      "data_equipment_slotted.xml",
+            "data_weapons.xml + data_armor.xml + "
+            "data_equipment_slotted.xml",
             "generated_by": "Master-DD-Taverna/tools/import_pathbuilder_equipment.py",
             "generated_at": datetime.now(timezone.utc).isoformat(),
             "license": "Pathbuilder 1e raw data (APK da BlueStacks utente, permesso "
-                       "concesso 2026-08-02). Meccaniche e nomi: OGL 1.0a. Description "
-                       "degli oggetti e Ref (URL d20pfsrd): Product Identity — MAI "
-                       "esportati (restano nel dataset PI local-only, gitignored).",
+            "concesso 2026-08-02). Meccaniche e nomi: OGL 1.0a. Description "
+            "degli oggetti e Ref (URL d20pfsrd): Product Identity — MAI "
+            "esportati (restano nel dataset PI local-only, gitignored).",
             "desc_policy": "Solo nomi + meccaniche strutturate, MAI la Description "
-                           "degli oggetti slotted ne' il Ref. BonusType/Amount degli "
-                           "slotted NON esportati: enhancement magici = preset di "
-                           "nome + stat base, MAI bonus inventato (piano D4).",
+            "degli oggetti slotted ne' il Ref. BonusType/Amount degli "
+            "slotted NON esportati: enhancement magici = preset di "
+            "nome + stat base, MAI bonus inventato (piano D4).",
             "mapping_policy": "Le mappe codici numerici PB (weaponCategories, "
-                              "weaponProficiencies, armorCategories, slotLabels) "
-                              "sono DICHIARATE qui, derivate da ispezione dei "
-                              "membri di ogni codice — non da documentazione "
-                              "Pathbuilder (assente).",
+            "weaponProficiencies, armorCategories, slotLabels) "
+            "sono DICHIARATE qui, derivate da ispezione dei "
+            "membri di ogni codice — non da documentazione "
+            "Pathbuilder (assente).",
             "conflict_policy": "PCGen (pcgen-equipment.json) VINCE sui valori per "
-                               "i nomi duplicati; PB aggiunge copertura (nomi "
-                               "assenti da PCGen). Match solo per nome normalizzato "
-                               "esatto: varianti di naming (es. 'Heavy steel "
-                               "shield' PB vs 'Shield (Heavy, Steel)' PCGen) NON "
-                               "sono fuse — dichiarato, mai merge silenzioso.",
+            "i nomi duplicati; PB aggiunge copertura (nomi "
+            "assenti da PCGen). Match solo per nome normalizzato "
+            "esatto: varianti di naming (es. 'Heavy steel "
+            "shield' PB vs 'Shield (Heavy, Steel)' PCGen) NON "
+            "sono fuse — dichiarato, mai merge silenzioso.",
             "format_notes_doc": "tools/import_pathbuilder_equipment.py (docstring)",
         },
         "weaponCategories": {str(k): v for k, v in WEAPON_CATEGORIES.items()},
@@ -306,20 +348,25 @@ def main(argv=None) -> int:
         "slotted": slotted,
     }
 
-    print(f"armi: {len(weapons)} (con danno: "
-          f"{payload['counts']['weaponsWithDamage']}; senza danno dichiarato: "
-          f"{len(without_damage)})")
+    print(
+        f"armi: {len(weapons)} (con danno: "
+        f"{payload['counts']['weaponsWithDamage']}; senza danno dichiarato: "
+        f"{len(without_damage)})"
+    )
     print(f"armature/scudi: {len(armor)}")
-    print(f"oggetti slotted: {len(slotted)} "
-          f"(righe template senza nome saltate: {slotted_skipped}; "
-          f"nomi duplicati dichiarati: {slotted_dups})")
+    print(
+        f"oggetti slotted: {len(slotted)} "
+        f"(righe template senza nome saltate: {slotted_skipped}; "
+        f"nomi duplicati dichiarati: {slotted_dups})"
+    )
 
     if not args.report_only:
         out_dir = Path(args.out_dir)
         out_dir.mkdir(parents=True, exist_ok=True)
         path = out_dir / "pathbuilder-equipment.json"
-        path.write_text(json.dumps(payload, indent=1, ensure_ascii=False) + "\n",
-                        encoding="utf-8")
+        path.write_text(
+            json.dumps(payload, indent=1, ensure_ascii=False) + "\n", encoding="utf-8"
+        )
         print(f"scritto {path}")
     return 0
 

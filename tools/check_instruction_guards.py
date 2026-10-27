@@ -6,6 +6,7 @@ persi, principi "mai competenza finta"/"mai silenzioso" cancellati, vincoli
 legali ammorbiditi) e' il tipo di regressione che i test del codice non
 vedono. Uso: python tools/check_instruction_guards.py [--root PATH]
 """
+
 from __future__ import annotations
 
 import argparse

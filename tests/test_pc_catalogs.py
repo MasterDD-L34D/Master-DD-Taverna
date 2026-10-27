@@ -1,12 +1,20 @@
 """Test per src/pc/catalogs.py (dati reali su disco, nessuna rete)."""
+
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.pc.catalogs import (ability_cost, campaign_budget, find_equipment,
-                             find_feat, find_trait, get_class, get_race,
-                             get_skill)
+from src.pc.catalogs import (
+    ability_cost,
+    campaign_budget,
+    find_equipment,
+    find_feat,
+    find_trait,
+    get_class,
+    get_race,
+    get_skill,
+)
 
 
 def test_ability_tables():

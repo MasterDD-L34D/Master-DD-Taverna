@@ -33,14 +33,20 @@ def _evict_failed_attempts_if_needed(current_client_id: str) -> None:
         _failed_attempts.clear()
         return
 
-    while len(_failed_attempts) >= max_clients and current_client_id not in _failed_attempts:
+    while (
+        len(_failed_attempts) >= max_clients
+        and current_client_id not in _failed_attempts
+    ):
         client_id_to_evict = min(
-            _failed_attempts.items(), key=lambda item: float(item[1].get("last_seen", 0.0))
+            _failed_attempts.items(),
+            key=lambda item: float(item[1].get("last_seen", 0.0)),
         )[0]
         _failed_attempts.pop(client_id_to_evict, None)
 
 
-def _record_failed_attempt(client_id: str, *, count: int, blocked_until: float, now: float) -> None:
+def _record_failed_attempt(
+    client_id: str, *, count: int, blocked_until: float, now: float
+) -> None:
     if client_id not in _failed_attempts:
         _evict_failed_attempts_if_needed(client_id)
 
@@ -87,7 +93,9 @@ def _client_identifier(request: Request) -> str:
 
 
 def _retry_after_for_active_backoff(client_id: str, now: float) -> int | None:
-    attempt_state = _failed_attempts.get(client_id, {"count": 0, "blocked_until": 0.0, "last_seen": now})
+    attempt_state = _failed_attempts.get(
+        client_id, {"count": 0, "blocked_until": 0.0, "last_seen": now}
+    )
     blocked_until = float(attempt_state.get("blocked_until", 0.0))
     if now >= blocked_until:
         return None
@@ -116,7 +124,6 @@ def _is_metrics_ip_allowed(request: Request) -> bool:
     return False
 
 
-
 _SENSITIVE_HEADER_NAMES = {
     "authorization",
     "cookie",
@@ -140,18 +147,31 @@ def _redacted_request_headers(request: Request) -> Dict[str, str]:
     redacted_headers: Dict[str, str] = {}
     for header_name, header_value in request.headers.items():
         normalized_name = header_name.lower()
-        redacted_headers[normalized_name] = _redact_header_value(normalized_name, header_value)
+        redacted_headers[normalized_name] = _redact_header_value(
+            normalized_name, header_value
+        )
     return redacted_headers
 
 
-async def require_api_key(request: Request, x_api_key: str | None = Header(default=None, alias="x-api-key")) -> None:
+async def require_api_key(
+    request: Request, x_api_key: str | None = Header(default=None, alias="x-api-key")
+) -> None:
     client_id = _client_identifier(request)
     now = monotonic()
     _cleanup_failed_attempts(now)
-    attempt_state = _failed_attempts.get(client_id, {"count": 0, "blocked_until": 0.0, "last_seen": now})
+    attempt_state = _failed_attempts.get(
+        client_id, {"count": 0, "blocked_until": 0.0, "last_seen": now}
+    )
     retry_after = _retry_after_for_active_backoff(client_id, now)
     if retry_after is not None:
-        logging.warning("Authentication backoff active", extra={"event": "auth_backoff_active", "client_ip": client_id, "retry_after": retry_after})
+        logging.warning(
+            "Authentication backoff active",
+            extra={
+                "event": "auth_backoff_active",
+                "client_ip": client_id,
+                "retry_after": retry_after,
+            },
+        )
         raise HTTPException(
             status_code=429,
             detail="Troppi tentativi non autorizzati, riprova più tardi",
@@ -174,11 +194,21 @@ async def require_api_key(request: Request, x_api_key: str | None = Header(defau
 
         if updated_count >= settings.auth_backoff_threshold:
             blocked_until = now + settings.auth_backoff_seconds
-            logging.warning("Authentication backoff triggered", extra={"event": "auth_backoff_triggered", "client_ip": client_id, "fail_count": updated_count, "retry_after": settings.auth_backoff_seconds})
+            logging.warning(
+                "Authentication backoff triggered",
+                extra={
+                    "event": "auth_backoff_triggered",
+                    "client_ip": client_id,
+                    "fail_count": updated_count,
+                    "retry_after": settings.auth_backoff_seconds,
+                },
+            )
             from .app import AUTH_BACKOFF_TRIGGER
 
             AUTH_BACKOFF_TRIGGER.inc()
-            _record_failed_attempt(client_id, count=updated_count, blocked_until=blocked_until, now=now)
+            _record_failed_attempt(
+                client_id, count=updated_count, blocked_until=blocked_until, now=now
+            )
             raise HTTPException(
                 status_code=429,
                 detail="Troppi tentativi non autorizzati, riprova più tardi",
@@ -198,13 +228,17 @@ async def require_api_key(request: Request, x_api_key: str | None = Header(defau
                 "headers": _redacted_request_headers(request),
             },
         )
-        _record_failed_attempt(client_id, count=updated_count, blocked_until=blocked_until, now=now)
+        _record_failed_attempt(
+            client_id, count=updated_count, blocked_until=blocked_until, now=now
+        )
         raise HTTPException(status_code=401, detail="Invalid or missing API key")
 
     _failed_attempts.pop(client_id, None)
 
 
-async def require_metrics_access(request: Request, x_api_key: str | None = Header(default=None, alias="x-api-key")) -> None:
+async def require_metrics_access(
+    request: Request, x_api_key: str | None = Header(default=None, alias="x-api-key")
+) -> None:
     provided_key = x_api_key or ""
     accepted_keys = _accepted_metrics_keys()
     if accepted_keys and provided_key in accepted_keys:

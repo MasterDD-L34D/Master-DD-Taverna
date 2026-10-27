@@ -3,6 +3,7 @@
 1. query-translation IT->EN con lessico da data/it_en_lexicon.json;
 2. fast-path esatto per nome proprio (embedding debole su nomi inventati).
 """
+
 import json
 import sys
 from pathlib import Path
@@ -18,11 +19,13 @@ from src.rag.indexer import index_reference_catalog
 class DummyEncoder:
     """Encoder deterministico: stesso vettore per ogni input (il ranking
     dipende solo dai boost, mai dal contenuto semantico)."""
+
     def __init__(self, dim=16):
         self.dim = dim
 
     def encode(self, texts, show_progress_bar=False, convert_to_numpy=True):
         import numpy as np
+
         if isinstance(texts, str):
             return np.ones(self.dim) / self.dim**0.5
         return np.array([np.ones(self.dim) / self.dim**0.5 for _ in texts])
@@ -31,15 +34,25 @@ class DummyEncoder:
 def _make_store(tmp_path):
     reference_dir = tmp_path / "reference"
     reference_dir.mkdir()
-    (reference_dir / "manifest.json").write_text(json.dumps({
-        "catalogs": [{"file": "races.json", "kind": "races", "is_ogc": True}],
-    }), encoding="utf-8")
-    (reference_dir / "races.json").write_text(json.dumps({
-        "entries": [
-            {"name": "Aasimar", "description": "Modificatori razziali."},
-            {"name": "Dwarf", "description": "Tratti nanici."},
-        ],
-    }), encoding="utf-8")
+    (reference_dir / "manifest.json").write_text(
+        json.dumps(
+            {
+                "catalogs": [{"file": "races.json", "kind": "races", "is_ogc": True}],
+            }
+        ),
+        encoding="utf-8",
+    )
+    (reference_dir / "races.json").write_text(
+        json.dumps(
+            {
+                "entries": [
+                    {"name": "Aasimar", "description": "Modificatori razziali."},
+                    {"name": "Dwarf", "description": "Tratti nanici."},
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
     store = VectorStore(tmp_path / "store")
     index_reference_catalog(reference_dir, store, "dummy", DummyEncoder())
     return store
@@ -47,8 +60,12 @@ def _make_store(tmp_path):
 
 def test_translate_query_applica_lessico(tmp_path):
     lexicon_file = tmp_path / "lex.json"
-    lexicon_file.write_text(json.dumps({"attacco poderoso": "power attack",
-                                        "cotta di maglia": "chainmail"}), encoding="utf-8")
+    lexicon_file.write_text(
+        json.dumps(
+            {"attacco poderoso": "power attack", "cotta di maglia": "chainmail"}
+        ),
+        encoding="utf-8",
+    )
     lex = load_lexicon(lexicon_file)
     out = translate_query("cosa fa il talento Attacco Poderoso?", lex)
     assert "power attack" in out.lower()

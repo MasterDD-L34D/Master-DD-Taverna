@@ -1,4 +1,5 @@
 """Test per tools/import_monsters.py — mechanics da fonte strutturata."""
+
 import sys
 from pathlib import Path
 
@@ -20,28 +21,54 @@ SOURCE_SAMPLE = [
         "type": "dragon",
         "initiative": {"bonus": 5},
         "senses": {"darkvision": 60, "low-light vision": True, "scent": True},
-        "AC": {"AC": 20, "touch": 10, "flat_footed": 19,
-               "components": {"dex": 1, "natural": 10, "size": -1}},
-        "HP": {"total": 103, "long": "9d12+45",
-               "HD": {"racial": {"die": 12, "num": 9}, "num": 9}, "bonus_HP": 45},
+        "AC": {
+            "AC": 20,
+            "touch": 10,
+            "flat_footed": 19,
+            "components": {"dex": 1, "natural": 10, "size": -1},
+        },
+        "HP": {
+            "total": 103,
+            "long": "9d12+45",
+            "HD": {"racial": {"die": 12, "num": 9}, "num": 9},
+            "bonus_HP": 45,
+        },
         "saves": {"fort": 11, "ref": 7, "will": 9},
         "immunities": ["dragon traits", "magic paralysis and sleep"],
         "resistances": {"acid": 10, "fire": 10},
         "SR": 19,
         "speeds": {"base": 20, "fly": 60, "fly_maneuverability": "poor", "swim": 40},
         "attacks": {
-            "melee": [[
-                {"text": "bite +13 (2d6+5 plus grab)", "attack": "bite", "bonus": [13]},
-                {"text": "2 stings +13 (1d6+5 plus poison)", "count": 2,
-                 "attack": "stings", "bonus": [13]},
-            ]],
-            "special": ["breath weapon (30-ft. cone, 6d6 fire damage plus fumes, "
-                        "Reflex DC 19 half, usable every 1d4 rounds)"],
+            "melee": [
+                [
+                    {
+                        "text": "bite +13 (2d6+5 plus grab)",
+                        "attack": "bite",
+                        "bonus": [13],
+                    },
+                    {
+                        "text": "2 stings +13 (1d6+5 plus poison)",
+                        "count": 2,
+                        "attack": "stings",
+                        "bonus": [13],
+                    },
+                ]
+            ],
+            "special": [
+                "breath weapon (30-ft. cone, 6d6 fire damage plus fumes, "
+                "Reflex DC 19 half, usable every 1d4 rounds)"
+            ],
         },
         "space": 10,
         "reach": 5,
-        "ability_scores": {"STR": 21, "DEX": 12, "CON": 20,
-                           "INT": 9, "WIS": 12, "CHA": 11},
+        "ability_scores": {
+            "STR": 21,
+            "DEX": 12,
+            "CON": 20,
+            "INT": 9,
+            "WIS": 12,
+            "CHA": 11,
+        },
         "BAB": 9,
         "CMB": 15,
         "CMD": 26,
@@ -49,11 +76,13 @@ SOURCE_SAMPLE = [
         "skills": {"Fly": {"_": 7}, "Perception": {"_": 20}},
         "special_abilities": {
             "Poison (Ex)": "Sting-injury; save Fort DC 19; frequency 1/round "
-                           "for 6 rounds; effect 1d4 Con; cure 2 consecutive saves.",
+            "for 6 rounds; effect 1d4 Con; cure 2 consecutive saves.",
         },
-        "ecology": {"environment": "temperate or warm hills",
-                    "organization": "solitary, pair, or murder (3-5 and 1-3 wyverns)",
-                    "treasure_type": "standard"},
+        "ecology": {
+            "environment": "temperate or warm hills",
+            "organization": "solitary, pair, or murder (3-5 and 1-3 wyverns)",
+            "treasure_type": "standard",
+        },
         "subtypes": ["evil"],
         "special_qualities": ["hold breath"],
         "CMB_other": "+19 grapple",
@@ -137,11 +166,26 @@ def test_convert_monsters_v2_missing_fields_use_none():
     """Campi v2 assenti nella fonte -> None, niente KeyError."""
     minimal = [{"title1": "Blob", "CR": 1, "sources": [{"name": "Test"}]}]
     mech = convert_monsters(minimal)[0]["mechanics"]
-    for key in ("type", "size", "alignment", "initiative", "environment",
-                "organization", "subtypes", "space", "reach", "reach_other",
-                "spell_like_abilities", "spells", "psychic_magic", "auras",
-                "defensive_abilities", "special_qualities",
-                "cmb_other", "cmd_other"):
+    for key in (
+        "type",
+        "size",
+        "alignment",
+        "initiative",
+        "environment",
+        "organization",
+        "subtypes",
+        "space",
+        "reach",
+        "reach_other",
+        "spell_like_abilities",
+        "spells",
+        "psychic_magic",
+        "auras",
+        "defensive_abilities",
+        "special_qualities",
+        "cmb_other",
+        "cmd_other",
+    ):
         assert key in mech, f"chiave mancante: {key}"
         assert mech[key] is None, f"{key} dovrebbe essere None"
 
@@ -157,9 +201,12 @@ def test_url_composite_names_use_subtype_page():
 
     assert _url("Agathion, Leonal").endswith("ItemName=Leonal")
     assert _url("Devil, Host Devil, Greater (Magaav)").endswith(
-        "ItemName=Host%20Devil,%20Greater%20(Magaav)")
+        "ItemName=Host%20Devil,%20Greater%20(Magaav)"
+    )
     assert _url("Dragon (Black), Adult Black Dragon").endswith(
-        "ItemName=Adult%20Black%20Dragon")
+        "ItemName=Adult%20Black%20Dragon"
+    )
     assert _url("Dragon (Esoteric, Astral), Young Astral Dragon").endswith(
-        "ItemName=Young%20Astral%20Dragon")
+        "ItemName=Young%20Astral%20Dragon"
+    )
     assert _url("Wyvern").endswith("ItemName=Wyvern")

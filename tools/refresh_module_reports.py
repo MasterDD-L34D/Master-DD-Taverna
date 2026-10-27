@@ -13,6 +13,7 @@ placeholder bullets where sections are missing or empty. If the source
 module file is not found in `src/modules/`, a warning is emitted but the
 report is still processed.
 """
+
 from __future__ import annotations
 
 import argparse

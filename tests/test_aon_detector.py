@@ -12,7 +12,6 @@ if str(ROOT) not in sys.path:
 
 from utils.aon_detector import is_aon_url
 
-
 # Strategie per domini AoN e non-AoN
 aon_domains = st.sampled_from(
     [

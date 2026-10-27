@@ -49,6 +49,7 @@ Uso:
   --out-dir PATH   (default <pathmaster sibling>/packages/rules-engine-v2/src/data)
   --no-strict-playable   (non validare la lista giocabili contro il dataset)
 """
+
 from __future__ import annotations
 
 import argparse
@@ -60,15 +61,22 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_RAW_DIR = REPO_ROOT / "data/reference/pi_local_only/pathbuilder"
-DEFAULT_OUT_DIR = (REPO_ROOT.parent / "pathmaster-dd"
-                   / "packages/rules-engine-v2/src/data")
+DEFAULT_OUT_DIR = (
+    REPO_ROOT.parent / "pathmaster-dd" / "packages/rules-engine-v2/src/data"
+)
 
 SEP_LIST = "&"
 
 SIZES = {
-    "Fine": "fine", "Diminutive": "diminutive", "Tiny": "tiny",
-    "Small": "small", "Medium": "medium", "Large": "large",
-    "Huge": "huge", "Gargantuan": "gargantuan", "Colossal": "colossal",
+    "Fine": "fine",
+    "Diminutive": "diminutive",
+    "Tiny": "tiny",
+    "Small": "small",
+    "Medium": "medium",
+    "Large": "large",
+    "Huge": "huge",
+    "Gargantuan": "gargantuan",
+    "Colossal": "colossal",
 }
 
 # Razze giocabili PC: LISTA ESPLICITA (regola del piano D1: dato, non
@@ -77,33 +85,75 @@ SIZES = {
 # NOTA: nel dataset PB anche Lizardfolk e Gnoll hanno Src=ARG, ma sono
 # schede d'esempio del race builder (tratti con "(N RP)"): la lista
 # esplicita le esclude, un filtro per Src non potrebbe.
-PLAYABLE_PC_RACES = frozenset([
-    # CRB (core)
-    "Dwarf", "Elf", "Gnome", "Half-Elf", "Half-Orc", "Halfling", "Human",
-    # ARG featured
-    "Aasimar", "Catfolk", "Dhampir", "Drow", "Fetchling", "Goblin",
-    "Hobgoblin", "Ifrit", "Kobold", "Orc", "Oread", "Ratfolk", "Sylph",
-    "Tengu", "Tiefling", "Undine",
-    # ARG uncommon
-    "Changeling", "Duergar", "Gillman", "Grippli", "Kitsune", "Merfolk",
-    "Nagaji", "Samsaran", "Strix", "Suli", "Svirfneblin", "Vanara",
-    "Vishkanya", "Wayang",
-])
+PLAYABLE_PC_RACES = frozenset(
+    [
+        # CRB (core)
+        "Dwarf",
+        "Elf",
+        "Gnome",
+        "Half-Elf",
+        "Half-Orc",
+        "Halfling",
+        "Human",
+        # ARG featured
+        "Aasimar",
+        "Catfolk",
+        "Dhampir",
+        "Drow",
+        "Fetchling",
+        "Goblin",
+        "Hobgoblin",
+        "Ifrit",
+        "Kobold",
+        "Orc",
+        "Oread",
+        "Ratfolk",
+        "Sylph",
+        "Tengu",
+        "Tiefling",
+        "Undine",
+        # ARG uncommon
+        "Changeling",
+        "Duergar",
+        "Gillman",
+        "Grippli",
+        "Kitsune",
+        "Merfolk",
+        "Nagaji",
+        "Samsaran",
+        "Strix",
+        "Suli",
+        "Svirfneblin",
+        "Vanara",
+        "Vishkanya",
+        "Wayang",
+    ]
+)
 
 # Segno+numero ADIACENTE al nome caratteristica (pieno o sigla). Il meno
 # nei dati e' spesso U+2013 (–); accettati anche U+2212 e ASCII '-'.
 ABILITY_BONUS_RE = re.compile(
     r"([+\u2013\u2212-])\s*(\d+)\s*"
     r"(Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma"
-    r"|Str|Dex|Con|Int|Wis|Cha)\b")
+    r"|Str|Dex|Con|Int|Wis|Cha)\b"
+)
 FLEXIBLE_RE = re.compile(
-    r"\+\s*2\s+to\s+(?:one|any\s+one)\s+ability\s+score", re.IGNORECASE)
+    r"\+\s*2\s+to\s+(?:one|any\s+one)\s+ability\s+score", re.IGNORECASE
+)
 
 ABILITY_KEYS = {
-    "strength": "str", "dexterity": "dex", "constitution": "con",
-    "intelligence": "int", "wisdom": "wis", "charisma": "cha",
-    "str": "str", "dex": "dex", "con": "con",
-    "int": "int", "wis": "wis", "cha": "cha",
+    "strength": "str",
+    "dexterity": "dex",
+    "constitution": "con",
+    "intelligence": "int",
+    "wisdom": "wis",
+    "charisma": "cha",
+    "str": "str",
+    "dex": "dex",
+    "con": "con",
+    "int": "int",
+    "wis": "wis",
+    "cha": "cha",
 }
 
 
@@ -172,39 +222,43 @@ def import_races(raw_dir: Path, *, strict_playable: bool = True) -> list[dict]:
         missing = sorted(PLAYABLE_PC_RACES - set(blocks))
         if missing:
             raise ValueError(
-                f"razze della lista giocabili assenti nel dataset: {missing}")
+                f"razze della lista giocabili assenti nel dataset: {missing}"
+            )
     out = []
     for race, race_rows in blocks.items():
         ab_row = next(
-            (r for r in race_rows if r.findtext("Trait") == "Ability Bonus"),
-            None)
+            (r for r in race_rows if r.findtext("Trait") == "Ability Bonus"), None
+        )
         description = ab_row.findtext("Description") if ab_row is not None else None
-        out.append({
-            "name": race,
-            "size": _size_of(race_rows),
-            "abilityAdjustments": parse_ability_bonus(description),
-            "flexible": is_flexible_ability_bonus(description),
-            "playable": race in PLAYABLE_PC_RACES,
-            "source": _source_of(race_rows, "Src"),
-        })
+        out.append(
+            {
+                "name": race,
+                "size": _size_of(race_rows),
+                "abilityAdjustments": parse_ability_bonus(description),
+                "flexible": is_flexible_ability_bonus(description),
+                "playable": race in PLAYABLE_PC_RACES,
+                "source": _source_of(race_rows, "Src"),
+            }
+        )
     return out
 
 
 def import_alternative_traits(raw_dir: Path) -> list[dict]:
-    rows = iter_rows(
-        ET.parse(raw_dir / "data_races_alternative_traits.xml").getroot())
+    rows = iter_rows(ET.parse(raw_dir / "data_races_alternative_traits.xml").getroot())
     blocks = group_race_blocks(rows)
     out = []
     for race, race_rows in blocks.items():
         for row in race_rows:
             split = lambda raw: [p for p in (raw or "").split(SEP_LIST) if p]
-            out.append({
-                "race": race,
-                "trait": row.findtext("Trait"),
-                "replaces": split(row.findtext("ReplacedTraits")),
-                "changes": split(row.findtext("ChangedTraits")),
-                "source": row.findtext("Source"),
-            })
+            out.append(
+                {
+                    "race": race,
+                    "trait": row.findtext("Trait"),
+                    "replaces": split(row.findtext("ReplacedTraits")),
+                    "changes": split(row.findtext("ChangedTraits")),
+                    "source": row.findtext("Source"),
+                }
+            )
     return out
 
 
@@ -217,8 +271,7 @@ def main(argv=None) -> int:
     args = ap.parse_args(argv)
 
     raw_dir = Path(args.raw_dir)
-    races = import_races(
-        raw_dir, strict_playable=not args.no_strict_playable)
+    races = import_races(raw_dir, strict_playable=not args.no_strict_playable)
     traits = import_alternative_traits(raw_dir)
 
     without_ability = [r["name"] for r in races if not r["abilityAdjustments"]]
@@ -231,20 +284,20 @@ def main(argv=None) -> int:
             "generated_by": "Master-DD-Taverna/tools/import_pathbuilder_races.py",
             "generated_at": datetime.now(timezone.utc).isoformat(),
             "license": "Pathbuilder 1e raw data (APK da BlueStacks utente, permesso "
-                       "concesso 2026-08-02). Meccaniche e nomi: OGL 1.0a. Description "
-                       "dei tratti: testo Paizo (Product Identity) — MAI esportato "
-                       "(resta nel dataset PI local-only, gitignored).",
+            "concesso 2026-08-02). Meccaniche e nomi: OGL 1.0a. Description "
+            "dei tratti: testo Paizo (Product Identity) — MAI esportato "
+            "(resta nel dataset PI local-only, gitignored).",
             "desc_policy": "Solo nomi + meccaniche strutturate, MAI la Description "
-                           "dei tratti. abilityAdjustments SOLO se parsati dal dato "
-                           "(formato regolare del tratto 'Ability Bonus'), altrimenti "
-                           "null dichiarato — mai inventati. Il catalogo curato "
-                           "races.json (26 razze) RESTA INTATTO e vince sempre: "
-                           "questo dataset e' additivo.",
+            "dei tratti. abilityAdjustments SOLO se parsati dal dato "
+            "(formato regolare del tratto 'Ability Bonus'), altrimenti "
+            "null dichiarato — mai inventati. Il catalogo curato "
+            "races.json (26 razze) RESTA INTATTO e vince sempre: "
+            "questo dataset e' additivo.",
             "playable_policy": "playable=true solo per la LISTA ESPLICITA di razze "
-                               "PC (7 core CRB + 30 ARG featured/uncommon) dichiarata "
-                               "nell'importer (PLAYABLE_PC_RACES) — non un'euristica. "
-                               "Le schede race-builder di Lizardfolk/Gnoll (Src=ARG) "
-                               "restano playable=false.",
+            "PC (7 core CRB + 30 ARG featured/uncommon) dichiarata "
+            "nell'importer (PLAYABLE_PC_RACES) — non un'euristica. "
+            "Le schede race-builder di Lizardfolk/Gnoll (Src=ARG) "
+            "restano playable=false.",
             "format_notes_doc": "tools/import_pathbuilder_races.py (docstring)",
         },
         "counts": {
@@ -264,15 +317,15 @@ def main(argv=None) -> int:
     traits_payload = {
         "_provenance": {
             "source": "Pathbuilder 1e raw data (res/raw dell'APK), "
-                      "data_races_alternative_traits.xml",
+            "data_races_alternative_traits.xml",
             "generated_by": "Master-DD-Taverna/tools/import_pathbuilder_races.py",
             "generated_at": datetime.now(timezone.utc).isoformat(),
             "license": "Pathbuilder 1e raw data (APK da BlueStacks utente, permesso "
-                       "concesso 2026-08-02). Meccaniche e nomi: OGL 1.0a. Description "
-                       "dei tratti: testo Paizo (Product Identity) — MAI esportato "
-                       "(resta nel dataset PI local-only, gitignored).",
+            "concesso 2026-08-02). Meccaniche e nomi: OGL 1.0a. Description "
+            "dei tratti: testo Paizo (Product Identity) — MAI esportato "
+            "(resta nel dataset PI local-only, gitignored).",
             "desc_policy": "Solo race/trait/replaces/changes/source: MAI la "
-                           "Description dei tratti alternativi.",
+            "Description dei tratti alternativi.",
             "format_notes_doc": "tools/import_pathbuilder_races.py (docstring)",
         },
         "counts": {
@@ -282,25 +335,32 @@ def main(argv=None) -> int:
         "traits": traits,
     }
 
-    print(f"razze: {len(races)} (giocabili PC: "
-          f"{races_payload['counts']['playable']}, flex: "
-          f"{races_payload['counts']['flexible']}, con ability strutturati: "
-          f"{races_payload['counts']['withAbilityAdjustments']})")
+    print(
+        f"razze: {len(races)} (giocabili PC: "
+        f"{races_payload['counts']['playable']}, flex: "
+        f"{races_payload['counts']['flexible']}, con ability strutturati: "
+        f"{races_payload['counts']['withAbilityAdjustments']})"
+    )
     print(f"razze senza ability nel dato (dichiarate): {len(without_ability)}")
     print(f"razze senza taglia nel dato (dichiarate): {len(without_size)}")
     print(f"razze senza source nel dato (dichiarate): {without_source}")
-    print(f"tratti alternativi: {len(traits)} "
-          f"su {traits_payload['counts']['races']} razze")
+    print(
+        f"tratti alternativi: {len(traits)} "
+        f"su {traits_payload['counts']['races']} razze"
+    )
 
     if not args.report_only:
         out_dir = Path(args.out_dir)
         out_dir.mkdir(parents=True, exist_ok=True)
         for name, payload in (
-                ("pathbuilder-races.json", races_payload),
-                ("pathbuilder-race-traits.json", traits_payload)):
+            ("pathbuilder-races.json", races_payload),
+            ("pathbuilder-race-traits.json", traits_payload),
+        ):
             path = out_dir / name
-            path.write_text(json.dumps(payload, indent=1, ensure_ascii=False) + "\n",
-                            encoding="utf-8")
+            path.write_text(
+                json.dumps(payload, indent=1, ensure_ascii=False) + "\n",
+                encoding="utf-8",
+            )
             print(f"scritto {path}")
     return 0
 

@@ -1,13 +1,13 @@
 """Test per data/ml_benchmark/prepare_itacsc_groundtruth.py — converter
 TXT ItaCSC -> ground truth DER, su input giocattolo (niente dataset reale:
 lo zip e' gitignored e non disponibile in CI)."""
+
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from data.ml_benchmark.prepare_itacsc_groundtruth import (
-    build_ground_truth, parse_turns)
+from data.ml_benchmark.prepare_itacsc_groundtruth import build_ground_truth, parse_turns
 
 TOY_TRACK_A = """\
 [0.500,2.000]\tG0001\tfemale\tciao come stai
@@ -37,19 +37,22 @@ def test_parse_turns_handles_crlf():
 
 
 def test_build_ground_truth_unione_ordinata():
-    gt = build_ground_truth([parse_turns(TOY_TRACK_A),
-                             parse_turns(TOY_TRACK_B)])
+    gt = build_ground_truth([parse_turns(TOY_TRACK_A), parse_turns(TOY_TRACK_B)])
     assert [s["speaker"] for s in gt["segments"]] == [
-        "G0001", "G0002", "G0001", "G0002"]
+        "G0001",
+        "G0002",
+        "G0001",
+        "G0002",
+    ]
     # overlap naturale preservato: G0001 [0.5,2] e G0002 [1,3] convivono
     starts = [s["start"] for s in gt["segments"]]
     assert starts == sorted(starts)
 
 
 def test_build_ground_truth_max_seconds_clampa_e_scarta():
-    gt = build_ground_truth([parse_turns(TOY_TRACK_A),
-                             parse_turns(TOY_TRACK_B)],
-                            max_seconds=3.0)
+    gt = build_ground_truth(
+        [parse_turns(TOY_TRACK_A), parse_turns(TOY_TRACK_B)], max_seconds=3.0
+    )
     assert gt["segments"] == [
         {"start": 0.5, "end": 2.0, "speaker": "G0001"},
         {"start": 1.0, "end": 3.0, "speaker": "G0002"},  # end clampato

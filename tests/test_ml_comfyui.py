@@ -1,4 +1,5 @@
 """Test per l'engine ComfyUI (F3, IMG-05): workflow builder + client HTTP."""
+
 import io
 import json
 import sys
@@ -34,7 +35,7 @@ def test_workflow_sdxl_structure():
     # nodi chiave del grafico SDXL minimo
     assert wf["1"]["class_type"] == "CheckpointLoaderSimple"
     assert wf["1"]["inputs"]["ckpt_name"] == "sd_xl_base_1.0.safetensors"
-    assert wf["2"]["inputs"]["text"] == "un dungeon"          # prompt positivo
+    assert wf["2"]["inputs"]["text"] == "un dungeon"  # prompt positivo
     assert wf["4"]["inputs"]["width"] == 512
     assert wf["4"]["inputs"]["height"] == 768
     assert wf["5"]["class_type"] == "KSampler"
@@ -56,8 +57,23 @@ def test_engine_generate_success(monkeypatch):
         if url.endswith("/prompt"):
             return FakeResp({"prompt_id": "pid-1"})
         if "/history/" in url:
-            return FakeResp({"pid-1": {"outputs": {"7": {"images": [
-                {"filename": "taverna_img_00001_.png", "subfolder": "", "type": "output"}]}}}})
+            return FakeResp(
+                {
+                    "pid-1": {
+                        "outputs": {
+                            "7": {
+                                "images": [
+                                    {
+                                        "filename": "taverna_img_00001_.png",
+                                        "subfolder": "",
+                                        "type": "output",
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            )
         if "/view" in url:
             return FakeResp(b"\x89PNG\r\n\x1a\nfakepng", binary=True)
         raise AssertionError(url)
@@ -86,7 +102,10 @@ def test_autostart_lancia_comfy_e_riprova(monkeypatch):
     monkeypatch.setenv("ML_IMG_COMFY_START_CWD", "C:/comfy")
     monkeypatch.setenv("ML_IMG_COMFY_START_TIMEOUT_S", "5")
     spawned = []
-    monkeypatch.setattr("subprocess.Popen", lambda *a, **k: spawned.append((a, k)) or type("P", (), {})())
+    monkeypatch.setattr(
+        "subprocess.Popen",
+        lambda *a, **k: spawned.append((a, k)) or type("P", (), {})(),
+    )
 
     state = {"prompt_failed": False}
 
@@ -100,8 +119,23 @@ def test_autostart_lancia_comfy_e_riprova(monkeypatch):
                 raise URLError("connection refused")
             return FakeResp({"prompt_id": "pid-1"})
         if "/history/" in url:
-            return FakeResp({"pid-1": {"outputs": {"7": {"images": [
-                {"filename": "x.png", "subfolder": "", "type": "output"}]}}}})
+            return FakeResp(
+                {
+                    "pid-1": {
+                        "outputs": {
+                            "7": {
+                                "images": [
+                                    {
+                                        "filename": "x.png",
+                                        "subfolder": "",
+                                        "type": "output",
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            )
         if "/view" in url:
             return FakeResp(b"\x89PNG\r\n\x1a\nx", binary=True)
         raise AssertionError(url)
@@ -138,7 +172,9 @@ def test_engine_poll_timeout(monkeypatch):
         raise AssertionError(url)
 
     monkeypatch.setattr("urllib.request.urlopen", fake_urlopen)
-    engine = ComfyUIEngine("http://127.0.0.1:8188", "sdxl", timeout_s=0, poll_interval_s=0)
+    engine = ComfyUIEngine(
+        "http://127.0.0.1:8188", "sdxl", timeout_s=0, poll_interval_s=0
+    )
     with pytest.raises(ImagineUnavailable, match="timeout"):
         engine.generate("p", 64, 64, 1)
 
@@ -152,9 +188,11 @@ def test_factory_comfyui_variants(monkeypatch):
         get_imagine_engine("comfyui-xyz")
 
 
-LORAS_ENV = json.dumps({
-    "fantasy-map": {"file": "fantasy_map_v2.safetensors", "strength": 0.8},
-})
+LORAS_ENV = json.dumps(
+    {
+        "fantasy-map": {"file": "fantasy_map_v2.safetensors", "strength": 0.8},
+    }
+)
 
 
 def test_workflow_sdxl_con_lora():
@@ -178,6 +216,7 @@ def test_workflow_senza_lora_resta_invariato():
 
 def test_lora_registry_da_env(monkeypatch):
     from src.ml.comfyui import parse_loras
+
     monkeypatch.setenv("ML_IMG_LORAS", LORAS_ENV)
     loras = parse_loras()
     assert loras["fantasy-map"]["file"] == "fantasy_map_v2.safetensors"
@@ -189,6 +228,7 @@ def test_lora_registry_da_env(monkeypatch):
 
 def test_lora_env_malformato(monkeypatch):
     from src.ml.comfyui import parse_loras
+
     monkeypatch.setenv("ML_IMG_LORAS", "{non e' json")
     with pytest.raises(ImagineUnavailable, match="ML_IMG_LORAS"):
         parse_loras()
@@ -204,8 +244,9 @@ def test_fake_engine_rifiuta_lora_onestamente():
 
 
 def test_workflow_sdxl_negative_prompt():
-    wf = build_workflow("sdxl", "un dungeon", 512, 512, 42,
-                        negative_prompt="griglia, watermark")
+    wf = build_workflow(
+        "sdxl", "un dungeon", 512, 512, 42, negative_prompt="griglia, watermark"
+    )
     assert wf["3"]["inputs"]["text"] == "griglia, watermark"
     # omesso: resta la stringa vuota di prima
     wf2 = build_workflow("sdxl", "un dungeon", 512, 512, 42)
@@ -228,8 +269,23 @@ def test_engine_passa_negative_prompt_al_workflow(monkeypatch):
             posted.append(json.loads(req.data.decode())["prompt"])
             return FakeResp({"prompt_id": "pid-1"})
         if "/history/" in url:
-            return FakeResp({"pid-1": {"outputs": {"7": {"images": [
-                {"filename": "x.png", "subfolder": "", "type": "output"}]}}}})
+            return FakeResp(
+                {
+                    "pid-1": {
+                        "outputs": {
+                            "7": {
+                                "images": [
+                                    {
+                                        "filename": "x.png",
+                                        "subfolder": "",
+                                        "type": "output",
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            )
         if "/view" in url:
             return FakeResp(b"\x89PNG\r\n\x1a\nx", binary=True)
         raise AssertionError(url)

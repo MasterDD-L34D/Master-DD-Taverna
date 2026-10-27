@@ -1,4 +1,5 @@
 """Invarianti dei cataloghi OGL reali (dati su disco, nessuna rete)."""
+
 import json
 import re
 import sys
@@ -18,8 +19,16 @@ NEW_KINDS = {
     "equipment_mundane.json": ("equipment", 150),
     "talents.json": ("talents", 700),
 }
-REQUIRED_FIELDS = {"name", "source", "source_id", "prerequisites", "tags",
-                   "references", "reference_urls", "description"}
+REQUIRED_FIELDS = {
+    "name",
+    "source",
+    "source_id",
+    "prerequisites",
+    "tags",
+    "references",
+    "reference_urls",
+    "description",
+}
 
 
 def _load(name):
@@ -34,8 +43,12 @@ def test_new_catalogs_structure():
         entries = catalog["entries"]
         assert len(entries) >= min_entries, f"{fname}: {len(entries)} < {min_entries}"
         for e in entries:
-            assert REQUIRED_FIELDS <= set(e), f"{fname}: entry senza campi obbligatori: {e.get('name')}"
-            assert e["references"] and e["reference_urls"], f"{fname}: {e['name']} senza riferimenti"
+            assert REQUIRED_FIELDS <= set(
+                e
+            ), f"{fname}: entry senza campi obbligatori: {e.get('name')}"
+            assert (
+                e["references"] and e["reference_urls"]
+            ), f"{fname}: {e['name']} senza riferimenti"
             assert "mechanics" in e, f"{fname}: {e['name']} senza mechanics"
     print("OK: struttura nuovi cataloghi")
 
@@ -49,7 +62,9 @@ def test_source_id_unique_globally():
             sid = e.get("source_id")
             if not sid:
                 continue
-            assert sid not in seen, f"source_id duplicato: {sid} ({path.name} e {seen[sid]})"
+            assert (
+                sid not in seen
+            ), f"source_id duplicato: {sid} ({path.name} e {seen[sid]})"
             seen[sid] = path.name
     print(f"OK: {len(seen)} source_id unici")
 
@@ -62,7 +77,9 @@ def test_manifest_counts():
         assert kind in files, f"manifest.files manca {kind}"
         with open(OGL / fname, encoding="utf-8") as f:
             real = len(json.load(f)["entries"])
-        assert files[kind]["entries"] == real, f"{kind}: manifest {files[kind]['entries']} != reale {real}"
+        assert (
+            files[kind]["entries"] == real
+        ), f"{kind}: manifest {files[kind]['entries']} != reale {real}"
     # Parita' files{} -> catalogs[]: ogni kind tracciato in files{} deve
     # esistere in catalogs[] con lo stesso count (chiude la staleness monsters).
     # Direzione volutamente unilaterale: monsters e' solo in catalogs[]
@@ -70,31 +87,40 @@ def test_manifest_counts():
     catalogs = {c["kind"]: c for c in manifest["catalogs"]}
     for kind, info in files.items():
         assert kind in catalogs, f"manifest.catalogs manca {kind}"
-        assert catalogs[kind]["entries"] == info["entries"], (
-            f"{kind}: catalogs {catalogs[kind]['entries']} != files {info['entries']}")
+        assert (
+            catalogs[kind]["entries"] == info["entries"]
+        ), f"{kind}: catalogs {catalogs[kind]['entries']} != files {info['entries']}"
     # Parita' manifest <-> file reale per TUTTI i kind di files{}: ogni kind
     # deve pareggiare il count su disco sia in files{} che in catalogs[]
     # (generalizza il check nato per NEW_KINDS + races/classes).
     for kind, info in files.items():
         with open(OGL / Path(info["path"]).name, encoding="utf-8") as f:
             real = len(json.load(f)["entries"])
-        assert info["entries"] == real, f"{kind}: manifest {info['entries']} != reale {real}"
-        assert catalogs[kind]["entries"] == real, f"{kind}: catalogs {catalogs[kind]['entries']} != reale {real}"
+        assert (
+            info["entries"] == real
+        ), f"{kind}: manifest {info['entries']} != reale {real}"
+        assert (
+            catalogs[kind]["entries"] == real
+        ), f"{kind}: catalogs {catalogs[kind]['entries']} != reale {real}"
     catalogs_kinds = {c["kind"] for c in manifest["catalogs"]}
     for _, (kind, _) in NEW_KINDS.items():
         assert kind in catalogs_kinds, f"manifest.catalogs manca {kind}"
     monsters = [c for c in manifest["catalogs"] if c["kind"] == "monsters"][0]
     # Conteggio reale dal file local-only (199 -> 3127 con l'espansione
     # 2026-07-25): niente numeri hardcoded, il riferimento e' il file.
-    with open(OGL.parent / "pi_local_only" / "monsters_local.json", encoding="utf-8") as f:
+    with open(
+        OGL.parent / "pi_local_only" / "monsters_local.json", encoding="utf-8"
+    ) as f:
         real_monsters = len(json.load(f)["entries"])
-    assert monsters["entries"] == real_monsters, (
-        f"manifest: monsters entries {monsters['entries']} != reale {real_monsters}")
+    assert (
+        monsters["entries"] == real_monsters
+    ), f"manifest: monsters entries {monsters['entries']} != reale {real_monsters}"
     npcs = [c for c in manifest["catalogs"] if c["kind"] == "npcs_local"][0]
     with open(OGL.parent / "pi_local_only" / "npcs_local.json", encoding="utf-8") as f:
         real_npcs = len(json.load(f)["entries"])
-    assert npcs["entries"] == real_npcs, (
-        f"manifest: npcs_local entries {npcs['entries']} != reale {real_npcs}")
+    assert (
+        npcs["entries"] == real_npcs
+    ), f"manifest: npcs_local entries {npcs['entries']} != reale {real_npcs}"
     print("OK: manifest allineato ai cataloghi")
 
 
@@ -103,7 +129,9 @@ def test_classes_races_mechanics():
     for e in classes:
         mech = e.get("mechanics", {})
         assert mech.get("hd"), f"{e['name']}: hd mancante"
-        assert len(mech.get("progression", [])) == 20, f"{e['name']}: progressione != 20 livelli"
+        assert (
+            len(mech.get("progression", [])) == 20
+        ), f"{e['name']}: progressione != 20 livelli"
         assert mech.get("class_skills"), f"{e['name']}: class_skills mancanti"
     races = _load("races.json")["entries"]
     # Razze senza ability_mods standard in pagina (formato non parsabile):
@@ -115,7 +143,9 @@ def test_classes_races_mechanics():
     for e in races:
         if e["name"] in KNOWN_NO_MODS:
             continue
-        assert e.get("mechanics", {}).get("ability_mods"), f"{e['name']}: ability_mods mancanti"
+        assert e.get("mechanics", {}).get(
+            "ability_mods"
+        ), f"{e['name']}: ability_mods mancanti"
     feats = _load("feats.json")["entries"]
     empty = sum(1 for e in feats if not e.get("prerequisites"))
     assert empty < 800, f"feats: ancora {empty} prerequisiti vuoti"
@@ -143,7 +173,9 @@ def test_spells_per_day_value_format():
     classes = _load("classes.json")["entries"]
     bad = []
     for cls in classes:
-        for i, row in enumerate(cls.get("mechanics", {}).get("progression", []), start=1):
+        for i, row in enumerate(
+            cls.get("mechanics", {}).get("progression", []), start=1
+        ):
             for circle, value in (row.get("spells_per_day") or {}).items():
                 if not re.match(r"^\d+(\+\d+)?$", str(value)):
                     bad.append((cls["name"], i, circle, value))

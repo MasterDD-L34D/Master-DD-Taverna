@@ -26,6 +26,7 @@ Emette:
 
 Esce con codice != 0 in caso di violazioni bloccanti.
 """
+
 from __future__ import annotations
 
 import csv
@@ -40,7 +41,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tools.sanitize_reference_pi import DESCRIPTION_ONLY_REPLACEMENTS, REPLACEMENTS
-
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 REFERENCE_DIR = REPO_ROOT / "data" / "reference"
@@ -59,43 +59,136 @@ REPORT_CSV = REPORT_DIR / "legal_filter_report.csv"
 # documentati nel report di triage (Shackles, Linnorm, Juju).
 PI_TERMS = [
     # Nazioni / regioni / luoghi di Golarion
-    "Golarion", "Absalom", "Varisia", "Cheliax", "Chelaxian", "Taldor",
-    "Taldan", "Andoran", "Andoren", "Qadira", "Qadiran", "Osirion",
-    "Osirian", "Osiriani", "Nex", "Geb", "Nidal", "Rahadoum", "Rahadoumi",
-    "Thuvia", "Thuvian", "Katapesh", "Kyonin", "Druma", "Numeria",
-    "Ustalav", "Oppara", "Sodden Lands", "Mana Wastes", "Inner Sea",
+    "Golarion",
+    "Absalom",
+    "Varisia",
+    "Cheliax",
+    "Chelaxian",
+    "Taldor",
+    "Taldan",
+    "Andoran",
+    "Andoren",
+    "Qadira",
+    "Qadiran",
+    "Osirion",
+    "Osirian",
+    "Osiriani",
+    "Nex",
+    "Geb",
+    "Nidal",
+    "Rahadoum",
+    "Rahadoumi",
+    "Thuvia",
+    "Thuvian",
+    "Katapesh",
+    "Kyonin",
+    "Druma",
+    "Numeria",
+    "Ustalav",
+    "Oppara",
+    "Sodden Lands",
+    "Mana Wastes",
+    "Inner Sea",
     # Deita' maggiori
-    "Sarenrae", "Iomedae", "Asmodeus", "Desna", "Calistria", "Norgorber",
-    "Zon-Kuthon", "Urgathoa", "Rovagug", "Lamashtu", "Abadar", "Irori",
-    "Gozreh", "Pharasma", "Shelyn", "Cayden", "Erastil", "Torag",
-    "Besmara", "Gorum", "Nethys",
+    "Sarenrae",
+    "Iomedae",
+    "Asmodeus",
+    "Desna",
+    "Calistria",
+    "Norgorber",
+    "Zon-Kuthon",
+    "Urgathoa",
+    "Rovagug",
+    "Lamashtu",
+    "Abadar",
+    "Irori",
+    "Gozreh",
+    "Pharasma",
+    "Shelyn",
+    "Cayden",
+    "Erastil",
+    "Torag",
+    "Besmara",
+    "Gorum",
+    "Nethys",
     # Organizzazioni / ordini
-    "Aldori", "Hellknight", "Pathfinder Society",
+    "Aldori",
+    "Hellknight",
+    "Pathfinder Society",
     # Toponimi / etnie / deita' minori Golarion (estensione quality review)
-    "Lastwall", "Worldwound", "Belkzen", "Shoanti", "Mwangi", "Tian",
-    "Varisian", "Chelish", "Irrisen", "Galt", "Hermea", "Hermean",
-    "Alkenstar", "Korvosa", "Riddleport", "Daggermark", "River Kingdoms",
-    "Walkena", "Mzali", "Vudra", "Kellid",
+    "Lastwall",
+    "Worldwound",
+    "Belkzen",
+    "Shoanti",
+    "Mwangi",
+    "Tian",
+    "Varisian",
+    "Chelish",
+    "Irrisen",
+    "Galt",
+    "Hermea",
+    "Hermean",
+    "Alkenstar",
+    "Korvosa",
+    "Riddleport",
+    "Daggermark",
+    "River Kingdoms",
+    "Walkena",
+    "Mzali",
+    "Vudra",
+    "Kellid",
 ]
 
 # Sottoinsieme delle deita': il triage lo usa per la categoria B
 # (prerequisito deita-specifico). Fonte unica anche per questo set.
 DEITY_TERMS = {
-    "sarenrae", "iomedae", "asmodeus", "desna", "calistria", "norgorber",
-    "zon-kuthon", "urgathoa", "rovagug", "lamashtu", "abadar", "irori",
-    "gozreh", "pharasma", "shelyn", "cayden", "erastil", "torag",
-    "besmara", "gorum", "nethys", "walkena",
+    "sarenrae",
+    "iomedae",
+    "asmodeus",
+    "desna",
+    "calistria",
+    "norgorber",
+    "zon-kuthon",
+    "urgathoa",
+    "rovagug",
+    "lamashtu",
+    "abadar",
+    "irori",
+    "gozreh",
+    "pharasma",
+    "shelyn",
+    "cayden",
+    "erastil",
+    "torag",
+    "besmara",
+    "gorum",
+    "nethys",
+    "walkena",
 }
 
 # Termini storici del gate (pre-Task 3) non presenti nel triage feats:
 # iconici, marchi e altri luoghi Golarion-specifici.
 GATE_LEGACY_TERMS = {
     # Luoghi
-    "Five Kings Mountains", "Hold of Belkzen", "Mammoth Lords",
-    "Stolen Lands", "Azlant", "Azlanti", "Thassilon", "Thassilonian",
+    "Five Kings Mountains",
+    "Hold of Belkzen",
+    "Mammoth Lords",
+    "Stolen Lands",
+    "Azlant",
+    "Azlanti",
+    "Thassilon",
+    "Thassilonian",
     # Iconici
-    "Seelah", "Ezren", "Valeros", "Merisiel", "Kyra", "Harsk", "Lem",
-    "Sajan", "Amiri", "Lini",
+    "Seelah",
+    "Ezren",
+    "Valeros",
+    "Merisiel",
+    "Kyra",
+    "Harsk",
+    "Lem",
+    "Sajan",
+    "Amiri",
+    "Lini",
     # Marchi / entita'
     "Paizo",
 }
@@ -111,21 +204,55 @@ GATE_LEGACY_TERMS = {
 # Osirion; resta nel gate a protezione degli import futuri.
 GATE_CANDIDATE_TERMS = {
     # Toponimi sicuri
-    "Magnimar", "Nirmathas", "Molthune", "Brevoy", "Sandpoint", "Cassomir",
-    "Ostenso", "Westcrown", "Egorian", "Almas", "Sothis", "Mendev",
-    "Sarkoris", "Vudran", "Jalmeray", "Iobaria", "Kalabuto", "Bloodcove",
-    "Eleder", "Usaro", "Garund", "Avistan", "Mbeke", "Taralu", "Xin",
-    "Aroden", "Osiria",
+    "Magnimar",
+    "Nirmathas",
+    "Molthune",
+    "Brevoy",
+    "Sandpoint",
+    "Cassomir",
+    "Ostenso",
+    "Westcrown",
+    "Egorian",
+    "Almas",
+    "Sothis",
+    "Mendev",
+    "Sarkoris",
+    "Vudran",
+    "Jalmeray",
+    "Iobaria",
+    "Kalabuto",
+    "Bloodcove",
+    "Eleder",
+    "Usaro",
+    "Garund",
+    "Avistan",
+    "Mbeke",
+    "Taralu",
+    "Xin",
+    "Aroden",
+    "Osiria",
     # Demon lord / archdevil
-    "Deskari", "Baphomet", "Pazuzu", "Nocticula", "Zura", "Cyth-V'sug",
-    "Moloch", "Belial", "Dispater", "Mammon", "Geryon", "Baalzebul",
+    "Deskari",
+    "Baphomet",
+    "Pazuzu",
+    "Nocticula",
+    "Zura",
+    "Cyth-V'sug",
+    "Moloch",
+    "Belial",
+    "Dispater",
+    "Mammon",
+    "Geryon",
+    "Baalzebul",
     "Mephistopheles",
     # Etnie/subrazze Golarion (lotto razze complete 2026-07-25): nomi di
     # subrazze elfiche ARG legati a nazioni/regioni del setting. Zero hit
     # atteso fuori dalle pagine razza. "Snowcaster" ESCLUSO: collide col
     # termine di regole "snowcaster abilities" (arctic druid, OGC) — un
     # hit reale in spells.json (2026-07-25).
-    "Ekujae", "Jininese", "Mierani",
+    "Ekujae",
+    "Jininese",
+    "Mierani",
 }
 
 # Product Identity scansionata dal gate: unione delle tre liste sopra.
@@ -144,8 +271,9 @@ PI_PHRASES = {
 # Belkzen" prima di "Belkzen"), word-boundary su entrambi i lati,
 # case-insensitive (stessa tecnica della regex del triage).
 _PI_WORDS_RE = re.compile(
-    r"\b(?P<term>" + "|".join(
-        re.escape(w) for w in sorted(PI_WORDS, key=len, reverse=True)) + r")\b",
+    r"\b(?P<term>"
+    + "|".join(re.escape(w) for w in sorted(PI_WORDS, key=len, reverse=True))
+    + r")\b",
     re.IGNORECASE,
 )
 
@@ -161,9 +289,14 @@ _CANONICAL = {w.lower(): w for w in PI_WORDS}
 _SANCTIONED_MASK = [
     re.compile(re.escape(value), re.IGNORECASE)
     for value in sorted(
-        {new for _, new in REPLACEMENTS + DESCRIPTION_ONLY_REPLACEMENTS
-         if _PI_WORDS_RE.search(new)},
-        key=len, reverse=True)
+        {
+            new
+            for _, new in REPLACEMENTS + DESCRIPTION_ONLY_REPLACEMENTS
+            if _PI_WORDS_RE.search(new)
+        },
+        key=len,
+        reverse=True,
+    )
 ]
 
 
@@ -233,18 +366,24 @@ def _find_pi(text: str) -> list[dict]:
             idx = lowered.find(phrase.lower(), start)
             if idx == -1:
                 break
-            found.append({
-                "type": "phrase",
-                "term": phrase,
-                "context": text[max(0, idx - 30) : idx + len(phrase) + 30],
-            })
+            found.append(
+                {
+                    "type": "phrase",
+                    "term": phrase,
+                    "context": text[max(0, idx - 30) : idx + len(phrase) + 30],
+                }
+            )
             start = idx + len(phrase)
     for match in _PI_WORDS_RE.finditer(text):
-        found.append({
-            "type": "word",
-            "term": _CANONICAL.get(match.group("term").lower(), match.group("term")),
-            "context": text[max(0, match.start() - 30) : match.end() + 30],
-        })
+        found.append(
+            {
+                "type": "word",
+                "term": _CANONICAL.get(
+                    match.group("term").lower(), match.group("term")
+                ),
+                "context": text[max(0, match.start() - 30) : match.end() + 30],
+            }
+        )
     return found
 
 
@@ -315,12 +454,14 @@ def run() -> int:
         path = REFERENCE_DIR / rel_path
 
         if not path.exists():
-            violations.append({
-                "catalog": kind,
-                "path": str(rel_path),
-                "type": "missing_file",
-                "detail": f"file dichiarato nel manifest non trovato: {path}",
-            })
+            violations.append(
+                {
+                    "catalog": kind,
+                    "path": str(rel_path),
+                    "type": "missing_file",
+                    "detail": f"file dichiarato nel manifest non trovato: {path}",
+                }
+            )
             continue
 
         data = json.loads(path.read_text(encoding="utf-8"))
@@ -328,32 +469,38 @@ def run() -> int:
         if catalog.get("is_ogc"):
             header_errors = _check_catalog_headers(catalog, data)
             for err in header_errors:
-                violations.append({
-                    "catalog": kind,
-                    "path": str(rel_path),
-                    "type": "missing_header",
-                    "detail": err,
-                })
+                violations.append(
+                    {
+                        "catalog": kind,
+                        "path": str(rel_path),
+                        "type": "missing_header",
+                        "detail": err,
+                    }
+                )
 
             # Scansiona i testi per PI solo nei cataloghi OGC redistribuibili.
             entries = data.get("entries", []) if isinstance(data, dict) else data
             for occurrence in scan_entries(entries):
-                violations.append({
-                    "catalog": kind,
-                    "path": str(rel_path),
-                    "type": "product_identity",
-                    "term": occurrence["term"],
-                    "term_type": occurrence["type"],
-                    "context": occurrence["context"],
-                })
+                violations.append(
+                    {
+                        "catalog": kind,
+                        "path": str(rel_path),
+                        "type": "product_identity",
+                        "term": occurrence["term"],
+                        "term_type": occurrence["type"],
+                        "context": occurrence["context"],
+                    }
+                )
 
     for err in _check_git_tracked_pi():
-        violations.append({
-            "catalog": "pi_local_only",
-            "path": "data/reference/pi_local_only/",
-            "type": "git_tracked_pi",
-            "detail": err,
-        })
+        violations.append(
+            {
+                "catalog": "pi_local_only",
+                "path": "data/reference/pi_local_only/",
+                "type": "git_tracked_pi",
+                "detail": err,
+            }
+        )
 
     summary = {
         "total_violations": len(violations),
@@ -362,7 +509,9 @@ def run() -> int:
     }
     for v in violations:
         summary["by_type"][v["type"]] = summary["by_type"].get(v["type"], 0) + 1
-        summary["by_catalog"][v["catalog"]] = summary["by_catalog"].get(v["catalog"], 0) + 1
+        summary["by_catalog"][v["catalog"]] = (
+            summary["by_catalog"].get(v["catalog"], 0) + 1
+        )
 
     report = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
@@ -374,29 +523,43 @@ def run() -> int:
     }
 
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
-    REPORT_JSON.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    REPORT_JSON.write_text(
+        json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
 
     with REPORT_CSV.open("w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(
             f,
-            fieldnames=["catalog", "path", "type", "term", "term_type", "context", "detail"],
+            fieldnames=[
+                "catalog",
+                "path",
+                "type",
+                "term",
+                "term_type",
+                "context",
+                "detail",
+            ],
         )
         writer.writeheader()
         for v in violations:
-            writer.writerow({
-                "catalog": v.get("catalog", ""),
-                "path": v.get("path", ""),
-                "type": v.get("type", ""),
-                "term": v.get("term", ""),
-                "term_type": v.get("term_type", ""),
-                "context": v.get("context", ""),
-                "detail": v.get("detail", ""),
-            })
+            writer.writerow(
+                {
+                    "catalog": v.get("catalog", ""),
+                    "path": v.get("path", ""),
+                    "type": v.get("type", ""),
+                    "term": v.get("term", ""),
+                    "term_type": v.get("term_type", ""),
+                    "context": v.get("context", ""),
+                    "detail": v.get("detail", ""),
+                }
+            )
 
     print(f"Violazioni rilevate: {len(violations)}")
     if violations:
         for v in violations[:20]:
-            print(f"  [{v['type']}] {v['catalog']}: {v.get('detail') or v.get('term') or v.get('context', '')}")
+            print(
+                f"  [{v['type']}] {v['catalog']}: {v.get('detail') or v.get('term') or v.get('context', '')}"
+            )
         if len(violations) > 20:
             print(f"  ... e altre {len(violations) - 20} violazioni")
         print(f"Report salvato in: {REPORT_JSON}")

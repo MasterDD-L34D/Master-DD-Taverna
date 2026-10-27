@@ -13,16 +13,23 @@ TAVERNA_SAVES_MAX_FILES = 200
 def list_files(base: Path) -> List[Dict]:
     out: List[Dict] = []
     if not base.exists() or not base.is_dir():
-        raise HTTPException(status_code=503, detail=f"Directory di configurazione non trovata: {base}")
+        raise HTTPException(
+            status_code=503, detail=f"Directory di configurazione non trovata: {base}"
+        )
     for p in sorted(base.iterdir()):
         if p.is_file():
-            out.append({"name": p.name, "size_bytes": p.stat().st_size, "suffix": p.suffix})
+            out.append(
+                {"name": p.name, "size_bytes": p.stat().st_size, "suffix": p.suffix}
+            )
     return out
 
 
 def taverna_saves_metrics(taverna_saves_dir: Path) -> Dict[str, object]:
     if not taverna_saves_dir.exists() or not taverna_saves_dir.is_dir():
-        raise HTTPException(status_code=503, detail=f"Directory taverna_saves non trovata: {taverna_saves_dir}")
+        raise HTTPException(
+            status_code=503,
+            detail=f"Directory taverna_saves non trovata: {taverna_saves_dir}",
+        )
 
     files = [p for p in taverna_saves_dir.iterdir() if p.is_file()]
     file_count = len(files)

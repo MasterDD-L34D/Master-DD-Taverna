@@ -16,6 +16,7 @@ Piano: planning/2026-07-19-pi-feats-triage.md. Copre:
   pi_local_only/traits_local.json + equipment_local.json, C sanitize in
   place): il gate deve dare 0 violazioni su tutti i cataloghi OGL.
 """
+
 import json
 import sys
 from pathlib import Path
@@ -30,8 +31,14 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 FEATS_JSON = REPO_ROOT / "data" / "reference" / "ogl" / "feats.json"
 
 HELLKNIGHT_ENTRIES = {
-    "Caster's Champion", "Extended Scrying", "Gate Breaker", "Scrutinize Spell",
-    "Relic Breaker", "Censoring Critical", "Dislocate", "Traditional Weapons",
+    "Caster's Champion",
+    "Extended Scrying",
+    "Gate Breaker",
+    "Scrutinize Spell",
+    "Relic Breaker",
+    "Censoring Critical",
+    "Dislocate",
+    "Traditional Weapons",
 }
 
 
@@ -50,9 +57,19 @@ class TestFonteUnica:
         # Il gate scansiona l'unione: 75 triage + legacy (iconici, marchi,
         # luoghi storici del gate) + candidati zero-hit del triage.
         assert set(gate.PI_TERMS) <= gate.PI_WORDS
-        for term in ("Paizo", "Lem", "Seelah", "Azlant", "Thassilon",
-                     "Stolen Lands", "Magnimar", "Aroden", "Mephistopheles",
-                     "Cyth-V'sug", "Xin"):
+        for term in (
+            "Paizo",
+            "Lem",
+            "Seelah",
+            "Azlant",
+            "Thassilon",
+            "Stolen Lands",
+            "Magnimar",
+            "Aroden",
+            "Mephistopheles",
+            "Cyth-V'sug",
+            "Xin",
+        ):
             assert term in gate.PI_WORDS
 
     def test_sargava_escluso_documentato(self):
@@ -161,51 +178,92 @@ class TestCataloghiLocali:
 
     def test_local_registrati_local_only(self):
         manifest = json.loads(
-            (REPO_ROOT / "data/reference/manifest.json").read_text(encoding="utf-8"))
+            (REPO_ROOT / "data/reference/manifest.json").read_text(encoding="utf-8")
+        )
         by_file = {c["file"]: c for c in manifest["catalogs"]}
-        for path, kind in (("pi_local_only/traits_local.json", "traits_local"),
-                           ("pi_local_only/equipment_local.json", "equipment_local")):
+        for path, kind in (
+            ("pi_local_only/traits_local.json", "traits_local"),
+            ("pi_local_only/equipment_local.json", "equipment_local"),
+        ):
             cat = by_file[path]
             assert cat["local_only"] is True and cat["is_ogc"] is False
             assert cat["kind"] == kind and cat["entries"] == 4
 
     def test_local_contenuto_verbatim(self):
-        traits = json.loads((self.LOCAL / "traits_local.json").read_text(encoding="utf-8"))
+        traits = json.loads(
+            (self.LOCAL / "traits_local.json").read_text(encoding="utf-8")
+        )
         assert traits["_license"] == "OGL-1.0a" and traits["_source"]
         by_name = {e["name"]: e for e in traits["entries"]}
-        assert set(by_name) == {"Aldori Caution", "Arodenite Sword Training",
-                                "Arodenite Historian", "Gifted Smuggler"}
+        assert set(by_name) == {
+            "Aldori Caution",
+            "Arodenite Sword Training",
+            "Arodenite Historian",
+            "Gifted Smuggler",
+        }
         # Verbatim: PI integrale conservata nel catalogo locale.
         assert "Aldori" in by_name["Aldori Caution"]["description"]
         assert by_name["Gifted Smuggler"]["prerequisites"] == ["Ostenso"]
-        equip = json.loads((self.LOCAL / "equipment_local.json").read_text(encoding="utf-8"))
+        equip = json.loads(
+            (self.LOCAL / "equipment_local.json").read_text(encoding="utf-8")
+        )
         assert equip["_license"] == "OGL-1.0a" and equip["_source"]
         assert {e["name"] for e in equip["entries"]} == {
-            "Hellknight leather", "Hellknight half-plate",
-            "Hellknight plate", "Alkenstar fortress plate"}
+            "Hellknight leather",
+            "Hellknight half-plate",
+            "Hellknight plate",
+            "Alkenstar fortress plate",
+        }
 
     def test_counts_ogl_aggiornati(self):
         traits = json.loads(
-            (REPO_ROOT / "data/reference/ogl/traits.json").read_text(encoding="utf-8"))
+            (REPO_ROOT / "data/reference/ogl/traits.json").read_text(encoding="utf-8")
+        )
         equip = json.loads(
-            (REPO_ROOT / "data/reference/ogl/equipment_mundane.json").read_text(encoding="utf-8"))
+            (REPO_ROOT / "data/reference/ogl/equipment_mundane.json").read_text(
+                encoding="utf-8"
+            )
+        )
         assert len(traits["entries"]) == 470 - 4
         assert len(equip["entries"]) == 790 - 4
         nomi_t = {e["name"] for e in traits["entries"]}
-        assert not {"Aldori Caution", "Arodenite Sword Training",
-                    "Arodenite Historian", "Gifted Smuggler"} & nomi_t
+        assert (
+            not {
+                "Aldori Caution",
+                "Arodenite Sword Training",
+                "Arodenite Historian",
+                "Gifted Smuggler",
+            }
+            & nomi_t
+        )
         nomi_e = {e["name"] for e in equip["entries"]}
-        assert not {"Hellknight leather", "Hellknight half-plate",
-                    "Hellknight plate", "Alkenstar fortress plate"} & nomi_e
+        assert (
+            not {
+                "Hellknight leather",
+                "Hellknight half-plate",
+                "Hellknight plate",
+                "Alkenstar fortress plate",
+            }
+            & nomi_e
+        )
 
     def test_c_sanitize_in_place(self):
         traits = json.loads(
-            (REPO_ROOT / "data/reference/ogl/traits.json").read_text(encoding="utf-8"))
+            (REPO_ROOT / "data/reference/ogl/traits.json").read_text(encoding="utf-8")
+        )
         by_name = {e["name"]: e for e in traits["entries"]}
-        desc = {n: by_name[n]["description"] for n in (
-            "Dueling Cloak Adept", "Crusader", "Divine Denier",
-            "Bureaucrat's Favored", "Scholar of the Analects",
-            "Stabbing Spells", "Reassuring Advice")}
+        desc = {
+            n: by_name[n]["description"]
+            for n in (
+                "Dueling Cloak Adept",
+                "Crusader",
+                "Divine Denier",
+                "Bureaucrat's Favored",
+                "Scholar of the Analects",
+                "Stabbing Spells",
+                "Reassuring Advice",
+            )
+        }
         assert "a dueling sword" in desc["Dueling Cloak Adept"]
         assert "Aldori" not in desc["Dueling Cloak Adept"]
         assert "a demon-blighted land" in desc["Crusader"]
@@ -218,7 +276,8 @@ class TestCataloghiLocali:
         # Fix quality review: residuo "Osiria" nel prereq sanitizzato con la
         # forma neutra della famiglia Osirion (set base REPLACEMENTS).
         assert by_name["Bureaucrat's Favored"]["prerequisites"] == [
-            "Associated with the court of the Black Dome in an ancient desert kingdom"]
+            "Associated with the court of the Black Dome in an ancient desert kingdom"
+        ]
 
 
 class TestSanitizeHellknightFeats:
@@ -229,8 +288,9 @@ class TestSanitizeHellknightFeats:
 
     def test_otto_entry_sanitizzate_source_id_intatto(self):
         data = json.loads(FEATS_JSON.read_text(encoding="utf-8"))
-        hits = [e for e in data["entries"]
-                if e.get("source") == "a strict-order handbook"]
+        hits = [
+            e for e in data["entries"] if e.get("source") == "a strict-order handbook"
+        ]
         assert {e["name"] for e in hits} == HELLKNIGHT_ENTRIES
         for e in hits:
             assert e["tags"] == ["a strict-order handbook"]
@@ -242,21 +302,26 @@ class TestScanEntriesCondiviso:
     riusabile da altri tool, + contratto exit-code di run()."""
 
     def test_scan_entries_trova_pi(self):
-        hits = gate.scan_entries([{"name": "Fireball",
-                                   "description": "Common on Golarion."}])
+        hits = gate.scan_entries(
+            [{"name": "Fireball", "description": "Common on Golarion."}]
+        )
         assert any(h["term"] == "Golarion" for h in hits)
 
     def test_scan_entries_maschera_sanctioned_e_salta_metadata(self):
         # replacement sanitized: nessun hit; campo 'source' (metadata,
         # non in SCANNED_FIELDS): nessun hit anche con titolo PI.
-        hits = gate.scan_entries([{
-            "name": "X",
-            "source": "The Inner Sea World Guide",
-            "description": "Common in the inner sea region."}])
+        hits = gate.scan_entries(
+            [
+                {
+                    "name": "X",
+                    "source": "The Inner Sea World Guide",
+                    "description": "Common in the inner sea region.",
+                }
+            ]
+        )
         assert hits == []
 
     def test_run_exit_code_zero_quando_pulito(self):
         # Contratto del gate: exit 0 senza violazioni (il report viene
         # comunque riscritto, come nei run da CLI).
         assert gate.run() == 0
-

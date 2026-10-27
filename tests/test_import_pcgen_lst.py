@@ -6,6 +6,7 @@ pcgen-repo/data/pathfinder/paizo/roleplaying_game/* (ricognizione
 tab; .COPY= per gli oggetti visibili derivati da basi VISIBLE:NO; .MOD per
 estensioni (es. liste di classi aggiunte); duplicati risolti last-wins.
 """
+
 import json
 import os
 import sys
@@ -16,7 +17,6 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tools import import_pcgen_lst as pc
-
 
 # ---------------------------------------------------------------------------
 # Fixture: forma reale (tab separati, colonne allineate come PrettyLST).
@@ -74,6 +74,7 @@ def _write(root: Path, rel: str, text: str) -> Path:
 # Parser di linea e prerequisiti
 # ---------------------------------------------------------------------------
 
+
 def test_iter_lst_records_salta_commenti_e_vuote():
     records = pc.iter_lst_records(FEATS_LST)
     names = [name for name, _tags in records]
@@ -93,7 +94,8 @@ def test_iter_lst_records_tag_in_ordine():
 
 def test_parse_prereq_premult_annidato():
     node = pc.parse_prereq_token(
-        "PREMULT:1,[PREVARGTEQ:PreStatScore_DEX,13],[PREVARGTEQ:FeatDexRequirement,15]")
+        "PREMULT:1,[PREVARGTEQ:PreStatScore_DEX,13],[PREVARGTEQ:FeatDexRequirement,15]"
+    )
     assert node["tag"] == "PREMULT"
     assert node["count"] == 1
     assert len(node["of"]) == 2
@@ -149,6 +151,7 @@ def test_derive_prereqs_tag_non_normalizzato_contato():
 # Entita': feats
 # ---------------------------------------------------------------------------
 
+
 def test_feats_from_records_campi():
     entries, stats = pc.feats_from_records(pc.iter_lst_records(FEATS_LST), "CR")
     by_name = {e["name"]: e for e in entries}
@@ -183,6 +186,7 @@ def test_feats_coverage_prereq_tags():
 # ---------------------------------------------------------------------------
 # Entita': equipment
 # ---------------------------------------------------------------------------
+
 
 def test_equipment_copy_resolution_e_stat():
     entries, stats = pc.equipment_from_records(pc.iter_lst_records(EQUIP_LST), "CR")
@@ -221,6 +225,7 @@ def test_equipment_copy_resolution_e_stat():
 # Entita': spells
 # ---------------------------------------------------------------------------
 
+
 def test_spells_from_records_campi_e_merge():
     entries, stats = pc.spells_from_records(pc.iter_lst_records(SPELLS_LST), "CR")
     by_name = {e["name"]: e for e in entries}
@@ -236,8 +241,7 @@ def test_spells_from_records_campi_e_merge():
     assert "desc" not in {k.lower() for e in entries for k in e}
 
     mbe = by_name["Mass Bear's Endurance"]
-    assert mbe["classes"] == {
-        "Cleric": 6, "Druid": 6, "Sorcerer": 6, "Wizard": 6}
+    assert mbe["classes"] == {"Cleric": 6, "Druid": 6, "Sorcerer": 6, "Wizard": 6}
 
     # .MOD con CLASSES si fonde nella base; .MOD senza campi rilevanti = no-op
     assert by_name.get("Bless") is None  # Bless non definita: MOD orfano
@@ -252,6 +256,7 @@ def test_spells_from_records_campi_e_merge():
 # build() end-to-end su radice PCGen finta
 # ---------------------------------------------------------------------------
 
+
 def _fake_pcgen_root(tmp_path: Path) -> Path:
     root = tmp_path / "pcgen-repo"
     base = root / "data/pathfinder/paizo"
@@ -264,8 +269,11 @@ def _fake_pcgen_root(tmp_path: Path) -> Path:
         if book == "CR":
             continue
         for rel in cfg["feats"] + cfg["equipment"] + cfg["spells"]:
-            _write(base, f"{cfg['dir']}/{rel}",
-                   f"# finto\nStub {book}	CATEGORY:FEAT	TYPE:General	DESC:x\n")
+            _write(
+                base,
+                f"{cfg['dir']}/{rel}",
+                f"# finto\nStub {book}	CATEGORY:FEAT	TYPE:General	DESC:x\n",
+            )
     return root
 
 
@@ -384,7 +392,9 @@ def test_parse_bonus_tag_gruppo_con_scelta():
 
 
 def test_parse_bonus_tag_pre_negata_preservata():
-    node = pc.parse_bonus_tag("SKILL|Acrobatics|ImprovisationBonus|!PRESKILL:1,Acrobatics=1")
+    node = pc.parse_bonus_tag(
+        "SKILL|Acrobatics|ImprovisationBonus|!PRESKILL:1,Acrobatics=1"
+    )
     assert node["conditions"] == ["!PRESKILL:1,Acrobatics=1"]
     assert node["recognized"] is True
 
@@ -410,7 +420,8 @@ def test_parse_bonus_tag_formula_con_uguale_dentro_parentesi():
     # Il "TYPE=PC" dentro classlevel("...") NON e' il tipo del bonus: lo split
     # rispetta le parentesi tonde.
     node = pc.parse_bonus_tag(
-        'VAR|DruidWildShape|MIN(4,classlevel("TYPE=PC")+classlevel("TYPE=NPC")-classlevel("Druid"))')
+        'VAR|DruidWildShape|MIN(4,classlevel("TYPE=PC")+classlevel("TYPE=NPC")-classlevel("Druid"))'
+    )
     assert node["group"] == "VAR"
     assert node["path"] == ["DruidWildShape"]
     assert "type" not in node
@@ -423,16 +434,21 @@ def test_feats_from_records_bonus_campi_e_conteggi():
     by_name = {e["name"]: e for e in entries}
 
     dodge = by_name["Dodge"]["bonus"]
-    assert dodge == [{
-        "raw": "COMBAT|AC|1|TYPE=Dodge",
-        "group": "COMBAT", "path": ["AC"], "value": "1",
-        "valueNumber": 1, "type": "Dodge", "recognized": True,
-    }]
+    assert dodge == [
+        {
+            "raw": "COMBAT|AC|1|TYPE=Dodge",
+            "group": "COMBAT",
+            "path": ["AC"],
+            "value": "1",
+            "valueNumber": 1,
+            "type": "Dodge",
+            "recognized": True,
+        }
+    ]
 
     # multi-BONUS: tutti, in ordine, niente scartato
     gritty = by_name["Gritty Savant"]["bonus"]
-    assert [b["raw"] for b in gritty] == [
-        "SAVE|Will|CHA-WIS", "VAR|GritPoints|1"]
+    assert [b["raw"] for b in gritty] == ["SAVE|Will|CHA-WIS", "VAR|GritPoints|1"]
 
     # talento senza BONUS: lista vuota, non campo assente
     assert by_name["No Bonus"]["bonus"] == []
@@ -441,8 +457,14 @@ def test_feats_from_records_bonus_campi_e_conteggi():
     assert bonus_stats["feats_with_bonus"] == 12
     assert bonus_stats["total_tags"] == 13
     assert bonus_stats["by_group"] == {
-        "COMBAT": 2, "SAVE": 4, "HP": 1, "SKILL": 2,
-        "WEAPONPROF=%LIST": 1, "VAR": 2, "PC": 1}
+        "COMBAT": 2,
+        "SAVE": 4,
+        "HP": 1,
+        "SKILL": 2,
+        "WEAPONPROF=%LIST": 1,
+        "VAR": 2,
+        "PC": 1,
+    }
     assert bonus_stats["literal_value"] == 8
     assert bonus_stats["with_type"] == 2
     assert bonus_stats["recognized"] == 12
@@ -454,12 +476,12 @@ def test_feats_from_records_bonus_campi_e_conteggi():
 # rompersi sui 2939 file veri e gli spot-check RAW devono reggere.
 # ---------------------------------------------------------------------------
 
-REAL_ROOT = Path(os.environ.get(
-    "PCGEN_REPO", r"C:\Users\VGit\Downloads\pcgen-repo"))
+REAL_ROOT = Path(os.environ.get("PCGEN_REPO", r"C:\Users\VGit\Downloads\pcgen-repo"))
 
 
-@pytest.mark.skipif(not (REAL_ROOT / "data/pathfinder/paizo").is_dir(),
-                    reason="clone PCGen assente")
+@pytest.mark.skipif(
+    not (REAL_ROOT / "data/pathfinder/paizo").is_dir(), reason="clone PCGen assente"
+)
 def test_dati_reali_spot_check():
     feats = pc.build_catalog(REAL_ROOT, "feats")
     by_name = {e["name"]: e for e in feats["entries"]}
@@ -489,8 +511,9 @@ def test_dati_reali_spot_check():
         assert spells["counts"][book] > 0
 
 
-@pytest.mark.skipif(not (REAL_ROOT / "data/pathfinder/paizo").is_dir(),
-                    reason="clone PCGen assente")
+@pytest.mark.skipif(
+    not (REAL_ROOT / "data/pathfinder/paizo").is_dir(), reason="clone PCGen assente"
+)
 def test_dati_reali_bonus_spot_check():
     """Slice BONUS: spot-check RAW dei tag BONUS sui dati veri."""
     feats = pc.build_catalog(REAL_ROOT, "feats")
@@ -555,8 +578,9 @@ def test_books_estesi_configurati():
         assert cfg["feats"] and cfg["equipment"] and cfg["spells"]
 
 
-@pytest.mark.skipif(not (REAL_ROOT / "data/pathfinder/paizo").is_dir(),
-                    reason="clone PCGen assente")
+@pytest.mark.skipif(
+    not (REAL_ROOT / "data/pathfinder/paizo").is_dir(), reason="clone PCGen assente"
+)
 def test_dati_reali_new_books_spot_check():
     feats = pc.build_catalog(REAL_ROOT, "feats")
     by_name = {e["name"]: e for e in feats["entries"]}

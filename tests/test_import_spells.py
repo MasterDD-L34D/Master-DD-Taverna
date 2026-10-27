@@ -4,6 +4,7 @@ Fixture HTML inline (MAI rete): markup ridotto ma fedele alle pagine reali
 `SpellDisplay.aspx?ItemName=...` (tabella MainContent_DataListTypes, span
 LabelName, blocchi h1.title, sezioni h3.framing, label in <b>).
 """
+
 import sys
 from pathlib import Path
 
@@ -82,10 +83,18 @@ def test_parse_spell_singolo_blocco():
     mech = entry["mechanics"]
     assert mech["school"] == "conjuration"
     assert mech["descriptors"] == ["acid"]
-    assert mech["spell_level"] == {"arcanist": 2, "bloodrager": 2, "magus": 2,
-                                   "sorcerer": 2, "wizard": 2}
+    assert mech["spell_level"] == {
+        "arcanist": 2,
+        "bloodrager": 2,
+        "magus": 2,
+        "sorcerer": 2,
+        "wizard": 2,
+    }
     assert mech["casting_time"] == "1 standard action"
-    assert mech["components"] == "V, S, M (rhubarb leaf and an adder's stomach), F (a dart)"
+    assert (
+        mech["components"]
+        == "V, S, M (rhubarb leaf and an adder's stomach), F (a dart)"
+    )
     assert mech["range"] == "long (400 ft. + 40 ft./level)"
     assert mech["duration"] == "1 round + 1 round per three levels"
     assert mech["saving_throw"] == "none"
@@ -98,8 +107,14 @@ def test_parse_spell_pagina_multiblocco_sceglie_il_blocco_giusto():
     assert mech["school"] == "evocation"
     assert mech["descriptors"] == ["fire"]
     # Livello 3 del blocco base, NON 4 della variante Controlled Fireball.
-    assert mech["spell_level"] == {"arcanist": 3, "bloodrager": 3, "magus": 3,
-                                   "occultist": 3, "sorcerer": 3, "wizard": 3}
+    assert mech["spell_level"] == {
+        "arcanist": 3,
+        "bloodrager": 3,
+        "magus": 3,
+        "occultist": 3,
+        "sorcerer": 3,
+        "wizard": 3,
+    }
     assert mech["saving_throw"] == "Reflex half"
     assert mech["spell_resistance"] == "yes"
     # La sezione mythic (h2.title) non deve inquinare i campi.
@@ -122,16 +137,24 @@ def test_parse_spell_nome_assente_ritorna_none():
 
 
 def test_merge_entry_riempie_solo_i_campi_mancanti():
-    entry = {"name": "Fireball",
-             "mechanics": {"school": "evocation",
-                           "spell_level": {"sorcerer/wizard": 3},
-                           "saving_throw": "Reflex half"}}
-    parsed = {"name": "Fireball",
-              "mechanics": {"school": "evocation",
-                            "descriptors": ["fire"],
-                            "spell_level": {"arcanist": 3, "sorcerer": 3},
-                            "casting_time": "1 standard action",
-                            "saving_throw": "Reflex half"}}
+    entry = {
+        "name": "Fireball",
+        "mechanics": {
+            "school": "evocation",
+            "spell_level": {"sorcerer/wizard": 3},
+            "saving_throw": "Reflex half",
+        },
+    }
+    parsed = {
+        "name": "Fireball",
+        "mechanics": {
+            "school": "evocation",
+            "descriptors": ["fire"],
+            "spell_level": {"arcanist": 3, "sorcerer": 3},
+            "casting_time": "1 standard action",
+            "saving_throw": "Reflex half",
+        },
+    }
     changed, notes = _merge_entry(entry, parsed)
     assert changed
     mech = entry["mechanics"]
@@ -145,27 +168,49 @@ def test_merge_entry_riempie_solo_i_campi_mancanti():
 
 
 def test_merge_entry_senza_cambi_reali_non_tocca():
-    entry = {"name": "Acid Arrow",
-             "mechanics": {"school": "conjuration", "descriptors": ["acid"],
-                           "spell_level": {"sorcerer/wizard": 2},
-                           "saving_throw": "none"}}
-    parsed = {"name": "Acid Arrow",
-              "mechanics": {"school": "conjuration", "descriptors": ["acid"],
-                            "spell_level": {"sorcerer": 2, "wizard": 2},
-                            "saving_throw": "none"}}
+    entry = {
+        "name": "Acid Arrow",
+        "mechanics": {
+            "school": "conjuration",
+            "descriptors": ["acid"],
+            "spell_level": {"sorcerer/wizard": 2},
+            "saving_throw": "none",
+        },
+    }
+    parsed = {
+        "name": "Acid Arrow",
+        "mechanics": {
+            "school": "conjuration",
+            "descriptors": ["acid"],
+            "spell_level": {"sorcerer": 2, "wizard": 2},
+            "saving_throw": "none",
+        },
+    }
     changed, _ = _merge_entry(entry, parsed)
     assert not changed
 
 
 def test_spell_pi_hits_fail_closed():
-    parsed = {"name": "Acid Arrow", "source": "PRPG Core Rulebook",
-              "mechanics": {"school": "conjuration", "descriptors": ["acid"],
-                            "components": "V, S, M (rhubarb leaf from Golarion)"}}
+    parsed = {
+        "name": "Acid Arrow",
+        "source": "PRPG Core Rulebook",
+        "mechanics": {
+            "school": "conjuration",
+            "descriptors": ["acid"],
+            "components": "V, S, M (rhubarb leaf from Golarion)",
+        },
+    }
     hits = _spell_pi_hits(parsed)
     assert hits and any(h["term"] == "Golarion" for h in hits)
-    clean_entry = {"name": "Acid Arrow", "source": "PRPG Core Rulebook",
-                   "mechanics": {"school": "conjuration", "descriptors": ["acid"],
-                                 "components": "V, S, M (rhubarb leaf)"}}
+    clean_entry = {
+        "name": "Acid Arrow",
+        "source": "PRPG Core Rulebook",
+        "mechanics": {
+            "school": "conjuration",
+            "descriptors": ["acid"],
+            "components": "V, S, M (rhubarb leaf)",
+        },
+    }
     assert _spell_pi_hits(clean_entry) == []
 
 

@@ -34,6 +34,7 @@ declared-unresolved) e VERDETTO da tabella dichiarata (verifiche AoN
 2026-08-07) — MAI risolta a tentativi: il dato resta com'e', la fonte
 operativa non cambia.
 """
+
 import json
 import sys
 from pathlib import Path
@@ -44,7 +45,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tools import build_spell_sources as bss
 
-
 # ---------------------------------------------------------------------------
 # Fixture: mini-fonti nella forma reale dei tre JSON.
 # ---------------------------------------------------------------------------
@@ -52,67 +52,144 @@ from tools import build_spell_sources as bss
 TAVERNA = {
     "_license": "OGL",
     "entries": [
-        {"name": "Acid Arrow", "source": "Pathfinder SRD", "tags": [],
-         "mechanics": {"school": "conjuration",
-                       "spell_level": {"sorcerer/wizard": 2, "magus": 2}}},
+        {
+            "name": "Acid Arrow",
+            "source": "Pathfinder SRD",
+            "tags": [],
+            "mechanics": {
+                "school": "conjuration",
+                "spell_level": {"sorcerer/wizard": 2, "magus": 2},
+            },
+        },
         # forma invertita Taverna + chiave combinata
-        {"name": "Dispel Magic, Greater", "source": "Pathfinder SRD", "tags": [],
-         "mechanics": {"school": "abjuration",
-                       "spell_level": {"cleric/oracle": 6, "sorcerer/wizard": 6}}},
+        {
+            "name": "Dispel Magic, Greater",
+            "source": "Pathfinder SRD",
+            "tags": [],
+            "mechanics": {
+                "school": "abjuration",
+                "spell_level": {"cleric/oracle": 6, "sorcerer/wizard": 6},
+            },
+        },
         # divergenza tre fonti: Taverna e PB concordi, PCGen difforme
-        {"name": "Commune with Nature", "source": "Pathfinder SRD", "tags": [],
-         "mechanics": {"school": "divination",
-                       "spell_level": {"druid": 5, "ranger": 4}}},
+        {
+            "name": "Commune with Nature",
+            "source": "Pathfinder SRD",
+            "tags": [],
+            "mechanics": {
+                "school": "divination",
+                "spell_level": {"druid": 5, "ranger": 4},
+            },
+        },
         # divergenza Taverna<->PB (PCGen assente)
-        {"name": "Soul Transfer", "source": "Book of the Damned", "tags": [],
-         "mechanics": {"school": "necromancy",
-                       "spell_level": {"sorcerer/wizard": 7, "witch": 7}}},
+        {
+            "name": "Soul Transfer",
+            "source": "Book of the Damned",
+            "tags": [],
+            "mechanics": {
+                "school": "necromancy",
+                "spell_level": {"sorcerer/wizard": 7, "witch": 7},
+            },
+        },
         # solo Taverna
-        {"name": "Taverna Only Spell", "source": "X", "tags": [],
-         "mechanics": {"school": "abjuration", "spell_level": {"bard": 1}}},
+        {
+            "name": "Taverna Only Spell",
+            "source": "X",
+            "tags": [],
+            "mechanics": {"school": "abjuration", "spell_level": {"bard": 1}},
+        },
         # artefatto magusum (alias dichiarato)
-        {"name": "Storm of Blades", "source": "X", "tags": [],
-         "mechanics": {"school": "conjuration",
-                       "spell_level": {"magusum": 2, "sorcerer/wizard": 2}}},
+        {
+            "name": "Storm of Blades",
+            "source": "X",
+            "tags": [],
+            "mechanics": {
+                "school": "conjuration",
+                "spell_level": {"magusum": 2, "sorcerer/wizard": 2},
+            },
+        },
     ],
 }
 
 PCGEN = {
     "_provenance": {"source": "PCGen"},
     "entries": [
-        {"name": "Acid Arrow", "source_book": "CR",
-         "classes": {"Sorcerer": 2, "Wizard": 2}, "school": "Conjuration"},
+        {
+            "name": "Acid Arrow",
+            "source_book": "CR",
+            "classes": {"Sorcerer": 2, "Wizard": 2},
+            "school": "Conjuration",
+        },
         # forma PCGen con parentesi
-        {"name": "Dispel Magic (Greater)", "source_book": "CR",
-         "classes": {"Cleric": 6, "Sorcerer": 6, "Wizard": 6},
-         "school": "Abjuration"},
-        {"name": "Commune with Nature", "source_book": "CR",
-         "classes": {"Druid": 4, "Ranger": 4}, "school": "Divination"},
+        {
+            "name": "Dispel Magic (Greater)",
+            "source_book": "CR",
+            "classes": {"Cleric": 6, "Sorcerer": 6, "Wizard": 6},
+            "school": "Abjuration",
+        },
+        {
+            "name": "Commune with Nature",
+            "source_book": "CR",
+            "classes": {"Druid": 4, "Ranger": 4},
+            "school": "Divination",
+        },
         # duplicato interno PCGen su due libri: classi complementari
-        {"name": "Summon Monster I", "source_book": "CR",
-         "classes": {"Bard": 1, "Cleric": 1}, "school": "Conjuration"},
-        {"name": "Summon Monster I", "source_book": "APG",
-         "classes": {"Witch": 1, "Antipaladin": 1}, "school": "Conjuration"},
+        {
+            "name": "Summon Monster I",
+            "source_book": "CR",
+            "classes": {"Bard": 1, "Cleric": 1},
+            "school": "Conjuration",
+        },
+        {
+            "name": "Summon Monster I",
+            "source_book": "APG",
+            "classes": {"Witch": 1, "Antipaladin": 1},
+            "school": "Conjuration",
+        },
         # variante PCGen-only: NON una forma invertita, mai fusa
-        {"name": "Align Weapon (Chaos Only)", "source_book": "CR",
-         "classes": {"Cleric": 2}, "school": "Transmutation"},
+        {
+            "name": "Align Weapon (Chaos Only)",
+            "source_book": "CR",
+            "classes": {"Cleric": 2},
+            "school": "Transmutation",
+        },
     ],
 }
 
 PB = {
     "_provenance": {"source": "Pathbuilder"},
     "spells": [
-        {"name": "Acid Arrow", "source": "CRB", "school": "Conjuration",
-         "spellLevels": {"sorcerer": 2, "wizard": 2, "magus": 2}},
-        {"name": "Dispel Magic, Greater", "source": "CRB", "school": "Abjuration",
-         "spellLevels": {"cleric": 6, "oracle": 6, "sorcerer": 6, "wizard": 6}},
-        {"name": "Commune with Nature", "source": "CRB", "school": "Divination",
-         "spellLevels": {"druid": 5, "ranger": 4}},
-        {"name": "Soul Transfer", "source": "BotD", "school": "Necromancy",
-         "spellLevels": {"sorcerer": 8, "wizard": 8, "witch": 8}},
+        {
+            "name": "Acid Arrow",
+            "source": "CRB",
+            "school": "Conjuration",
+            "spellLevels": {"sorcerer": 2, "wizard": 2, "magus": 2},
+        },
+        {
+            "name": "Dispel Magic, Greater",
+            "source": "CRB",
+            "school": "Abjuration",
+            "spellLevels": {"cleric": 6, "oracle": 6, "sorcerer": 6, "wizard": 6},
+        },
+        {
+            "name": "Commune with Nature",
+            "source": "CRB",
+            "school": "Divination",
+            "spellLevels": {"druid": 5, "ranger": 4},
+        },
+        {
+            "name": "Soul Transfer",
+            "source": "BotD",
+            "school": "Necromancy",
+            "spellLevels": {"sorcerer": 8, "wizard": 8, "witch": 8},
+        },
         # solo PB
-        {"name": "Pb Only Spell", "source": "X", "school": "Evocation",
-         "spellLevels": {"arcanist": 2}},
+        {
+            "name": "Pb Only Spell",
+            "source": "X",
+            "school": "Evocation",
+            "spellLevels": {"arcanist": 2},
+        },
     ],
 }
 
@@ -131,6 +208,7 @@ def sources(tmp_path: Path) -> dict:
 # ---------------------------------------------------------------------------
 # Normalizzazione nomi
 # ---------------------------------------------------------------------------
+
 
 def test_norm_base():
     assert bss.norm_name("  Acid   Arrow ") == "acid arrow"
@@ -153,8 +231,15 @@ def test_canon_solo_qualificatori_dichiarati():
 
 def test_qualifiers_dichiarati():
     assert set(bss.QUALIFIERS) == {
-        "greater", "lesser", "mass", "communal", "improved", "supreme",
-        "giant", "greater communal"}
+        "greater",
+        "lesser",
+        "mass",
+        "communal",
+        "improved",
+        "supreme",
+        "giant",
+        "greater communal",
+    }
 
 
 def test_class_id_alias():
@@ -167,10 +252,10 @@ def test_class_id_alias():
 # Loaders per fonte
 # ---------------------------------------------------------------------------
 
+
 def test_load_taverna_chiavi_combinate_splittate(sources):
     tav = bss.load_taverna(sources["taverna"])
-    assert tav["acid arrow"]["levels"] == {
-        "sorcerer": 2, "wizard": 2, "magus": 2}
+    assert tav["acid arrow"]["levels"] == {"sorcerer": 2, "wizard": 2, "magus": 2}
     # chiave canonica dalla forma invertita
     assert "dispel magic (greater)" in tav
     # alias magusum applicato
@@ -180,7 +265,11 @@ def test_load_taverna_chiavi_combinate_splittate(sources):
 def test_load_pcgen_duplicati_merged_unione_classi(sources):
     pcg, dup_report = bss.load_pcgen(sources["pcgen"])
     assert pcg["summon monster i"]["levels"] == {
-        "bard": 1, "cleric": 1, "witch": 1, "antipaladin": 1}
+        "bard": 1,
+        "cleric": 1,
+        "witch": 1,
+        "antipaladin": 1,
+    }
     assert dup_report["mergedNames"] == ["summon monster i"]
     assert dup_report["conflicts"] == []
 
@@ -194,9 +283,9 @@ def test_load_pb(sources):
 # Indice riconciliato: conteggi, nessun merge silenzioso
 # ---------------------------------------------------------------------------
 
+
 def test_build_index_provenance_per_fonte(sources):
-    index = bss.build(
-        sources["taverna"], sources["pcgen"], sources["pb"])
+    index = bss.build(sources["taverna"], sources["pcgen"], sources["pb"])
     entry = index["spells"]["acid arrow"]
     assert set(entry["sources"]) == {"taverna", "pcgen", "pb"}
     # i livelli di ogni fonte restano SEPARATI: mai un merge
@@ -207,8 +296,7 @@ def test_build_index_provenance_per_fonte(sources):
 
 
 def test_build_conteggi(sources):
-    index = bss.build(
-        sources["taverna"], sources["pcgen"], sources["pb"])
+    index = bss.build(sources["taverna"], sources["pcgen"], sources["pb"])
     counts = index["counts"]
     assert counts["taverna"] == 6
     assert counts["pcgen"] == 5  # 6 entry, 1 duplicato fuso
@@ -229,9 +317,9 @@ def test_build_conteggi(sources):
 # Divergenze di livello per classe: il cuore D5
 # ---------------------------------------------------------------------------
 
+
 def test_divergenze_tre_fonti_pcgen_outlier(sources):
-    index = bss.build(
-        sources["taverna"], sources["pcgen"], sources["pb"])
+    index = bss.build(sources["taverna"], sources["pcgen"], sources["pb"])
     divs = {(d["spell"], d["class"]): d for d in index["report"]["divergences"]}
     d = divs[("commune with nature", "druid")]
     assert d["levels"] == {"taverna": 5, "pcgen": 4, "pb": 5}
@@ -243,8 +331,7 @@ def test_divergenze_tre_fonti_pcgen_outlier(sources):
 
 
 def test_divergenze_taverna_pb(sources):
-    index = bss.build(
-        sources["taverna"], sources["pcgen"], sources["pb"])
+    index = bss.build(sources["taverna"], sources["pcgen"], sources["pb"])
     divs = {(d["spell"], d["class"]): d for d in index["report"]["divergences"]}
     for cls in ("sorcerer", "wizard", "witch"):
         d = divs[("soul transfer", cls)]
@@ -257,22 +344,35 @@ def test_divergenze_mai_risolte_a_tentativi(sources):
     # verdict null — il dato resta com'e'
     tav = json.loads(json.dumps(TAVERNA))
     tav["entries"].append(
-        {"name": "Mystery Spell", "source": "X", "tags": [],
-         "mechanics": {"school": "abjuration", "spell_level": {"bard": 2}}})
+        {
+            "name": "Mystery Spell",
+            "source": "X",
+            "tags": [],
+            "mechanics": {"school": "abjuration", "spell_level": {"bard": 2}},
+        }
+    )
     pb = json.loads(json.dumps(PB))
     pb["spells"].append(
-        {"name": "Mystery Spell", "source": "X", "school": "Abjuration",
-         "spellLevels": {"bard": 3}})
+        {
+            "name": "Mystery Spell",
+            "source": "X",
+            "school": "Abjuration",
+            "spellLevels": {"bard": 3},
+        }
+    )
     import tempfile
+
     with tempfile.TemporaryDirectory() as td:
-        tavp = Path(td) / "t.json"; pb_p = Path(td) / "p.json"
+        tavp = Path(td) / "t.json"
+        pb_p = Path(td) / "p.json"
         pcg_p = Path(td) / "c.json"
         tavp.write_text(json.dumps(tav), encoding="utf-8")
         pb_p.write_text(json.dumps(pb), encoding="utf-8")
         pcg_p.write_text(json.dumps(PCGEN), encoding="utf-8")
         index = bss.build(tavp, pcg_p, pb_p)
-    d = {(x["spell"], x["class"]): x
-         for x in index["report"]["divergences"]}[("mystery spell", "bard")]
+    d = {(x["spell"], x["class"]): x for x in index["report"]["divergences"]}[
+        ("mystery spell", "bard")
+    ]
     assert d["classification"] == "declared-unresolved"
     assert d["verdict"] is None
     # e la spell resta con ENTRAMBI i livelli per fonte (nessun merge)
@@ -282,8 +382,7 @@ def test_divergenze_mai_risolte_a_tentativi(sources):
 
 
 def test_verdetti_dichiarati_per_divergenze_note(sources):
-    index = bss.build(
-        sources["taverna"], sources["pcgen"], sources["pb"])
+    index = bss.build(sources["taverna"], sources["pcgen"], sources["pb"])
     divs = {(d["spell"], d["class"]): d for d in index["report"]["divergences"]}
     v = divs[("commune with nature", "druid")]["verdict"]
     assert v is not None
@@ -296,16 +395,23 @@ def test_verdetti_dichiarati_per_divergenze_note(sources):
 # Payload completo (main)
 # ---------------------------------------------------------------------------
 
+
 def test_main_scrive_json(sources, tmp_path):
     out_dir = tmp_path / "out"
-    rc = bss.main([
-        "--taverna", str(sources["taverna"]),
-        "--pcgen", str(sources["pcgen"]),
-        "--pb", str(sources["pb"]),
-        "--out-dir", str(out_dir)])
+    rc = bss.main(
+        [
+            "--taverna",
+            str(sources["taverna"]),
+            "--pcgen",
+            str(sources["pcgen"]),
+            "--pb",
+            str(sources["pb"]),
+            "--out-dir",
+            str(out_dir),
+        ]
+    )
     assert rc == 0
-    payload = json.loads(
-        (out_dir / "spell-sources.json").read_text(encoding="utf-8"))
+    payload = json.loads((out_dir / "spell-sources.json").read_text(encoding="utf-8"))
     prov = payload["_provenance"]
     for key in ("taverna", "pcgen", "pathbuilder"):
         assert key in prov["sources"]
@@ -325,14 +431,19 @@ def test_main_scrive_json(sources, tmp_path):
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 REAL_TAVERNA = REPO_ROOT / "data/reference/ogl/spells.json"
-REAL_PCGEN = (REPO_ROOT.parent / "pathmaster-dd"
-              / "packages/rules-engine-v2/src/data/pcgen-spells.json")
-REAL_PB = (REPO_ROOT.parent / "pathmaster-dd"
-           / "packages/rules-engine-v2/src/data/pathbuilder-spells.json")
+REAL_PCGEN = (
+    REPO_ROOT.parent
+    / "pathmaster-dd"
+    / "packages/rules-engine-v2/src/data/pcgen-spells.json"
+)
+REAL_PB = (
+    REPO_ROOT.parent
+    / "pathmaster-dd"
+    / "packages/rules-engine-v2/src/data/pathbuilder-spells.json"
+)
 REAL_REASON = "JSON sorgente assente (Taverna OGL o output import)"
 
-_real_ok = (REAL_TAVERNA.is_file() and REAL_PCGEN.is_file()
-            and REAL_PB.is_file())
+_real_ok = REAL_TAVERNA.is_file() and REAL_PCGEN.is_file() and REAL_PB.is_file()
 
 
 @pytest.mark.skipif(not _real_ok, reason=REAL_REASON)
@@ -341,7 +452,7 @@ def test_dati_reali_conteggi_e_copertura():
     counts = index["counts"]
     assert counts["taverna"] == 2820
     assert counts["pcgen"] == 2001  # 2.023 entry (Fase A: +UI/UW/HA/AG),
-                                    # 22 nomi in 2 libri
+    # 22 nomi in 2 libri
     assert counts["pb"] == 2922
     assert counts["union"] == 3092
     assert counts["intersection"]["tavernaPcgen"] == 1868
@@ -375,9 +486,12 @@ def test_dati_reali_divergenze_esatte_classificate():
         ("soul transfer", "witch"),
     }
     # le 4 tre-fonti: Taverna==PB, PCGen difforme (AoN: Taverna/PB RAW-corrette)
-    for key in [("commune with nature", "druid"), ("geas (lesser)", "bard"),
-                ("nondetection", "ranger"),
-                ("withdraw affliction", "spiritualist")]:
+    for key in [
+        ("commune with nature", "druid"),
+        ("geas (lesser)", "bard"),
+        ("nondetection", "ranger"),
+        ("withdraw affliction", "spiritualist"),
+    ]:
         assert divs[key]["classification"] == "pcgen-outlier"
         assert divs[key]["verdict"] is not None
     # Fool's Gold: omonimia RAW reale (spell diverse AA vs VC), non un errore
@@ -411,8 +525,7 @@ def test_dati_reali_overwhelming_presence_correzione_curata():
     for name, src in entry["sources"].items():
         if "psychic" in src["levels"]:
             assert src["levels"]["psychic"] == 9, name
-    divs = {(d["spell"], d["class"])
-            for d in index["report"]["divergences"]}
+    divs = {(d["spell"], d["class"]) for d in index["report"]["divergences"]}
     assert ("overwhelming presence", "psychic") not in divs
     # il verdetto storico e' rimosso dalla tabella (la divergenza e' chiusa):
     # la correzione vive nel commento CORREZIONI CURATE del builder

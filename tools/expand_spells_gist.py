@@ -15,6 +15,7 @@ Policy (spec grilling 2026-07-25):
 
 Default: dry-run (report a video). --write applica e scrive file + report.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -39,8 +40,11 @@ MANIFEST_PATH = ROOT / "data" / "reference" / "manifest.json"
 REPORT_PATH = ROOT / "reports" / "expand_spells_gist.md"
 
 _PI_NAME_RE = re.compile(
-    r"\b(" + "|".join(re.escape(w) for w in sorted(PI_WORDS, key=len, reverse=True)) + r")\b",
-    re.IGNORECASE)
+    r"\b("
+    + "|".join(re.escape(w) for w in sorted(PI_WORDS, key=len, reverse=True))
+    + r")\b",
+    re.IGNORECASE,
+)
 
 _INVERTIBLE_PREFIXES = ("Greater", "Lesser", "Mass")
 
@@ -99,8 +103,15 @@ def _tags_for(name: str, mech: dict) -> list[str]:
 def gist_to_entry(g: dict) -> dict:
     """Record gist -> entry catalogo spells (description sanitizzata)."""
     mech = {}
-    for key in ("school", "casting_time", "components", "range",
-                "duration", "saving_throw", "targets"):
+    for key in (
+        "school",
+        "casting_time",
+        "components",
+        "range",
+        "duration",
+        "saving_throw",
+        "targets",
+    ):
         value = g.get(key)
         if isinstance(value, str) and value.strip():
             mech[key] = value.strip()
@@ -116,18 +127,24 @@ def gist_to_entry(g: dict) -> dict:
         "references": [f"PathfinderSpellsJSON gist: {g['name']}"],
         "reference_urls": [
             "https://aonprd.com/SpellDisplay.aspx?ItemName="
-            + g["name"].replace(" ", "%20").replace("'", "%27")],
+            + g["name"].replace(" ", "%20").replace("'", "%27")
+        ],
         "description": sanitize_text(g.get("description") or "", description=True),
         "mechanics": mech,
-        "notes": ("Aggiunta da cache gist PathfinderSpellsJSON (expansion "
-                  "2026-07-25): assente dal catalogo storico."),
+        "notes": (
+            "Aggiunta da cache gist PathfinderSpellsJSON (expansion "
+            "2026-07-25): assente dal catalogo storico."
+        ),
     }
 
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--write", action="store_true",
-                    help="scrive spells.json/spells_local.json/manifest + report")
+    ap.add_argument(
+        "--write",
+        action="store_true",
+        help="scrive spells.json/spells_local.json/manifest + report",
+    )
     args = ap.parse_args(argv)
 
     catalog = json.loads(SPELLS_PATH.read_text(encoding="utf-8"))
@@ -143,8 +160,10 @@ def main(argv=None) -> int:
         entry = gist_to_entry(g)
         (local_entries if is_pi_name(entry["name"]) else ogl_entries).append(entry)
 
-    print(f"gist: {len(records)} record; nuovi: {len(nuovi)} "
-          f"(OGL {len(ogl_entries)}, PI->local {len(local_entries)})")
+    print(
+        f"gist: {len(records)} record; nuovi: {len(nuovi)} "
+        f"(OGL {len(ogl_entries)}, PI->local {len(local_entries)})"
+    )
     if not args.write:
         print("Dry-run: nessuna modifica (usa --write)")
         for e in local_entries[:20]:
@@ -153,17 +172,21 @@ def main(argv=None) -> int:
 
     entries.extend(ogl_entries)
     catalog["entries"] = entries
-    SPELLS_PATH.write_text(json.dumps(catalog, ensure_ascii=False, indent=2),
-                           encoding="utf-8")
+    SPELLS_PATH.write_text(
+        json.dumps(catalog, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
 
     local_catalog = {
         "_license": "OGL-1.0a",
-        "_source": ("PathfinderSpellsJSON gist / Archives of Nethys "
-                    "(local only, not redistributed)"),
+        "_source": (
+            "PathfinderSpellsJSON gist / Archives of Nethys "
+            "(local only, not redistributed)"
+        ),
         "entries": local_entries,
     }
-    LOCAL_PATH.write_text(json.dumps(local_catalog, ensure_ascii=False, indent=2),
-                          encoding="utf-8")
+    LOCAL_PATH.write_text(
+        json.dumps(local_catalog, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
 
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     today = date.today().isoformat()
@@ -172,33 +195,43 @@ def main(argv=None) -> int:
         if c["kind"] == "spells":
             c["entries"] = len(entries)
             c["last_verified"] = today
-    manifest["catalogs"] = [c for c in manifest["catalogs"] if c["kind"] != "spells_local"]
-    manifest["catalogs"].append({
-        "file": "pi_local_only/spells_local.json",
-        "kind": "spells_local",
-        "source": "PathfinderSpellsJSON gist / Archives of Nethys (aonprd.com)",
-        "license": "OGL-1.0a",
-        "is_ogc": False,
-        "is_pi": False,
-        "cup_allowed": False,
-        "local_only": True,
-        "entries": len(local_entries),
-        "notes": ("Spell con Product Identity nel nome (possessivi di divinita' "
-                  "e simili), separate dal catalogo OGL con la policy 2026-07-25 "
-                  "(reports/expand_spells_gist.md). NON redistribuire. Generato da "
-                  "tools/expand_spells_gist.py; indicizza con index_rag.py --include-local."),
-        "last_verified": today,
-    })
-    MANIFEST_PATH.write_text(json.dumps(manifest, ensure_ascii=False, indent=2),
-                             encoding="utf-8")
+    manifest["catalogs"] = [
+        c for c in manifest["catalogs"] if c["kind"] != "spells_local"
+    ]
+    manifest["catalogs"].append(
+        {
+            "file": "pi_local_only/spells_local.json",
+            "kind": "spells_local",
+            "source": "PathfinderSpellsJSON gist / Archives of Nethys (aonprd.com)",
+            "license": "OGL-1.0a",
+            "is_ogc": False,
+            "is_pi": False,
+            "cup_allowed": False,
+            "local_only": True,
+            "entries": len(local_entries),
+            "notes": (
+                "Spell con Product Identity nel nome (possessivi di divinita' "
+                "e simili), separate dal catalogo OGL con la policy 2026-07-25 "
+                "(reports/expand_spells_gist.md). NON redistribuire. Generato da "
+                "tools/expand_spells_gist.py; indicizza con index_rag.py --include-local."
+            ),
+            "last_verified": today,
+        }
+    )
+    MANIFEST_PATH.write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
 
     lines = [
-        "# Expansion spells da cache gist (2026-07-25)", "",
+        "# Expansion spells da cache gist (2026-07-25)",
+        "",
         f"- Record gist: {len(records)}",
         f"- Nuove (non in catalogo): {len(nuovi)}",
         f"- Aggiunte a spells.json (OGL): {len(ogl_entries)} (totale {len(entries)})",
         f"- Spostate in spells_local.json (nome PI): {len(local_entries)}",
-        "", "## Nomi PI spostati in locale", "",
+        "",
+        "## Nomi PI spostati in locale",
+        "",
     ]
     lines += [f"- {e['name']}" for e in local_entries]
     REPORT_PATH.write_text("\n".join(lines) + "\n", encoding="utf-8")

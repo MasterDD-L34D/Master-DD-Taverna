@@ -1,4 +1,5 @@
 """LLM generator abstraction for RAG answers."""
+
 import json
 import os
 from typing import List
@@ -53,9 +54,7 @@ def _source_label(chunk: dict) -> str:
 
 def _format_context(context: List[dict]) -> str:
     """Chunk concatenati, ognuno con la sua etichetta [fonte: ...]."""
-    return "\n\n".join(
-        f"[fonte: {_source_label(c)}]\n{c['text']}" for c in context
-    )
+    return "\n\n".join(f"[fonte: {_source_label(c)}]\n{c['text']}" for c in context)
 
 
 class MockProvider:
@@ -73,7 +72,9 @@ class MockProvider:
 
 
 class OllamaProvider:
-    def __init__(self, base_url: str = "http://localhost:11434", model: str = "qwen2.5-coder:14b"):
+    def __init__(
+        self, base_url: str = "http://localhost:11434", model: str = "qwen2.5-coder:14b"
+    ):
         self.base_url = base_url.rstrip("/")
         self.model = model
 
@@ -96,7 +97,12 @@ class OllamaProvider:
 
 
 class OpenAIProvider:
-    def __init__(self, api_key: str | None = None, base_url: str = "https://api.openai.com/v1", model: str = "gpt-3.5-turbo"):
+    def __init__(
+        self,
+        api_key: str | None = None,
+        base_url: str = "https://api.openai.com/v1",
+        model: str = "gpt-3.5-turbo",
+    ):
         self.api_key = api_key or os.getenv("OPENAI_API_KEY")
         self.base_url = base_url.rstrip("/")
         self.model = model
@@ -106,15 +112,21 @@ class OpenAIProvider:
             return "[Errore: OPENAI_API_KEY mancante]"
         messages = [
             {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": (
-                f"{_CONTEXT_HEADER}\n---\n{_format_context(context)}\n---\n\n"
-                f"Domanda: {query}\n{_USER_SUFFIX}"
-            )},
+            {
+                "role": "user",
+                "content": (
+                    f"{_CONTEXT_HEADER}\n---\n{_format_context(context)}\n---\n\n"
+                    f"Domanda: {query}\n{_USER_SUFFIX}"
+                ),
+            },
         ]
         try:
             resp = httpx.post(
                 f"{self.base_url}/chat/completions",
-                headers={"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"},
+                headers={
+                    "Authorization": f"Bearer {self.api_key}",
+                    "Content-Type": "application/json",
+                },
                 json={"model": self.model, "messages": messages, "temperature": 0.3},
                 timeout=120,
             )
@@ -153,18 +165,24 @@ def get_provider(
     name = (provider or os.getenv("RAG_LLM_PROVIDER", "mock")).lower()
     if name == "ollama":
         return OllamaProvider(
-            base_url=ollama_base_url or os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
+            base_url=ollama_base_url
+            or os.getenv("OLLAMA_BASE_URL", "http://localhost:11434"),
             model=ollama_model or os.getenv("OLLAMA_MODEL", "qwen2.5-coder:14b"),
         )
     if name == "ollama-openai":
         return OllamaOpenAIProvider(
-            base_url=(ollama_base_url or os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")).rstrip("/") + "/v1",
+            base_url=(
+                ollama_base_url
+                or os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+            ).rstrip("/")
+            + "/v1",
             model=ollama_model or os.getenv("OLLAMA_MODEL", "qwen2.5-coder:14b"),
         )
     if name in ("openai", "openai-compatible"):
         return OpenAIProvider(
             api_key=openai_api_key or os.getenv("OPENAI_API_KEY"),
-            base_url=openai_base_url or os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1"),
+            base_url=openai_base_url
+            or os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1"),
             model=openai_model or os.getenv("OPENAI_MODEL", "gpt-3.5-turbo"),
         )
     return MockProvider()

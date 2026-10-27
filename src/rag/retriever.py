@@ -1,4 +1,5 @@
 """Retrieval interface for the RAG store."""
+
 import re
 
 from .lexicon import load_lexicon, translate_query
@@ -23,7 +24,9 @@ class Retriever:
 
     def search(self, query: str, top_k: int = 5) -> list[dict]:
         if not self.store.is_ready():
-            raise RuntimeError("Vector store non inizializzato. Esegui prima tools/index_rag.py")
+            raise RuntimeError(
+                "Vector store non inizializzato. Esegui prima tools/index_rag.py"
+            )
         # Mitigazione finding RAG eval 2026-07-25: query-translation IT->EN
         # prima dell'encoding e del matching (hit rate 33% -> 78% validato).
         query = translate_query(query, self._lexicon)
@@ -42,7 +45,11 @@ class Retriever:
                 if overlap:
                     score += 0.05 * overlap
                 norm_name = self._normalize(name)
-                if norm_name and norm_query and (norm_query in norm_name or norm_name in norm_query):
+                if (
+                    norm_name
+                    and norm_query
+                    and (norm_query in norm_name or norm_name in norm_query)
+                ):
                     score += 0.12
             boosted.append({**c, "score": score})
         # Fast-path esatto (embedding debole su nomi inventati, es.
@@ -59,7 +66,9 @@ class Retriever:
                 if not name:
                     continue
                 norm_name = self._normalize(name)
-                if norm_name and (norm_name == norm_query or norm_name in norm_term_set):
+                if norm_name and (
+                    norm_name == norm_query or norm_name in norm_term_set
+                ):
                     if id(c) not in seen_ids:
                         exact.append(c)
             seen_exact = {id(c) for c in exact}

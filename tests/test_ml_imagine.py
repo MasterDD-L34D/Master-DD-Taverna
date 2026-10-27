@@ -1,4 +1,5 @@
 """Test per il servizio img-gen /ml/imagine (F3, contratto img-gen-design)."""
+
 import json
 import sys
 from pathlib import Path
@@ -16,6 +17,7 @@ def _client(monkeypatch, tmp_path, engine="fake"):
     monkeypatch.setenv("ML_IMG_ENGINE", engine)
     monkeypatch.setenv("ML_IMG_DIR", str(tmp_path))
     from src.app import app
+
     return TestClient(app)
 
 
@@ -29,7 +31,9 @@ def test_worm_image_storage_dedup(tmp_path):
 
 def test_imagine_fake_engine_contract(monkeypatch, tmp_path):
     client = _client(monkeypatch, tmp_path)
-    resp = client.post("/ml/imagine", json={"prompt": "dungeon di pietra", "width": 256, "height": 128})
+    resp = client.post(
+        "/ml/imagine", json={"prompt": "dungeon di pietra", "width": 256, "height": 128}
+    )
     assert resp.status_code == 200, resp.text
     data = resp.json()
     assert data["mimeType"] == "image/png"
@@ -49,10 +53,17 @@ def test_imagine_fake_engine_contract(monkeypatch, tmp_path):
 
 def test_imagine_fake_is_deterministic(monkeypatch, tmp_path):
     client = _client(monkeypatch, tmp_path)
-    r1 = client.post("/ml/imagine", json={"prompt": "bosco", "seed": 42, "width": 64, "height": 64}).json()
-    r2 = client.post("/ml/imagine", json={"prompt": "bosco", "seed": 42, "width": 64, "height": 64}).json()
+    r1 = client.post(
+        "/ml/imagine", json={"prompt": "bosco", "seed": 42, "width": 64, "height": 64}
+    ).json()
+    r2 = client.post(
+        "/ml/imagine", json={"prompt": "bosco", "seed": 42, "width": 64, "height": 64}
+    ).json()
     assert r1["sha256"] == r2["sha256"]
-    r3 = client.post("/ml/imagine", json={"prompt": "bosco diverso", "seed": 42, "width": 64, "height": 64}).json()
+    r3 = client.post(
+        "/ml/imagine",
+        json={"prompt": "bosco diverso", "seed": 42, "width": 64, "height": 64},
+    ).json()
     assert r3["sha256"] != r1["sha256"]
 
 
@@ -80,8 +91,13 @@ def test_imagine_api_engine_requires_url(monkeypatch, tmp_path):
 
 
 def test_imagine_engine_override_in_request(monkeypatch, tmp_path):
-    client = _client(monkeypatch, tmp_path, engine="off")  # env off, ma la request forza fake
-    resp = client.post("/ml/imagine", json={"prompt": "override", "engine": "fake", "width": 64, "height": 64})
+    client = _client(
+        monkeypatch, tmp_path, engine="off"
+    )  # env off, ma la request forza fake
+    resp = client.post(
+        "/ml/imagine",
+        json={"prompt": "override", "engine": "fake", "width": 64, "height": 64},
+    )
     assert resp.status_code == 200
     assert resp.json()["engine"] == "fake"
 
@@ -89,23 +105,41 @@ def test_imagine_engine_override_in_request(monkeypatch, tmp_path):
 def test_imagine_input_validation(monkeypatch, tmp_path):
     client = _client(monkeypatch, tmp_path)
     assert client.post("/ml/imagine", json={"prompt": ""}).status_code == 422
-    assert client.post("/ml/imagine", json={"prompt": "x", "width": 32}).status_code == 422
+    assert (
+        client.post("/ml/imagine", json={"prompt": "x", "width": 32}).status_code == 422
+    )
     assert client.post("/ml/imagine", json={"prompt": "x" * 2001}).status_code == 422
-    assert client.post("/ml/imagine", json={"prompt": "x", "negative_prompt": "y" * 2001}).status_code == 422
+    assert (
+        client.post(
+            "/ml/imagine", json={"prompt": "x", "negative_prompt": "y" * 2001}
+        ).status_code
+        == 422
+    )
 
 
 def test_imagine_negative_prompt_end_to_end(monkeypatch, tmp_path):
     client = _client(monkeypatch, tmp_path)
-    resp = client.post("/ml/imagine", json={
-        "prompt": "mappa dungeon", "negative_prompt": "griglia",
-        "width": 64, "height": 64, "seed": 3})
+    resp = client.post(
+        "/ml/imagine",
+        json={
+            "prompt": "mappa dungeon",
+            "negative_prompt": "griglia",
+            "width": 64,
+            "height": 64,
+            "seed": 3,
+        },
+    )
     assert resp.status_code == 200, resp.text
     data = resp.json()
-    meta = json.loads((tmp_path / f"{data['imageId']}.json").read_text(encoding="utf-8"))
+    meta = json.loads(
+        (tmp_path / f"{data['imageId']}.json").read_text(encoding="utf-8")
+    )
     assert meta["negative_prompt"] == "griglia"
     # il negative entra nel seed: stesso prompt/seed senza negative -> altro sha
-    other = client.post("/ml/imagine", json={
-        "prompt": "mappa dungeon", "width": 64, "height": 64, "seed": 3}).json()
+    other = client.post(
+        "/ml/imagine",
+        json={"prompt": "mappa dungeon", "width": 64, "height": 64, "seed": 3},
+    ).json()
     assert other["sha256"] != data["sha256"]
 
 
@@ -116,8 +150,14 @@ def test_imagine_get_errors(monkeypatch, tmp_path):
 
 
 def test_save_image_manifest_is_worm(tmp_path):
-    meta = {"prompt": "dungeon", "seed": 42, "engine": "fake",
-            "width": 64, "height": 64, "sha256": "ab" * 32}
+    meta = {
+        "prompt": "dungeon",
+        "seed": 42,
+        "engine": "fake",
+        "width": 64,
+        "height": 64,
+        "sha256": "ab" * 32,
+    }
     p1 = save_image_manifest("img_" + "ab" * 8, meta, tmp_path)
     data1 = json.loads(p1.read_text(encoding="utf-8"))
     assert data1["prompt"] == "dungeon"
@@ -132,8 +172,15 @@ def test_save_image_manifest_is_worm(tmp_path):
 
 def test_imagine_writes_manifest_sidecar(monkeypatch, tmp_path):
     client = _client(monkeypatch, tmp_path)
-    resp = client.post("/ml/imagine", json={
-        "prompt": "ritratto token goblin", "width": 128, "height": 128, "seed": 7})
+    resp = client.post(
+        "/ml/imagine",
+        json={
+            "prompt": "ritratto token goblin",
+            "width": 128,
+            "height": 128,
+            "seed": 7,
+        },
+    )
     assert resp.status_code == 200, resp.text
     data = resp.json()
     manifest = tmp_path / f"{data['imageId']}.json"

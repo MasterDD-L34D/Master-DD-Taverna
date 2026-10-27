@@ -39,6 +39,7 @@ Uso:
   --raw-dir PATH   (default data/reference/pi_local_only/pathbuilder)
   --out-dir PATH   (default <pathmaster sibling>/packages/rules-engine-v2/src/data)
 """
+
 from __future__ import annotations
 
 import argparse
@@ -49,19 +50,29 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_RAW_DIR = REPO_ROOT / "data/reference/pi_local_only/pathbuilder"
-DEFAULT_OUT_DIR = (REPO_ROOT.parent / "pathmaster-dd"
-                   / "packages/rules-engine-v2/src/data")
+DEFAULT_OUT_DIR = (
+    REPO_ROOT.parent / "pathmaster-dd" / "packages/rules-engine-v2/src/data"
+)
 
 # Mappe codici DICHIARATE: identiche a quelle di import_pathbuilder_equipment
 # (D4) — le riusiamo per coerenza, verificate sui membri noti (Animated 3&4 =
 # scudo/torre, Bashing 3 = solo scudo; Keen 0&1&2&6 = mischia+naturale).
 ARMOR_CATEGORIES = {
-    0: "light", 1: "medium", 2: "heavy", 3: "shield",
-    4: "tower-shield", 5: "magic-accessory",
+    0: "light",
+    1: "medium",
+    2: "heavy",
+    3: "shield",
+    4: "tower-shield",
+    5: "magic-accessory",
 }
 WEAPON_CATEGORIES = {
-    0: "light", 1: "one-handed", 2: "two-handed", 3: "ranged",
-    4: "firearm-one-handed", 5: "firearm-two-handed", 6: "natural",
+    0: "light",
+    1: "one-handed",
+    2: "two-handed",
+    3: "ranged",
+    4: "firearm-one-handed",
+    5: "firearm-two-handed",
+    6: "natural",
 }
 
 OUTPUT_FILE = "pathbuilder-magic-qualities.json"
@@ -74,18 +85,19 @@ def _rows(path: Path) -> list[ET.Element]:
 def _categories(row: ET.Element, labels: dict[int, str]) -> dict:
     raw = (row.findtext("Categories") or "").strip()
     codes = [int(c) for c in raw.split("&") if c.strip()]
-    return {"categories": codes,
-            "categoryLabels": [labels[c] for c in codes]}
+    return {"categories": codes, "categoryLabels": [labels[c] for c in codes]}
 
 
 def import_armor_magic(raw_dir: Path) -> list[dict]:
     out = []
     for row in _rows(raw_dir / "data_armor_magic.xml"):
-        out.append({
-            "name": (row.findtext("Effect") or "").strip(),
-            **_categories(row, ARMOR_CATEGORIES),
-            # MAI description/damage: non esistono come campi nel dato
-        })
+        out.append(
+            {
+                "name": (row.findtext("Effect") or "").strip(),
+                **_categories(row, ARMOR_CATEGORIES),
+                # MAI description/damage: non esistono come campi nel dato
+            }
+        )
     return out
 
 
@@ -111,27 +123,29 @@ def build(raw_dir: Path) -> dict:
     return {
         "_provenance": {
             "source": "Pathbuilder 1e raw data (res/raw dell'APK), "
-                      "data_armor_magic.xml + data_weapon_effects.xml",
+            "data_armor_magic.xml + data_weapon_effects.xml",
             "generated_by": "Master-DD-Taverna/tools/import_pathbuilder_magic_qualities.py",
             "generated_at": datetime.now(timezone.utc).isoformat(),
             "license": "Pathbuilder 1e raw data (APK da BlueStacks utente, permesso "
-                       "concesso 2026-08-02). Meccaniche e nomi: OGL 1.0a.",
+            "concesso 2026-08-02). Meccaniche e nomi: OGL 1.0a.",
             "desc_policy": "Solo nomi + categorie di applicabilita'. NIENTE "
-                           "description (non esiste nel dato), NIENTE bonus/prezzi "
-                           "inventati (non nel dato). Il <Damage> di 13 weapon "
-                           "effects resta stringa grezza, MAI parsato.",
+            "description (non esiste nel dato), NIENTE bonus/prezzi "
+            "inventati (non nel dato). Il <Damage> di 13 weapon "
+            "effects resta stringa grezza, MAI parsato.",
             "mapping_policy": "Le mappe codici (armorCategories, weaponCategories) "
-                              "sono quelle DICHIARATE di import_pathbuilder_equipment "
-                              "(D4), riusate per coerenza.",
+            "sono quelle DICHIARATE di import_pathbuilder_equipment "
+            "(D4), riusate per coerenza.",
             "consumer": "NESSUN consumatore ancora (dichiarato): dataset pronto "
-                        "per il candidato legality equipaggiamento D6 (qualita' "
-                        "magiche ammesse sull'item). Il canale `proficiency` "
-                        "attuale NON usa questi dati.",
+            "per il candidato legality equipaggiamento D6 (qualita' "
+            "magiche ammesse sull'item). Il canale `proficiency` "
+            "attuale NON usa questi dati.",
         },
         "armorCategories": {str(k): v for k, v in ARMOR_CATEGORIES.items()},
         "weaponCategories": {str(k): v for k, v in WEAPON_CATEGORIES.items()},
-        "counts": {"armorMagic": len(armor_magic),
-                   "weaponEffects": len(weapon_effects)},
+        "counts": {
+            "armorMagic": len(armor_magic),
+            "weaponEffects": len(weapon_effects),
+        },
         "armorMagic": armor_magic,
         "weaponEffects": weapon_effects,
     }
@@ -148,15 +162,18 @@ def main(argv=None) -> int:
     counts = payload["counts"]
     with_damage = sum(1 for e in payload["weaponEffects"] if "damage" in e)
     print(f"qualita' armatura/scudi: {counts['armorMagic']}")
-    print(f"qualita' armi: {counts['weaponEffects']} "
-          f"(con Damage grezzo: {with_damage})")
+    print(
+        f"qualita' armi: {counts['weaponEffects']} "
+        f"(con Damage grezzo: {with_damage})"
+    )
 
     if not args.report_only:
         out_dir = Path(args.out_dir)
         out_dir.mkdir(parents=True, exist_ok=True)
         path = out_dir / OUTPUT_FILE
-        path.write_text(json.dumps(payload, indent=1, ensure_ascii=False) + "\n",
-                        encoding="utf-8")
+        path.write_text(
+            json.dumps(payload, indent=1, ensure_ascii=False) + "\n", encoding="utf-8"
+        )
         print(f"scritto {path}")
     return 0
 

@@ -1,4 +1,5 @@
 """Index modules and reference catalog into the vector store."""
+
 import hashlib
 import json
 import re
@@ -22,8 +23,15 @@ def _is_reference_source(source: str) -> bool:
     return source.startswith(_REFERENCE_PREFIX)
 
 
-def _merge_and_save(store: VectorStore, chunks: list[dict], texts: list[str],
-                    is_domain, model_name: str, encoder, label: str) -> int:
+def _merge_and_save(
+    store: VectorStore,
+    chunks: list[dict],
+    texts: list[str],
+    is_domain,
+    model_name: str,
+    encoder,
+    label: str,
+) -> int:
     """Salva `chunks` nello store riusando gli embedding dei chunk invariati.
 
     L'id di ogni chunk e' un hash del contenuto: i chunk del dominio
@@ -42,8 +50,8 @@ def _merge_and_save(store: VectorStore, chunks: list[dict], texts: list[str],
         unique_chunks.append(c)
         unique_texts.append(t)
 
-    keep: list = []                  # (chunk, embedding) fuori dominio
-    reuse: dict = {}                 # id -> embedding nel dominio
+    keep: list = []  # (chunk, embedding) fuori dominio
+    reuse: dict = {}  # id -> embedding nel dominio
     if store.is_ready():
         for i, old in enumerate(store.chunks):
             if is_domain(old["source"]):
@@ -54,8 +62,13 @@ def _merge_and_save(store: VectorStore, chunks: list[dict], texts: list[str],
     to_encode = [i for i, c in enumerate(unique_chunks) if c["id"] not in reuse]
     print(f"  {label}: {len(to_encode)} da ri-encodare su {len(unique_chunks)}")
     new_embeddings = (
-        encoder.encode([unique_texts[i] for i in to_encode], show_progress_bar=True, convert_to_numpy=True)
-        if to_encode else None
+        encoder.encode(
+            [unique_texts[i] for i in to_encode],
+            show_progress_bar=True,
+            convert_to_numpy=True,
+        )
+        if to_encode
+        else None
     )
     it = iter(new_embeddings) if new_embeddings is not None else iter(())
     merged = [reuse[c["id"]] if c["id"] in reuse else next(it) for c in unique_chunks]
@@ -72,7 +85,9 @@ def _merge_and_save(store: VectorStore, chunks: list[dict], texts: list[str],
     return len(unique_chunks)
 
 
-def _split_paragraphs(text: str, max_chars: int = 1200, overlap: int = 200) -> list[str]:
+def _split_paragraphs(
+    text: str, max_chars: int = 1200, overlap: int = 200
+) -> list[str]:
     """Split text into chunks by paragraphs first, then by sentences if too long."""
     paragraphs = [p.strip() for p in text.split("\n\n") if p.strip()]
     chunks = []
@@ -93,7 +108,9 @@ def _split_paragraphs(text: str, max_chars: int = 1200, overlap: int = 200) -> l
     return chunks
 
 
-def index_modules(modules_dir: Path | str, store: VectorStore, model_name: str, encoder):
+def index_modules(
+    modules_dir: Path | str, store: VectorStore, model_name: str, encoder
+):
     modules_dir = Path(modules_dir)
     chunks = []
     texts = []
@@ -108,18 +125,26 @@ def index_modules(modules_dir: Path | str, store: VectorStore, model_name: str, 
                 text = parts[2]
         source = str(path.relative_to(modules_dir))
         for idx, chunk_text in enumerate(_split_paragraphs(text)):
-            chunks.append({
-                "id": _chunk_id(source, chunk_text),
-                "source": source,
-                "text": chunk_text,
-                "meta": {"index": idx},
-            })
+            chunks.append(
+                {
+                    "id": _chunk_id(source, chunk_text),
+                    "source": source,
+                    "text": chunk_text,
+                    "meta": {"index": idx},
+                }
+            )
             texts.append(chunk_text)
     if not texts:
         raise ValueError("Nessun testo trovato da indicizzare")
-    return _merge_and_save(store, chunks, texts,
-                           lambda s: not _is_reference_source(s),
-                           model_name, encoder, "moduli")
+    return _merge_and_save(
+        store,
+        chunks,
+        texts,
+        lambda s: not _is_reference_source(s),
+        model_name,
+        encoder,
+        "moduli",
+    )
 
 
 def _catalog_entries(catalog: dict, reference_dir: Path, include_local: bool):
@@ -136,7 +161,13 @@ def _catalog_entries(catalog: dict, reference_dir: Path, include_local: bool):
     return data if isinstance(data, list) else []
 
 
-def index_reference_catalog(reference_dir: Path | str, store: VectorStore, model_name: str, encoder, include_local: bool = False):
+def index_reference_catalog(
+    reference_dir: Path | str,
+    store: VectorStore,
+    model_name: str,
+    encoder,
+    include_local: bool = False,
+):
     """Index structured reference entries declared in manifest.json.
 
     Only catalogs with is_ogc=True or cup_allowed=True are indexed.
@@ -155,7 +186,9 @@ def index_reference_catalog(reference_dir: Path | str, store: VectorStore, model
     for catalog in catalogs:
         if not isinstance(catalog, dict):
             continue
-        is_local = catalog.get("local_only", False) or "pi_local_only" in str(catalog.get("file", ""))
+        is_local = catalog.get("local_only", False) or "pi_local_only" in str(
+            catalog.get("file", "")
+        )
         if is_local:
             if not include_local:
                 continue
@@ -178,7 +211,9 @@ def index_reference_catalog(reference_dir: Path | str, store: VectorStore, model
             if "notes" in entry and entry["notes"]:
                 text_parts.append(entry["notes"])
             if entry.get("mechanics"):
-                mech_text = json.dumps(entry["mechanics"], ensure_ascii=False, sort_keys=True)
+                mech_text = json.dumps(
+                    entry["mechanics"], ensure_ascii=False, sort_keys=True
+                )
                 text_parts.append(f"Mechanics: {mech_text[:2000]}")
             if "tags" in entry and entry["tags"]:
                 text_parts.append("Tags: " + ", ".join(str(t) for t in entry["tags"]))
@@ -186,13 +221,15 @@ def index_reference_catalog(reference_dir: Path | str, store: VectorStore, model
             if not text.strip():
                 continue
             source = f"reference::{kind}::{entry.get('name', idx)}"
-            chunks.append({
-                "id": _chunk_id(source, text),
-                "source": source,
-                "text": text,
-                "meta": {"kind": kind, "entry": entry.get("name", "")},
-            })
+            chunks.append(
+                {
+                    "id": _chunk_id(source, text),
+                    "source": source,
+                    "text": text,
+                    "meta": {"kind": kind, "entry": entry.get("name", "")},
+                }
+            )
             texts.append(text)
-    return _merge_and_save(store, chunks, texts,
-                           _is_reference_source,
-                           model_name, encoder, "reference")
+    return _merge_and_save(
+        store, chunks, texts, _is_reference_source, model_name, encoder, "reference"
+    )

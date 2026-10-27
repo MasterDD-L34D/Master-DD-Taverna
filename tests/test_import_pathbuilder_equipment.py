@@ -34,6 +34,7 @@ Forma reale dei file (ricognizione 2026-08-07): <Root><Row>.
 Policy OGL: il JSON committato non include mai la Description ne' il Ref.
 Gli enhancement magici restano preset di nome+stat base: MAI bonus inventato.
 """
+
 import json
 import sys
 from pathlib import Path
@@ -43,7 +44,6 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tools import import_pathbuilder_equipment as pbe
-
 
 # ---------------------------------------------------------------------------
 # Fixture: forma reale (campi nell'ordine osservato nei file veri).
@@ -284,8 +284,7 @@ SLOTTED_XML = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 def raw_dir(tmp_path: Path) -> Path:
     (tmp_path / "data_weapons.xml").write_text(WEAPONS_XML, encoding="utf-8")
     (tmp_path / "data_armor.xml").write_text(ARMOR_XML, encoding="utf-8")
-    (tmp_path / "data_equipment_slotted.xml").write_text(
-        SLOTTED_XML, encoding="utf-8")
+    (tmp_path / "data_equipment_slotted.xml").write_text(SLOTTED_XML, encoding="utf-8")
     return tmp_path
 
 
@@ -293,23 +292,37 @@ def raw_dir(tmp_path: Path) -> Path:
 # Mappe dichiarate (codici numerici PB -> etichette)
 # ---------------------------------------------------------------------------
 
+
 def test_weapon_categories_dichiarate():
     assert pbe.WEAPON_CATEGORIES == {
-        0: "light", 1: "one-handed", 2: "two-handed", 3: "ranged",
-        4: "firearm-one-handed", 5: "firearm-two-handed", 6: "natural",
+        0: "light",
+        1: "one-handed",
+        2: "two-handed",
+        3: "ranged",
+        4: "firearm-one-handed",
+        5: "firearm-two-handed",
+        6: "natural",
     }
 
 
 def test_weapon_proficiencies_dichiarate():
     assert pbe.WEAPON_PROFICIENCIES == {
-        -1: "none", 0: "simple", 1: "martial", 2: "exotic", 3: "firearm",
+        -1: "none",
+        0: "simple",
+        1: "martial",
+        2: "exotic",
+        3: "firearm",
     }
 
 
 def test_armor_categories_dichiarate():
     assert pbe.ARMOR_CATEGORIES == {
-        0: "light", 1: "medium", 2: "heavy", 3: "shield",
-        4: "tower-shield", 5: "magic-accessory",
+        0: "light",
+        1: "medium",
+        2: "heavy",
+        3: "shield",
+        4: "tower-shield",
+        5: "magic-accessory",
     }
 
 
@@ -327,6 +340,7 @@ def test_slot_labels_dichiarate_e_complete():
 # ---------------------------------------------------------------------------
 # Weapons
 # ---------------------------------------------------------------------------
+
 
 def test_import_weapons_stat_strutturate(raw_dir):
     weapons = pbe.import_weapons(raw_dir)
@@ -386,8 +400,7 @@ def test_import_weapons_doppia_valori_per_estremita(raw_dir):
     # armi doppie: Damage e CritMultiplier sono per estremita', separati da
     # '&' nel dato. damage resta la stringa grezza strutturata; critMultiplier
     # singolo e' null DICHIARATO e la coppia va in critMultipliers.
-    ghh = {w["name"]: w for w in pbe.import_weapons(raw_dir)}[
-        "Gnome hooked hammer"]
+    ghh = {w["name"]: w for w in pbe.import_weapons(raw_dir)}["Gnome hooked hammer"]
     assert ghh["damage"] == "1d8&1d6"
     assert ghh["critMultiplier"] is None
     assert ghh["critMultipliers"] == [3, 4]
@@ -406,6 +419,7 @@ def test_import_weapons_niente_costo_inventato(raw_dir):
 # ---------------------------------------------------------------------------
 # Armor
 # ---------------------------------------------------------------------------
+
 
 def test_import_armor_stat_strutturate(raw_dir):
     armor = pbe.import_armor(raw_dir)
@@ -445,6 +459,7 @@ def test_import_armor_niente_costo_inventato(raw_dir):
 # Slotted
 # ---------------------------------------------------------------------------
 
+
 def test_import_slotted_nome_costo_slot_fonte(raw_dir):
     items, skipped = pbe.import_slotted(raw_dir)
     assert skipped == 1  # la riga senza Name (template di bonus)
@@ -475,17 +490,19 @@ def test_import_slotted_mai_description_ne_ref(raw_dir):
 # Payload completo (main) — header, conteggi, report
 # ---------------------------------------------------------------------------
 
+
 def test_main_scrive_json_con_header_e_report(raw_dir, tmp_path):
     out_dir = tmp_path / "out"
-    rc = pbe.main([
-        "--raw-dir", str(raw_dir), "--out-dir", str(out_dir)])
+    rc = pbe.main(["--raw-dir", str(raw_dir), "--out-dir", str(out_dir)])
     assert rc == 0
     payload = json.loads(
-        (out_dir / "pathbuilder-equipment.json").read_text(encoding="utf-8"))
+        (out_dir / "pathbuilder-equipment.json").read_text(encoding="utf-8")
+    )
     prov = payload["_provenance"]
     assert "Pathbuilder" in prov["source"]
     assert prov["generated_by"] == (
-        "Master-DD-Taverna/tools/import_pathbuilder_equipment.py")
+        "Master-DD-Taverna/tools/import_pathbuilder_equipment.py"
+    )
     assert "OGL" in prov["license"]
     assert "Description" in prov["desc_policy"]
     # mappe dichiarate nel dato
@@ -515,8 +532,7 @@ REAL_RAW = REPO_ROOT / "data/reference/pi_local_only/pathbuilder"
 REAL_REASON = f"dataset PI local-only assente: {REAL_RAW}"
 
 
-@pytest.mark.skipif(not (REAL_RAW / "data_weapons.xml").is_file(),
-                    reason=REAL_REASON)
+@pytest.mark.skipif(not (REAL_RAW / "data_weapons.xml").is_file(), reason=REAL_REASON)
 def test_dati_reali_weapons_conteggi_e_spot_check():
     weapons = pbe.import_weapons(REAL_RAW)
     assert len(weapons) == 313
@@ -542,8 +558,7 @@ def test_dati_reali_weapons_conteggi_e_spot_check():
     assert ghh["critMultipliers"] == [3, 4]
 
 
-@pytest.mark.skipif(not (REAL_RAW / "data_armor.xml").is_file(),
-                    reason=REAL_REASON)
+@pytest.mark.skipif(not (REAL_RAW / "data_armor.xml").is_file(), reason=REAL_REASON)
 def test_dati_reali_armor_conteggi_e_spot_check():
     armor = pbe.import_armor(REAL_RAW)
     assert len(armor) == 58
@@ -559,8 +574,9 @@ def test_dati_reali_armor_conteggi_e_spot_check():
     assert by_name["Tower shield"]["armorCheckPenalty"] == -10
 
 
-@pytest.mark.skipif(not (REAL_RAW / "data_equipment_slotted.xml").is_file(),
-                    reason=REAL_REASON)
+@pytest.mark.skipif(
+    not (REAL_RAW / "data_equipment_slotted.xml").is_file(), reason=REAL_REASON
+)
 def test_dati_reali_slotted_conteggi_e_spot_check():
     items, skipped = pbe.import_slotted(REAL_RAW)
     assert len(items) == 2783
@@ -573,8 +589,14 @@ def test_dati_reali_slotted_conteggi_e_spot_check():
     assert amulet["slotLabel"] == "neck"
     # 6 nomi duplicati (slot/fonte diversi) dichiarati, mai fusi
     dups = {n for n, v in by_name.items() if len(v) > 1}
-    assert dups == {"Darkflare", "Pantograph", "Troll styptic",
-                    "Goblinvine", "Leechwort", "Winterbite"}
+    assert dups == {
+        "Darkflare",
+        "Pantograph",
+        "Troll styptic",
+        "Goblinvine",
+        "Leechwort",
+        "Winterbite",
+    }
     # 11 voci con Name ma senza Slot nel dato: null DICHIARATI, mai dedotti
     no_slot = [i["name"] for i in items if i["slot"] is None]
     assert len(no_slot) == 11

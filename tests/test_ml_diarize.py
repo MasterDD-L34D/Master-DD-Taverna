@@ -1,5 +1,6 @@
 """Test per src/ml/diarize.py — clustering speaker su embedding iniettati
 (niente resemblyzer/modello: encoder finto deterministico)."""
+
 import sys
 from pathlib import Path
 
@@ -26,8 +27,9 @@ class FakeEncoder:
 
 
 def _segments(n, dur=2.0):
-    return [{"start": i * dur, "end": (i + 1) * dur, "text": f"seg {i}"}
-            for i in range(n)]
+    return [
+        {"start": i * dur, "end": (i + 1) * dur, "text": f"seg {i}"} for i in range(n)
+    ]
 
 
 def _wav(seconds):
@@ -57,22 +59,27 @@ def test_short_segment_inherits_previous_label():
     """Segmenti sotto MIN_SEG_SECONDS: niente embedding, eredita l'etichetta."""
     a = np.array([1.0, 0.0])
     enc = FakeEncoder([a, a])  # il segmento corto non consuma embedding
-    segs = [{"start": 0.0, "end": 2.0, "text": "lungo"},
-            {"start": 2.0, "end": 2.3, "text": "corto"},
-            {"start": 2.3, "end": 4.3, "text": "lungo 2"}]
+    segs = [
+        {"start": 0.0, "end": 2.0, "text": "lungo"},
+        {"start": 2.0, "end": 2.3, "text": "corto"},
+        {"start": 2.3, "end": 4.3, "text": "lungo 2"},
+    ]
     labels = diarize_segments(_wav(5.0), SR, segs, encoder=enc)
     assert labels == ["S1", "S1", "S1"]
 
 
 def test_attach_speakers_contract():
-    segs = [{"start": 0.0, "end": 1.0, "text": "x"},
-            {"start": 1.0, "end": 2.0, "text": "y"}]
+    segs = [
+        {"start": 0.0, "end": 1.0, "text": "x"},
+        {"start": 1.0, "end": 2.0, "text": "y"},
+    ]
     attach_speakers(segs, ["S1", "S2"])
     assert segs[0]["speaker"] == "S1" and segs[1]["speaker"] == "S2"
 
 
 def test_fake_engine_diarize_adds_speakers():
     from src.ml.asr import FakeAsrEngine
+
     out = FakeAsrEngine().transcribe(b"audio", "clip.ogg", diarize=True)
     speakers = [s["speaker"] for s in out["segments"]]
     assert speakers == ["S1", "S2"]

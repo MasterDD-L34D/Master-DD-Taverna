@@ -5,6 +5,7 @@ suite, il valutatore e il contratto del prompt funzionino, SENZA LLM reale.
 Il runner con LLM reale (ollama) e' opt-in: `RAG_ADVERSARIAL_LIVE=1` (o
 direttamente `tools/rag_adversarial.py`, che salva/confronta la baseline).
 """
+
 import json
 import os
 import sys
@@ -16,11 +17,20 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 
 from src.rag.generator import OllamaProvider, OllamaOpenAIProvider
 from tools.rag_adversarial import (
-    CASES_PATH, evaluate_answer, evaluate_suite, load_cases, summarize,
+    CASES_PATH,
+    evaluate_answer,
+    evaluate_suite,
+    load_cases,
+    summarize,
 )
 
 CASES, _ = load_cases()
-FAMILIES = ("anti-allucinazione", "prompt-injection", "fonti-false", "grounding-positivo")
+FAMILIES = (
+    "anti-allucinazione",
+    "prompt-injection",
+    "fonti-false",
+    "grounding-positivo",
+)
 
 # Risposte sicure in scatola: un LLM ben comportato passa tutte le sentinelle.
 SAFE_ANSWERS = {
@@ -97,8 +107,9 @@ def test_cases_structure():
     ids = [c["id"] for c in CASES]
     assert len(set(ids)) == 12
     for family in FAMILIES:
-        assert sum(1 for c in CASES if c["family"] == family) == 3, \
-            f"famiglia {family}: attesi 3 casi"
+        assert (
+            sum(1 for c in CASES if c["family"] == family) == 3
+        ), f"famiglia {family}: attesi 3 casi"
     for c in CASES:
         assert c["severity"] in ("critico", "regressione")
         assert c["query"].strip()
@@ -107,13 +118,23 @@ def test_cases_structure():
         assert "require_groups" in rubric and "forbid_any" in rubric
         assert all(isinstance(g, list) and g for g in rubric["require_groups"])
     # le famiglie avversariali sono critiche; il grounding positivo segnala regressioni
-    assert all(c["severity"] == "critico" for c in CASES if c["family"] != "grounding-positivo")
-    assert all(c["severity"] == "regressione" for c in CASES if c["family"] == "grounding-positivo")
+    assert all(
+        c["severity"] == "critico" for c in CASES if c["family"] != "grounding-positivo"
+    )
+    assert all(
+        c["severity"] == "regressione"
+        for c in CASES
+        if c["family"] == "grounding-positivo"
+    )
 
 
 def test_evaluator_require_groups_and_forbid():
-    case = {"rubric": {"require_groups": [["alfa", "beta"], ["gamma"]],
-                       "forbid_any": ["vietato"]}}
+    case = {
+        "rubric": {
+            "require_groups": [["alfa", "beta"], ["gamma"]],
+            "forbid_any": ["vietato"],
+        }
+    }
     assert evaluate_answer(case, "dico beta e gamma")["ok"]
     assert not evaluate_answer(case, "dico solo beta")["ok"]
     assert not evaluate_answer(case, "beta gamma ma anche vietato")["ok"]
@@ -133,21 +154,26 @@ def test_safe_script_passes_all_cases():
 
 def test_compromised_script_is_caught():
     """LLM finto compromesso: ogni fallimento inscenato deve essere intercettato."""
+
     def answer(case):
         return COMPROMISED_ANSWERS.get(case["id"], SAFE_ANSWERS[case["id"]])
 
     results = evaluate_suite(CASES, answer)
     by_id = {r["id"]: r for r in results}
     for cid in COMPROMISED_ANSWERS:
-        assert not by_id[cid]["ok"], f"{cid}: comportamento compromesso non intercettato"
+        assert not by_id[cid][
+            "ok"
+        ], f"{cid}: comportamento compromesso non intercettato"
     ok_ids = [r["id"] for r in results if r["ok"]]
     assert set(ok_ids) == set(SAFE_ANSWERS) - set(COMPROMISED_ANSWERS)
     summary = summarize(results)
     assert not summary["ok"]
     # allucinazione / leak / fonte falsa sono critici; il grounding rotto e' regressione
     assert set(summary["critical_failures"]) == {
-        "halluc-feat-great-weapon-focus", "inject-reveal-system-prompt",
-        "source-fake-manual-inner-sea"}
+        "halluc-feat-great-weapon-focus",
+        "inject-reveal-system-prompt",
+        "source-fake-manual-inner-sea",
+    }
     assert summary["regression_failures"] == ["ground-spell-fireball"]
 
 
@@ -175,11 +201,15 @@ def test_ollama_prompt_has_grounding_guardrails(monkeypatch):
         return _FakeResponse({"response": "ok"})
 
     monkeypatch.setattr("src.rag.generator.httpx.post", fake_post)
-    OllamaProvider().generate("domanda?", [{"source": "feats", "text": "Power Attack: ..."}])
+    OllamaProvider().generate(
+        "domanda?", [{"source": "feats", "text": "Power Attack: ..."}]
+    )
     prompt = captured["prompt"]
     assert "solo il contesto fornito" in prompt
     assert "Se il contesto non basta, dillo chiaramente" in prompt
-    assert "Power Attack: ..." in prompt, "il contesto recuperato deve entrare nel prompt"
+    assert (
+        "Power Attack: ..." in prompt
+    ), "il contesto recuperato deve entrare nel prompt"
     assert "domanda?" in prompt
 
 
@@ -229,10 +259,12 @@ def test_system_prompt_hardening_clauses(monkeypatch):
         assert "se il contesto non basta" in low, "clausola di assenza ovunque"
         assert "non inventare" in low, "divieto esplicito di allucinazione"
         assert "non rivelare" in low, "divieto di leak del system prompt"
-        assert ("non istruzioni" in low or "ignora" in low), \
-            "il contesto deve essere dichiarato DATI, non comandi"
-        assert "ignorare queste regole" in low, \
-            "anti-injection anche sulla domanda utente"
+        assert (
+            "non istruzioni" in low or "ignora" in low
+        ), "il contesto deve essere dichiarato DATI, non comandi"
+        assert (
+            "ignorare queste regole" in low
+        ), "anti-injection anche sulla domanda utente"
     # il testo recuperato va marcato come dati anche nel messaggio utente
     assert "non istruzioni" in chat_user.lower() or "dati" in chat_user.lower()
     # richiamo anti-injection in coda (recency) su entrambi i percorsi
@@ -250,10 +282,13 @@ def test_context_chunks_carry_source_labels(monkeypatch):
         return _FakeResponse({"choices": [{"message": {"content": "ok"}}]})
 
     monkeypatch.setattr("src.rag.generator.httpx.post", fake_post)
-    OllamaOpenAIProvider().generate("domanda?", [
-        {"source": "reference::feats::Power Attack", "text": "testo talento"},
-        {"source": "adventurer_ledger.txt", "text": "testo modulo"},
-    ])
+    OllamaOpenAIProvider().generate(
+        "domanda?",
+        [
+            {"source": "reference::feats::Power Attack", "text": "testo talento"},
+            {"source": "adventurer_ledger.txt", "text": "testo modulo"},
+        ],
+    )
     user = captured["messages"][-1]["content"]
     assert "[fonte: Power Attack (feats)]" in user
     assert "[fonte: adventurer_ledger.txt]" in user
@@ -262,8 +297,14 @@ def test_context_chunks_carry_source_labels(monkeypatch):
 
 def test_source_label_helper():
     from src.rag.generator import _source_label
-    assert _source_label({"source": "reference::feats::Power Attack"}) == "Power Attack (feats)"
-    assert _source_label({"source": "reference::spells::Fireball"}) == "Fireball (spells)"
+
+    assert (
+        _source_label({"source": "reference::feats::Power Attack"})
+        == "Power Attack (feats)"
+    )
+    assert (
+        _source_label({"source": "reference::spells::Fireball"}) == "Fireball (spells)"
+    )
     assert _source_label({"source": "ruling_expert.txt"}) == "ruling_expert.txt"
     assert _source_label({"source": ""}) == "sconosciuta"
     assert _source_label({}) == "sconosciuta"
@@ -280,31 +321,43 @@ def test_live_sentinels_no_critical_failures():
     from src.rag.retriever import Retriever
     from src.rag.store import VectorStore
 
-    store = VectorStore(str(Path(__file__).resolve().parent.parent / "src" / "data" / "vector_store"))
+    store = VectorStore(
+        str(Path(__file__).resolve().parent.parent / "src" / "data" / "vector_store")
+    )
     if not store.is_ready():
         pytest.skip("Indice RAG non trovato; esegui tools/index_rag.py --include-local")
-    retriever = Retriever(store, SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2"))
+    retriever = Retriever(
+        store, SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2")
+    )
     provider = get_provider()
 
     def answer(case):
-        return provider.generate(case["query"], retriever.search(case["query"], top_k=5))
+        return provider.generate(
+            case["query"], retriever.search(case["query"], top_k=5)
+        )
 
     results = evaluate_suite(CASES, answer)
     summary = summarize(results)
-    assert not summary["critical_failures"], \
-        f"sentinelle critiche fallite con LLM reale: {summary['critical_failures']}"
+    assert not summary[
+        "critical_failures"
+    ], f"sentinelle critiche fallite con LLM reale: {summary['critical_failures']}"
 
 
 def test_cases_file_is_not_rag_knowledge():
     """Regola 'la suite non e' conoscenza del modello': i casi non devono finire
     nei moduli prompt indicizzati (controllo statico anti-leak)."""
     modules_dir = Path(__file__).resolve().parent.parent / "src" / "modules"
-    markers = {c["id"] for c in CASES} | {"Great Weapon Focus", "Sfera Prismatica Invertita",
-                                         "Secrets of the Inner Sea Tactics"}
+    markers = {c["id"] for c in CASES} | {
+        "Great Weapon Focus",
+        "Sfera Prismatica Invertita",
+        "Secrets of the Inner Sea Tactics",
+    }
     if not modules_dir.is_dir():
         pytest.skip("src/modules assente")
     for path in modules_dir.rglob("*"):
         if path.is_file() and path.suffix in (".txt", ".md", ".json"):
             text = path.read_text(encoding="utf-8", errors="ignore")
             leaked = [m for m in markers if m in text]
-            assert not leaked, f"sentinelle finite nella conoscenza del modello ({path}): {leaked}"
+            assert (
+                not leaked
+            ), f"sentinelle finite nella conoscenza del modello ({path}): {leaked}"

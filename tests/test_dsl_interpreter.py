@@ -1965,7 +1965,9 @@ commands:
     it.run_command("/go")
     assert [e for e in it.events if "wizard_guard_falso" in e]
     assert get_path(it.state, "game_mode.shared.accepted") is None
-    assert get_path(it.state, "runtime.current_state") != "GameMode.K.p"  # mai atterrato
+    assert (
+        get_path(it.state, "runtime.current_state") != "GameMode.K.p"
+    )  # mai atterrato
 
 
 # ---- Router input libero (ADR 015, ES4) --------------------------------
@@ -2072,8 +2074,7 @@ def test_route_input_invoke_noop_pipeline(tmp_path):
     it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
     it.route_input("cosa fa il talento Pounce?")
     assert any(
-        n.get("verb") == "invoke"
-        and n.get("reason") == "pipeline_non_implementata"
+        n.get("verb") == "invoke" and n.get("reason") == "pipeline_non_implementata"
         for n in it.noop_log
     )
     # i set dei decorators invece si applicano
@@ -2139,7 +2140,7 @@ def test_route_input_disambiguazione_vede_candidati_correnti(tmp_path):
     # corrente (non quelli precedenti) nel reply
     mini = _ROUTER_MINI.replace(
         'reply: "Quale modulo?"',
-        'reply: "Candidati: {{ runtime.intent_candidates | join(\', \') }}"',
+        "reply: \"Candidati: {{ runtime.intent_candidates | join(', ') }}\"",
     )
     it = Interpreter(_mini(tmp_path, mini))
     assert it.route_input("talento npc") is None
@@ -2191,5 +2192,7 @@ def test_route_input_disambiguazione_dopo_tutti_i_segmenti(tmp_path):
     # multi-segmento emetteva prompt ripetuti e crescenti)
     it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
     assert it.route_input("storia; poi talento; poi npc") is None
-    assert [o for o in it.output_log if o == "Quale modulo?"].count("Quale modulo?") == 1
+    assert [o for o in it.output_log if o == "Quale modulo?"].count(
+        "Quale modulo?"
+    ) == 1
     assert len(get_path(it.state, "runtime.intent_candidates")) == 3

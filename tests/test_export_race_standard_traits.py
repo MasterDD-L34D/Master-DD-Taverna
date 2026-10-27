@@ -10,6 +10,7 @@ Policy: mai i testi dei tratti (description Paizo, restano nel catalogo).
 Le razze senza lista tratti nel catalogo compaiono nel report `without_traits`
 — dichiarate, mai inventate.
 """
+
 import json
 import sys
 from pathlib import Path
@@ -18,7 +19,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tools import export_race_standard_traits as ex
 
-
 RACES = {
     "entries": [
         {
@@ -26,7 +26,10 @@ RACES = {
             "mechanics": {
                 "traits": [
                     {"name": "Bonus Feat", "text": "Humans select one extra feat..."},
-                    {"name": "Skilled", "text": "Humans gain an additional skill rank..."},
+                    {
+                        "name": "Skilled",
+                        "text": "Humans gain an additional skill rank...",
+                    },
                 ],
             },
         },
@@ -81,12 +84,43 @@ def test_real_catalog_covers_pb_playable_races():
     data = json.loads(catalog.read_text(encoding="utf-8"))
     doc = ex.build_file(data)
     playable = [
-        "Dwarf", "Elf", "Gnome", "Half-Elf", "Half-Orc", "Halfling", "Human",
-        "Aasimar", "Catfolk", "Dhampir", "Drow", "Fetchling", "Goblin",
-        "Hobgoblin", "Ifrit", "Kobold", "Orc", "Oread", "Ratfolk", "Sylph",
-        "Tengu", "Tiefling", "Undine", "Changeling", "Duergar", "Gillman",
-        "Grippli", "Kitsune", "Merfolk", "Nagaji", "Samsaran", "Strix",
-        "Suli", "Svirfneblin", "Vanara", "Vishkanya", "Wayang",
+        "Dwarf",
+        "Elf",
+        "Gnome",
+        "Half-Elf",
+        "Half-Orc",
+        "Halfling",
+        "Human",
+        "Aasimar",
+        "Catfolk",
+        "Dhampir",
+        "Drow",
+        "Fetchling",
+        "Goblin",
+        "Hobgoblin",
+        "Ifrit",
+        "Kobold",
+        "Orc",
+        "Oread",
+        "Ratfolk",
+        "Sylph",
+        "Tengu",
+        "Tiefling",
+        "Undine",
+        "Changeling",
+        "Duergar",
+        "Gillman",
+        "Grippli",
+        "Kitsune",
+        "Merfolk",
+        "Nagaji",
+        "Samsaran",
+        "Strix",
+        "Suli",
+        "Svirfneblin",
+        "Vanara",
+        "Vishkanya",
+        "Wayang",
     ]
     have = {k.strip().lower() for k in doc["races"]}
     missing = [r for r in playable if r.strip().lower() not in have]

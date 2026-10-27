@@ -38,6 +38,7 @@ Livello minimo (precedenza dichiarata, come D3-a):
 Uso:
   python tools/build_class_feature_pools.py [--out-dir PATH]
 """
+
 from __future__ import annotations
 
 import argparse
@@ -50,12 +51,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 TALENTS_PATH = REPO_ROOT / "data" / "reference" / "ogl" / "talents.json"
 PCGEN_DATA_DIR = (
-    REPO_ROOT.parent
-    / "pathmaster-dd"
-    / "packages"
-    / "rules-engine-v2"
-    / "src"
-    / "data"
+    REPO_ROOT.parent / "pathmaster-dd" / "packages" / "rules-engine-v2" / "src" / "data"
 )
 DEFAULT_OUT_DIR = PCGEN_DATA_DIR
 
@@ -155,7 +151,9 @@ def qualifier_matches_category(category: str, pcgen_key: str) -> bool:
     return bool(cat) and (qual == cat or qual.startswith(cat) or cat.startswith(qual))
 
 
-def find_pcgen_match(talent: dict, pcgen_entries: list[dict]) -> tuple[str, dict | None]:
+def find_pcgen_match(
+    talent: dict, pcgen_entries: list[dict]
+) -> tuple[str, dict | None]:
     """Ritorna ("matched"|"ambiguous"|"absent", entry PCGen o None)."""
     mech = talent.get("mechanics", {})
     pool = mech.get("pool", "")
@@ -173,11 +171,17 @@ def find_pcgen_match(talent: dict, pcgen_entries: list[dict]) -> tuple[str, dict
     ]
     if pool == "order":
         # il nome Taverna ("Order of Vengeance") e' la key nuda PCGen
-        candidates = [e for e in pcgen_entries if norm(e.get("key", "")) == name and key_ok(e.get("key", ""))]
+        candidates = [
+            e
+            for e in pcgen_entries
+            if norm(e.get("key", "")) == name and key_ok(e.get("key", ""))
+        ]
     if not candidates:
         return "absent", None
     if category:
-        preferred = [e for e in candidates if qualifier_matches_category(category, e["key"])]
+        preferred = [
+            e for e in candidates if qualifier_matches_category(category, e["key"])
+        ]
         if len(preferred) == 1:
             return "matched", preferred[0]
         if len(preferred) > 1:
@@ -272,8 +276,14 @@ def build(talents_path: Path, pcgen_dir: Path) -> dict:
             min_level_source = "taverna"
         elif pcgen is not None:
             granted = grant_min_level(pcgen["key"], cls, progression)
-            gated = gate_min_level(pcgen.get("prerequisites", []), CLASS_TO_PCGEN.get(cls, cls))
-            candidates = [(s, v) for s, v in (("pcgen-grant", granted), ("pcgen-gate", gated)) if v is not None]
+            gated = gate_min_level(
+                pcgen.get("prerequisites", []), CLASS_TO_PCGEN.get(cls, cls)
+            )
+            candidates = [
+                (s, v)
+                for s, v in (("pcgen-grant", granted), ("pcgen-gate", gated))
+                if v is not None
+            ]
             if candidates:
                 # a parita' di presenza: il grant (concessione) vale piu' del
                 # gate (requisito); fra due valori il MINIMO (regola D3-a)
@@ -297,7 +307,9 @@ def build(talents_path: Path, pcgen_dir: Path) -> dict:
             "pcgen_match": status,
             "pcgen_key": pcgen["key"] if pcgen is not None else None,
             "prereqs_known": pcgen is not None,
-            "prerequisites": pcgen.get("prerequisites", []) if pcgen is not None else [],
+            "prerequisites": (
+                pcgen.get("prerequisites", []) if pcgen is not None else []
+            ),
         }
         entries.append(entry)
 
@@ -334,7 +346,9 @@ def main(argv: list[str] | None = None) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     data = build(Path(args.talents), Path(args.pcgen_dir))
     out_path = out_dir / "class-features-pool.json"
-    out_path.write_text(json.dumps(data, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    out_path.write_text(
+        json.dumps(data, indent=1, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
 
     cov = data["_coverage"]
     print(f"entry pool: {cov['entries']}")

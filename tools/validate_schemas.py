@@ -22,7 +22,6 @@ from typing import Iterable, Mapping
 from jsonschema import Draft202012Validator
 from jsonschema.exceptions import SchemaError
 
-
 DEFAULT_BUILD_DIR_CANDIDATES = (
     Path("builds"),
     Path("data/builds"),
@@ -121,7 +120,9 @@ def validate_reference_contract(
     errors.extend(manifest_file_errors)
 
     missing_required_datasets = [
-        dataset for dataset in REQUIRED_REFERENCE_DATASETS if dataset not in manifest_files
+        dataset
+        for dataset in REQUIRED_REFERENCE_DATASETS
+        if dataset not in manifest_files
     ]
     if missing_required_datasets:
         errors.append(
@@ -151,7 +152,9 @@ def validate_reference_contract(
             elif isinstance(dataset_payload, list):
                 actual_entries = len(dataset_payload)
             else:
-                errors.append(f"{dataset_path}: dataset deve essere una lista JSON o un oggetto con 'entries'")
+                errors.append(
+                    f"{dataset_path}: dataset deve essere una lista JSON o un oggetto con 'entries'"
+                )
                 continue
             descriptor = (manifest_payload.get("files") or {}).get(dataset_name)
             expected_entries = (

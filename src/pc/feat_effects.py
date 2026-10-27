@@ -4,6 +4,7 @@ La mappa e' deliberatamente dichiarativa: ogni talento -> dict di modificatori
 applicati in apply_feat_effects. I talenti senza effetto numerico sui valori
 della scheda (metamagic, granted di classe, condizionali) sono ignorati senza
 warning; le selezioni mancanti/invalide producono warning."""
+
 import re
 
 from src.pc import catalogs
@@ -41,10 +42,14 @@ def _apply_weapon_focus(sheet, selection):
             if attack["weapon"].lower() == selection.lower():
                 attack["bonus"] += 1
                 return
-        sheet["warnings"].append(f"Weapon Focus ({selection}): arma non in equip, nessun bonus")
+        sheet["warnings"].append(
+            f"Weapon Focus ({selection}): arma non in equip, nessun bonus"
+        )
         return
     sheet["attacks"][0]["bonus"] += 1
-    sheet["warnings"].append("Weapon Focus senza selezione: bonus applicato alla prima arma")
+    sheet["warnings"].append(
+        "Weapon Focus senza selezione: bonus applicato alla prima arma"
+    )
 
 
 def _apply_skill_focus(sheet, selection, mods):
@@ -60,16 +65,33 @@ def _apply_skill_focus(sheet, selection, mods):
         sheet["warnings"].append(f"Skill Focus ({selection}): skill sconosciuta")
         return
     key = sk["mechanics"]["key_ability"]
-    skills[selection] = {"ranks": 0, "ability": key, "total": mods[key] + 3, "class_skill": False}
+    skills[selection] = {
+        "ranks": 0,
+        "ability": key,
+        "total": mods[key] + 3,
+        "class_skill": False,
+    }
 
 
 # Lista curata v1 di armi finessabili comuni (la categoria "light" completa
 # non e' ancora nei mechanics del catalogo equipment; ampliare quando disponibile).
 FINESSE_WEAPONS = {
-    "Dagger", "Punching dagger", "Rapier", "Short sword", "Whip",
-    "Spiked chain", "Elven curve blade", "Light hammer", "Handaxe",
-    "Sickle", "Kukri", "Starknife",
-    "Light mace", "Gauntlet", "Spiked gauntlet", "Throwing axe",
+    "Dagger",
+    "Punching dagger",
+    "Rapier",
+    "Short sword",
+    "Whip",
+    "Spiked chain",
+    "Elven curve blade",
+    "Light hammer",
+    "Handaxe",
+    "Sickle",
+    "Kukri",
+    "Starknife",
+    "Light mace",
+    "Gauntlet",
+    "Spiked gauntlet",
+    "Throwing axe",
 }
 
 
