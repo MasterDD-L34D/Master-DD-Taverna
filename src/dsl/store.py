@@ -63,10 +63,19 @@ class JsonFilePort:
         os.replace(tmp, self.path)
         self._data = fresh
 
+    def _refresh(self) -> None:
+        """Rilegge il file dal disco: load/list vedono i save fatti da
+        altre istanze dopo la nostra init (review Codex P2 #554 giro 5).
+        TOCTOU tra processi concorrenti: fuori scope, modello sequenziale."""
+        if self.path.exists():
+            self._data = json.loads(self.path.read_text(encoding="utf-8"))
+
     def load(self, key: str) -> Any:
+        self._refresh()
         return self._data.get(key)
 
     def list(self, prefix: str) -> list[str]:
+        self._refresh()
         return sorted(k for k in self._data if k.startswith(prefix))
 
     def emit(self, topic: str, payload: Any) -> None:

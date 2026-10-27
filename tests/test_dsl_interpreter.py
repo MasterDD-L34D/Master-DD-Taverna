@@ -949,6 +949,18 @@ def test_due_porte_stesso_file_non_si_sovrascrivono(tmp_path):
     assert data == {"build_A": {"x": 1}, "build_B": {"x": 2}}
 
 
+def test_load_e_list_vedono_save_di_altra_istanza(tmp_path):
+    # P2 review Codex #554 giro 5: load/list rinfrescano dal disco — una
+    # porta inizializzata PRIMA del save altrui non resta cieca all'entry
+    from src.dsl.store import JsonFilePort
+
+    path = tmp_path / "store.json"
+    prima = JsonFilePort(path)
+    JsonFilePort(path).save("build_Esterno", {"x": 1})
+    assert prima.load("build_Esterno") == {"x": 1}
+    assert prima.list("build_") == ["build_Esterno"]
+
+
 def test_valore_non_serializzabile_fallisce_esplicito(tmp_path):
     # ADR 009: mai str() silenzioso — evento e nessuna scrittura
     from src.dsl.store import JsonFilePort
