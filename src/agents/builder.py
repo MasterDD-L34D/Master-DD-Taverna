@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from ..pc import catalogs as _pc_catalogs
 from ..rag.generator import get_provider
 from ..rag.retriever import Retriever
 
@@ -114,6 +115,20 @@ def _build_target_schema() -> dict[str, Any]:
     }
 
 
+def _pc_catalog_text() -> str:
+    """Nomi esatti dai cataloghi PC per i campi pc_draft (fix review #562):
+    distinti dal catalogo reference dei source_id (feats/spells/items)."""
+    names = lambda k: ", ".join(sorted(e["name"] for e in _pc_catalogs.load(k)))
+    return (
+        "Catalogo nomi PC (vale per race/class/skills di pc_draft):\n"
+        f"- Races: {names('races')}\n"
+        f"- Classes: {names('classes')}\n"
+        f"- Skills: {names('skills')}\n"
+        "Traits ed equipment: cataloghi estesi, risolti per nome canonico dal "
+        "ricalcolatore; usa nomi OGL canonici, altrimenti ometti — non inventare."
+    )
+
+
 def _make_prompt(request: dict, context_chunks: list[dict], references: list[dict]) -> str:
     schema = json.dumps(_build_target_schema(), ensure_ascii=False, indent=2)
     chunks_text = "\n\n---\n\n".join(c["text"] for c in context_chunks)
@@ -145,11 +160,13 @@ def _make_prompt(request: dict, context_chunks: list[dict], references: list[dic
         "favored_class_bonus (\"hp\" o \"skill\"), level, hp_method (\"average\" o \"max\"), "
         "skills (nome: ranks), feats (array di stringhe, es. \"Weapon Focus (Longsword)\"), "
         "traits, equipment (nomi ESATTI dal catalogo), spells (array di nomi o vuoto). "
-        "Usa SOLO nomi presenti nel catalogo reference; se un nome non e' in catalogo, omettilo — non inventare.\n\n"
+        "Per race/class/skills usa SOLO nomi dal Catalogo nomi PC sotto; "
+        "per feats/spells/items e i source_id vale il catalogo reference.\n\n"
         "Contesto dai moduli:\n"
         f"{chunks_text}\n\n"
         "Catalogo reference disponibile:\n"
         f"{refs_text}\n\n"
+        f"{_pc_catalog_text()}\n\n"
         "Richiesta utente:\n"
         f"{req_text}\n\n"
         "Risposta JSON:"

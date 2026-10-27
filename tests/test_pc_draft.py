@@ -72,3 +72,14 @@ def test_fallback_popola_pc_draft_valida():
 def test_prompt_chiede_pc_draft():
     prompt = _make_prompt({"class": "Fighter", "race": "Human", "level": 5}, [], [])
     assert "pc_draft" in prompt
+
+
+def test_prompt_espone_catalogo_nomi_pc():
+    # fix P2 review #562: race/class/skills devono poter rispettare
+    # "nomi ESATTI dal catalogo" — il prompt espone i nomi veri, non solo
+    # i source_id reference (feats/spells/items)
+    prompt = _make_prompt({"class": "Fighter", "race": "Human", "level": 5}, [], [])
+    assert "Catalogo nomi PC" in prompt
+    assert "- Races:" in prompt and "Human" in prompt
+    assert "- Classes:" in prompt and "Fighter" in prompt
+    assert "- Skills:" in prompt and "Perception" in prompt
