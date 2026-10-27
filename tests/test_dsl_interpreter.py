@@ -1617,3 +1617,32 @@ commands:
     it.run_command("/s")
     it.run_input("spada, scudo")
     assert it.state.get("inventario") == ["spada", "scudo"]
+
+
+def test_run_input_slash_command_con_argomenti(tmp_path):
+    # Codex P2 #559 giro 3: durante il wizard, /comando arg=val instrada
+    # l'input intero — gli argomenti non si scartano dopo il nome
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {}
+    T:
+      p:
+        prompt: "Fermo?"
+        parse:
+          any: {set: risposta, value: "{{input}}"}
+        end: true
+commands:
+  /s: {action: [{goto_state: GameMode.T.p}]}
+  /add_item:
+    params: [oggetto]
+    action:
+      - set: inventario
+        value: "{{ (inventario or []) + [oggetto] }}"
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/s")
+    it.run_input("/add_item oggetto=spada")
+    assert it.state.get("inventario") == ["spada"]
+    assert get_path(it.state, "runtime.current_state") == "GameMode.T.p"

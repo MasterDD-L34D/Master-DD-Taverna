@@ -605,9 +605,15 @@ class Interpreter:
             self.events.append({"nodo_wizard_mancante": cur})
             return
         if text.startswith("/"):
-            cmd = text.split()[0]
-            if cmd in self.kernel.commands:
-                self.run_command(cmd, _depth=_depth)
+            head = text.split()[0]
+            known = head in self.kernel.commands or any(
+                n.split(" ", 1)[0] == head for n in self.kernel.commands
+            )
+            if known:
+                # Codex P2 #559 giro 3: l'input intero va al dispatcher —
+                # gli argomenti dopo il nome arrivano al comando (spec
+                # parser quote-aware), non si scarta tutto dopo il nome
+                self._dispatch_command(text, _depth, {"input": text})
                 return
             # comando sconosciuto: il nodo lo consuma come testo (ES4
             # aggiungera' il router davanti)
