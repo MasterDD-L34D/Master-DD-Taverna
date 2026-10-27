@@ -138,7 +138,7 @@ def test_bonus_razziale_ca_non_verificabile():
                                      "saves": {"Tempra": 6, "Riflessi": 2, "Volonta": 1}}},
     })
     assert r["dettaglio"]["CA"]["esito"] == "non_verificabile"
-    assert "razziale" in r["dettaglio"]["CA"]["motivo"]
+    assert "CA" in r["dettaglio"]["CA"]["motivo"]
     for razza_condizionale in ("Dwarf", "Gnome"):
         payload = {
             "pc_draft": _draft_pc(race=razza_condizionale),
@@ -147,3 +147,29 @@ def test_bonus_razziale_ca_non_verificabile():
         }
         # CA 11 = 10 + dex 1: senza bonus condizionali il confronto resta valido
         assert confronta(payload)["dettaglio"]["CA"]["esito"] in ("concorda", "diverge")
+
+
+def _payload_pc(draft, ca):
+    return {"pc_draft": draft, "benchmark": {"statistics": {
+        "PF": 49, "CA": ca, "DPR": 9, "saves": {"Tempra": 6, "Riflessi": 2, "Volonta": 1}}}}
+
+
+def test_bonus_classe_ts_e_ca_monk_non_verificabili():
+    # P2 Codex g4: bonus di CLASSE non modellati, stesso principio — Divine
+    # Grace (Cha a tutti i TS dal lv2) e CA del Monk da Saggezza senza armatura
+    pal = _draft_pc(class_="Paladin")
+    pal["level"] = 3
+    r = confronta(_payload_pc(pal, ca=11))
+    for ita in SAVES_MAP:
+        assert r["dettaglio"][f"TS {ita}"]["esito"] == "non_verificabile", ita
+    # Paladin lv1: Divine Grace non ancora attiva — i TS restano confrontabili
+    pal1 = _draft_pc(class_="Paladin")
+    pal1["level"] = 1
+    assert confronta(_payload_pc(pal1, ca=11))["dettaglio"]["TS Tempra"]["esito"] in (
+        "concorda", "diverge")
+    # Monk senza armatura: CA non verificabile; con armatura: confrontabile
+    monk = _draft_pc(class_="Monk")
+    assert confronta(_payload_pc(monk, ca=11))["dettaglio"]["CA"]["esito"] == "non_verificabile"
+    monk["equipment"] = ["Chainmail"]
+    assert confronta(_payload_pc(monk, ca=16))["dettaglio"]["CA"]["esito"] in (
+        "concorda", "diverge")

@@ -130,6 +130,29 @@ def confronta(payload):
         for f in frasi_traits
     )
 
+    # bonus di CLASSE non modellati (stesso principio): feature attive al
+    # livello della build che concedono bonus alle statistiche misurate —
+    # Cha a tutti i TS (Divine Grace lv2+, Unholy Resilience, Towering Ego)
+    # e CA da Saggezza/classe senza armatura (Monk AC Bonus, Shifter)
+    cls = catalogs.get_class(draft.class_)
+    feat_attive = [
+        f
+        for f in (cls or {}).get("mechanics", {}).get("features", [])
+        if not f.get("levels") or draft.level >= min(f["levels"])
+    ]
+    if any(
+        re.search(r"Charisma[^.]{0,80}saving throws", f.get("text", ""), re.IGNORECASE)
+        for f in feat_attive
+    ):
+        ts_non_verificabili = True
+    indossa_armatura = any(
+        it["mechanics"].get("armor_bonus") for it in sheet.get("equipment", [])
+    )
+    ca_classe_non_verificabile = not indossa_armatura and any(
+        re.search(r"unarmored[^.]{0,120}(Wisdom|\bAC\b)", f.get("text", ""), re.IGNORECASE)
+        for f in feat_attive
+    )
+
     dich = payload.get("benchmark", {}).get("statistics", {})
     dettaglio = {}
     for label, calc in (("PF", sheet.get("hp")), ("CA", sheet.get("ac"))):
@@ -147,9 +170,11 @@ def confronta(payload):
             motivo_ca = (
                 f"equip non modellato: {'; '.join(equip_non_modellato)}"
                 if equip_non_modellato
-                else "bonus razziale alla CA non modellato dall'engine"
+                else "bonus alla CA non modellato dall'engine"
             )
-            non_verificabile_ca = bool(equip_non_modellato) or ca_non_verificabile
+            non_verificabile_ca = (
+                bool(equip_non_modellato) or ca_non_verificabile or ca_classe_non_verificabile
+            )
             dettaglio[label] = (
                 {"esito": "non_verificabile", "dichiarato": val, "ricalcolato": calc,
                  "motivo": motivo_ca}
@@ -169,7 +194,7 @@ def confronta(payload):
         # tolleranza non basta: tutto il gruppo TS e' non_verificabile
         dettaglio[f"TS {ita}"] = (
             {"esito": "non_verificabile", "dichiarato": val, "ricalcolato": calc,
-             "motivo": "bonus razziale ai TS non modellato dall'engine"}
+             "motivo": "bonus ai TS non modellato dall'engine"}
             if ts_non_verificabili
             else {"esito": "non_verificabile", "dichiarato": val, "ricalcolato": calc}
             if val is None or calc is None
