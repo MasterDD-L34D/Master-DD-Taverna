@@ -46,6 +46,7 @@ Uso:
   --pcgen-repo PATH  (default %PCGEN_REPO% o C:/Users/VGit/Downloads/pcgen-repo)
   --out-dir PATH     (default <pathmaster sibling>/packages/rules-engine-v2/src/data)
 """
+
 from __future__ import annotations
 
 import argparse
@@ -60,61 +61,84 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_PCGEN_REPO = Path(os.environ.get(
-    "PCGEN_REPO", r"C:\Users\VGit\Downloads\pcgen-repo"))
-DEFAULT_OUT_DIR = (REPO_ROOT.parent / "pathmaster-dd"
-                   / "packages/rules-engine-v2/src/data")
+DEFAULT_PCGEN_REPO = Path(
+    os.environ.get("PCGEN_REPO", r"C:\Users\VGit\Downloads\pcgen-repo")
+)
+DEFAULT_OUT_DIR = (
+    REPO_ROOT.parent / "pathmaster-dd" / "packages/rules-engine-v2/src/data"
+)
 
 DATA_SUBDIR = "data/pathfinder/paizo"
 
 LICENSE_TEXT = (
     "PCGen data sets: OGL 1.0a (Open Game Content di Paizo) distribuiti nel "
     "progetto PCGen (LGPL per il codice). Solo meccaniche e nomi: nessun "
-    "testo di regole (DESC/BENEFIT) esportato. Paizo Community Use Policy.")
+    "testo di regole (DESC/BENEFIT) esportato. Paizo Community Use Policy."
+)
 DESC_POLICY = (
     "DESC/BENEFIT omessi per policy: solo meccaniche + nomi, mai testo di "
-    "regole completo redistribuito.")
+    "regole completo redistribuito."
+)
 
 # Libri CORE PF1e (sigla -> dir relativa a data/pathfinder/paizo, titolo, file).
 # Estensione futura = aggiungere una riga qui (e i file esistono nel clone).
 BOOKS = {
-    "CR": {"dir": "roleplaying_game/core_rulebook", "title": "Core Rulebook",
-           "feats": ["cr_feats.lst"],
-           "equipment": ["cr_equip_arms_armor.lst"],
-           "spells": ["cr_spells.lst"]},
-    "APG": {"dir": "roleplaying_game/advanced_players_guide",
-            "title": "Advanced Player's Guide",
-            "feats": ["apg_feats.lst"],
-            "equipment": ["apg_equip_arms_armor.lst"],
-            "spells": ["apg_spells.lst"]},
-    "ACG": {"dir": "roleplaying_game/advanced_class_guide",
-            "title": "Advanced Class Guide",
-            "feats": ["acg_feats.lst"],
-            "equipment": ["acg_equip.lst"],
-            "spells": ["acg_spells.lst"]},
-    "ARG": {"dir": "roleplaying_game/advanced_race_guide",
-            "title": "Advanced Race Guide",
-            "feats": ["arg_feats.lst"],
-            "equipment": ["arg_equip_arms_armor.lst"],
-            "spells": ["arg_spells.lst"]},
-    "UM": {"dir": "roleplaying_game/ultimate_magic", "title": "Ultimate Magic",
-           "feats": ["um_feats.lst"],
-           "equipment": ["um_equip_arms_armor.lst"],
-           "spells": ["um_spells.lst"]},
-    "UC": {"dir": "roleplaying_game/ultimate_combat", "title": "Ultimate Combat",
-           "feats": ["uc_feats.lst"],
-           "equipment": ["uc_equip_arms_armor.lst"],
-           "spells": ["uc_spells.lst"]},
-    "UE": {"dir": "roleplaying_game/ultimate_equipment",
-           "title": "Ultimate Equipment",
-           "feats": [],
-           "equipment": ["ue_equip_arms_armor.lst"],
-           "spells": ["ue_spells.lst"]},
-    "OA": {"dir": "roleplaying_game/occult_adventures",
-           "title": "Occult Adventures",
-           "feats": ["oa_feats.lst"],
-           "equipment": ["oa_equip.lst"],
-           "spells": ["oa_spells.lst"]},
+    "CR": {
+        "dir": "roleplaying_game/core_rulebook",
+        "title": "Core Rulebook",
+        "feats": ["cr_feats.lst"],
+        "equipment": ["cr_equip_arms_armor.lst"],
+        "spells": ["cr_spells.lst"],
+    },
+    "APG": {
+        "dir": "roleplaying_game/advanced_players_guide",
+        "title": "Advanced Player's Guide",
+        "feats": ["apg_feats.lst"],
+        "equipment": ["apg_equip_arms_armor.lst"],
+        "spells": ["apg_spells.lst"],
+    },
+    "ACG": {
+        "dir": "roleplaying_game/advanced_class_guide",
+        "title": "Advanced Class Guide",
+        "feats": ["acg_feats.lst"],
+        "equipment": ["acg_equip.lst"],
+        "spells": ["acg_spells.lst"],
+    },
+    "ARG": {
+        "dir": "roleplaying_game/advanced_race_guide",
+        "title": "Advanced Race Guide",
+        "feats": ["arg_feats.lst"],
+        "equipment": ["arg_equip_arms_armor.lst"],
+        "spells": ["arg_spells.lst"],
+    },
+    "UM": {
+        "dir": "roleplaying_game/ultimate_magic",
+        "title": "Ultimate Magic",
+        "feats": ["um_feats.lst"],
+        "equipment": ["um_equip_arms_armor.lst"],
+        "spells": ["um_spells.lst"],
+    },
+    "UC": {
+        "dir": "roleplaying_game/ultimate_combat",
+        "title": "Ultimate Combat",
+        "feats": ["uc_feats.lst"],
+        "equipment": ["uc_equip_arms_armor.lst"],
+        "spells": ["uc_spells.lst"],
+    },
+    "UE": {
+        "dir": "roleplaying_game/ultimate_equipment",
+        "title": "Ultimate Equipment",
+        "feats": [],
+        "equipment": ["ue_equip_arms_armor.lst"],
+        "spells": ["ue_spells.lst"],
+    },
+    "OA": {
+        "dir": "roleplaying_game/occult_adventures",
+        "title": "Occult Adventures",
+        "feats": ["oa_feats.lst"],
+        "equipment": ["oa_equip.lst"],
+        "spells": ["oa_spells.lst"],
+    },
     # Fase A (2026-08-08): manuali fuori linea core PRESENTI nel clone.
     # Scarti DICHIARATI (nel clone, NON importati): mythic_adventures
     # (sistema mythic = regole alternative, come words of power),
@@ -122,36 +146,48 @@ BOOKS = {
     # monster_codex + bestiari (contenuto mostri/PNG, fuori scope A1),
     # beginner_box (sottoinsieme del CR), core_essentials (plumbing).
     # Villain Codex: NON presente nel clone sparse (dichiarato).
-    "UI": {"dir": "roleplaying_game/ultimate_intrigue",
-           "title": "Ultimate Intrigue",
-           "feats": ["ui_feats.lst"],
-           "equipment": ["ui_equip_arms_armor.lst"],
-           "spells": ["ui_spells.lst"]},
-    "UW": {"dir": "roleplaying_game/ultimate_wilderness",
-           "title": "Ultimate Wilderness",
-           "feats": ["uw_feats.lst"],
-           "equipment": ["uw_equip_arms_armor.lst"],
-           "spells": ["uw_spells.lst"]},
-    "HA": {"dir": "roleplaying_game/horror_adventures",
-           "title": "Horror Adventures",
-           "feats": ["ha_feats.lst"],
-           "equipment": ["ha_equip_arms_armor.lst"],
-           "spells": ["ha_spells.lst"]},
-    "PU": {"dir": "roleplaying_game/pathfinder_unchained",
-           "title": "Pathfinder Unchained",
-           "feats": ["pu_feats.lst"],
-           "equipment": ["pu_equip.lst"],
-           "spells": ["pu_spells.lst"]},
-    "AG": {"dir": "roleplaying_game/adventurers_guide",
-           "title": "Adventurer's Guide",
-           "feats": ["ag_feats.lst"],
-           "equipment": ["ag_equip_arms_armor.lst"],
-           "spells": ["ag_spells.lst"]},
+    "UI": {
+        "dir": "roleplaying_game/ultimate_intrigue",
+        "title": "Ultimate Intrigue",
+        "feats": ["ui_feats.lst"],
+        "equipment": ["ui_equip_arms_armor.lst"],
+        "spells": ["ui_spells.lst"],
+    },
+    "UW": {
+        "dir": "roleplaying_game/ultimate_wilderness",
+        "title": "Ultimate Wilderness",
+        "feats": ["uw_feats.lst"],
+        "equipment": ["uw_equip_arms_armor.lst"],
+        "spells": ["uw_spells.lst"],
+    },
+    "HA": {
+        "dir": "roleplaying_game/horror_adventures",
+        "title": "Horror Adventures",
+        "feats": ["ha_feats.lst"],
+        "equipment": ["ha_equip_arms_armor.lst"],
+        "spells": ["ha_spells.lst"],
+    },
+    "PU": {
+        "dir": "roleplaying_game/pathfinder_unchained",
+        "title": "Pathfinder Unchained",
+        "feats": ["pu_feats.lst"],
+        "equipment": ["pu_equip.lst"],
+        "spells": ["pu_spells.lst"],
+    },
+    "AG": {
+        "dir": "roleplaying_game/adventurers_guide",
+        "title": "Adventurer's Guide",
+        "feats": ["ag_feats.lst"],
+        "equipment": ["ag_equip_arms_armor.lst"],
+        "spells": ["ag_spells.lst"],
+    },
 }
 
-OUTPUT_FILES = {"feats": "pcgen-feats.json",
-                "equipment": "pcgen-equipment.json",
-                "spells": "pcgen-spells.json"}
+OUTPUT_FILES = {
+    "feats": "pcgen-feats.json",
+    "equipment": "pcgen-equipment.json",
+    "spells": "pcgen-spells.json",
+}
 
 ABILITY_KEYS = ("STR", "DEX", "CON", "INT", "WIS", "CHA")
 
@@ -159,6 +195,7 @@ ABILITY_KEYS = ("STR", "DEX", "CON", "INT", "WIS", "CHA")
 # ---------------------------------------------------------------------------
 # Parser di linea LST
 # ---------------------------------------------------------------------------
+
 
 def iter_lst_records(text: str):
     """Testo .lst -> lista di (nome, [(chiave, valore), ...]).
@@ -190,6 +227,7 @@ def iter_lst_records(text: str):
 # Prerequisiti: albero grezzo + derived
 # ---------------------------------------------------------------------------
 
+
 def _split_top_level(text: str, sep: str = ","):
     """Split rispettando la profondita' delle parentesi quadre."""
     parts, depth, current = [], 0, []
@@ -217,8 +255,11 @@ def parse_prereq_token(token: str) -> dict:
     if key == "PREMULT":
         count, _comma, rest = value.partition(",")
         items = re.findall(r"\[([^\]]*)\]", rest)
-        return {"tag": "PREMULT", "count": int(count or 0),
-                "of": [parse_prereq_token(item) for item in items]}
+        return {
+            "tag": "PREMULT",
+            "count": int(count or 0),
+            "of": [parse_prereq_token(item) for item in items],
+        }
     return {"tag": key, "args": _split_top_level(value), "raw": token}
 
 
@@ -229,14 +270,25 @@ def prereq_tree(tags) -> list:
     NON deve avere X) — restano grezzi nell'albero e contati nei non
     normalizzati; la negazione e' visibile nel tag stesso.
     """
-    return [parse_prereq_token(f"{k}:{v}") for k, v in tags
-            if k.startswith("PRE") or k.startswith("!PRE")]
+    return [
+        parse_prereq_token(f"{k}:{v}")
+        for k, v in tags
+        if k.startswith("PRE") or k.startswith("!PRE")
+    ]
 
 
 def _empty_derived() -> dict:
-    return {"required_feats": [], "ability_mins": {}, "bab_min": None,
-            "level_min": None, "level_max": None, "class_levels": [],
-            "skill_ranks": [], "alignments": [], "other_tags": {}}
+    return {
+        "required_feats": [],
+        "ability_mins": {},
+        "bab_min": None,
+        "level_min": None,
+        "level_max": None,
+        "class_levels": [],
+        "skill_ranks": [],
+        "alignments": [],
+        "other_tags": {},
+    }
 
 
 def derive_prereqs(nodes: list) -> dict:
@@ -272,7 +324,8 @@ def derive_prereqs(nodes: list) -> dict:
             if m and m.group(1) in ABILITY_KEYS and val.lstrip("-").isdigit():
                 ab = m.group(1)
                 derived["ability_mins"][ab] = max(
-                    int(val), derived["ability_mins"].get(ab, 0))
+                    int(val), derived["ability_mins"].get(ab, 0)
+                )
             else:
                 derived["other_tags"][tag] = derived["other_tags"].get(tag, 0) + 1
         elif tag == "PRESTAT":
@@ -281,7 +334,8 @@ def derive_prereqs(nodes: list) -> dict:
                 k, eq, v = a.partition("=")
                 if eq and k in ABILITY_KEYS and v.isdigit():
                     derived["ability_mins"][k] = max(
-                        int(v), derived["ability_mins"].get(k, 0))
+                        int(v), derived["ability_mins"].get(k, 0)
+                    )
         elif tag == "PRETOTALAB" and args and args[0].isdigit():
             n = int(args[0])
             derived["bab_min"] = max(n, derived["bab_min"] or 0)
@@ -299,11 +353,9 @@ def derive_prereqs(nodes: list) -> dict:
             for a in args[1:]:
                 skill, eq, ranks = a.partition("=")
                 if eq and ranks.isdigit():
-                    derived["skill_ranks"].append(
-                        {"skill": skill, "ranks": int(ranks)})
+                    derived["skill_ranks"].append({"skill": skill, "ranks": int(ranks)})
                 else:
-                    derived["other_tags"][tag] = (
-                        derived["other_tags"].get(tag, 0) + 1)
+                    derived["other_tags"][tag] = derived["other_tags"].get(tag, 0) + 1
         elif tag == "PREALIGN" and args:
             for a in args:
                 if a not in derived["alignments"]:
@@ -319,9 +371,19 @@ def derive_prereqs(nodes: list) -> dict:
 
 
 # Tag con forma normalizzata nel derived (copertura dichiarata in doc).
-COVERED_PRE_TAGS = ("PREMULT", "PREABILITY", "PREVARGTEQ", "PRESTAT",
-                    "PRETOTALAB", "PRELEVEL", "PREPCLEVEL", "PRELEVELMAX",
-                    "PRECLASS", "PRESKILL", "PREALIGN")
+COVERED_PRE_TAGS = (
+    "PREMULT",
+    "PREABILITY",
+    "PREVARGTEQ",
+    "PRESTAT",
+    "PRETOTALAB",
+    "PRELEVEL",
+    "PREPCLEVEL",
+    "PRELEVELMAX",
+    "PRECLASS",
+    "PRESKILL",
+    "PREALIGN",
+)
 
 
 # ---------------------------------------------------------------------------
@@ -339,6 +401,7 @@ COVERED_PRE_TAGS = ("PREMULT", "PREABILITY", "PREVARGTEQ", "PRESTAT",
 # da modificatori `TYPE=...` e condizioni `PRE*`/`!PRE*` raw. `valueNumber` e'
 # presente SOLO se il valore e' un intero letterale (le formule `max(3,TL)`,
 # i riferimenti a VAR e i `%LIST` restano stringhe raw).
+
 
 def _split_pipes(text: str) -> list:
     """Split su '|' rispettando la profondita' di () e [].
@@ -380,7 +443,7 @@ def parse_bonus_tag(value: str) -> dict:
     seen_modifier = False
     for seg in segments:
         if seg.startswith("TYPE="):
-            node["type"] = seg[len("TYPE="):]
+            node["type"] = seg[len("TYPE=") :]
             seen_modifier = True
         elif seg.startswith("PRE") or seg.startswith("!PRE"):
             conditions.append(seg)
@@ -407,9 +470,15 @@ def parse_bonus_tag(value: str) -> dict:
 
 
 def _empty_bonus_stats() -> dict:
-    return {"feats_with_bonus": 0, "total_tags": 0, "by_group": {},
-            "literal_value": 0, "with_type": 0,
-            "recognized": 0, "unrecognized": 0}
+    return {
+        "feats_with_bonus": 0,
+        "total_tags": 0,
+        "by_group": {},
+        "literal_value": 0,
+        "with_type": 0,
+        "recognized": 0,
+        "unrecognized": 0,
+    }
 
 
 def _bonus_stats_add(stats: dict, nodes: list) -> None:
@@ -444,6 +513,7 @@ def _coverage_add(cov: dict, nodes: list) -> None:
 # Entita'
 # ---------------------------------------------------------------------------
 
+
 def _tag_values(tags, key: str) -> list:
     return [v for k, v in tags if k == key]
 
@@ -475,9 +545,11 @@ def feats_from_records(records, book: str):
     """
     by_name = {}
     order = []
-    stats = {"duplicates_overridden": 0,
-             "prereq_coverage": {"covered": {}, "not_normalized": {}},
-             "bonus": _empty_bonus_stats()}
+    stats = {
+        "duplicates_overridden": 0,
+        "prereq_coverage": {"covered": {}, "not_normalized": {}},
+        "bonus": _empty_bonus_stats(),
+    }
     for name, tags in records:
         if not name or name.endswith((".MOD", ".FORGET")) or ".COPY=" in name:
             continue
@@ -495,7 +567,11 @@ def feats_from_records(records, book: str):
             "key": _tag_value(tags, "KEY") or name,
             "source_book": book,
             "category": (_tag_value(tags, "CATEGORY") or "").lower() or None,
-            "types": (_tag_value(tags, "TYPE") or "").split(".") if _tag_value(tags, "TYPE") else [],
+            "types": (
+                (_tag_value(tags, "TYPE") or "").split(".")
+                if _tag_value(tags, "TYPE")
+                else []
+            ),
             "multiple": _tag_value(tags, "MULT") == "YES",
             "stack": (stack == "YES") if stack else None,
             "choose": _tag_value(tags, "CHOOSE"),
@@ -513,9 +589,15 @@ def _resolve_equip_records(records):
     raw = {}
     copies = []
     mods = []
-    stats = {"copies_resolved": 0, "copies_unresolved": 0,
-             "mods_applied": 0, "mods_unresolved": 0, "forgets": 0,
-             "skipped_hidden": 0, "duplicates_overridden": 0}
+    stats = {
+        "copies_resolved": 0,
+        "copies_unresolved": 0,
+        "mods_applied": 0,
+        "mods_unresolved": 0,
+        "forgets": 0,
+        "skipped_hidden": 0,
+        "duplicates_overridden": 0,
+    }
     for name, tags in records:
         if ".COPY=" in name:
             base, _sep, _new = name.partition(".COPY=")
@@ -585,9 +667,13 @@ def equipment_from_records(records, book: str):
                     types = []
                 else:
                     types.extend(t for t in v.split(".") if t)
-        kind = ("weapon" if "Weapon" in types
-                else "armor" if "Armor" in types
-                else "shield" if "Shield" in types else None)
+        kind = (
+            "weapon"
+            if "Weapon" in types
+            else (
+                "armor" if "Armor" in types else "shield" if "Shield" in types else None
+            )
+        )
         if kind is None:
             continue
         if _tag_value(tags, "VISIBLE") == "NO":
@@ -616,20 +702,27 @@ def equipment_from_records(records, book: str):
             "source_page": _tag_value(tags, "SOURCEPAGE"),
         }
         if kind == "weapon":
-            entry.update({
-                "damage": _tag_value(tags, "DAMAGE"),
-                "crit_mult": _number((_tag_value(tags, "CRITMULT") or "").lstrip("xX")) or None,
-                "crit_range": _number(_tag_value(tags, "CRITRANGE")),
-                "range_increment": _number(_tag_value(tags, "RANGE")),
-                "wield": _tag_value(tags, "WIELD"),
-            })
+            entry.update(
+                {
+                    "damage": _tag_value(tags, "DAMAGE"),
+                    "crit_mult": _number(
+                        (_tag_value(tags, "CRITMULT") or "").lstrip("xX")
+                    )
+                    or None,
+                    "crit_range": _number(_tag_value(tags, "CRITRANGE")),
+                    "range_increment": _number(_tag_value(tags, "RANGE")),
+                    "wield": _tag_value(tags, "WIELD"),
+                }
+            )
         else:
-            entry.update({
-                "ac_bonus": ac_bonus,
-                "max_dex": _number(_tag_value(tags, "MAXDEX")),
-                "armor_check_penalty": _number(_tag_value(tags, "ACCHECK")),
-                "spell_failure": _number(_tag_value(tags, "SPELLFAILURE")),
-            })
+            entry.update(
+                {
+                    "ac_bonus": ac_bonus,
+                    "max_dex": _number(_tag_value(tags, "MAXDEX")),
+                    "armor_check_penalty": _number(_tag_value(tags, "ACCHECK")),
+                    "spell_failure": _number(_tag_value(tags, "SPELLFAILURE")),
+                }
+            )
         entries.append(entry)
     entries.sort(key=lambda e: (e["kind"], e["name"]))
     return entries, stats
@@ -660,8 +753,13 @@ def spells_from_records(records, book: str):
     by_name = {}
     order = []
     mods = []
-    stats = {"duplicates_overridden": 0, "mods_merged": 0, "mods_noop": 0,
-             "mods_unresolved": 0, "copies_skipped": 0}
+    stats = {
+        "duplicates_overridden": 0,
+        "mods_merged": 0,
+        "mods_noop": 0,
+        "mods_unresolved": 0,
+        "copies_skipped": 0,
+    }
     for name, tags in records:
         if ".COPY=" in name:
             stats["copies_skipped"] += 1
@@ -680,12 +778,20 @@ def spells_from_records(records, book: str):
             "name": name,
             "key": _tag_value(tags, "KEY") or name,
             "source_book": book,
-            "types": (_tag_value(tags, "TYPE") or "").split(".") if _tag_value(tags, "TYPE") else [],
+            "types": (
+                (_tag_value(tags, "TYPE") or "").split(".")
+                if _tag_value(tags, "TYPE")
+                else []
+            ),
             "classes": _parse_level_groups(_tag_value(tags, "CLASSES") or ""),
             "domains": _parse_level_groups(_tag_value(tags, "DOMAINS") or ""),
             "school": _tag_value(tags, "SCHOOL"),
             "subschool": _tag_value(tags, "SUBSCHOOL"),
-            "descriptors": [d.strip() for d in (_tag_value(tags, "DESCRIPTOR") or "").split(",") if d.strip()],
+            "descriptors": [
+                d.strip()
+                for d in (_tag_value(tags, "DESCRIPTOR") or "").split(",")
+                if d.strip()
+            ],
             "components": _tag_value(tags, "COMPS"),
             "casting_time": _tag_value(tags, "CASTTIME"),
             "range": _tag_value(tags, "RANGE"),
@@ -713,6 +819,7 @@ def spells_from_records(records, book: str):
 # Classi: SOLO report (decisione dichiarata: niente pcgen-classes.json)
 # ---------------------------------------------------------------------------
 
+
 def class_names_in_file(path: Path) -> list:
     """Nomi delle classi definite (righe 'CLASS:Nome') in un classes.lst."""
     names = []
@@ -720,7 +827,7 @@ def class_names_in_file(path: Path) -> list:
         return names
     for line in path.read_text(encoding="utf-8", errors="replace").splitlines():
         if line.startswith("CLASS:"):
-            name = line.split("\t", 1)[0][len("CLASS:"):].strip()
+            name = line.split("\t", 1)[0][len("CLASS:") :].strip()
             if name and not name.endswith((".MOD", ".COPY", ".FORGET")):
                 names.append(name)
     return names
@@ -730,16 +837,21 @@ def class_names_in_file(path: Path) -> list:
 # Build dei cataloghi
 # ---------------------------------------------------------------------------
 
-PARSERS = {"feats": (lambda b: BOOKS[b]["feats"], feats_from_records),
-           "equipment": (lambda b: BOOKS[b]["equipment"], equipment_from_records),
-           "spells": (lambda b: BOOKS[b]["spells"], spells_from_records)}
+PARSERS = {
+    "feats": (lambda b: BOOKS[b]["feats"], feats_from_records),
+    "equipment": (lambda b: BOOKS[b]["equipment"], equipment_from_records),
+    "spells": (lambda b: BOOKS[b]["spells"], spells_from_records),
+}
 
 
 def _pcgen_commit(pcgen_root: Path) -> str:
     try:
         out = subprocess.run(
             ["git", "-C", str(pcgen_root), "rev-parse", "HEAD"],
-            capture_output=True, text=True, timeout=15)
+            capture_output=True,
+            text=True,
+            timeout=15,
+        )
         if out.returncode == 0:
             return out.stdout.strip()
     except (OSError, subprocess.SubprocessError):
@@ -752,7 +864,9 @@ def build_catalog(pcgen_root, kind: str, books=None) -> dict:
     `books`, usato dai test su radici finte: un libro configurato ma assente
     sul disco e' un errore, non una resa silenziosa)."""
     if kind not in PARSERS:
-        raise ValueError(f"kind sconosciuto: {kind!r} (atteso uno di {sorted(PARSERS)})")
+        raise ValueError(
+            f"kind sconosciuto: {kind!r} (atteso uno di {sorted(PARSERS)})"
+        )
     pcgen_root = Path(pcgen_root)
     files_for, parser = PARSERS[kind]
     entries = []
@@ -766,23 +880,29 @@ def build_catalog(pcgen_root, kind: str, books=None) -> dict:
             path = pcgen_root / DATA_SUBDIR / cfg["dir"] / rel
             if not path.is_file():
                 raise FileNotFoundError(f"file LST mancante: {path}")
-            book_records.extend(iter_lst_records(
-                path.read_text(encoding="utf-8", errors="replace")))
+            book_records.extend(
+                iter_lst_records(path.read_text(encoding="utf-8", errors="replace"))
+            )
         book_entries, book_stats = parser(book_records, book)
         entries.extend(book_entries)
         counts[book] = len(book_entries)
         stats[book] = book_stats
     return {
         "_provenance": {
-            "source": ("PCGen data sets (github.com/PCGen/pcgen), "
-                       f"{DATA_SUBDIR}/roleplaying_game/*"),
+            "source": (
+                "PCGen data sets (github.com/PCGen/pcgen), "
+                f"{DATA_SUBDIR}/roleplaying_game/*"
+            ),
             "pcgen_commit": _pcgen_commit(pcgen_root),
             "generated_by": "Master-DD-Taverna/tools/import_pcgen_lst.py",
             "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "license": LICENSE_TEXT,
             "desc_policy": DESC_POLICY,
-            "books": {b: cfg["title"] for b, cfg in BOOKS.items()
-                      if books is None or b in books},
+            "books": {
+                b: cfg["title"]
+                for b, cfg in BOOKS.items()
+                if books is None or b in books
+            },
         },
         "counts": counts,
         "stats": stats,
@@ -792,8 +912,10 @@ def build_catalog(pcgen_root, kind: str, books=None) -> dict:
 
 def _print_report(payloads: dict, classes_report: dict) -> None:
     for kind, payload in payloads.items():
-        print(f"[{kind}] totale: {len(payload['entries'])} voci "
-              f"(commit pcgen {payload['_provenance']['pcgen_commit'][:12]})")
+        print(
+            f"[{kind}] totale: {len(payload['entries'])} voci "
+            f"(commit pcgen {payload['_provenance']['pcgen_commit'][:12]})"
+        )
         for book, n in payload["counts"].items():
             print(f"  {book}: {n}")
         if kind == "feats":
@@ -803,8 +925,12 @@ def _print_report(payloads: dict, classes_report: dict) -> None:
                     covered[tag] = covered.get(tag, 0) + n
                 for tag, n in book_stats["prereq_coverage"]["not_normalized"].items():
                     not_norm[tag] = not_norm.get(tag, 0) + n
-            print(f"  PRE* normalizzati: {dict(sorted(covered.items(), key=lambda kv: -kv[1]))}")
-            print(f"  PRE* grezzi (non normalizzati): {dict(sorted(not_norm.items(), key=lambda kv: -kv[1]))}")
+            print(
+                f"  PRE* normalizzati: {dict(sorted(covered.items(), key=lambda kv: -kv[1]))}"
+            )
+            print(
+                f"  PRE* grezzi (non normalizzati): {dict(sorted(not_norm.items(), key=lambda kv: -kv[1]))}"
+            )
             bonus = _empty_bonus_stats()
             for book_stats in payload["stats"].values():
                 bs = book_stats["bonus"]
@@ -815,12 +941,16 @@ def _print_report(payloads: dict, classes_report: dict) -> None:
                 for k in ("literal_value", "with_type", "recognized", "unrecognized"):
                     bonus[k] += bs[k]
             total = bonus["total_tags"] or 1
-            print(f"  BONUS: {bonus['total_tags']} tag su {bonus['feats_with_bonus']} talenti | "
-                  f"gruppi {dict(sorted(bonus['by_group'].items(), key=lambda kv: -kv[1]))}")
-            print(f"  BONUS: valore letterale {bonus['literal_value']}/{bonus['total_tags']} "
-                  f"({bonus['literal_value'] / total:.0%}) | "
-                  f"TYPE= {bonus['with_type']} ({bonus['with_type'] / total:.0%}) | "
-                  f"non riconosciuti {bonus['unrecognized']} ({bonus['unrecognized'] / total:.1%})")
+            print(
+                f"  BONUS: {bonus['total_tags']} tag su {bonus['feats_with_bonus']} talenti | "
+                f"gruppi {dict(sorted(bonus['by_group'].items(), key=lambda kv: -kv[1]))}"
+            )
+            print(
+                f"  BONUS: valore letterale {bonus['literal_value']}/{bonus['total_tags']} "
+                f"({bonus['literal_value'] / total:.0%}) | "
+                f"TYPE= {bonus['with_type']} ({bonus['with_type'] / total:.0%}) | "
+                f"non riconosciuti {bonus['unrecognized']} ({bonus['unrecognized'] / total:.1%})"
+            )
     if classes_report:
         print("[classi] SOLO REPORT (classes.json curato resta la fonte):")
         for book, names in classes_report.items():
@@ -836,20 +966,35 @@ def main(argv=None) -> int:
 
     pcgen_root = Path(args.pcgen_repo)
     if not (pcgen_root / DATA_SUBDIR).is_dir():
-        print(f"ERRORE: dataset PCGen non trovato in {pcgen_root / DATA_SUBDIR}",
-              file=sys.stderr)
+        print(
+            f"ERRORE: dataset PCGen non trovato in {pcgen_root / DATA_SUBDIR}",
+            file=sys.stderr,
+        )
         return 1
 
     payloads = {kind: build_catalog(pcgen_root, kind) for kind in PARSERS}
     classes_report = {
         book: class_names_in_file(pcgen_root / DATA_SUBDIR / cfg["dir"] / f)
         for book, cfg in BOOKS.items()
-        for f in [next((x for x in
-                        ["cr_classes.lst", "apg_classes.lst", "acg_classes.lst",
-                         "um_classes.lst", "uc_classes.lst", "oa_classes.lst",
-                         "ui_classes.lst", "uw_classes.lst"]
-                        if (pcgen_root / DATA_SUBDIR / cfg["dir"] / x).is_file()),
-                       None)]
+        for f in [
+            next(
+                (
+                    x
+                    for x in [
+                        "cr_classes.lst",
+                        "apg_classes.lst",
+                        "acg_classes.lst",
+                        "um_classes.lst",
+                        "uc_classes.lst",
+                        "oa_classes.lst",
+                        "ui_classes.lst",
+                        "uw_classes.lst",
+                    ]
+                    if (pcgen_root / DATA_SUBDIR / cfg["dir"] / x).is_file()
+                ),
+                None,
+            )
+        ]
         if f
     }
     _print_report(payloads, classes_report)
@@ -860,8 +1005,9 @@ def main(argv=None) -> int:
     out_dir.mkdir(parents=True, exist_ok=True)
     for kind, payload in payloads.items():
         path = out_dir / OUTPUT_FILES[kind]
-        path.write_text(json.dumps(payload, indent=1, ensure_ascii=False) + "\n",
-                        encoding="utf-8")
+        path.write_text(
+            json.dumps(payload, indent=1, ensure_ascii=False) + "\n", encoding="utf-8"
+        )
         print(f"scritto {path} ({len(payload['entries'])} voci)")
     return 0
 

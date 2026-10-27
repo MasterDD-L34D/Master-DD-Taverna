@@ -1,4 +1,5 @@
 """Simple persistent vector store based on numpy embeddings."""
+
 import json
 import os
 from pathlib import Path
@@ -38,12 +39,26 @@ class VectorStore:
         self.chunks = chunks
         self.embeddings = embeddings.astype(np.float32)
         self.meta = {"model": model, "dim": embeddings.shape[1], "count": len(chunks)}
-        json.dump(self.chunks, open(self.chunks_path, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+        json.dump(
+            self.chunks,
+            open(self.chunks_path, "w", encoding="utf-8"),
+            ensure_ascii=False,
+            indent=2,
+        )
         np.save(self.embeddings_path, self.embeddings)
-        json.dump(self.meta, open(self.meta_path, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+        json.dump(
+            self.meta,
+            open(self.meta_path, "w", encoding="utf-8"),
+            ensure_ascii=False,
+            indent=2,
+        )
 
     def is_ready(self) -> bool:
-        return bool(self.chunks) and self.embeddings is not None and len(self.chunks) == len(self.embeddings)
+        return (
+            bool(self.chunks)
+            and self.embeddings is not None
+            and len(self.chunks) == len(self.embeddings)
+        )
 
     def search(self, query_embedding: np.ndarray, top_k: int = 5) -> list[dict]:
         if not self.is_ready():

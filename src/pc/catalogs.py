@@ -1,4 +1,5 @@
 """Loaders dei cataloghi OGL (Lotto 4) per il builder deterministico."""
+
 import functools
 import json
 from pathlib import Path
@@ -10,9 +11,13 @@ OGL_DIR = Path(__file__).resolve().parents[2] / "data" / "reference" / "ogl"
 def load(kind):
     """Carica le entries di un catalogo per kind (abilities, races, ...)."""
     filename = {
-        "abilities": "abilities.json", "races": "races.json", "classes": "classes.json",
-        "skills": "skills.json", "traits": "traits.json",
-        "equipment": "equipment_mundane.json", "feats": "feats.json",
+        "abilities": "abilities.json",
+        "races": "races.json",
+        "classes": "classes.json",
+        "skills": "skills.json",
+        "traits": "traits.json",
+        "equipment": "equipment_mundane.json",
+        "feats": "feats.json",
         "spells": "spells.json",
     }[kind]
     with open(OGL_DIR / filename, encoding="utf-8") as f:
@@ -101,10 +106,27 @@ def spell_level_for_class(spell, class_name):
 
 
 # Character Wealth by Level (PFRPG Core, tabella OGC).
-WBL_BY_LEVEL = {2: 1000, 3: 3000, 4: 6000, 5: 10500, 6: 16000, 7: 23500,
-                8: 33000, 9: 46000, 10: 62000, 11: 82000, 12: 108000, 13: 140000,
-                14: 185000, 15: 240000, 16: 315000, 17: 410000, 18: 530000,
-                19: 685000, 20: 880000}
+WBL_BY_LEVEL = {
+    2: 1000,
+    3: 3000,
+    4: 6000,
+    5: 10500,
+    6: 16000,
+    7: 23500,
+    8: 33000,
+    9: 46000,
+    10: 62000,
+    11: 82000,
+    12: 108000,
+    13: 140000,
+    14: 185000,
+    15: 240000,
+    16: 315000,
+    17: 410000,
+    18: 530000,
+    19: 685000,
+    20: 880000,
+}
 
 
 def wealth_by_level(level):

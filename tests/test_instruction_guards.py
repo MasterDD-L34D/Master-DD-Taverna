@@ -3,6 +3,7 @@
 Stile PR #276 vault: niente fixture su disco — documenti buoni/cattivi in
 memoria; un caso per controllare che ciascun guard separi davvero il drift.
 """
+
 import sys
 from pathlib import Path
 
@@ -79,9 +80,7 @@ def test_file_mancante_fallisce():
     docs = good_docs()
     del docs["AGENTS.md"]
     results = evaluate(docs)
-    assert all(
-        results[n] is False for n in results if n.startswith("agents_")
-    )
+    assert all(results[n] is False for n in results if n.startswith("agents_"))
     assert results["router_rz1"] is True  # i doc presenti restano validi
 
 

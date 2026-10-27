@@ -44,6 +44,7 @@ Uso:
   --raw-dir PATH   (default data/reference/pi_local_only/pathbuilder)
   --out-dir PATH   (default <pathmaster sibling>/packages/rules-engine-v2/src/data)
 """
+
 from __future__ import annotations
 
 import argparse
@@ -56,15 +57,23 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_RAW_DIR = REPO_ROOT / "data/reference/pi_local_only/pathbuilder"
-DEFAULT_OUT_DIR = (REPO_ROOT.parent / "pathmaster-dd"
-                   / "packages/rules-engine-v2/src/data")
+DEFAULT_OUT_DIR = (
+    REPO_ROOT.parent / "pathmaster-dd" / "packages/rules-engine-v2/src/data"
+)
 
 SEP_FIELD = "£"
 SEP_LIST = "&"
 
 SIZES = {
-    -2: "fine", -1: "diminutive", 0: "tiny", 1: "small", 2: "medium",
-    3: "large", 4: "huge", 5: "gargantuan", 6: "colossal",
+    -2: "fine",
+    -1: "diminutive",
+    0: "tiny",
+    1: "small",
+    2: "medium",
+    3: "large",
+    4: "huge",
+    5: "gargantuan",
+    6: "colossal",
 }
 
 GOOD_SAVE_FIELDS = (("Fort", "fort"), ("Ref", "ref"), ("Will", "will"))
@@ -126,8 +135,16 @@ def speed_text(row: ET.Element, *, capital: bool = False) -> str:
     base = row.findtext("Speed" if capital else "speed")
     if base and int(base) > 0:
         parts.append(f"{int(base)} ft.")
-    fields = (("Fly", "fly"), ("Swim", "swim"), ("Climb", "climb")) if capital else \
-             (("fly", "fly"), ("swim", "swim"), ("climb", "climb"), ("burrow", "burrow"))
+    fields = (
+        (("Fly", "fly"), ("Swim", "swim"), ("Climb", "climb"))
+        if capital
+        else (
+            ("fly", "fly"),
+            ("swim", "swim"),
+            ("climb", "climb"),
+            ("burrow", "burrow"),
+        )
+    )
     for field, label in fields:
         value = row.findtext(field)
         if value and value.strip() not in ("", "0"):
@@ -205,28 +222,34 @@ def import_animals(raw_dir: Path) -> list[dict]:
             "dex": int(r.findtext("levelDex") or 0),
             "con": int(r.findtext("levelCon") or 0),
             "specialAttacks": (r.findtext("levelSpecialAttacks") or "").strip() or None,
-            "specialQualities": (r.findtext("levelSpecialQualities") or "").strip() or None,
+            "specialQualities": (r.findtext("levelSpecialQualities") or "").strip()
+            or None,
         }
-        out.append({
-            "name": r.findtext("name"),
-            "size": size_of(r),
-            "speed": speed_text(r),
-            "naturalArmor": int(r.findtext("baseAC") or 0),
-            "attacks": parse_attacks(r.findtext("baseAttacksParsed")),
-            "abilities": {
-                "str": ability(r, "str"),
-                "dex": ability(r, "dex"),
-                "con": ability(r, "con"),
-                "int": ability(r, "int"),
-                "wis": ability(r, "wis"),
-                "cha": ability(r, "cha"),
-            },
-            "specialQualities": (r.findtext("baseSpecialQualities") or "").replace(SEP_LIST, ", ") or None,
-            "levelOfIncrease": int(r.findtext("levelOfIncrease")),
-            "level": level,
-            "source": r.findtext("source"),
-            "ref": r.findtext("ref"),
-        })
+        out.append(
+            {
+                "name": r.findtext("name"),
+                "size": size_of(r),
+                "speed": speed_text(r),
+                "naturalArmor": int(r.findtext("baseAC") or 0),
+                "attacks": parse_attacks(r.findtext("baseAttacksParsed")),
+                "abilities": {
+                    "str": ability(r, "str"),
+                    "dex": ability(r, "dex"),
+                    "con": ability(r, "con"),
+                    "int": ability(r, "int"),
+                    "wis": ability(r, "wis"),
+                    "cha": ability(r, "cha"),
+                },
+                "specialQualities": (r.findtext("baseSpecialQualities") or "").replace(
+                    SEP_LIST, ", "
+                )
+                or None,
+                "levelOfIncrease": int(r.findtext("levelOfIncrease")),
+                "level": level,
+                "source": r.findtext("source"),
+                "ref": r.findtext("ref"),
+            }
+        )
     return out
 
 
@@ -234,27 +257,32 @@ def import_eidolon_base_forms(raw_dir: Path) -> list[dict]:
     rows = ET.parse(raw_dir / "data_eidolons_base_forms.xml").getroot().findall("Row")
     out = []
     for r in rows:
-        good = [save for field, save in GOOD_SAVE_FIELDS
-                if (r.findtext(field) or "0") == "1"]
+        good = [
+            save
+            for field, save in GOOD_SAVE_FIELDS
+            if (r.findtext(field) or "0") == "1"
+        ]
         free = (r.findtext("FreeEvolutions") or "").split(SEP_LIST)
-        out.append({
-            "name": r.findtext("BaseForm"),
-            "size": size_of(r, "Size"),
-            "speed": speed_text(r, capital=True),
-            "naturalArmor": int(r.findtext("AC") or 0),
-            "goodSaves": good,
-            "attacks": parse_attacks(r.findtext("Attacks"), three_fields=True),
-            "abilities": {
-                "str": int(r.findtext("Str")),
-                "dex": int(r.findtext("Dex")),
-                "con": int(r.findtext("Con")),
-                "int": int(r.findtext("Int")),
-                "wis": int(r.findtext("Wis")),
-                "cha": int(r.findtext("Cha")),
-            },
-            "freeEvolutions": [f for f in free if f],
-            "source": r.findtext("Source"),
-        })
+        out.append(
+            {
+                "name": r.findtext("BaseForm"),
+                "size": size_of(r, "Size"),
+                "speed": speed_text(r, capital=True),
+                "naturalArmor": int(r.findtext("AC") or 0),
+                "goodSaves": good,
+                "attacks": parse_attacks(r.findtext("Attacks"), three_fields=True),
+                "abilities": {
+                    "str": int(r.findtext("Str")),
+                    "dex": int(r.findtext("Dex")),
+                    "con": int(r.findtext("Con")),
+                    "int": int(r.findtext("Int")),
+                    "wis": int(r.findtext("Wis")),
+                    "cha": int(r.findtext("Cha")),
+                },
+                "freeEvolutions": [f for f in free if f],
+                "source": r.findtext("Source"),
+            }
+        )
     return out
 
 
@@ -263,13 +291,15 @@ def import_eidolon_evolutions(raw_dir: Path) -> list[dict]:
     out = []
     for r in rows:
         times = r.findtext("TimesSelectable")
-        out.append({
-            "name": r.findtext("Evolution"),
-            "cost": int(r.findtext("Cost")),
-            "timesSelectable": int(times) if times else 1,
-            "category": int(r.findtext("Category") or 0),
-            "source": r.findtext("Source"),
-        })
+        out.append(
+            {
+                "name": r.findtext("Evolution"),
+                "cost": int(r.findtext("Cost")),
+                "timesSelectable": int(times) if times else 1,
+                "category": int(r.findtext("Category") or 0),
+                "source": r.findtext("Source"),
+            }
+        )
     return out
 
 
@@ -289,18 +319,18 @@ def main(argv=None) -> int:
     payload = {
         "_provenance": {
             "source": "Pathbuilder 1e raw data (res/raw dell'APK), "
-                      "data_familiars.xml + data_animals.xml + "
-                      "data_eidolons_base_forms.xml + data_eidolons_evolutions.xml",
+            "data_familiars.xml + data_animals.xml + "
+            "data_eidolons_base_forms.xml + data_eidolons_evolutions.xml",
             "generated_by": "Master-DD-Taverna/tools/import_pathbuilder_companions.py",
             "generated_at": datetime.now(timezone.utc).isoformat(),
             "license": "Pathbuilder 1e raw data (APK da BlueStacks utente, permesso "
-                       "concesso 2026-08-02). Meccaniche e nomi: OGL 1.0a. Description/"
-                       "specialAbi/descShort: testo Paizo (Product Identity) — MAI "
-                       "esportato (resta nel dataset PI local-only, gitignored).",
+            "concesso 2026-08-02). Meccaniche e nomi: OGL 1.0a. Description/"
+            "specialAbi/descShort: testo Paizo (Product Identity) — MAI "
+            "esportato (resta nel dataset PI local-only, gitignored).",
             "desc_policy": "Solo meccaniche + nomi, come PB-1 (pathbuilder-feats.json). "
-                           "Rider degli attacchi ('Plus Trip') e specialAttacks/Qualities: "
-                           "dichiarati, mai applicati dal motore. Il 5o campo degli attacchi "
-                           "parsati Pathbuilder non e' decodificato: non esportato.",
+            "Rider degli attacchi ('Plus Trip') e specialAttacks/Qualities: "
+            "dichiarati, mai applicati dal motore. Il 5o campo degli attacchi "
+            "parsati Pathbuilder non e' decodificato: non esportato.",
             "format_notes_doc": "tools/import_pathbuilder_companions.py (docstring)",
         },
         "counts": {
@@ -315,19 +345,24 @@ def main(argv=None) -> int:
         "eidolonEvolutions": evolutions,
     }
 
-    print(f"famigli: {len(familiars)} (improved: "
-          f"{sum(1 for f in familiars if f['improved'])})")
+    print(
+        f"famigli: {len(familiars)} (improved: "
+        f"{sum(1 for f in familiars if f['improved'])})"
+    )
     print(f"animali da compagnia: {len(animals)}")
-    print(f"eidolon base forms: {len(base_forms)} -> "
-          f"{[f['name'] for f in base_forms]}")
+    print(
+        f"eidolon base forms: {len(base_forms)} -> "
+        f"{[f['name'] for f in base_forms]}"
+    )
     print(f"eidolon evolutions: {len(evolutions)}")
 
     if not args.report_only:
         out_dir = Path(args.out_dir)
         out_dir.mkdir(parents=True, exist_ok=True)
         path = out_dir / "pathbuilder-companions.json"
-        path.write_text(json.dumps(payload, indent=1, ensure_ascii=False) + "\n",
-                        encoding="utf-8")
+        path.write_text(
+            json.dumps(payload, indent=1, ensure_ascii=False) + "\n", encoding="utf-8"
+        )
         print(f"scritto {path}")
     return 0
 

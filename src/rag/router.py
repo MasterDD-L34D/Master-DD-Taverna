@@ -1,4 +1,5 @@
 """FastAPI endpoints for RAG search and ask."""
+
 import os
 from pathlib import Path
 
@@ -21,7 +22,9 @@ def _get_encoder():
     try:
         from sentence_transformers import SentenceTransformer
     except ImportError as exc:
-        raise HTTPException(status_code=503, detail=f"sentence-transformers non installato: {exc}")
+        raise HTTPException(
+            status_code=503, detail=f"sentence-transformers non installato: {exc}"
+        )
     model = os.getenv("RAG_EMBEDDING_MODEL", "paraphrase-multilingual-MiniLM-L12-v2")
     _encoder = SentenceTransformer(model)
     return _encoder
@@ -30,15 +33,20 @@ def _get_encoder():
 def _get_store():
     store_dir = Path(os.getenv("RAG_STORE_DIR", str(DATA_DIR / "vector_store")))
     from .store import VectorStore
+
     return VectorStore(store_dir)
 
 
 def _get_retriever():
     store = _get_store()
     if not store.is_ready():
-        raise HTTPException(status_code=503, detail="Indice RAG non trovato. Esegui: python tools/index_rag.py")
+        raise HTTPException(
+            status_code=503,
+            detail="Indice RAG non trovato. Esegui: python tools/index_rag.py",
+        )
     encoder = _get_encoder()
     from .retriever import Retriever
+
     return Retriever(store, encoder)
 
 
@@ -76,6 +84,7 @@ async def rag_ask(req: AskRequest, _=Depends(require_api_key)):
     retriever = _get_retriever()
     results = retriever.search(req.query, top_k=req.top_k)
     from .generator import get_provider
+
     provider = get_provider(
         req.provider,
         ollama_model=req.ollama_model,
@@ -93,9 +102,12 @@ async def rag_ask(req: AskRequest, _=Depends(require_api_key)):
 @router.post("/build")
 async def rag_build(req: BuildRequest, _=Depends(require_api_key)):
     from ..agents.builder import generate_build
+
     retriever = _get_retriever()
     request_dict = req.model_dump(by_alias=True)
     # 'class' è riservato in Python; BuildRequest usa class_name mappato sull'alias "class"
     request_dict["class"] = request_dict.pop("class_name", request_dict.get("class"))
-    payload = generate_build(request_dict, retriever=retriever, provider_name=req.provider)
+    payload = generate_build(
+        request_dict, retriever=retriever, provider_name=req.provider
+    )
     return {"request": request_dict, "build": payload}

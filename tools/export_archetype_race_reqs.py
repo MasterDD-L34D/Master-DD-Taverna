@@ -22,6 +22,7 @@ Uso:
   python tools/export_archetype_race_reqs.py --report-only  # solo stdout
   --out-dir PATH  (default <pathmaster sibling>/packages/rules-engine-v2/src/data)
 """
+
 from __future__ import annotations
 
 import argparse
@@ -32,8 +33,9 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CATALOG = REPO_ROOT / "data/reference/ogl/archetypes.json"
-DEFAULT_OUT_DIR = (REPO_ROOT.parent / "pathmaster-dd"
-                   / "packages/rules-engine-v2/src/data")
+DEFAULT_OUT_DIR = (
+    REPO_ROOT.parent / "pathmaster-dd" / "packages/rules-engine-v2/src/data"
+)
 OUTPUT_FILE = "taverna-archetype-race-reqs.json"
 
 LICENSE_TEXT = (
@@ -50,12 +52,14 @@ def extract_race_reqs(catalog: dict) -> list[dict]:
         race_req = mechanics.get("race_req") or []
         if not race_req:
             continue
-        out.append({
-            "class": mechanics.get("class"),
-            "name": entry.get("name"),
-            "race_req": list(race_req),
-            "source_id": entry.get("source_id"),
-        })
+        out.append(
+            {
+                "class": mechanics.get("class"),
+                "name": entry.get("name"),
+                "race_req": list(race_req),
+                "source_id": entry.get("source_id"),
+            }
+        )
     return out
 
 
@@ -67,12 +71,12 @@ def build_file(catalog: dict, generated_at: str | None = None) -> dict:
     return {
         "_provenance": {
             "source": "Master-DD-Taverna data/reference/ogl/archetypes.json "
-                      "(catalogo curato OGL, fonte AoN)",
+            "(catalogo curato OGL, fonte AoN)",
             "generated_by": "Master-DD-Taverna/tools/export_archetype_race_reqs.py",
             "license": LICENSE_TEXT,
             "semantics": "Solo gli archetipi con race_req attestato. Chi non c'e': "
-                         "nessun requisito razziale NOTO da questa fonte (assenza "
-                         "di dato, non prova di assenza — policy D6 nel motore).",
+            "nessun requisito razziale NOTO da questa fonte (assenza "
+            "di dato, non prova di assenza — policy D6 nel motore).",
         },
         "generated_at": generated_at or datetime.now(timezone.utc).isoformat(),
         "counts": {
@@ -98,8 +102,9 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     out_path = args.out_dir / OUTPUT_FILE
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n",
-                        encoding="utf-8")
+    out_path.write_text(
+        json.dumps(doc, indent=1, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
     print(f"scritto {out_path}", file=sys.stderr)
     return 0
 

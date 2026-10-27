@@ -4,6 +4,7 @@
 Misura tempi di risposta e qualita' delle risposte per diverse query
 usando lo stesso indice RAG ma modelli LLM diversi.
 """
+
 import json
 import os
 import sys
@@ -77,7 +78,11 @@ def ask(query: str, model: str, top_k: int = 3):
 
 
 def main():
-    out_path = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("../../sessione-2026-07-16/rapporti/model_benchmark.json")
+    out_path = (
+        Path(sys.argv[1])
+        if len(sys.argv) > 1
+        else Path("../../sessione-2026-07-16/rapporti/model_benchmark.json")
+    )
     report = {
         "api_url": API_URL,
         "models": [],
@@ -88,17 +93,21 @@ def main():
         for q in QUERIES:
             print(f"  Query: {q['id']}", end="", flush=True)
             res = ask(q["text"], model)
-            model_result["queries"].append({
-                "id": q["id"],
-                "query": q["text"],
-                "expected": q["expected"],
-                **res,
-            })
+            model_result["queries"].append(
+                {
+                    "id": q["id"],
+                    "query": q["text"],
+                    "expected": q["expected"],
+                    **res,
+                }
+            )
             status = "OK" if res["ok"] else "ERR"
             print(f" -> {status} in {res['elapsed_seconds']}s")
         report["models"].append(model_result)
 
-    out_path.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    out_path.write_text(
+        json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
     print(f"\nReport salvato in: {out_path}")
 
 

@@ -20,6 +20,7 @@ MAI inventato.
 
 Policy OGL: i JSON committati non includono mai la Description.
 """
+
 import json
 import sys
 from pathlib import Path
@@ -29,7 +30,6 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tools import import_pathbuilder_races as pb
-
 
 # ---------------------------------------------------------------------------
 # Fixture: forma reale (campi nell'ordine osservato nei file veri).
@@ -152,55 +152,72 @@ ALT_TRAITS_XML = """<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 # Parser degli ability adjustments (SOLO dal dato, formati regolari)
 # ---------------------------------------------------------------------------
 
+
 def test_parse_ability_bonus_formato_standard():
     assert pb.parse_ability_bonus(
-        "Bonus +2 Constitution, +2 Wisdom, –2 Charisma. Dwarves are...") == {
-        "con": 2, "wis": 2, "cha": -2}
+        "Bonus +2 Constitution, +2 Wisdom, –2 Charisma. Dwarves are..."
+    ) == {"con": 2, "wis": 2, "cha": -2}
 
 
 def test_parse_ability_bonus_doppio_spazio_e_segno_varianti():
     assert pb.parse_ability_bonus(
-        "Bonus  +2 Dexterity, +2 Intelligence, –2 Constitution. Elves...") == {
-        "dex": 2, "int": 2, "con": -2}
+        "Bonus  +2 Dexterity, +2 Intelligence, –2 Constitution. Elves..."
+    ) == {"dex": 2, "int": 2, "con": -2}
 
 
 def test_parse_ability_bonus_gain_suffer():
-    assert pb.parse_ability_bonus(
-        "They gain +2 Constitution and +2 Charisma.") == {"con": 2, "cha": 2}
+    assert pb.parse_ability_bonus("They gain +2 Constitution and +2 Charisma.") == {
+        "con": 2,
+        "cha": 2,
+    }
     assert pb.parse_ability_bonus(
         "They gain +2 Dexterity and +2 Constitution but suffer –2 Intelligence."
-        ) == {"dex": 2, "con": 2, "int": -2}
+    ) == {"dex": 2, "con": 2, "int": -2}
 
 
 def test_parse_ability_bonus_sigle():
     assert pb.parse_ability_bonus(
-        "+2 Str, +2 Wis, –2 Int. Rougarous are strong and alert.") == {
-        "str": 2, "wis": 2, "int": -2}
+        "+2 Str, +2 Wis, –2 Int. Rougarous are strong and alert."
+    ) == {"str": 2, "wis": 2, "int": -2}
     assert pb.parse_ability_bonus("Flexible (+2 Str, +2 Con) (2 RP)") == {
-        "str": 2, "con": 2}
+        "str": 2,
+        "con": 2,
+    }
 
 
 def test_parse_ability_bonus_senza_numeri_e_none():
     # mai inventato: description senza numeri -> None (dichiarato assente)
-    assert pb.parse_ability_bonus(
-        "Aasimars are insightful, confident, and personable.") is None
+    assert (
+        pb.parse_ability_bonus("Aasimars are insightful, confident, and personable.")
+        is None
+    )
     assert pb.parse_ability_bonus(None) is None
     # numeri NON adiacenti al nome caratteristica: niente parsing
-    assert pb.parse_ability_bonus(
-        "they gain a +2 racial bonus to either Strength, Dexterity, or "
-        "Constitution (see Change Shape).") is None
-    assert pb.parse_ability_bonus(
-        "syrinx gain a +2 bonus to Wisdom but suffer a –2 penalty to Dexterity."
-        ) is None
+    assert (
+        pb.parse_ability_bonus(
+            "they gain a +2 racial bonus to either Strength, Dexterity, or "
+            "Constitution (see Change Shape)."
+        )
+        is None
+    )
+    assert (
+        pb.parse_ability_bonus(
+            "syrinx gain a +2 bonus to Wisdom but suffer a –2 penalty to Dexterity."
+        )
+        is None
+    )
 
 
 def test_is_flexible_ability_bonus():
     assert pb.is_flexible_ability_bonus(
-        "Bonus +2 to One Ability Score. Human characters gain...")
+        "Bonus +2 to One Ability Score. Human characters gain..."
+    )
     assert pb.is_flexible_ability_bonus(
-        "Bonus +2 to one ability score of their choice.")
+        "Bonus +2 to one ability score of their choice."
+    )
     assert not pb.is_flexible_ability_bonus(
-        "Bonus +2 Constitution, +2 Wisdom, –2 Charisma.")
+        "Bonus +2 Constitution, +2 Wisdom, –2 Charisma."
+    )
     assert not pb.is_flexible_ability_bonus(None)
 
 
@@ -208,18 +225,23 @@ def test_is_flexible_ability_bonus():
 # Raggruppamento blocchi razza (Race solo sulla prima riga del blocco)
 # ---------------------------------------------------------------------------
 
+
 def test_group_race_blocks():
     rows = pb.iter_rows(pb.parse_xml(RACES_XML))
     blocks = pb.group_race_blocks(rows)
     assert list(blocks) == ["Dwarf", "Human", "Halfling", "Aasimar", "Shabti"]
     assert [r.findtext("Trait") for r in blocks["Dwarf"]] == [
-        "Ability Bonus", "Medium", "Darkvision"]
+        "Ability Bonus",
+        "Medium",
+        "Darkvision",
+    ]
     assert len(blocks["Shabti"]) == 2
 
 
 # ---------------------------------------------------------------------------
 # import_races: entita' completa
 # ---------------------------------------------------------------------------
+
 
 def test_import_races_fixture(tmp_path):
     d = tmp_path / "raw"
@@ -282,11 +304,13 @@ def test_playable_list_esplicita_e_validata(tmp_path):
 # import_alternative_traits
 # ---------------------------------------------------------------------------
 
+
 def test_import_alternative_traits_fixture(tmp_path):
     d = tmp_path / "raw"
     d.mkdir()
     (d / "data_races_alternative_traits.xml").write_text(
-        ALT_TRAITS_XML, encoding="utf-8")
+        ALT_TRAITS_XML, encoding="utf-8"
+    )
     traits = pb.import_alternative_traits(d)
     assert len(traits) == 3
     by_trait = {t["trait"]: t for t in traits}
@@ -314,15 +338,16 @@ def test_import_alternative_traits_fixture(tmp_path):
 # main() end-to-end su radice finta
 # ---------------------------------------------------------------------------
 
+
 def test_main_scrive_i_due_json(tmp_path):
     raw = tmp_path / "raw"
     raw.mkdir()
     (raw / "data_races.xml").write_text(RACES_XML, encoding="utf-8")
     (raw / "data_races_alternative_traits.xml").write_text(
-        ALT_TRAITS_XML, encoding="utf-8")
+        ALT_TRAITS_XML, encoding="utf-8"
+    )
     out = tmp_path / "out"
-    rc = pb.main(["--raw-dir", str(raw), "--out-dir", str(out),
-                  "--no-strict-playable"])
+    rc = pb.main(["--raw-dir", str(raw), "--out-dir", str(out), "--no-strict-playable"])
     assert rc == 0
 
     races = json.loads((out / "pathbuilder-races.json").read_text("utf-8"))
@@ -339,11 +364,9 @@ def test_main_scrive_i_due_json(tmp_path):
     assert "Aasimar" in races["report"]["racesWithoutAbilityData"]
     assert "Shabti" in races["report"]["racesWithoutSize"]
     assert "Human" in races["report"]["racesWithoutSource"]
-    assert "description" not in {
-        k.lower() for r in races["races"] for k in r}
+    assert "description" not in {k.lower() for r in races["races"] for k in r}
 
-    traits = json.loads(
-        (out / "pathbuilder-race-traits.json").read_text("utf-8"))
+    traits = json.loads((out / "pathbuilder-race-traits.json").read_text("utf-8"))
     assert traits["_provenance"]["license"]
     assert traits["counts"]["traits"] == 3
     assert traits["counts"]["races"] == 2
@@ -367,12 +390,10 @@ def test_dati_reali_races_conteggi_e_spot_check():
 
     # spot-check RAW: Dwarf +2 Cos/+2 Sag/-2 Car; Halfling small;
     # Human flex (+2 a scelta, contratto E6-A6); Kasatha +2 Des/+2 Sag
-    assert by_name["Dwarf"]["abilityAdjustments"] == {
-        "con": 2, "wis": 2, "cha": -2}
+    assert by_name["Dwarf"]["abilityAdjustments"] == {"con": 2, "wis": 2, "cha": -2}
     assert by_name["Dwarf"]["size"] == "medium"
     assert by_name["Halfling"]["size"] == "small"
-    assert by_name["Halfling"]["abilityAdjustments"] == {
-        "dex": 2, "cha": 2, "str": -2}
+    assert by_name["Halfling"]["abilityAdjustments"] == {"dex": 2, "cha": 2, "str": -2}
     assert by_name["Human"]["flexible"] is True
     assert by_name["Human"]["abilityAdjustments"] is None
     assert by_name["Kasatha"]["abilityAdjustments"] == {"dex": 2, "wis": 2}
@@ -390,8 +411,9 @@ def test_dati_reali_races_conteggi_e_spot_check():
         assert c["name"] in by_name, f"razza curated assente in PB: {c['name']}"
 
 
-@pytest.mark.skipif(not (REAL_RAW / "data_races_alternative_traits.xml").is_file(),
-                    reason=REAL_REASON)
+@pytest.mark.skipif(
+    not (REAL_RAW / "data_races_alternative_traits.xml").is_file(), reason=REAL_REASON
+)
 def test_dati_reali_alternative_traits():
     traits = pb.import_alternative_traits(REAL_RAW)
     assert len(traits) == 702

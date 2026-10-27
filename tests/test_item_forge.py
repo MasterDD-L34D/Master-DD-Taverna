@@ -1,5 +1,6 @@
 """Test per tools/item_forge.py — core deterministico oggetti magici PF1e.
 Riferimenti ufficiali dal legacy Item-generator (Formato Torneo)."""
+
 import sys
 from pathlib import Path
 
@@ -8,9 +9,18 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tools.item_forge import (
-    aura_for_cl, crafting_cost, forge_from_spell, min_caster_level,
-    price_bonus_item, price_charged_item, price_spell_item,
-    rarity_for_price, save_dc, school_it, spell_lookup)
+    aura_for_cl,
+    crafting_cost,
+    forge_from_spell,
+    min_caster_level,
+    price_bonus_item,
+    price_charged_item,
+    price_spell_item,
+    rarity_for_price,
+    save_dc,
+    school_it,
+    spell_lookup,
+)
 
 
 class TestPriceSpellItem:
@@ -89,9 +99,9 @@ class TestDerived:
         assert aura_for_cl(20) == "Forte"
 
     def test_save_dc(self):
-        assert save_dc(3) == 16       # 10+3+3 (min +3)
+        assert save_dc(3) == 16  # 10+3+3 (min +3)
         assert save_dc(3, 5) == 18
-        assert save_dc(1, 0) == 14    # mod sotto il minimo -> +3
+        assert save_dc(1, 0) == 14  # mod sotto il minimo -> +3
 
     def test_rarity(self):
         assert rarity_for_price(9_999) == "Comune"

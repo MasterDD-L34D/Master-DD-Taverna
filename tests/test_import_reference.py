@@ -1,15 +1,24 @@
 """Test per tools/import_reference.py — parser su fixture HTML inline (no rete)."""
+
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from tools.import_reference import (SKILL_HEADER_RE, _class_skill_matches,
-                                    parse_abilities, parse_class,
-                                    parse_equipment_table, parse_item_source,
-                                    parse_race, parse_race_subraces,
-                                    parse_skill, parse_traits,
-                                    source_id, slug)
+from tools.import_reference import (
+    SKILL_HEADER_RE,
+    _class_skill_matches,
+    parse_abilities,
+    parse_class,
+    parse_equipment_table,
+    parse_item_source,
+    parse_race,
+    parse_race_subraces,
+    parse_skill,
+    parse_traits,
+    source_id,
+    slug,
+)
 from tools.import_reference import extract_prerequisites
 
 
@@ -19,8 +28,13 @@ def test_extract_prerequisites():
     d2 = "Benefit: You gain a +2 bonus.\n\nNormal: Without this feat, nothing."
     assert extract_prerequisites(d2) == []
     d3 = "Prerequisite: Dex 15, Nimble Moves, base attack bonus +7.\n\nBenefit: X."
-    assert extract_prerequisites(d3) == ["Dex 15", "Nimble Moves", "base attack bonus +7"]
+    assert extract_prerequisites(d3) == [
+        "Dex 15",
+        "Nimble Moves",
+        "base attack bonus +7",
+    ]
     print("OK: extract_prerequisites fixture")
+
 
 ABILITIES_HTML = """
 <html><body>
@@ -41,10 +55,23 @@ def test_slug_and_source_id():
 
 def test_parse_abilities():
     entries = parse_abilities(ABILITIES_HTML)
-    costs = {e["name"]: e["mechanics"]["cost"] for e in entries if e["mechanics"]["kind"] == "ability_cost"}
-    budget = {e["name"]: e["mechanics"]["points"] for e in entries if e["mechanics"]["kind"] == "campaign_budget"}
+    costs = {
+        e["name"]: e["mechanics"]["cost"]
+        for e in entries
+        if e["mechanics"]["kind"] == "ability_cost"
+    }
+    budget = {
+        e["name"]: e["mechanics"]["points"]
+        for e in entries
+        if e["mechanics"]["kind"] == "campaign_budget"
+    }
     assert costs == {"Score 7": -4, "Score 10": 0, "Score 14": 5, "Score 18": 17}
-    assert budget == {"Low Fantasy": 10, "Standard Fantasy": 15, "High Fantasy": 20, "Epic Fantasy": 25}
+    assert budget == {
+        "Low Fantasy": 10,
+        "Standard Fantasy": 15,
+        "High Fantasy": 20,
+        "Epic Fantasy": 25,
+    }
     assert all(e["source_id"].startswith("pfrpg_core:") for e in entries)
     print("OK: parse_abilities fixture")
 
@@ -78,8 +105,10 @@ def test_parse_race():
 
 
 def test_parse_race_any_bonus():
-    html = ("<html><body><h3>Racial Traits</h3>"
-            "<p><b>+2 to One Ability Score</b>: Humans get a bonus feat.</p></body></html>")
+    html = (
+        "<html><body><h3>Racial Traits</h3>"
+        "<p><b>+2 to One Ability Score</b>: Humans get a bonus feat.</p></body></html>"
+    )
     entry = parse_race(html, "Human")
     assert entry["mechanics"]["ability_mods"] == {"any": 2}
     print("OK: parse_race any-bonus")
@@ -136,7 +165,13 @@ def test_parse_race_exotic_kasatha():
     assert mech["speed"] == 30
     assert any(t["name"] == "Multi-Armed" for t in mech["traits"])
     assert mech["languages"]["auto"] == ["Common", "Kasatha"]
-    assert mech["languages"]["bonus"] == ["Dwarven", "Draconic", "Gnoll", "Orc", "Sphinx"]
+    assert mech["languages"]["bonus"] == [
+        "Dwarven",
+        "Draconic",
+        "Gnoll",
+        "Orc",
+        "Sphinx",
+    ]
     print("OK: parse_race exotic kasatha")
 
 
@@ -156,7 +191,13 @@ def test_parse_race_exotic_strix():
     assert mech["speed"] == 30
     assert any(t["name"] == "Flight" for t in mech["traits"])
     assert mech["languages"]["auto"] == ["Strix"]
-    assert mech["languages"]["bonus"] == ["Auran", "Azlanti", "Common", "Draconic", "Infernal"]
+    assert mech["languages"]["bonus"] == [
+        "Auran",
+        "Azlanti",
+        "Common",
+        "Draconic",
+        "Infernal",
+    ]
     print("OK: parse_race exotic strix")
 
 
@@ -221,7 +262,13 @@ def test_parse_race_mods_endash_start_abbreviations_and_mojibake():
 """
     entry = parse_race(html, "X")
     assert entry["mechanics"]["ability_mods"] == {
-        "str": -2, "dex": 4, "con": 2, "int": 2, "wis": 2, "cha": 2}
+        "str": -2,
+        "dex": 4,
+        "con": 2,
+        "int": 2,
+        "wis": 2,
+        "cha": 2,
+    }
 
 
 def test_parse_race_large_size_and_speed_labels():
@@ -289,8 +336,11 @@ def test_parse_race_favored_class_options():
     entry = parse_race(RACE_FCO_HTML, "Elf")
     fco = entry["mechanics"]["favored_class_options"]
     assert len(fco) == 2
-    assert fco[0] == {"class": "Alchemist", "source": "Advanced Race Guide",
-                      "bonus": "Add one extract formula to his formula book."}
+    assert fco[0] == {
+        "class": "Alchemist",
+        "source": "Advanced Race Guide",
+        "bonus": "Add one extract formula to his formula book.",
+    }
     assert fco[1]["class"] == "Arcanist"
     assert fco[1]["source"] == "Advanced Class Guide"
     assert fco[1]["bonus"].startswith("Increase points")
@@ -335,23 +385,41 @@ RACE_INDEX_HTML = """
 
 def test_race_index_names_from_html():
     from tools.import_reference import _race_index_names_from_html
+
     assert _race_index_names_from_html(RACE_INDEX_HTML) == [
-        "Aasimar", "Catfolk", "Vine Leshy"]
+        "Aasimar",
+        "Catfolk",
+        "Vine Leshy",
+    ]
 
 
 def test_pi_split_moves_named_subraces():
     """Nomi subrace/trait PI -> subraces_local con campo race; gli altri restano."""
     from tools.import_reference import _pi_split_race_sections
-    entry = {"name": "Elf", "mechanics": {
-        "subraces": [{"name": "Aquatic Elves", "description": "x"},
-                     {"name": "Ekujae Elves", "description": "y"}],
-        "alternate_traits": [{"name": "Blightborn", "replaces": ["Elven Immunities"],
-                              "source": "Horror Adventures", "description": "z"}]}}
+
+    entry = {
+        "name": "Elf",
+        "mechanics": {
+            "subraces": [
+                {"name": "Aquatic Elves", "description": "x"},
+                {"name": "Ekujae Elves", "description": "y"},
+            ],
+            "alternate_traits": [
+                {
+                    "name": "Blightborn",
+                    "replaces": ["Elven Immunities"],
+                    "source": "Horror Adventures",
+                    "description": "z",
+                }
+            ],
+        },
+    }
     local = []
     _pi_split_race_sections(entry, local)
     assert [s["name"] for s in entry["mechanics"]["subraces"]] == ["Aquatic Elves"]
-    assert local == [{"race": "Elf", "kind": "subrace", "name": "Ekujae Elves",
-                      "description": "y"}]
+    assert local == [
+        {"race": "Elf", "kind": "subrace", "name": "Ekujae Elves", "description": "y"}
+    ]
     assert entry["mechanics"]["alternate_traits"][0]["name"] == "Blightborn"
 
 
@@ -378,7 +446,12 @@ def test_parse_class():
     assert mech["skill_points_per_level"] == 4
     assert "Acrobatics" in mech["class_skills"] and "Perception" in mech["class_skills"]
     lvl1 = mech["progression"][0]
-    assert lvl1["level"] == 1 and lvl1["bab"] == 1 and lvl1["fort"] == 2 and lvl1["ref"] == 0
+    assert (
+        lvl1["level"] == 1
+        and lvl1["bab"] == 1
+        and lvl1["fort"] == 2
+        and lvl1["ref"] == 0
+    )
     assert "rage" in lvl1["special"]
     assert lvl1["spells_per_day"] == {"0": "3", "1st": "1"}
     assert "Unarmed Damage" in lvl1.get("extra_progression", {})
@@ -413,7 +486,9 @@ def test_parse_class_spells_known():
     assert prog[0]["spells_per_day"] == {"0": "3", "1st": "1"}
     # entry preesistente senza tabella known: nessuna chiave
     no_known = parse_class(CLASS_HTML, "Barbarian")
-    assert all("spells_known" not in row for row in no_known["mechanics"]["progression"])
+    assert all(
+        "spells_known" not in row for row in no_known["mechanics"]["progression"]
+    )
     print("OK: parse_class spells_known")
 
 
@@ -487,8 +562,12 @@ def test_parse_class_brawler_unarmed_damage():
     assert lvl1["extra_progression"] == {"Unarmed Damage": "1d6"}
     assert "spells_per_day" not in lvl1
     assert "Unarmed Damage" not in lvl1.get("spells_per_day", {})
-    assert lvl1["special"] == ["Brawler's cunning", "martial flexibility",
-                               "martial training", "unarmed strike"]
+    assert lvl1["special"] == [
+        "Brawler's cunning",
+        "martial flexibility",
+        "martial training",
+        "unarmed strike",
+    ]
     assert "brawler's flurry (Two-Weapon Fighting)" in mech["progression"][1]["special"]
     assert entry["source"] == "Advanced Class Guide"
     assert entry["tags"] == ["class", "hybrid"]
@@ -560,13 +639,17 @@ def test_parse_class_proficiencies_two_sentences():
     assert "light armor, but not with shields" in prof
     assert prof.endswith("shields")
     assert "Alchemy" not in prof
-    html = ("<html><body><p><b>Weapon and Armor Proficiency</b>: Witches are "
-            "proficient with all simple weapons. They are not proficient with "
-            "any type of armor or shield. Armor interferes with a witch's "
-            "gestures, which can cause her spells to fail.</p></body></html>")
+    html = (
+        "<html><body><p><b>Weapon and Armor Proficiency</b>: Witches are "
+        "proficient with all simple weapons. They are not proficient with "
+        "any type of armor or shield. Armor interferes with a witch's "
+        "gestures, which can cause her spells to fail.</p></body></html>"
+    )
     prof = parse_class(html, "Witch")["mechanics"]["proficiencies"]
-    assert prof == ("Witches are proficient with all simple weapons. "
-                    "They are not proficient with any type of armor or shield")
+    assert prof == (
+        "Witches are proficient with all simple weapons. "
+        "They are not proficient with any type of armor or shield"
+    )
     print("OK: parse_class proficiencies two sentences")
 
 
@@ -582,8 +665,12 @@ def test_skill_header_regex():
 def test_parse_skill():
     html = "<html><body><h2>Acrobatics (Dex; Armor Check Penalty)</h2><p>You can keep your balance.</p></body></html>"
     entry = parse_skill(html, "Acrobatics")
-    assert entry["mechanics"] == {"key_ability": "dex", "trained_only": False,
-                                  "armor_check_penalty": True, "class_skills_of": []}
+    assert entry["mechanics"] == {
+        "key_ability": "dex",
+        "trained_only": False,
+        "armor_check_penalty": True,
+        "class_skills_of": [],
+    }
     print("OK: parse_skill fixture")
 
 
@@ -617,17 +704,21 @@ def test_parse_equipment_table():
     # Detail URL dal link nel nome; senza link fallback al generico.
     assert ls["reference_urls"] == [
         "https://aonprd.com/EquipmentWeaponsDisplay.aspx?ItemName=Longsword",
-        "https://aonprd.com/Equipment.aspx"]
+        "https://aonprd.com/Equipment.aspx",
+    ]
     assert entries[1]["reference_urls"] == ["https://aonprd.com/Equipment.aspx"]
     assert entries[1]["mechanics"]["range"] == "60 ft."
     # Spazi negli href AoN: URL-encode nel detail URL.
     assert entries[2]["reference_urls"][0] == (
-        "https://aonprd.com/EquipmentWeaponsDisplay.aspx?ItemName=Battle%20aspergillum")
+        "https://aonprd.com/EquipmentWeaponsDisplay.aspx?ItemName=Battle%20aspergillum"
+    )
     print("OK: parse_equipment_table fixture")
 
 
 def test_parse_item_source():
-    html = "<html><body><h2>Klar</h2><p>Source Ultimate Equipment pg. 24</p></body></html>"
+    html = (
+        "<html><body><h2>Klar</h2><p>Source Ultimate Equipment pg. 24</p></body></html>"
+    )
     assert parse_item_source(html) == "Ultimate Equipment"
     html2 = "<html><body><p>Source PRPG Core Rulebook pg. 141</p></body></html>"
     assert parse_item_source(html2) == "PFRPG Core"
@@ -661,11 +752,13 @@ def test_parse_traits():
 
 
 def test_parse_traits_strips_suggested_characters():
-    html = ("<html><body>"
-            "<h3><a href=\"TraitDisplay.aspx?ItemName=Inspiring\">Inspiring</a></h3>"
-            "<p><b>Source</b> Ultimate Campaign pg. 61</p>"
-            "<p>You gain a +1 trait bonus on Diplomacy checks. Suggested Characters : Iomedaeans, Chelaxians.</p>"
-            "</body></html>")
+    html = (
+        "<html><body>"
+        '<h3><a href="TraitDisplay.aspx?ItemName=Inspiring">Inspiring</a></h3>'
+        "<p><b>Source</b> Ultimate Campaign pg. 61</p>"
+        "<p>You gain a +1 trait bonus on Diplomacy checks. Suggested Characters : Iomedaeans, Chelaxians.</p>"
+        "</body></html>"
+    )
     entries = parse_traits(html, "Basic (Social)")
     assert "Suggested Characters" not in entries[0]["description"]
     assert "Iomedaeans" not in entries[0]["description"]
@@ -675,35 +768,59 @@ def test_parse_traits_strips_suggested_characters():
 
 def test_trait_pi_supplement():
     from tools.import_reference import _trait_pi_hits
-    entry = {"name": "Acadamae Neophyte", "description": "You studied at the Acadamae of Korvosa.",
-             "prerequisites": [], "source": "Ultimate Campaign"}
+
+    entry = {
+        "name": "Acadamae Neophyte",
+        "description": "You studied at the Acadamae of Korvosa.",
+        "prerequisites": [],
+        "source": "Ultimate Campaign",
+    }
     assert _trait_pi_hits(entry)
-    clean_entry = {"name": "Reactionary", "description": "+2 trait bonus on initiative checks.",
-                   "prerequisites": [], "source": "Ultimate Campaign"}
+    clean_entry = {
+        "name": "Reactionary",
+        "description": "+2 trait bonus on initiative checks.",
+        "prerequisites": [],
+        "source": "Ultimate Campaign",
+    }
     assert not _trait_pi_hits(clean_entry)
-    society = {"name": "Pathfinder's Focus", "description": "+1 on saves.",
-               "prerequisites": [], "source": "Pathfinder Society Primer"}
+    society = {
+        "name": "Pathfinder's Focus",
+        "description": "+1 on saves.",
+        "prerequisites": [],
+        "source": "Pathfinder Society Primer",
+    }
     assert _trait_pi_hits(society)
     print("OK: trait PI supplement")
 
 
 def test_trait_pi_supplement_demonyms():
     from tools.import_reference import _trait_pi_hits
-    prereq = {"name": "Hill Fighter", "description": "+1 trait bonus on attacks.",
-              "prerequisites": ["Sargavan"], "source": "Sargava, the Lost Colony"}
+
+    prereq = {
+        "name": "Hill Fighter",
+        "description": "+1 trait bonus on attacks.",
+        "prerequisites": ["Sargavan"],
+        "source": "Sargava, the Lost Colony",
+    }
     assert _trait_pi_hits(prereq)
-    desc = {"name": "Obari Veteran", "description": "Garundi and Vudrani traditions.",
-            "prerequisites": [], "source": "Ultimate Campaign"}
+    desc = {
+        "name": "Obari Veteran",
+        "description": "Garundi and Vudrani traditions.",
+        "prerequisites": [],
+        "source": "Ultimate Campaign",
+    }
     assert _trait_pi_hits(desc)
     print("OK: trait PI supplement demonyms")
 
 
 def test_parse_traits_comma_source():
-    html = ("<html><body>"
-            "<h3><a href=\"TraitDisplay.aspx?ItemName=Hill+Fighter\">Hill Fighter</a></h3>"
-            "<p><b>Source</b> Sargava, the Lost Colony pg. 12</p>"
-            "<p>You gain a +1 trait bonus on attacks from higher ground.</p>"
-            "</body></html>")
+    html = (
+        "<html><body>"
+        '<h3><a href="TraitDisplay.aspx?ItemName=Hill+Fighter">Hill Fighter</a></h3>'
+        "<p><b>Source</b> Sargava, the Lost Colony pg. 12</p>"
+        "<p>You gain a +1 trait bonus on attacks from higher ground.</p>"
+        "</body></html>"
+    )
     entries = parse_traits(html, "Basic (Combat)")
     assert entries[0]["source"] == "Sargava, the Lost Colony"
     assert entries[0]["source_id"].startswith("sargava_the_lost_colony:")
@@ -728,8 +845,15 @@ def test_parse_feats_index():
 
 
 def test_split_prereq_string():
-    assert split_prereq_string("Str 13, base attack bonus +1") == ["Str 13", "base attack bonus +1"]
-    assert split_prereq_string("Int 13, Spell Focus (illusion), wizard level 3rd") == ["Int 13", "Spell Focus (illusion)", "wizard level 3rd"]
+    assert split_prereq_string("Str 13, base attack bonus +1") == [
+        "Str 13",
+        "base attack bonus +1",
+    ]
+    assert split_prereq_string("Int 13, Spell Focus (illusion), wizard level 3rd") == [
+        "Int 13",
+        "Spell Focus (illusion)",
+        "wizard level 3rd",
+    ]
     assert split_prereq_string("") == []
     print("OK: feats index + split")
 
@@ -740,8 +864,14 @@ from tools.import_reference import clean_existing_prerequisites
 def test_clean_existing_prerequisites():
     entry = {"name": "Improved Initiative", "prerequisites": ["Improved Initiative."]}
     assert clean_existing_prerequisites(entry) == []
-    entry2 = {"name": "Power Attack", "prerequisites": ["Strength 13", "base attack bonus +1."]}
-    assert clean_existing_prerequisites(entry2) == ["Strength 13", "base attack bonus +1"]
+    entry2 = {
+        "name": "Power Attack",
+        "prerequisites": ["Strength 13", "base attack bonus +1."],
+    }
+    assert clean_existing_prerequisites(entry2) == [
+        "Strength 13",
+        "base attack bonus +1",
+    ]
     entry3 = {"name": "Dodge", "prerequisites": ["Dexterity 13"]}
     assert clean_existing_prerequisites(entry3) == ["Dexterity 13"]
     print("OK: clean existing prerequisites")
@@ -755,48 +885,86 @@ def test_attribute_subrace_traits_extended_prose():
     from tools.import_reference import _attribute_subrace_traits
 
     mech = {
-        "alternate_traits": [{"name": n} for n in (
-            "Minesight", "Deep Warrior", "Stonesinger", "Ancient Enmity",
-            "Lorekeeper", "Magic Resistant", "Stubborn", "Mountaineer",
-            "Surface Survivalist", "Sky Sentinel", "Xenophobic", "Wary",
-            "Integrated")],
+        "alternate_traits": [
+            {"name": n}
+            for n in (
+                "Minesight",
+                "Deep Warrior",
+                "Stonesinger",
+                "Ancient Enmity",
+                "Lorekeeper",
+                "Magic Resistant",
+                "Stubborn",
+                "Mountaineer",
+                "Surface Survivalist",
+                "Sky Sentinel",
+                "Xenophobic",
+                "Wary",
+                "Integrated",
+            )
+        ],
         "subraces": [
-            {"name": "Deep Delver",
-             "description": ("Dwarves living far below the earth have the "
-                             "minesight and deep warrior racial traits. Deep "
-                             "delver spellcasters may exchange stonecunning "
-                             "for the stonesinger trait."),
-             "alternate_traits": []},
-            {"name": "Elder Dwarf",
-             "description": ("Traditionalist dwarves have the ancient enmity, "
-                             "lorekeeper, and either the magic resistant or "
-                             "stubborn racial traits."),
-             "alternate_traits": []},
-            {"name": "Mountain Dwarf",
-             "description": ("Dwarves living atop high peaks have the "
-                             "mountaineer racial trait and often surface "
-                             "survivalist as well. Mountain dwarves are also "
-                             "trained to defend their homes, and may take the "
-                             "sky sentinel and xenophobic traits instead."),
-             "alternate_traits": []},
-            {"name": "Human-Raised",
-             "description": ("These half-elves have the integrated and wary "
-                             "racial traits."),
-             "alternate_traits": []},
-            {"name": "Flavor Only",
-             "description": ("These elves sail the seas and sing songs, with "
-                             "no mechanics mentioned at all."),
-             "alternate_traits": []},
-            {"name": "Gia Attribuita",
-             "description": "x",
-             "alternate_traits": ["Wary"]},
+            {
+                "name": "Deep Delver",
+                "description": (
+                    "Dwarves living far below the earth have the "
+                    "minesight and deep warrior racial traits. Deep "
+                    "delver spellcasters may exchange stonecunning "
+                    "for the stonesinger trait."
+                ),
+                "alternate_traits": [],
+            },
+            {
+                "name": "Elder Dwarf",
+                "description": (
+                    "Traditionalist dwarves have the ancient enmity, "
+                    "lorekeeper, and either the magic resistant or "
+                    "stubborn racial traits."
+                ),
+                "alternate_traits": [],
+            },
+            {
+                "name": "Mountain Dwarf",
+                "description": (
+                    "Dwarves living atop high peaks have the "
+                    "mountaineer racial trait and often surface "
+                    "survivalist as well. Mountain dwarves are also "
+                    "trained to defend their homes, and may take the "
+                    "sky sentinel and xenophobic traits instead."
+                ),
+                "alternate_traits": [],
+            },
+            {
+                "name": "Human-Raised",
+                "description": (
+                    "These half-elves have the integrated and wary " "racial traits."
+                ),
+                "alternate_traits": [],
+            },
+            {
+                "name": "Flavor Only",
+                "description": (
+                    "These elves sail the seas and sing songs, with "
+                    "no mechanics mentioned at all."
+                ),
+                "alternate_traits": [],
+            },
+            {
+                "name": "Gia Attribuita",
+                "description": "x",
+                "alternate_traits": ["Wary"],
+            },
         ],
     }
     _attribute_subrace_traits(mech)
     subs = {s["name"]: s["alternate_traits"] for s in mech["subraces"]}
     assert subs["Deep Delver"] == ["Minesight", "Deep Warrior"]
-    assert subs["Elder Dwarf"] == ["Ancient Enmity", "Lorekeeper",
-                                   "Magic Resistant", "Stubborn"]
+    assert subs["Elder Dwarf"] == [
+        "Ancient Enmity",
+        "Lorekeeper",
+        "Magic Resistant",
+        "Stubborn",
+    ]
     assert subs["Mountain Dwarf"] == ["Mountaineer", "Surface Survivalist"]
     assert subs["Human-Raised"] == ["Integrated", "Wary"]
     assert subs["Flavor Only"] == []
@@ -826,8 +994,12 @@ def test_parse_class_features_core():
     entry = parse_class(CLASS_FEATURES_HTML, "Barbarian")
     feats = entry["mechanics"]["features"]
     by_name = {f["name"]: f for f in feats}
-    assert set(by_name) == {"Weapon and Armor Proficiency", "Fast Movement",
-                            "Rage", "Rage Powers"}
+    assert set(by_name) == {
+        "Weapon and Armor Proficiency",
+        "Fast Movement",
+        "Rage",
+        "Rage Powers",
+    }
     assert by_name["Fast Movement"]["kind"] == "Ex"
     assert by_name["Fast Movement"]["levels"] == [1]
     assert by_name["Weapon and Armor Proficiency"]["levels"] == []

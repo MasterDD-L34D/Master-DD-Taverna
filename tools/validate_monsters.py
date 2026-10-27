@@ -13,6 +13,7 @@ Uso:
     .venv/Scripts/python tools/validate_monsters.py \
         --source ../../sessione-2026-07-16/ricerca/PathfinderMonsterDatabase/data/full/data.json
 """
+
 from __future__ import annotations
 
 import argparse
@@ -22,10 +23,19 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_INPUT = REPO_ROOT / "data" / "reference" / "pi_local_only" / "monsters_local.json"
+DEFAULT_INPUT = (
+    REPO_ROOT / "data" / "reference" / "pi_local_only" / "monsters_local.json"
+)
 DEFAULT_REPORT = REPO_ROOT / "reports" / "monsters_cr_band.md"
-DEFAULT_SOURCE = (REPO_ROOT.parent.parent / "sessione-2026-07-16" / "ricerca"
-                  / "PathfinderMonsterDatabase" / "data" / "full" / "data.json")
+DEFAULT_SOURCE = (
+    REPO_ROOT.parent.parent
+    / "sessione-2026-07-16"
+    / "ricerca"
+    / "PathfinderMonsterDatabase"
+    / "data"
+    / "full"
+    / "data.json"
+)
 
 # Benchmark per CR (valori meccanici, scala di creazione mostri del gioco):
 # CR -> (hp, ac, atk_high, atk_low, dmg_high, dmg_low, save_good, save_poor)
@@ -116,18 +126,32 @@ def max_group_damage(attacks: dict) -> float:
     return best
 
 
-def _check(findings: list, name: str, cr: float, field: str,
-           value: float | int | None, lo: float, hi: float) -> None:
+def _check(
+    findings: list,
+    name: str,
+    cr: float,
+    field: str,
+    value: float | int | None,
+    lo: float,
+    hi: float,
+) -> None:
     if value is None:
         return
     if value < lo or value > hi:
-        findings.append({"name": name, "cr": cr, "field": field,
-                         "value": value,
-                         "note": f"fuori banda [{lo:.1f}, {hi:.1f}]"})
+        findings.append(
+            {
+                "name": name,
+                "cr": cr,
+                "field": field,
+                "value": value,
+                "note": f"fuori banda [{lo:.1f}, {hi:.1f}]",
+            }
+        )
 
 
-def validate(entries: list, legacy_35: set[str] | None = None,
-             tolerance: float = TOLERANCE) -> list[dict]:
+def validate(
+    entries: list, legacy_35: set[str] | None = None, tolerance: float = TOLERANCE
+) -> list[dict]:
     """Ritorna la lista dei rilievi (vuota = tutto in banda)."""
     findings: list[dict] = []
     for e in entries:
@@ -135,26 +159,59 @@ def validate(entries: list, legacy_35: set[str] | None = None,
         mech = e.get("mechanics") or {}
         cr = mech.get("cr")
         if legacy_35 and name in legacy_35:
-            findings.append({"name": name, "cr": cr, "field": "legacy",
-                             "value": True,
-                             "note": "statblock 3.5 legacy (is_3.5)"})
+            findings.append(
+                {
+                    "name": name,
+                    "cr": cr,
+                    "field": "legacy",
+                    "value": True,
+                    "note": "statblock 3.5 legacy (is_3.5)",
+                }
+            )
         if not isinstance(cr, (int, float)) or cr not in BENCHMARK:
-            findings.append({"name": name, "cr": cr, "field": "cr",
-                             "value": cr,
-                             "note": "fuori range benchmark (0.5-20)"})
+            findings.append(
+                {
+                    "name": name,
+                    "cr": cr,
+                    "field": "cr",
+                    "value": cr,
+                    "note": "fuori range benchmark (0.5-20)",
+                }
+            )
             continue
         hp_b, ac_b, atk_hi, atk_lo, dmg_hi, dmg_lo, sv_g, sv_p = BENCHMARK[cr]
         t = tolerance
         _check(findings, name, cr, "hp", mech.get("hp"), hp_b * (1 - t), hp_b * (1 + t))
         _check(findings, name, cr, "ac", mech.get("ac"), ac_b * (1 - t), ac_b * (1 + t))
-        _check(findings, name, cr, "attack", max_attack_bonus(mech.get("attacks")),
-               atk_lo * (1 - t), atk_hi * (1 + t))
-        _check(findings, name, cr, "damage", max_group_damage(mech.get("attacks")),
-               dmg_lo * (1 - t), dmg_hi * (1 + t))
+        _check(
+            findings,
+            name,
+            cr,
+            "attack",
+            max_attack_bonus(mech.get("attacks")),
+            atk_lo * (1 - t),
+            atk_hi * (1 + t),
+        )
+        _check(
+            findings,
+            name,
+            cr,
+            "damage",
+            max_group_damage(mech.get("attacks")),
+            dmg_lo * (1 - t),
+            dmg_hi * (1 + t),
+        )
         saves = mech.get("saves") or {}
         for key in ("fort", "ref", "will"):
-            _check(findings, name, cr, f"save_{key}", saves.get(key),
-                   sv_p * (1 - t), sv_g * (1 + t))
+            _check(
+                findings,
+                name,
+                cr,
+                f"save_{key}",
+                saves.get(key),
+                sv_p * (1 - t),
+                sv_g * (1 + t),
+            )
     return findings
 
 
@@ -170,8 +227,12 @@ def main() -> None:
     ap = argparse.ArgumentParser(description="Validazione CR-band mostri (report-only)")
     ap.add_argument("--input", type=Path, default=DEFAULT_INPUT)
     ap.add_argument("--report", type=Path, default=DEFAULT_REPORT)
-    ap.add_argument("--source", type=Path, default=DEFAULT_SOURCE,
-                    help="data.json sorgente per flag 3.5 (opzionale)")
+    ap.add_argument(
+        "--source",
+        type=Path,
+        default=DEFAULT_SOURCE,
+        help="data.json sorgente per flag 3.5 (opzionale)",
+    )
     args = ap.parse_args()
 
     catalog = json.loads(args.input.read_text(encoding="utf-8"))
@@ -189,7 +250,9 @@ def main() -> None:
         "|---|---|---|---|---|",
     ]
     for f in findings:
-        lines.append(f"| {f['name']} | {f['cr']} | {f['field']} | {f['value']} | {f['note']} |")
+        lines.append(
+            f"| {f['name']} | {f['cr']} | {f['field']} | {f['value']} | {f['note']} |"
+        )
     args.report.parent.mkdir(parents=True, exist_ok=True)
     args.report.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"Mostri: {len(entries)}, rilievi: {len(findings)}")

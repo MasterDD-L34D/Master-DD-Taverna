@@ -1,4 +1,5 @@
 """Test per il pipeline di arricchimento reference."""
+
 import sys
 from pathlib import Path
 

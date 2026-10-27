@@ -10,12 +10,10 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 def _make_stub_python(tmp_path: Path) -> Path:
     stub_python = tmp_path / "python"
-    stub_python.write_text(
-        """#!/usr/bin/env bash
+    stub_python.write_text("""#!/usr/bin/env bash
 # Stub python to short-circuit commands
 exit 0
-"""
-    )
+""")
     stub_python.chmod(0o755)
     return stub_python
 

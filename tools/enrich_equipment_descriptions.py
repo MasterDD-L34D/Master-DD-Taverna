@@ -10,6 +10,7 @@ nel report).
 
 Default: dry-run. --write applica. --offline: solo cache (mai rete).
 """
+
 from __future__ import annotations
 
 import argparse
@@ -24,13 +25,16 @@ from tools.reference_lib import OGL_DIR, clean
 from tools.sanitize_reference_pi import sanitize_text
 
 EQUIPMENT_PATH = OGL_DIR / "equipment_mundane.json"
-REPORT_PATH = Path(__file__).resolve().parents[1] / "reports" / "enrich_equipment_descriptions.md"
+REPORT_PATH = (
+    Path(__file__).resolve().parents[1] / "reports" / "enrich_equipment_descriptions.md"
+)
 
 
 def parse_equipment_description(html: str) -> str:
     """Sezione <h3 class='framing'>Description</h3> -> testo flavor (fino
     all'h3/h1 successivo o fine contenitore). '' se assente."""
     from bs4 import BeautifulSoup, NavigableString, Tag
+
     soup = BeautifulSoup(html, "html.parser")
     for h3 in soup.find_all("h3", class_="framing"):
         if clean(h3.get_text()).lower() != "description":
@@ -78,7 +82,9 @@ def main() -> int:
         if not path.exists():
             missing_page += 1
             continue
-        flavor = parse_equipment_description(path.read_text(encoding="utf-8", errors="replace"))
+        flavor = parse_equipment_description(
+            path.read_text(encoding="utf-8", errors="replace")
+        )
         if not flavor:
             no_section += 1
             continue
@@ -87,18 +93,22 @@ def main() -> int:
         if entry["description"] != before:
             enriched += 1
 
-    print(f"entries: {len(catalog['entries'])}; arricchite: {enriched}; "
-          f"senza sezione: {no_section}; pagina mancante: {missing_page}")
+    print(
+        f"entries: {len(catalog['entries'])}; arricchite: {enriched}; "
+        f"senza sezione: {no_section}; pagina mancante: {missing_page}"
+    )
     if not args.write:
         print("Dry-run: nessuna modifica (usa --write)")
         return 0
-    EQUIPMENT_PATH.write_text(json.dumps(catalog, ensure_ascii=False, indent=2),
-                              encoding="utf-8")
+    EQUIPMENT_PATH.write_text(
+        json.dumps(catalog, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
     REPORT_PATH.write_text(
         f"# Enrich equipment descriptions (2026-07-25)\n\n"
         f"- Entries: {len(catalog['entries'])}\n- Arricchite: {enriched}\n"
         f"- Senza sezione Description: {no_section}\n- Pagina mancante: {missing_page}\n",
-        encoding="utf-8")
+        encoding="utf-8",
+    )
     print(f"Scritto: {EQUIPMENT_PATH}; report: {REPORT_PATH}")
     return 0
 

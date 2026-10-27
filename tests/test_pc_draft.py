@@ -6,6 +6,7 @@ lo rappresenta 1:1 (chiavi inglesi, punteggi base point-buy, campi
 obbligatori) — D1 della review Claude: chiave nuova, mai 'sheet' (gia' usata
 altrove). Il fallback DEVE popolarla: nessuna via libera dal banco.
 """
+
 import sys
 from pathlib import Path
 
@@ -41,7 +42,9 @@ def _payload(pc_draft):
 
 def test_pc_draft_valida_passa_schema():
     assert (
-        validate_with_schema("build_core.schema.json", _payload(PC_DRAFT_VALIDA), "test", strict=True)
+        validate_with_schema(
+            "build_core.schema.json", _payload(PC_DRAFT_VALIDA), "test", strict=True
+        )
         is None
     )
 
@@ -49,11 +52,20 @@ def test_pc_draft_valida_passa_schema():
 def test_pc_draft_malformata_fallisce_schema():
     # chiavi italiane = drift del contratto 1:1 con CharacterDraft
     drift = dict(PC_DRAFT_VALIDA)
-    drift["abilities"] = {"for": 13, "des": 13, "con": 13, "int": 12, "sag": 10, "car": 10}
+    drift["abilities"] = {
+        "for": 13,
+        "des": 13,
+        "con": 13,
+        "int": 12,
+        "sag": 10,
+        "car": 10,
+    }
     # strict=False: ritorna il messaggio di errore senza raise (come il gate
     # del builder in _validate); il $def pc_draft deve renderlo non-None
     assert (
-        validate_with_schema("build_core.schema.json", _payload(drift), "test", strict=False)
+        validate_with_schema(
+            "build_core.schema.json", _payload(drift), "test", strict=False
+        )
         is not None
     )
 

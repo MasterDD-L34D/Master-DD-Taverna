@@ -6,7 +6,9 @@ from typing import Dict, List, Mapping
 
 import yaml
 
-REFERENCE_MANIFEST_PATH = Path(__file__).resolve().parent.parent / "data" / "reference" / "manifest.json"
+REFERENCE_MANIFEST_PATH = (
+    Path(__file__).resolve().parent.parent / "data" / "reference" / "manifest.json"
+)
 
 
 def load_reference_manifest() -> Mapping[str, object]:
@@ -24,11 +26,16 @@ def reference_catalog_version() -> str | None:
     return str(version) if version else None
 
 
-def parse_json_module_metadata(text: str, *, source: Path | None = None) -> Dict[str, object]:
+def parse_json_module_metadata(
+    text: str, *, source: Path | None = None
+) -> Dict[str, object]:
     try:
         parsed = json.loads(text)
     except json.JSONDecodeError:
-        logging.warning("Impossibile analizzare il modulo JSON", extra={"path": str(source or "<inline>")})
+        logging.warning(
+            "Impossibile analizzare il modulo JSON",
+            extra={"path": str(source or "<inline>")},
+        )
         return {}
 
     if not isinstance(parsed, Mapping):
@@ -52,9 +59,13 @@ def parse_json_module_metadata(text: str, *, source: Path | None = None) -> Dict
     return metadata
 
 
-def parse_front_matter_metadata(text: str, *, source: Path | None = None) -> Dict[str, object]:
+def parse_front_matter_metadata(
+    text: str, *, source: Path | None = None
+) -> Dict[str, object]:
     metadata: Dict[str, object] = {}
-    version_match = re.search(r"^version:\s*\"?(?P<version>[^\n#]+)\"?\s*$", text, re.MULTILINE)
+    version_match = re.search(
+        r"^version:\s*\"?(?P<version>[^\n#]+)\"?\s*$", text, re.MULTILINE
+    )
     if version_match:
         metadata["version"] = version_match.group("version").strip().strip('"')
 
@@ -79,7 +90,9 @@ def parse_front_matter_metadata(text: str, *, source: Path | None = None) -> Dic
             snippet = "compatibility:\n" + "\n".join(block_lines)
             try:
                 parsed = yaml.safe_load(snippet)
-                compatibility = parsed.get("compatibility") if isinstance(parsed, dict) else None
+                compatibility = (
+                    parsed.get("compatibility") if isinstance(parsed, dict) else None
+                )
                 if compatibility is not None:
                     metadata["compatibility"] = compatibility
             except yaml.YAMLError:

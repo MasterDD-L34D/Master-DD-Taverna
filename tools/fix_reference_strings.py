@@ -7,6 +7,7 @@ bonificati — appendice di reports/pi_feats_triage.md).
 
 Default: dry-run (conteggi). --write applica.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -57,8 +58,9 @@ def main(argv=None) -> int:
         print(f"{path.name}: {subs} references bonificati")
         if args.write:
             data["entries"] = new_entries
-            path.write_text(json.dumps(data, ensure_ascii=False, indent=2),
-                            encoding="utf-8")
+            path.write_text(
+                json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"
+            )
     print(f"totale: {total_subs} sostituzioni")
     if not args.write:
         print("Dry-run: nessuna modifica (usa --write)")

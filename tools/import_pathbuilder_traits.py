@@ -41,6 +41,7 @@ Uso:
   --raw-dir PATH   (default data/reference/pi_local_only/pathbuilder)
   --out-dir PATH   (default <pathmaster sibling>/packages/rules-engine-v2/src/data)
 """
+
 from __future__ import annotations
 
 import argparse
@@ -51,8 +52,9 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_RAW_DIR = REPO_ROOT / "data/reference/pi_local_only/pathbuilder"
-DEFAULT_OUT_DIR = (REPO_ROOT.parent / "pathmaster-dd"
-                   / "packages/rules-engine-v2/src/data")
+DEFAULT_OUT_DIR = (
+    REPO_ROOT.parent / "pathmaster-dd" / "packages/rules-engine-v2/src/data"
+)
 
 # Mappa codice <Type> -> categoria. ESPLICITA, cross-check Ref (docstring).
 TYPE_CATEGORY: dict[int, str] = {
@@ -81,13 +83,16 @@ def parse_traits_xml(text: str) -> tuple[list[dict[str, str]], list[str]]:
         name_el = row.findtext("Name")
         type_el = row.findtext("Type")
         if name_el is None or type_el is None:
-            raise ValueError("riga senza <Name> o <Type>: dato inatteso, "
-                             "mai scartato in silenzio")
+            raise ValueError(
+                "riga senza <Name> o <Type>: dato inatteso, " "mai scartato in silenzio"
+            )
         name = name_el.strip()
         code = int(type_el)
         if code not in TYPE_CATEGORY:
-            raise ValueError(f"<Type>{code}</Type> fuori mappa per {name!r}: "
-                             "categoria MAI indovinata")
+            raise ValueError(
+                f"<Type>{code}</Type> fuori mappa per {name!r}: "
+                "categoria MAI indovinata"
+            )
         if name in seen and name not in duplicates:
             duplicates.append(name)
         seen.add(name)
@@ -104,11 +109,11 @@ def build_document(raw_dir: Path) -> dict:
     return {
         "_provenance": {
             "source": "Pathbuilder 1e app data (data_background_traits.xml), "
-                      "estratto res/raw APK — dataset PI local-only, MAI committato",
+            "estratto res/raw APK — dataset PI local-only, MAI committato",
             "generated_by": "Master-DD-Taverna/tools/import_pathbuilder_traits.py",
             "generated_at": datetime.now(timezone.utc).isoformat(),
             "license": "Solo nomi + categorie (fatti, non testo). MAI esportate "
-                       "<Description> (testo Paizo PI) ne' <Ref>.",
+            "<Description> (testo Paizo PI) ne' <Ref>.",
             "type_map": {str(k): v for k, v in sorted(TYPE_CATEGORY.items())},
         },
         "counts": {
@@ -130,15 +135,18 @@ def main(argv=None) -> int:
 
     doc = build_document(Path(args.raw_dir))
     counts = doc["counts"]
-    print(f"entries: {counts['entries']} (nomi unici {counts['uniqueNames']}, "
-          f"duplicati {counts['duplicateNames']})")
+    print(
+        f"entries: {counts['entries']} (nomi unici {counts['uniqueNames']}, "
+        f"duplicati {counts['duplicateNames']})"
+    )
     for cat, n in counts["perCategory"].items():
         print(f"  {cat}: {n}")
     if args.report_only:
         return 0
     out = Path(args.out_dir) / "pathbuilder-background-traits.json"
-    out.write_text(json.dumps(doc, ensure_ascii=False, indent=1) + "\n",
-                   encoding="utf-8")
+    out.write_text(
+        json.dumps(doc, ensure_ascii=False, indent=1) + "\n", encoding="utf-8"
+    )
     print(f"scritto {out}")
     return 0
 

@@ -22,6 +22,7 @@ Uso:
   python tools/export_race_standard_traits.py --report-only  # solo stdout
   --out-dir PATH  (default <pathmaster sibling>/packages/rules-engine-v2/src/data)
 """
+
 from __future__ import annotations
 
 import argparse
@@ -32,8 +33,9 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CATALOG = REPO_ROOT / "data/reference/ogl/races.json"
-DEFAULT_OUT_DIR = (REPO_ROOT.parent / "pathmaster-dd"
-                   / "packages/rules-engine-v2/src/data")
+DEFAULT_OUT_DIR = (
+    REPO_ROOT.parent / "pathmaster-dd" / "packages/rules-engine-v2/src/data"
+)
 OUTPUT_FILE = "taverna-race-standard-traits.json"
 
 LICENSE_TEXT = (
@@ -61,13 +63,13 @@ def build_file(catalog: dict, generated_at: str | None = None) -> dict:
     return {
         "_provenance": {
             "source": "Master-DD-Taverna data/reference/ogl/races.json "
-                      "(catalogo curato OGL)",
+            "(catalogo curato OGL)",
             "generated_by": "Master-DD-Taverna/tools/export_race_standard_traits.py",
             "license": LICENSE_TEXT,
             "semantics": "Solo i NOMI dei tratti standard per razza. Una razza "
-                         "assente non ha lista attestata da questa fonte: i "
-                         "replaces dei suoi tratti alternativi restano unknown "
-                         "dichiarato (policy D6), mai indovinati.",
+            "assente non ha lista attestata da questa fonte: i "
+            "replaces dei suoi tratti alternativi restano unknown "
+            "dichiarato (policy D6), mai indovinati.",
         },
         "generated_at": generated_at or datetime.now(timezone.utc).isoformat(),
         "counts": {
@@ -90,14 +92,16 @@ def main(argv: list[str] | None = None) -> int:
     doc = build_file(catalog)
     counts = {k: v for k, v in doc["counts"].items() if k != "without_traits"}
     print(json.dumps(counts, indent=1, ensure_ascii=False))
-    print(f"senza tratti: {len(doc['counts']['without_traits'])} razze",
-          file=sys.stderr)
+    print(
+        f"senza tratti: {len(doc['counts']['without_traits'])} razze", file=sys.stderr
+    )
     if args.report_only:
         return 0
     out_path = args.out_dir / OUTPUT_FILE
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n",
-                        encoding="utf-8")
+    out_path.write_text(
+        json.dumps(doc, indent=1, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
     print(f"scritto {out_path}", file=sys.stderr)
     return 0
 

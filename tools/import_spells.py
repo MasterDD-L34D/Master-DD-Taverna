@@ -29,6 +29,7 @@ Uso:
   python tools/import_spells.py --write    # scrive il merge in spells.json
   python tools/import_spells.py --fetch N  # scarica al piu' N pagine mancanti
 """
+
 import argparse
 import json
 import re
@@ -49,9 +50,21 @@ SPELLS_PATH = OGL_DIR / "spells.json"
 # Label <b> riconosciute nel blocco. Effect/Area/Targets servono solo da
 # delimitatori (il loro testo non entra nelle mechanics, shape esistente).
 _KNOWN_LABELS = frozenset(
-    ["Source", "School", "Level", "Casting Time", "Components", "Range",
-     "Effect", "Area", "Targets", "Duration", "Saving Throw",
-     "Spell Resistance"])
+    [
+        "Source",
+        "School",
+        "Level",
+        "Casting Time",
+        "Components",
+        "Range",
+        "Effect",
+        "Area",
+        "Targets",
+        "Duration",
+        "Saving Throw",
+        "Spell Resistance",
+    ]
+)
 
 # Stessa regex di enrich_spells.parse_description_mechanics: school, poi
 # subschool tra () (scartata, non prevista dallo shape), descriptors tra [].
@@ -99,8 +112,9 @@ def _block_fields(h1):
             text = node.get_text() if isinstance(node, Tag) else str(node)
             fields[current].append(text)
     # Stesso strip dei separatori finali di enrich_spells._split_header_fields.
-    return {k: re.sub(r"[;.\s]+$", "", clean("".join(parts)))
-            for k, parts in fields.items()}
+    return {
+        k: re.sub(r"[;.\s]+$", "", clean("".join(parts))) for k, parts in fields.items()
+    }
 
 
 def parse_spell(html, name):
@@ -128,8 +142,11 @@ def parse_spell(html, name):
         if m:
             mech["school"] = m.group(1).lower()
             descriptors = m.group(3)
-            mech["descriptors"] = ([d.strip().lower() for d in descriptors.split(",")
-                                    if d.strip()] if descriptors else [])
+            mech["descriptors"] = (
+                [d.strip().lower() for d in descriptors.split(",") if d.strip()]
+                if descriptors
+                else []
+            )
     level_raw = fields.get("Level")
     if level_raw:
         mech["spell_level"] = parse_spell_level(level_raw)
@@ -142,7 +159,9 @@ def parse_spell(html, name):
         "name": name,
         "source": source or "PFRPG Core",
         "references": [f"AoN: {name} (Spells)"],
-        "reference_urls": [BASE + f"SpellDisplay.aspx?ItemName={name.replace(' ', '%20')}"],
+        "reference_urls": [
+            BASE + f"SpellDisplay.aspx?ItemName={name.replace(' ', '%20')}"
+        ],
         "mechanics": mech,
     }
 
@@ -167,8 +186,15 @@ def _merge_entry(entry, parsed):
     mech = entry.get("mechanics") or {}
     new = parsed["mechanics"]
     changed, notes = False, []
-    for field in ("school", "casting_time", "components", "range", "duration",
-                  "saving_throw", "spell_resistance"):
+    for field in (
+        "school",
+        "casting_time",
+        "components",
+        "range",
+        "duration",
+        "saving_throw",
+        "spell_resistance",
+    ):
         value = new.get(field)
         if not value:
             continue
@@ -177,7 +203,9 @@ def _merge_entry(entry, parsed):
             changed = True
             notes.append(f"+{field} (da AoN)")
         elif mech[field] != value:
-            notes.append(f"discrepanza {field}: catalogo={mech[field]!r} vs aon={value!r}")
+            notes.append(
+                f"discrepanza {field}: catalogo={mech[field]!r} vs aon={value!r}"
+            )
     if new.get("descriptors") and not mech.get("descriptors"):
         mech["descriptors"] = new["descriptors"]
         changed = True
@@ -187,9 +215,13 @@ def _merge_entry(entry, parsed):
             mech["spell_level"] = new["spell_level"]
             changed = True
             notes.append("+spell_level (da AoN)")
-        elif _expand_spell_level(mech["spell_level"]) != _expand_spell_level(new["spell_level"]):
-            notes.append("discrepanza spell_level: "
-                         f"catalogo={mech['spell_level']} vs aon={new['spell_level']}")
+        elif _expand_spell_level(mech["spell_level"]) != _expand_spell_level(
+            new["spell_level"]
+        ):
+            notes.append(
+                "discrepanza spell_level: "
+                f"catalogo={mech['spell_level']} vs aon={new['spell_level']}"
+            )
     if changed:
         entry["mechanics"] = mech
     return changed, notes
@@ -223,7 +255,9 @@ def build_spells(write=False, max_fetch=0):
     changed_names, all_notes = [], []
     n_fetched = 0
     for entry in catalog["entries"]:
-        url = next((u for u in entry.get("reference_urls", []) if "aonprd.com" in u), None)
+        url = next(
+            (u for u in entry.get("reference_urls", []) if "aonprd.com" in u), None
+        )
         if url is None:
             unmatched.append(entry["name"])
             continue
@@ -246,20 +280,26 @@ def build_spells(write=False, max_fetch=0):
         # Assert di copertura sui campi chiave (pagina parsata ma vuota =
         # forma AoN cambiata: fallire forte, non fondere dati parziali).
         assert parsed["mechanics"].get("school"), f"{entry['name']}: school non parsata"
-        assert parsed["mechanics"].get("spell_level"), f"{entry['name']}: spell_level non parsato"
+        assert parsed["mechanics"].get(
+            "spell_level"
+        ), f"{entry['name']}: spell_level non parsato"
         matched.append(entry["name"])
         changed, notes = _merge_entry(entry, parsed)
         if changed:
             changed_names.append(entry["name"])
         all_notes += [f"{entry['name']}: {n}" for n in notes]
 
-    print(f"matched: {len(matched)}, unmatched: {len(unmatched)}, "
-          f"non in cache: {len(uncached)}, scaricate ora: {n_fetched}")
+    print(
+        f"matched: {len(matched)}, unmatched: {len(unmatched)}, "
+        f"non in cache: {len(uncached)}, scaricate ora: {n_fetched}"
+    )
     print(f"entry da aggiornare: {len(changed_names)}, PI scartate: {len(skipped_pi)}")
     if uncached and max_fetch == 0:
         seconds = len(uncached) * 2.5
-        print(f"nota: {len(uncached)} pagine non in cache; per un import completo "
-              f"rilancia con --fetch N (stima ~{int(seconds // 60)} min a 2.5s/pagina)")
+        print(
+            f"nota: {len(uncached)} pagine non in cache; per un import completo "
+            f"rilancia con --fetch N (stima ~{int(seconds // 60)} min a 2.5s/pagina)"
+        )
     if all_notes:
         print("note merge:")
         for line in all_notes[:30]:
@@ -271,15 +311,21 @@ def build_spells(write=False, max_fetch=0):
             print(f"nota: {name}: scartata per PI: {', '.join(terms)}")
 
     if not write:
-        print(f"report: {len(catalog['entries'])} entry (write=False, nessuna scrittura)")
+        print(
+            f"report: {len(catalog['entries'])} entry (write=False, nessuna scrittura)"
+        )
         return
     if matched and "aonprd" not in source_text:
         source_text = source_text.rstrip(".") + "; Archives of Nethys (aonprd.com)."
     if not changed_names and source_text == catalog.get("_source", SOURCE):
         print("nessun cambio reale: niente scrittura")
         return
-    write_catalog(SPELLS_PATH, catalog["entries"],
-                  license_text=catalog.get("_license", LICENSE), source_text=source_text)
+    write_catalog(
+        SPELLS_PATH,
+        catalog["entries"],
+        license_text=catalog.get("_license", LICENSE),
+        source_text=source_text,
+    )
     if skipped_pi:
         path = OGL_DIR.parents[2] / "reports" / "pi_removed_spells.txt"
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -290,10 +336,18 @@ def build_spells(write=False, max_fetch=0):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--write", action="store_true",
-                    help="scrive il merge in spells.json (default: solo report)")
-    ap.add_argument("--fetch", type=int, default=0, metavar="N",
-                    help="scarica al piu' N pagine mancanti (default 0: solo cache)")
+    ap.add_argument(
+        "--write",
+        action="store_true",
+        help="scrive il merge in spells.json (default: solo report)",
+    )
+    ap.add_argument(
+        "--fetch",
+        type=int,
+        default=0,
+        metavar="N",
+        help="scarica al piu' N pagine mancanti (default 0: solo cache)",
+    )
     args = ap.parse_args(argv)
     build_spells(write=args.write, max_fetch=args.fetch)
 

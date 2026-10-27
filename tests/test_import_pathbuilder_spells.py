@@ -38,6 +38,7 @@ Note di formato misurate (ricognizione 2026-08-07):
 
 Policy OGL: solo nomi + meccaniche strutturate; MAI la description.
 """
+
 import json
 import sys
 from pathlib import Path
@@ -47,7 +48,6 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tools import import_pathbuilder_spells as pbs
-
 
 # ---------------------------------------------------------------------------
 # Fixture: forma reale (campi nell'ordine osservato nel file vero).
@@ -184,6 +184,7 @@ def raw_dir(tmp_path: Path) -> Path:
 # Alias di classe dichiarati
 # ---------------------------------------------------------------------------
 
+
 def test_class_aliases_dichiarati():
     assert pbs.CLASS_ALIASES == {
         "magusum": "magus",
@@ -195,21 +196,32 @@ def test_class_aliases_dichiarati():
 # Parsing spellLevelsDisplay
 # ---------------------------------------------------------------------------
 
+
 def test_parse_levels_forma_regolare():
-    levels, unparsed = pbs.parse_spell_levels("cleric/oracle 2, inquisitor 2, paladin 2")
+    levels, unparsed = pbs.parse_spell_levels(
+        "cleric/oracle 2, inquisitor 2, paladin 2"
+    )
     assert levels == {"cleric": 2, "oracle": 2, "inquisitor": 2, "paladin": 2}
     assert unparsed == []
 
 
 def test_parse_levels_classe_combinata_splittata():
-    levels, _ = pbs.parse_spell_levels("sorcerer/wizard 3, summoner/unchained summoner 2")
-    assert levels == {"sorcerer": 3, "wizard": 3,
-                      "summoner": 2, "unchained summoner": 2}
+    levels, _ = pbs.parse_spell_levels(
+        "sorcerer/wizard 3, summoner/unchained summoner 2"
+    )
+    assert levels == {
+        "sorcerer": 3,
+        "wizard": 3,
+        "summoner": 2,
+        "unchained summoner": 2,
+    }
 
 
 def test_parse_levels_segmento_irregolare_preservato_raw():
     # livello raddoppiato nel dato grezzo: MAI parsato a tentativi
-    levels, unparsed = pbs.parse_spell_levels("druid 1, summoner/unchained summoner 1 1")
+    levels, unparsed = pbs.parse_spell_levels(
+        "druid 1, summoner/unchained summoner 1 1"
+    )
     assert levels == {"druid": 1}
     assert unparsed == ["summoner/unchained summoner 1 1"]
 
@@ -229,6 +241,7 @@ def test_parse_levels_alias_applicati():
 # Import righe
 # ---------------------------------------------------------------------------
 
+
 def test_import_spell_campi_strutturati(raw_dir):
     spells = pbs.import_spells(raw_dir)
     by_name = {s["name"]: s for s in spells}
@@ -237,8 +250,12 @@ def test_import_spell_campi_strutturati(raw_dir):
     assert ab["school"] == "Abjuration"
     assert ab["subschool"] is None
     assert ab["descriptors"] == []
-    assert ab["spellLevels"] == {"cleric": 2, "oracle": 2,
-                                 "inquisitor": 2, "paladin": 2}
+    assert ab["spellLevels"] == {
+        "cleric": 2,
+        "oracle": 2,
+        "inquisitor": 2,
+        "paladin": 2,
+    }
     assert ab["castingTime"] == "1 minute"
     assert ab["components"] == "V, S, M (a flask of holy water worth 25 gp), DF"
     assert ab["range"] == "touch"
@@ -278,7 +295,11 @@ def test_import_spell_alias_unchained(raw_dir):
     by_name = {s["name"]: s for s in pbs.import_spells(raw_dir)}
     ab = by_name["Absorbing Barrier"]
     assert ab["spellLevels"] == {
-        "alchemist": 4, "sorcerer": 4, "summoner": 4, "unchained summoner": 4}
+        "alchemist": 4,
+        "sorcerer": 4,
+        "summoner": 4,
+        "unchained summoner": 4,
+    }
 
 
 def test_import_descriptors_puliti(raw_dir):
@@ -312,16 +333,19 @@ def test_import_mai_description_ne_mythic(raw_dir):
 # Payload completo (main) — header, conteggi, report
 # ---------------------------------------------------------------------------
 
+
 def test_main_scrive_json_con_header_e_report(raw_dir, tmp_path):
     out_dir = tmp_path / "out"
     rc = pbs.main(["--raw-dir", str(raw_dir), "--out-dir", str(out_dir)])
     assert rc == 0
     payload = json.loads(
-        (out_dir / "pathbuilder-spells.json").read_text(encoding="utf-8"))
+        (out_dir / "pathbuilder-spells.json").read_text(encoding="utf-8")
+    )
     prov = payload["_provenance"]
     assert "Pathbuilder" in prov["source"]
     assert prov["generated_by"] == (
-        "Master-DD-Taverna/tools/import_pathbuilder_spells.py")
+        "Master-DD-Taverna/tools/import_pathbuilder_spells.py"
+    )
     assert "OGL" in prov["license"]
     assert "description" in prov["desc_policy"].lower()
     counts = payload["counts"]
@@ -338,7 +362,9 @@ def test_main_scrive_json_con_header_e_report(raw_dir, tmp_path):
     # Absorbing Barrier: display summoner/unchained 4, colonne stale a 2
     assert cross["columnLevelMismatches"] == 2
     assert {m["class"] for m in cross["mismatches"]} == {
-        "summoner", "unchained summoner"}
+        "summoner",
+        "unchained summoner",
+    }
     assert cross["note"]
     # nessuna description/mythic in tutto il payload
     raw = json.dumps(payload)
@@ -355,8 +381,7 @@ REAL_RAW = REPO_ROOT / "data/reference/pi_local_only/pathbuilder"
 REAL_REASON = f"dataset PI local-only assente: {REAL_RAW}"
 
 
-@pytest.mark.skipif(not (REAL_RAW / "data_spells.xml").is_file(),
-                    reason=REAL_REASON)
+@pytest.mark.skipif(not (REAL_RAW / "data_spells.xml").is_file(), reason=REAL_REASON)
 def test_dati_reali_conteggi_e_spot_check():
     spells = pbs.import_spells(REAL_RAW)
     assert len(spells) == 2922
@@ -365,9 +390,19 @@ def test_dati_reali_conteggi_e_spot_check():
     # spot-check RAW: Cure Light Wounds (lista nota CRB+)
     clw = by_name["Cure Light Wounds"]
     assert clw["spellLevels"] == {
-        "bard": 1, "cleric": 1, "oracle": 1, "druid": 1, "paladin": 1,
-        "ranger": 2, "witch": 1, "inquisitor": 1, "alchemist": 1,
-        "shaman": 1, "occultist": 1, "spiritualist": 1}
+        "bard": 1,
+        "cleric": 1,
+        "oracle": 1,
+        "druid": 1,
+        "paladin": 1,
+        "ranger": 2,
+        "witch": 1,
+        "inquisitor": 1,
+        "alchemist": 1,
+        "shaman": 1,
+        "occultist": 1,
+        "spiritualist": 1,
+    }
     assert clw["school"] == "Conjuration"
     assert clw["subschool"] == "healing"
     assert clw["source"] == "CRB"
@@ -382,14 +417,14 @@ def test_dati_reali_conteggi_e_spot_check():
     assert gdm["spellLevels"]["summoner"] == 5
 
 
-@pytest.mark.skipif(not (REAL_RAW / "data_spells.xml").is_file(),
-                    reason=REAL_REASON)
+@pytest.mark.skipif(not (REAL_RAW / "data_spells.xml").is_file(), reason=REAL_REASON)
 def test_dati_reali_irregolari_e_alias():
     spells = pbs.import_spells(REAL_RAW)
     by_name = {s["name"]: s for s in spells}
     # i 4 segmenti irregolari del dataset: preservati raw, mai a tentativi
-    unparsed = [(s["name"], seg) for s in spells
-                for seg in s.get("unparsedLevelSegments", [])]
+    unparsed = [
+        (s["name"], seg) for s in spells for seg in s.get("unparsedLevelSegments", [])
+    ]
     assert sorted(unparsed) == [
         ("Aquatic Cavalry", "summoner/unchained summoner 2 2"),
         ("Deeper Darkness", "inquisitor"),
@@ -402,8 +437,7 @@ def test_dati_reali_irregolari_e_alias():
     assert "magusum" not in sob["spellLevels"]
 
 
-@pytest.mark.skipif(not (REAL_RAW / "data_spells.xml").is_file(),
-                    reason=REAL_REASON)
+@pytest.mark.skipif(not (REAL_RAW / "data_spells.xml").is_file(), reason=REAL_REASON)
 def test_dati_reali_mai_description():
     for s in pbs.import_spells(REAL_RAW):
         keys = {k.lower() for k in s}

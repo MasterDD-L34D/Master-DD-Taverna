@@ -291,9 +291,7 @@ def test_build_stub_endpoint_payload_matches_schema(client, auth_headers):
     "cls",
     ["wizard", "sorcerer", "witch", "arcanist", "monk", "psychic"],
 )
-def test_build_stub_no_light_armor_for_unproficient_classes(
-    client, auth_headers, cls
-):
+def test_build_stub_no_light_armor_for_unproficient_classes(client, auth_headers, cls):
     response = client.post(
         f"/build/stub?class={cls}&race=Elf&level=1&mode=extended",
         headers=auth_headers,
@@ -307,9 +305,7 @@ def test_build_stub_no_light_armor_for_unproficient_classes(
 
 
 @pytest.mark.parametrize("cls", ["fighter", "cleric", "unknownclass"])
-def test_build_stub_keeps_light_armor_for_other_classes(
-    client, auth_headers, cls
-):
+def test_build_stub_keeps_light_armor_for_other_classes(client, auth_headers, cls):
     response = client.post(
         f"/build/stub?class={cls}&race=Elf&level=1&mode=extended",
         headers=auth_headers,
@@ -349,8 +345,8 @@ def test_build_stub_monk_zen_archer_no_light_armor(client, auth_headers):
 @pytest.mark.parametrize(
     "cls,archetype",
     [
-        ("monk", "menhir%20guardian"),   # grant di sole armi; "armor" compare
-        ("wizard", "scrollmaster"),      # solo nel nome della feature sostituita
+        ("monk", "menhir%20guardian"),  # grant di sole armi; "armor" compare
+        ("wizard", "scrollmaster"),  # solo nel nome della feature sostituita
     ],
 )
 def test_build_stub_archetype_without_armor_grant_no_light_armor(
@@ -690,7 +686,8 @@ def test_get_module_rejects_symlink_outside_modules(client, auth_headers, tmp_pa
         # cade fuori da MODULES_DIR esattamente come con un symlink.
         subprocess.run(
             ["cmd", "/c", "mklink", "/J", str(junction_path), str(external_dir)],
-            check=True, capture_output=True,
+            check=True,
+            capture_output=True,
         )
         url = "/modules/outside_link/outside.txt"
         cleanup = lambda: junction_path.rmdir()
@@ -924,7 +921,9 @@ def test_module_uri_bindings_resolve(client, auth_headers, enable_module_dump):
             uri = f"{match.group(1)}://{match.group(2)}"
             resolved = resolve_module_uri(uri)
             if resolved is None or not resolved.is_file():
-                unresolved.append((module_name, uri, str(resolved) if resolved else None))
+                unresolved.append(
+                    (module_name, uri, str(resolved) if resolved else None)
+                )
 
     assert not unresolved, f"Unresolved URIs: {unresolved}"
 
@@ -1305,7 +1304,9 @@ def test_backoff_reset_after_successful_auth(client, short_backoff, auth_headers
     assert app_module._failed_attempts == {}
 
 
-def test_metrics_accepts_primary_api_key_when_metrics_key_missing(client, metrics_security_settings):
+def test_metrics_accepts_primary_api_key_when_metrics_key_missing(
+    client, metrics_security_settings
+):
     settings.metrics_api_key = None
 
     response = client.get("/metrics", headers={"x-api-key": "test-api-key"})
@@ -1314,10 +1315,14 @@ def test_metrics_accepts_primary_api_key_when_metrics_key_missing(client, metric
     assert response.headers["content-type"] == CONTENT_TYPE_LATEST
 
 
-def test_auth_backoff_counter_increments_when_threshold_is_hit(client, short_backoff, auth_headers):
+def test_auth_backoff_counter_increments_when_threshold_is_hit(
+    client, short_backoff, auth_headers
+):
     baseline_response = client.get("/metrics", headers=auth_headers)
     baseline_metric = next(
-        line for line in baseline_response.text.splitlines() if line.startswith("auth_backoff_trigger_total ")
+        line
+        for line in baseline_response.text.splitlines()
+        if line.startswith("auth_backoff_trigger_total ")
     )
     baseline_value = float(baseline_metric.rsplit(" ", 1)[1])
 
@@ -1328,7 +1333,9 @@ def test_auth_backoff_counter_increments_when_threshold_is_hit(client, short_bac
 
     metrics_response = client.get("/metrics", headers=auth_headers)
     metric_line = next(
-        line for line in metrics_response.text.splitlines() if line.startswith("auth_backoff_trigger_total ")
+        line
+        for line in metrics_response.text.splitlines()
+        if line.startswith("auth_backoff_trigger_total ")
     )
     assert float(metric_line.rsplit(" ", 1)[1]) == baseline_value + 1
 
@@ -1350,7 +1357,9 @@ def test_storage_meta_preserves_remediation_contract(client, auth_headers):
     assert "/self_check" in payload["remediation"]["qa_check"]
 
 
-def test_storage_meta_returns_503_when_taverna_dir_missing(client, auth_headers, monkeypatch, tmp_path):
+def test_storage_meta_returns_503_when_taverna_dir_missing(
+    client, auth_headers, monkeypatch, tmp_path
+):
     missing = tmp_path / "missing_taverna"
     monkeypatch.setattr(app_module, "TAVERNA_SAVES_DIR", missing)
 

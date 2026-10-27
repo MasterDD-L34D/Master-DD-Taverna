@@ -52,6 +52,7 @@ Policy (allineata ai lotti precedenti):
 
 Default: dry-run. --write applica. --offline usa solo la cache (no rete).
 """
+
 from __future__ import annotations
 
 import argparse
@@ -79,91 +80,153 @@ BASE = "https://aonprd.com/"
 # Configurazione pool: pagine tabellari (parser parse_talent_tables) tranne
 # ki power (parser dedicato parse_ki_powers sulla pagina classe).
 POOLS = [
-    {"pool": "rage power", "cls": "Barbarian",
-     "ref": "AoN: Rage Powers (Barbarian)",
-     "pages": [(f"{BASE}BarbarianRagePowers.aspx?Type={t}", cat)
-               for t, cat in [("Offensive", "offensive"),
-                              ("Defensive", "defensive"),
-                              ("Misc", "miscellaneous"),
-                              ("Blood", "blood"),
-                              ("Elemental", "elemental"),
-                              ("Totem", "totem")]]},
-    {"pool": "mercy", "cls": "Paladin",
-     "ref": "AoN: Mercies (Paladin)",
-     "pages": [(f"{BASE}PaladinMercies.aspx", None)]},
-    {"pool": "rogue talent", "cls": "Rogue",
-     "ref": "AoN: Rogue Talents (Rogue)",
-     "h1_pools": {"Rogue Talents": "rogue talent",
-                  "Advanced Rogue Talents": "advanced rogue talent"},
-     "pages": [(f"{BASE}RogueTalents.aspx", None)]},
-    {"pool": "discovery", "cls": "Alchemist",
-     "ref": "AoN: Discoveries (Alchemist)",
-     "h1_pools": {"Alchemist Discoveries": "discovery",
-                  "Grand Discoveries": "grand discovery"},
-     "pages": [(f"{BASE}AlchemistDiscoveries.aspx", None)]},
-    {"pool": "hex", "cls": "Witch",
-     "ref": "AoN: Hexes (Witch)",
-     "h1_pools": {"Hexes": "hex", "Major Hexes": "major hex",
-                  "Grand Hexes": "grand hex"},
-     "pages": [(f"{BASE}WitchHexes.aspx", None)]},
-    {"pool": "deed", "cls": "Swashbuckler",
-     "ref": "AoN: Deeds (Swashbuckler)",
-     "pages": [(f"{BASE}SwashbucklerDeeds.aspx", None)]},
-    {"pool": "ki power", "cls": "Monk (Unchained)",
-     "ref": "AoN: Ki Powers (Monk Unchained)",
-     "parser": "ki",
-     "pages": [(f"{BASE}ClassDisplay.aspx?ItemName=Monk%20(Unchained)", None)]},
+    {
+        "pool": "rage power",
+        "cls": "Barbarian",
+        "ref": "AoN: Rage Powers (Barbarian)",
+        "pages": [
+            (f"{BASE}BarbarianRagePowers.aspx?Type={t}", cat)
+            for t, cat in [
+                ("Offensive", "offensive"),
+                ("Defensive", "defensive"),
+                ("Misc", "miscellaneous"),
+                ("Blood", "blood"),
+                ("Elemental", "elemental"),
+                ("Totem", "totem"),
+            ]
+        ],
+    },
+    {
+        "pool": "mercy",
+        "cls": "Paladin",
+        "ref": "AoN: Mercies (Paladin)",
+        "pages": [(f"{BASE}PaladinMercies.aspx", None)],
+    },
+    {
+        "pool": "rogue talent",
+        "cls": "Rogue",
+        "ref": "AoN: Rogue Talents (Rogue)",
+        "h1_pools": {
+            "Rogue Talents": "rogue talent",
+            "Advanced Rogue Talents": "advanced rogue talent",
+        },
+        "pages": [(f"{BASE}RogueTalents.aspx", None)],
+    },
+    {
+        "pool": "discovery",
+        "cls": "Alchemist",
+        "ref": "AoN: Discoveries (Alchemist)",
+        "h1_pools": {
+            "Alchemist Discoveries": "discovery",
+            "Grand Discoveries": "grand discovery",
+        },
+        "pages": [(f"{BASE}AlchemistDiscoveries.aspx", None)],
+    },
+    {
+        "pool": "hex",
+        "cls": "Witch",
+        "ref": "AoN: Hexes (Witch)",
+        "h1_pools": {
+            "Hexes": "hex",
+            "Major Hexes": "major hex",
+            "Grand Hexes": "grand hex",
+        },
+        "pages": [(f"{BASE}WitchHexes.aspx", None)],
+    },
+    {
+        "pool": "deed",
+        "cls": "Swashbuckler",
+        "ref": "AoN: Deeds (Swashbuckler)",
+        "pages": [(f"{BASE}SwashbucklerDeeds.aspx", None)],
+    },
+    {
+        "pool": "ki power",
+        "cls": "Monk (Unchained)",
+        "ref": "AoN: Ki Powers (Monk Unchained)",
+        "parser": "ki",
+        "pages": [(f"{BASE}ClassDisplay.aspx?ItemName=Monk%20(Unchained)", None)],
+    },
     # Lotto C4-bis follow-up (2026-07-26): pool delle 5 classi residue C4.
     # Stesse convenzioni dei pool rogue: h1 -> pool, h2 -> category
     # ('Sneak Attack Talents'/'Other Talents'). Ninja/slayer hanno la
     # variante 'advanced' (livello 10+) come pool distinto.
-    {"pool": "ninja trick", "cls": "Ninja",
-     "ref": "AoN: Ninja Tricks (Ninja)",
-     "h1_pools": {"Ninja Tricks": "ninja trick",
-                  "Advanced Ninja Tricks": "advanced ninja trick"},
-     "pages": [(f"{BASE}NinjaTricks.aspx", None)]},
-    {"pool": "slayer talent", "cls": "Slayer",
-     "ref": "AoN: Slayer Talents (Slayer)",
-     "h1_pools": {"Slayer Talents": "slayer talent",
-                  "Advanced Slayer Talents": "advanced slayer talent"},
-     "pages": [(f"{BASE}SlayerTalents.aspx", None)]},
+    {
+        "pool": "ninja trick",
+        "cls": "Ninja",
+        "ref": "AoN: Ninja Tricks (Ninja)",
+        "h1_pools": {
+            "Ninja Tricks": "ninja trick",
+            "Advanced Ninja Tricks": "advanced ninja trick",
+        },
+        "pages": [(f"{BASE}NinjaTricks.aspx", None)],
+    },
+    {
+        "pool": "slayer talent",
+        "cls": "Slayer",
+        "ref": "AoN: Slayer Talents (Slayer)",
+        "h1_pools": {
+            "Slayer Talents": "slayer talent",
+            "Advanced Slayer Talents": "advanced slayer talent",
+        },
+        "pages": [(f"{BASE}SlayerTalents.aspx", None)],
+    },
     # Vigilante: la pagina unica contiene social talents, vigilante talents
     # e la sotto-lista 'Hidden Strike' (category esplicita via h1_categories:
     # il titolo h2 non e' normalizzabile con le regole generiche).
-    {"pool": "vigilante talent", "cls": "Vigilante",
-     "ref": "AoN: Vigilante Talents (Vigilante)",
-     "h1_pools": {"Social Talents": "social talent",
-                  "Vigilante Talents": "vigilante talent",
-                  "Vigilante Talents - Hidden Strike": "vigilante talent"},
-     "h1_categories": {"Vigilante Talents - Hidden Strike": "hidden strike"},
-     "pages": [(f"{BASE}VigilanteTalents.aspx", None)]},
+    {
+        "pool": "vigilante talent",
+        "cls": "Vigilante",
+        "ref": "AoN: Vigilante Talents (Vigilante)",
+        "h1_pools": {
+            "Social Talents": "social talent",
+            "Vigilante Talents": "vigilante talent",
+            "Vigilante Talents - Hidden Strike": "vigilante talent",
+        },
+        "h1_categories": {"Vigilante Talents - Hidden Strike": "hidden strike"},
+        "pages": [(f"{BASE}VigilanteTalents.aspx", None)],
+    },
     # Residui C2 task 2 (2026-07-26, stessa giornata): magus arcana e i
     # blocchi-scelta a pagine dettaglio (mystery/revelation, bloodline,
     # order). Parser dedicati: le pagine dettaglio hanno UN solo span
     # LabelName con sezioni a bold ('<b>Class Skills</b>: ...') e le entry
     # selezionabili inline ('<i>Nome (kind)</i>:' come i ki powers).
-    {"pool": "magus arcana", "cls": "Magus",
-     "ref": "AoN: Magus Arcana (Magus)",
-     "pages": [(f"{BASE}MagusArcana.aspx", None)]},
-    {"pool": "revelation", "cls": "Oracle",
-     "ref": "AoN: Mysteries (Oracle)",
-     "parser": "mystery",
-     "index": f"{BASE}OracleMysteries.aspx", "link_frag": "MysteryDisplay"},
-    {"pool": "bloodline", "cls": "Sorcerer",
-     "ref": "AoN: Bloodlines (Sorcerer)",
-     "parser": "bloodline",
-     "index": f"{BASE}SorcererBloodlines.aspx", "link_frag": "BloodlineDisplay"},
-    {"pool": "order", "cls": "Cavalier",
-     "ref": "AoN: Orders (Cavalier/Samurai)",
-     "parser": "order",
-     "index": f"{BASE}CavalierOrders.aspx",
-     "link_frag": "CavalierOrders.aspx?ItemName="},
+    {
+        "pool": "magus arcana",
+        "cls": "Magus",
+        "ref": "AoN: Magus Arcana (Magus)",
+        "pages": [(f"{BASE}MagusArcana.aspx", None)],
+    },
+    {
+        "pool": "revelation",
+        "cls": "Oracle",
+        "ref": "AoN: Mysteries (Oracle)",
+        "parser": "mystery",
+        "index": f"{BASE}OracleMysteries.aspx",
+        "link_frag": "MysteryDisplay",
+    },
+    {
+        "pool": "bloodline",
+        "cls": "Sorcerer",
+        "ref": "AoN: Bloodlines (Sorcerer)",
+        "parser": "bloodline",
+        "index": f"{BASE}SorcererBloodlines.aspx",
+        "link_frag": "BloodlineDisplay",
+    },
+    {
+        "pool": "order",
+        "cls": "Cavalier",
+        "ref": "AoN: Orders (Cavalier/Samurai)",
+        "parser": "order",
+        "index": f"{BASE}CavalierOrders.aspx",
+        "link_frag": "CavalierOrders.aspx?ItemName=",
+    },
 ]
 
 _KIND_RE = re.compile(r"^(.*?)(?:\s*\((Ex|Su|Sp)\))?$")
 _LEVEL_RE = re.compile(r"(\d+)(?:st|nd|rd|th)-level", re.I)
 _CATEGORY_SUFFIX_RE = re.compile(
-    r"(?i)\s+(?:talents|discoveries|rage powers|deeds|mercies)$")
+    r"(?i)\s+(?:talents|discoveries|rage powers|deeds|mercies)$"
+)
 _PAGE_RE = re.compile(r"\s*pg\.\s*\d+.*$")
 _SPACE_PUNCT_RE = re.compile(r"\s+([.,;:!?])")
 
@@ -199,8 +262,7 @@ def _category_from_h2(h2_text):
     return cat.strip().lower() or None
 
 
-def parse_talent_tables(html, h1_pools=None, page_category=None,
-                        h1_categories=None):
+def parse_talent_tables(html, h1_pools=None, page_category=None, h1_categories=None):
     """Pagine a tabella AoN -> [{name, kind, source, text, pool, category, level}].
 
     Struttura reale (cache 2026-07-26): sezioni h1/h2.title; tabelle
@@ -215,6 +277,7 @@ def parse_talent_tables(html, h1_pools=None, page_category=None,
     Talents' nel pool 'social talent') -> None. level: dal titolo h2
     'Nth-level'."""
     from bs4 import BeautifulSoup
+
     soup = BeautifulSoup(html, "html.parser")
     entries = []
     h1_cur = h2_cur = None
@@ -224,8 +287,9 @@ def parse_talent_tables(html, h1_pools=None, page_category=None,
             return True
         # Solo le DataList: le tabelle annidate nelle righe (table.inner)
         # non entrano nel walk (vengono decomposed durante il parse righe).
-        return (t.name == "table"
-                and str(t.get("id") or "").startswith("MainContent_DataList"))
+        return t.name == "table" and str(t.get("id") or "").startswith(
+            "MainContent_DataList"
+        )
 
     for el in soup.find_all(_section_or_datalist):
         if el.name in ("h1", "h2"):
@@ -239,8 +303,11 @@ def parse_talent_tables(html, h1_pools=None, page_category=None,
         pool = h1_pools.get(h1_cur) if h1_pools else None
         if h1_pools and pool is None:
             continue  # sezione h1 fuori scope (non inventare pool)
-        category = (page_category or (h1_categories or {}).get(h1_cur)
-                    or _category_from_h2(h2_cur))
+        category = (
+            page_category
+            or (h1_categories or {}).get(h1_cur)
+            or _category_from_h2(h2_cur)
+        )
         if category and pool and category in pool:
             category = None  # categoria ridondante col pool (es. 'social')
         m_lvl = _LEVEL_RE.search(h2_cur or "")
@@ -265,9 +332,17 @@ def parse_talent_tables(html, h1_pools=None, page_category=None,
             # '):' e' quello del blocco fonte (il nome non contiene '):').
             text = full.split("):", 1)[1].strip() if "):" in full else ""
             if name:
-                entries.append({"name": name, "kind": kind, "source": source,
-                                "text": text, "pool": pool,
-                                "category": category, "level": level})
+                entries.append(
+                    {
+                        "name": name,
+                        "kind": kind,
+                        "source": source,
+                        "text": text,
+                        "pool": pool,
+                        "category": category,
+                        "level": level,
+                    }
+                )
     return entries
 
 
@@ -281,16 +356,17 @@ def parse_ki_powers(html):
     non hanno ':' dopo). Niente campo source per-entry nella sezione:
     source=None -> fallback di pagina deciso dal chiamante."""
     from bs4 import BeautifulSoup, NavigableString
+
     soup = BeautifulSoup(html, "html.parser")
-    marker = next((b for b in soup.find_all("b")
-                   if clean(b.get_text()) == "Ki Powers (Su)"), None)
+    marker = next(
+        (b for b in soup.find_all("b") if clean(b.get_text()) == "Ki Powers (Su)"), None
+    )
     if marker is None:
         return []
 
     def follower_colon(el):
         sib = el.next_sibling
-        return (isinstance(sib, NavigableString)
-                and str(sib).lstrip().startswith(":"))
+        return isinstance(sib, NavigableString) and str(sib).lstrip().startswith(":")
 
     entries, current, parts = [], None, []
     marker_ids = set()
@@ -300,9 +376,17 @@ def parse_ki_powers(html):
             text = _clean_rule_text(" ".join(parts)).lstrip(":").strip()
             name, kind = _split_name_kind(current)
             if name and text:
-                entries.append({"name": name, "kind": kind, "source": None,
-                                "text": text, "pool": "ki power",
-                                "category": None, "level": None})
+                entries.append(
+                    {
+                        "name": name,
+                        "kind": kind,
+                        "source": None,
+                        "text": text,
+                        "pool": "ki power",
+                        "category": None,
+                        "level": None,
+                    }
+                )
 
     # next_elements (NON find_all_next, che yields solo Tag): servono anche i
     # NavigableString per accumulare il testo oltre i tag inline — fix
@@ -334,9 +418,11 @@ def parse_ki_powers(html):
 # inline '<i>Nome (kind)</i>:' (stesso markup dei ki powers). La sezione
 # 'Deities' dei mystery NON viene mai letta: nomi di divinita' = PI Paizo.
 
+
 def _detail_span(html):
     """Il singolo span LabelName della pagina dettaglio (None se assente)."""
     from bs4 import BeautifulSoup
+
     soup = BeautifulSoup(html, "html.parser")
     return soup.find("span", id=re.compile(r"LabelName"))
 
@@ -373,6 +459,7 @@ def _section_text(span, label, stop_labels):
     sezione manca. Bold intermedi non in stop_labels: saltati come label ma
     NON chiudono la sezione."""
     from bs4 import NavigableString, Tag
+
     marker = _find_label_bold(span, label)
     if marker is None:
         return ""
@@ -396,12 +483,16 @@ _BONUS_SPELL_RE = re.compile(r"([^,()]+?)\s*\((\d+)(?:st|nd|rd|th)\)")
 
 def _parse_bonus_spells(text):
     """'enlarge person (2nd), fog cloud (4th).' -> [{name, level}]."""
-    return [{"name": clean(m.group(1)), "level": int(m.group(2))}
-            for m in _BONUS_SPELL_RE.finditer(text) if clean(m.group(1))]
+    return [
+        {"name": clean(m.group(1)), "level": int(m.group(2))}
+        for m in _BONUS_SPELL_RE.finditer(text)
+        if clean(m.group(1))
+    ]
 
 
 _ADDS_SKILLS_RE = re.compile(
-    r"adds (.+?) to (?:her|his|their) (?:list of )?class skills", re.I)
+    r"adds (.+?) to (?:her|his|their) (?:list of )?class skills", re.I
+)
 _GAINS_SKILLS_RE = re.compile(r"gains (.+?) as class skills", re.I)
 
 
@@ -424,14 +515,14 @@ def _parse_inline_choices(span, start_label, stop_labels, pool, category):
     Discriminante come parse_ki_powers: <i> con next_sibling che inizia
     per ':' (gli <i> di enfasi/spell nel testo non aprono entry)."""
     from bs4 import NavigableString, Tag
+
     marker = _find_label_bold(span, start_label)
     if marker is None:
         return []
 
     def follower_colon(el):
         sib = el.next_sibling
-        return (isinstance(sib, NavigableString)
-                and str(sib).lstrip().startswith(":"))
+        return isinstance(sib, NavigableString) and str(sib).lstrip().startswith(":")
 
     entries, current, parts = [], None, []
     marker_ids = set()
@@ -441,9 +532,17 @@ def _parse_inline_choices(span, start_label, stop_labels, pool, category):
             text = _clean_rule_text(" ".join(parts)).lstrip(":").strip()
             name, kind = _split_name_kind(current)
             if name and text:
-                entries.append({"name": name, "kind": kind, "source": None,
-                                "text": text, "pool": pool,
-                                "category": category, "level": None})
+                entries.append(
+                    {
+                        "name": name,
+                        "kind": kind,
+                        "source": None,
+                        "text": text,
+                        "pool": pool,
+                        "category": category,
+                        "level": None,
+                    }
+                )
 
     for el in marker.next_elements:
         if not _is_descendant(el, span):
@@ -470,8 +569,13 @@ def _parse_inline_choices(span, start_label, stop_labels, pool, category):
     return entries
 
 
-_MYSTERY_SECTIONS = {"Deities", "Class Skills", "Bonus Spells",
-                     "Revelations", "Final Revelation"}
+_MYSTERY_SECTIONS = {
+    "Deities",
+    "Class Skills",
+    "Bonus Spells",
+    "Revelations",
+    "Final Revelation",
+}
 
 
 def parse_mystery_page(html):
@@ -490,21 +594,36 @@ def parse_mystery_page(html):
     skills_text = _section_text(span, "Class Skills", _MYSTERY_SECTIONS)
     spells_text = _section_text(span, "Bonus Spells", _MYSTERY_SECTIONS)
     final_text = _section_text(span, "Final Revelation", set())
-    mech = {"class_skills": _parse_added_skills(skills_text),
-            "bonus_spells": _parse_bonus_spells(spells_text)}
+    mech = {
+        "class_skills": _parse_added_skills(skills_text),
+        "bonus_spells": _parse_bonus_spells(spells_text),
+    }
     if final_text:
         mech["final_revelation"] = final_text
     desc = f"Class Skills: {skills_text} Bonus Spells: {spells_text}".strip()
-    mystery = {"name": name, "kind": None, "source": _first_source(span),
-               "text": desc, "pool": "mystery", "category": None,
-               "level": None, "mechanics_extra": mech}
+    mystery = {
+        "name": name,
+        "kind": None,
+        "source": _first_source(span),
+        "text": desc,
+        "pool": "mystery",
+        "category": None,
+        "level": None,
+        "mechanics_extra": mech,
+    }
     revelations = _parse_inline_choices(
-        span, "Revelations", {"Final Revelation"}, "revelation", name.lower())
+        span, "Revelations", {"Final Revelation"}, "revelation", name.lower()
+    )
     return mystery, revelations
 
 
-_BLOODLINE_SECTIONS = {"Class Skill", "Bonus Spells", "Bonus Feats",
-                       "Bloodline Arcana", "Bloodline Powers"}
+_BLOODLINE_SECTIONS = {
+    "Class Skill",
+    "Bonus Spells",
+    "Bonus Feats",
+    "Bloodline Arcana",
+    "Bloodline Powers",
+}
 
 
 def parse_bloodline_page(html):
@@ -524,24 +643,33 @@ def parse_bloodline_page(html):
     # (la fonte) e tieni solo il flavor.
     src = _first_source(span)
     if src and flavor.startswith(src):
-        flavor = flavor[len(src):].strip()
+        flavor = flavor[len(src) :].strip()
     flavor = re.sub(r"^pg\.\s*\d+\S*\s*", "", flavor)
     skill_text = _section_text(span, "Class Skill", _BLOODLINE_SECTIONS)
     feats_text = _section_text(span, "Bonus Feats", _BLOODLINE_SECTIONS)
     arcana = _section_text(span, "Bloodline Arcana", _BLOODLINE_SECTIONS)
-    powers = _parse_inline_choices(span, "Bloodline Powers", set(),
-                                   "bloodline power", name.lower())
-    mech = {"class_skill": skill_text.rstrip("."),
-            "bonus_spells": _parse_bonus_spells(
-                _section_text(span, "Bonus Spells", _BLOODLINE_SECTIONS)),
-            "bonus_feats": [f for f in _split_languages(
-                feats_text.rstrip(".")) if f],
-            "arcana": arcana,
-            "powers": [{"name": p["name"], "kind": p["kind"]}
-                       for p in powers]}
-    return {"name": name, "kind": None, "source": src,
-            "text": flavor, "pool": "bloodline", "category": None,
-            "level": None, "mechanics_extra": mech}
+    powers = _parse_inline_choices(
+        span, "Bloodline Powers", set(), "bloodline power", name.lower()
+    )
+    mech = {
+        "class_skill": skill_text.rstrip("."),
+        "bonus_spells": _parse_bonus_spells(
+            _section_text(span, "Bonus Spells", _BLOODLINE_SECTIONS)
+        ),
+        "bonus_feats": [f for f in _split_languages(feats_text.rstrip(".")) if f],
+        "arcana": arcana,
+        "powers": [{"name": p["name"], "kind": p["kind"]} for p in powers],
+    }
+    return {
+        "name": name,
+        "kind": None,
+        "source": src,
+        "text": flavor,
+        "pool": "bloodline",
+        "category": None,
+        "level": None,
+        "mechanics_extra": mech,
+    }
 
 
 _ORDER_SECTIONS = {"Edicts", "Challenge", "Skills", "Order Abilities"}
@@ -561,22 +689,32 @@ def parse_order_page(html):
     flavor = _section_text(span, "Source", _ORDER_SECTIONS)
     src = _first_source(span)
     if src and flavor.startswith(src):
-        flavor = flavor[len(src):].strip()
+        flavor = flavor[len(src) :].strip()
     flavor = re.sub(r"^pg\.\s*\d+\S*\s*", "", flavor)
     skills_text = _section_text(span, "Skills", _ORDER_SECTIONS)
     mech = {"skills": _parse_added_skills(skills_text)}
-    return {"name": name, "kind": None, "source": src,
-            "text": flavor, "pool": "order", "category": None,
-            "level": None, "mechanics_extra": mech}
+    return {
+        "name": name,
+        "kind": None,
+        "source": src,
+        "text": flavor,
+        "pool": "order",
+        "category": None,
+        "level": None,
+        "mechanics_extra": mech,
+    }
 
 
 def _detail_links(html, link_frag):
     """URL assoluti delle pagine dettaglio linkate dall'indice."""
     from bs4 import BeautifulSoup
+
     soup = BeautifulSoup(html, "html.parser")
-    hrefs = sorted({a["href"] for a in soup.find_all("a", href=True)
-                    if link_frag in a["href"]})
+    hrefs = sorted(
+        {a["href"] for a in soup.find_all("a", href=True) if link_frag in a["href"]}
+    )
     import urllib.parse
+
     return [BASE + urllib.parse.quote(h, safe="/?=&()%") for h in hrefs]
 
 
@@ -586,8 +724,12 @@ def talent_entry(row, pool, cls, ref, page_url):
     powers, ...) viene fuso in mechanics dopo le chiavi standard.
     row['source_key'] (revelation: stessa entry offerta da piu' mystery)
     sostituisce la chiave di default per source_id."""
-    tags = ["talent", pool.replace(" ", "-"), slug(cls).replace("_", "-"),
-            slug(row["name"]).replace("_", "-")]
+    tags = [
+        "talent",
+        pool.replace(" ", "-"),
+        slug(cls).replace("_", "-"),
+        slug(row["name"]).replace("_", "-"),
+    ]
     mechanics = {"class": cls, "pool": pool, "kind": row["kind"]}
     if row.get("category"):
         mechanics["category"] = row["category"]
@@ -597,8 +739,9 @@ def talent_entry(row, pool, cls, ref, page_url):
     return {
         "name": row["name"],
         "source": row["source"] or "Archives of Nethys (aonprd.com)",
-        "source_id": source_id("talent", row.get("source_key")
-                               or f"{pool} {row['name']}"),
+        "source_id": source_id(
+            "talent", row.get("source_key") or f"{pool} {row['name']}"
+        ),
         "prerequisites": [],
         "tags": tags,
         "references": [ref],
@@ -634,9 +777,9 @@ def collect_entries(offline):
             if spec.get("parser") == "ki":
                 rows = parse_ki_powers(html)
             else:
-                rows = parse_talent_tables(html, spec.get("h1_pools"),
-                                           page_category,
-                                           spec.get("h1_categories"))
+                rows = parse_talent_tables(
+                    html, spec.get("h1_pools"), page_category, spec.get("h1_categories")
+                )
                 for row in rows:
                     row["pool"] = row["pool"] or spec["pool"]
             if not rows:
@@ -644,9 +787,11 @@ def collect_entries(offline):
             for row in rows:
                 if row["source"] is None and spec.get("parser") != "ki":
                     anomalies.append(
-                        f"- **{spec['pool']} / {row['name']}**: fonte per-entry assente")
-                entries.append(talent_entry(row, row["pool"], spec["cls"],
-                                            spec["ref"], url))
+                        f"- **{spec['pool']} / {row['name']}**: fonte per-entry assente"
+                    )
+                entries.append(
+                    talent_entry(row, row["pool"], spec["cls"], spec["ref"], url)
+                )
     # Dedup per (pool, name): prima occorrenza vince. Eccezione revelation:
     # la stessa entry e' offerta da piu' mystery (category diversa) e ogni
     # occorrenza e' un'istanza selezionabile distinta -> chiave estesa.
@@ -672,8 +817,9 @@ def _collect_detail_pool(spec, offline, entries, anomalies):
     try:
         index_html = _fetch_page(spec["index"], offline)
     except Exception as exc:
-        anomalies.append(f"- **{spec['pool']}** ({spec['index']}): "
-                         f"FETCH INDICE FALLITO ({exc})")
+        anomalies.append(
+            f"- **{spec['pool']}** ({spec['index']}): " f"FETCH INDICE FALLITO ({exc})"
+        )
         return
     parser = spec["parser"]
     for url in _detail_links(index_html, spec["link_frag"]):
@@ -688,8 +834,9 @@ def _collect_detail_pool(spec, offline, entries, anomalies):
                 anomalies.append(f"- **mystery** ({url}): blocco non parsato")
                 continue
             page_source = mystery["source"]
-            entries.append(talent_entry(mystery, "mystery", spec["cls"],
-                                        spec["ref"], url))
+            entries.append(
+                talent_entry(mystery, "mystery", spec["cls"], spec["ref"], url)
+            )
             if not revelations:
                 anomalies.append(f"- **mystery {mystery['name']}**: 0 revelation")
             for row in revelations:
@@ -698,23 +845,31 @@ def _collect_detail_pool(spec, offline, entries, anomalies):
                 # (es. Combat Healer: battle/life/succor): entry per
                 # (category, name), source_id disambiguato dalla category.
                 row["source_key"] = f"revelation {row['category']} {row['name']}"
-                entries.append(talent_entry(row, "revelation", spec["cls"],
-                                            spec["ref"], url))
+                entries.append(
+                    talent_entry(row, "revelation", spec["cls"], spec["ref"], url)
+                )
         else:
-            row = parse_bloodline_page(html) if parser == "bloodline" \
+            row = (
+                parse_bloodline_page(html)
+                if parser == "bloodline"
                 else parse_order_page(html)
+            )
             if row is None or not row["name"]:
                 anomalies.append(f"- **{spec['pool']}** ({url}): blocco non parsato")
                 continue
-            entries.append(talent_entry(row, spec["pool"], spec["cls"],
-                                        spec["ref"], url))
+            entries.append(
+                talent_entry(row, spec["pool"], spec["cls"], spec["ref"], url)
+            )
 
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--write", action="store_true")
-    ap.add_argument("--offline", action="store_true",
-                    help="fallisce se una pagina non e' in cache (nessuna rete)")
+    ap.add_argument(
+        "--offline",
+        action="store_true",
+        help="fallisce se una pagina non e' in cache (nessuna rete)",
+    )
     args = ap.parse_args(argv)
 
     entries, dupes, anomalies = collect_entries(args.offline)
@@ -725,11 +880,12 @@ def main(argv=None) -> int:
     by_pool = {}
     for e in all_entries:
         by_pool[e["mechanics"]["pool"]] = by_pool.get(e["mechanics"]["pool"], 0) + 1
-    zero_text = sum(1 for e in all_entries + local_entries
-                    if not e["description"])
+    zero_text = sum(1 for e in all_entries + local_entries if not e["description"])
     total = len(all_entries) + len(local_entries)
-    print(f"talenti: {total} (OGL {len(all_entries)}, PI->local {len(local_entries)}); "
-          f"duplicati scartati: {dupes}; senza testo: {zero_text}")
+    print(
+        f"talenti: {total} (OGL {len(all_entries)}, PI->local {len(local_entries)}); "
+        f"duplicati scartati: {dupes}; senza testo: {zero_text}"
+    )
     for pool in sorted(by_pool):
         print(f"  {pool}: {by_pool[pool]}")
     if anomalies:
@@ -748,75 +904,101 @@ def main(argv=None) -> int:
         "_source": "Archives of Nethys (local only, not redistributed)",
         "entries": local_entries,
     }
-    LOCAL_PATH.write_text(json.dumps(local_catalog, ensure_ascii=False, indent=2),
-                          encoding="utf-8")
+    LOCAL_PATH.write_text(
+        json.dumps(local_catalog, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
 
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     today = date.today().isoformat()
-    manifest["files"]["talents"] = {"path": "ogl/talents.json",
-                                    "entries": len(all_entries)}
-    manifest["catalogs"] = [c for c in manifest["catalogs"]
-                            if c["kind"] not in ("talents", "talents_local")]
-    manifest["catalogs"].append({
-        "file": "ogl/talents.json",
-        "kind": "talents",
-        "source": "Archives of Nethys (aonprd.com)",
-        "license": "OGL-1.0a",
-        "is_ogc": True, "is_pi": False, "cup_allowed": False,
+    manifest["files"]["talents"] = {
+        "path": "ogl/talents.json",
         "entries": len(all_entries),
-        "notes": ("Talenti selezionabili per classe da pagine dedicate AoN "
-                  "(rage power/Barbarian, mercy/Paladin, rogue talent + "
-                  "advanced/Rogue, discovery + grand/Alchemist, hex/major/"
-                  "grand/Witch, deed/Swashbuckler, ki power/Monk Unchained, "
-                  "ninja trick + advanced/Ninja, slayer talent + advanced/"
-                  "Slayer, social + vigilante talent/Vigilante, magus "
-                  "arcana/Magus, mystery + revelation/Oracle, bloodline/"
-                  "Sorcerer, order/Cavalier+Samurai): "
-                  "mechanics {class, pool, kind, category?, level?} + "
-                  "mechanics_extra per i blocchi-scelta (class_skills, "
-                  "bonus_spells, powers...). "
-                  "Rigenerare con tools/import_talents.py."),
-        "last_verified": today,
-    })
-    if local_entries:
-        manifest["catalogs"].append({
-            "file": "pi_local_only/talents_local.json",
-            "kind": "talents_local",
+    }
+    manifest["catalogs"] = [
+        c for c in manifest["catalogs"] if c["kind"] not in ("talents", "talents_local")
+    ]
+    manifest["catalogs"].append(
+        {
+            "file": "ogl/talents.json",
+            "kind": "talents",
             "source": "Archives of Nethys (aonprd.com)",
             "license": "OGL-1.0a",
-            "is_ogc": False, "is_pi": False, "cup_allowed": False,
-            "local_only": True,
-            "entries": len(local_entries),
-            "notes": ("Talenti con Product Identity nel nome, separati dal "
-                      "catalogo OGL (policy 2026-07-26). NON redistribuire."),
+            "is_ogc": True,
+            "is_pi": False,
+            "cup_allowed": False,
+            "entries": len(all_entries),
+            "notes": (
+                "Talenti selezionabili per classe da pagine dedicate AoN "
+                "(rage power/Barbarian, mercy/Paladin, rogue talent + "
+                "advanced/Rogue, discovery + grand/Alchemist, hex/major/"
+                "grand/Witch, deed/Swashbuckler, ki power/Monk Unchained, "
+                "ninja trick + advanced/Ninja, slayer talent + advanced/"
+                "Slayer, social + vigilante talent/Vigilante, magus "
+                "arcana/Magus, mystery + revelation/Oracle, bloodline/"
+                "Sorcerer, order/Cavalier+Samurai): "
+                "mechanics {class, pool, kind, category?, level?} + "
+                "mechanics_extra per i blocchi-scelta (class_skills, "
+                "bonus_spells, powers...). "
+                "Rigenerare con tools/import_talents.py."
+            ),
             "last_verified": today,
-        })
-    MANIFEST_PATH.write_text(json.dumps(manifest, ensure_ascii=False, indent=2),
-                             encoding="utf-8")
+        }
+    )
+    if local_entries:
+        manifest["catalogs"].append(
+            {
+                "file": "pi_local_only/talents_local.json",
+                "kind": "talents_local",
+                "source": "Archives of Nethys (aonprd.com)",
+                "license": "OGL-1.0a",
+                "is_ogc": False,
+                "is_pi": False,
+                "cup_allowed": False,
+                "local_only": True,
+                "entries": len(local_entries),
+                "notes": (
+                    "Talenti con Product Identity nel nome, separati dal "
+                    "catalogo OGL (policy 2026-07-26). NON redistribuire."
+                ),
+                "last_verified": today,
+            }
+        )
+    MANIFEST_PATH.write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
 
-    lines = ["# Import talenti (sotto-cataloghi per classe) da AoN (2026-07-26)", "",
-             f"- Talenti totali: {total}",
-             f"- OGL (talents.json): {len(all_entries)}",
-             f"- PI -> talents_local.json: {len(local_entries)}",
-             f"- Duplicati (pool, name) scartati: {dupes}",
-             f"- Entry senza testo: {zero_text}", "",
-             "## Conteggi per pool (OGL)", ""]
+    lines = [
+        "# Import talenti (sotto-cataloghi per classe) da AoN (2026-07-26)",
+        "",
+        f"- Talenti totali: {total}",
+        f"- OGL (talents.json): {len(all_entries)}",
+        f"- PI -> talents_local.json: {len(local_entries)}",
+        f"- Duplicati (pool, name) scartati: {dupes}",
+        f"- Entry senza testo: {zero_text}",
+        "",
+        "## Conteggi per pool (OGL)",
+        "",
+    ]
     lines += [f"- **{pool}**: {by_pool[pool]}" for pool in sorted(by_pool)]
     lines += ["", "## Anomalie", ""] + (anomalies or ["- (nessuna)"])
-    lines += ["", "## Fix post-review (2026-07-26, seconda passata)", "",
-              "- 9 ki power troncati ai tag `<i>` inline (spell citate nel "
-              "testo): il walk ora usa `next_elements` (find_all_next yields "
-              "solo Tag, quindi i NavigableString non venivano mai "
-              "accumulati). Discriminante entry invariato: `<i>` con "
-              "next_sibling che inizia per ':'.",
-              "- 3 rogue talent (Black Market Connections, Rumormonger, "
-              "Quick Disguise) con `<table class=\"inner\">` appiattita in "
-              "coda alla description: tabelle annidate escluse dal testo "
-              "(assenza onesta — dato tabellare via reference_url).",
-              "- Cleanup punteggiatura del join per frammenti "
-              "('dimension door .' -> 'dimension door.') su entrambi i parser.",
-              "- Scan finale: 0 description con finale non "
-              "'.', '!', '?', '”', '\"', ')'.", ""]
+    lines += [
+        "",
+        "## Fix post-review (2026-07-26, seconda passata)",
+        "",
+        "- 9 ki power troncati ai tag `<i>` inline (spell citate nel "
+        "testo): il walk ora usa `next_elements` (find_all_next yields "
+        "solo Tag, quindi i NavigableString non venivano mai "
+        "accumulati). Discriminante entry invariato: `<i>` con "
+        "next_sibling che inizia per ':'.",
+        "- 3 rogue talent (Black Market Connections, Rumormonger, "
+        'Quick Disguise) con `<table class="inner">` appiattita in '
+        "coda alla description: tabelle annidate escluse dal testo "
+        "(assenza onesta — dato tabellare via reference_url).",
+        "- Cleanup punteggiatura del join per frammenti "
+        "('dimension door .' -> 'dimension door.') su entrambi i parser.",
+        "- Scan finale: 0 description con finale non " "'.', '!', '?', '”', '\"', ')'.",
+        "",
+    ]
     lines += ["## Nomi PI spostati in locale", ""]
     lines += [f"- {e['mechanics']['pool']} / {e['name']}" for e in local_entries]
     REPORT_PATH.write_text("\n".join(lines) + "\n", encoding="utf-8")

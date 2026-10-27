@@ -4,6 +4,7 @@
 I dati prodotti sono riassunti meccanici originali in italiano, compatibili con lo
 schema reference_catalog.schema.json. I riferimenti puntano a d20PFSRD (OGL).
 """
+
 import json
 from pathlib import Path
 
@@ -23,10 +24,12 @@ def base_entry(
     kind_label_en = {"class": "class", "race": "race", "archetype": "archetype"}[kind]
     kind_label_it = {"class": "classe", "race": "razza", "archetype": "archetipo"}[kind]
     # Ensure the English name and kind are prominent for retrieval.
-    enriched_tags = sorted(set(
-        [name.lower(), kind_label_en, kind_label_it, "pathfinder 1e"] + tags
-    ))
-    short_description = f"Pathfinder 1E {kind_label_en}: {name}. {kind_label_it.capitalize()} PF1e."
+    enriched_tags = sorted(
+        set([name.lower(), kind_label_en, kind_label_it, "pathfinder 1e"] + tags)
+    )
+    short_description = (
+        f"Pathfinder 1E {kind_label_en}: {name}. {kind_label_it.capitalize()} PF1e."
+    )
     return {
         "name": name,
         "source": "Pathfinder SRD",
@@ -47,7 +50,8 @@ def base_entry(
 
 CLASSES = [
     base_entry(
-        "Barbarian", "pfrpg_core:barbarian",
+        "Barbarian",
+        "pfrpg_core:barbarian",
         ["martial", "full bab", "d12 hd", "fortitude good", "rage", "uncanny dodge"],
         ["d20PFSRD: Barbarian"],
         ["https://www.d20pfsrd.com/classes/core-classes/barbarian/"],
@@ -68,8 +72,17 @@ CLASSES = [
         kind="class",
     ),
     base_entry(
-        "Bard", "pfrpg_core:bard",
-        ["skilled", "3/4 bab", "d8 hd", "all good saves", "arcane spellcasting", "bardic performance", "inspire courage"],
+        "Bard",
+        "pfrpg_core:bard",
+        [
+            "skilled",
+            "3/4 bab",
+            "d8 hd",
+            "all good saves",
+            "arcane spellcasting",
+            "bardic performance",
+            "inspire courage",
+        ],
         ["d20PFSRD: Bard"],
         ["https://www.d20pfsrd.com/classes/core-classes/bard/"],
         notes=(
@@ -88,8 +101,17 @@ CLASSES = [
         kind="class",
     ),
     base_entry(
-        "Cleric", "pfrpg_core:cleric",
-        ["divine spellcasting", "3/4 bab", "d8 hd", "channel energy", "domains", "fortitude good", "will good"],
+        "Cleric",
+        "pfrpg_core:cleric",
+        [
+            "divine spellcasting",
+            "3/4 bab",
+            "d8 hd",
+            "channel energy",
+            "domains",
+            "fortitude good",
+            "will good",
+        ],
         ["d20PFSRD: Cleric"],
         ["https://www.d20pfsrd.com/classes/core-classes/cleric/"],
         notes=(
@@ -106,8 +128,18 @@ CLASSES = [
         kind="class",
     ),
     base_entry(
-        "Druid", "pfrpg_core:druid",
-        ["divine spellcasting", "3/4 bab", "d8 hd", "animal companion", "wild shape", "nature bond", "fortitude good", "will good"],
+        "Druid",
+        "pfrpg_core:druid",
+        [
+            "divine spellcasting",
+            "3/4 bab",
+            "d8 hd",
+            "animal companion",
+            "wild shape",
+            "nature bond",
+            "fortitude good",
+            "will good",
+        ],
         ["d20PFSRD: Druid"],
         ["https://www.d20pfsrd.com/classes/core-classes/druid/"],
         notes=(
@@ -126,8 +158,18 @@ CLASSES = [
         kind="class",
     ),
     base_entry(
-        "Fighter", "pfrpg_core:fighter",
-        ["martial", "full bab", "d10 hd", "fortitude good", "reflex good", "bonus feats", "weapon training", "armor training"],
+        "Fighter",
+        "pfrpg_core:fighter",
+        [
+            "martial",
+            "full bab",
+            "d10 hd",
+            "fortitude good",
+            "reflex good",
+            "bonus feats",
+            "weapon training",
+            "armor training",
+        ],
         ["d20PFSRD: Fighter"],
         ["https://www.d20pfsrd.com/classes/core-classes/fighter/"],
         notes=(
@@ -145,8 +187,18 @@ CLASSES = [
         kind="class",
     ),
     base_entry(
-        "Monk", "pfrpg_core:monk",
-        ["martial", "3/4 bab", "d8 hd", "all good saves", "unarmed strike", "flurry of blows", "ki", "ac bonus"],
+        "Monk",
+        "pfrpg_core:monk",
+        [
+            "martial",
+            "3/4 bab",
+            "d8 hd",
+            "all good saves",
+            "unarmed strike",
+            "flurry of blows",
+            "ki",
+            "ac bonus",
+        ],
         ["d20PFSRD: Monk"],
         ["https://www.d20pfsrd.com/classes/core-classes/monk/"],
         notes=(
@@ -166,8 +218,19 @@ CLASSES = [
         kind="class",
     ),
     base_entry(
-        "Paladin", "pfrpg_core:paladin",
-        ["divine", "martial", "full bab", "d10 hd", "divine grace", "lay on hands", "smite evil", "fortitude good", "will good"],
+        "Paladin",
+        "pfrpg_core:paladin",
+        [
+            "divine",
+            "martial",
+            "full bab",
+            "d10 hd",
+            "divine grace",
+            "lay on hands",
+            "smite evil",
+            "fortitude good",
+            "will good",
+        ],
         ["d20PFSRD: Paladin"],
         ["https://www.d20pfsrd.com/classes/core-classes/paladin/"],
         notes=(
@@ -185,8 +248,19 @@ CLASSES = [
         kind="class",
     ),
     base_entry(
-        "Ranger", "pfrpg_core:ranger",
-        ["martial", "full bab", "d10 hd", "favored enemy", "favored terrain", "animal companion", "spells", "fortitude good", "reflex good"],
+        "Ranger",
+        "pfrpg_core:ranger",
+        [
+            "martial",
+            "full bab",
+            "d10 hd",
+            "favored enemy",
+            "favored terrain",
+            "animal companion",
+            "spells",
+            "fortitude good",
+            "reflex good",
+        ],
         ["d20PFSRD: Ranger"],
         ["https://www.d20pfsrd.com/classes/core-classes/ranger/"],
         notes=(
@@ -204,8 +278,18 @@ CLASSES = [
         kind="class",
     ),
     base_entry(
-        "Rogue", "pfrpg_core:rogue",
-        ["skilled", "3/4 bab", "d8 hd", "sneak attack", "trapfinding", "evasion", "rogue talents", "reflex good"],
+        "Rogue",
+        "pfrpg_core:rogue",
+        [
+            "skilled",
+            "3/4 bab",
+            "d8 hd",
+            "sneak attack",
+            "trapfinding",
+            "evasion",
+            "rogue talents",
+            "reflex good",
+        ],
         ["d20PFSRD: Rogue"],
         ["https://www.d20pfsrd.com/classes/core-classes/rogue/"],
         notes=(
@@ -223,7 +307,8 @@ CLASSES = [
         kind="class",
     ),
     base_entry(
-        "Sorcerer", "pfrpg_core:sorcerer",
+        "Sorcerer",
+        "pfrpg_core:sorcerer",
         ["arcane spellcasting", "1/2 bab", "d6 hd", "bloodline", "will good"],
         ["d20PFSRD: Sorcerer"],
         ["https://www.d20pfsrd.com/classes/core-classes/sorcerer/"],
@@ -241,8 +326,17 @@ CLASSES = [
         kind="class",
     ),
     base_entry(
-        "Wizard", "pfrpg_core:wizard",
-        ["arcane spellcasting", "1/2 bab", "d6 hd", "arcane school", "scribe scroll", "familiar", "will good"],
+        "Wizard",
+        "pfrpg_core:wizard",
+        [
+            "arcane spellcasting",
+            "1/2 bab",
+            "d6 hd",
+            "arcane school",
+            "scribe scroll",
+            "familiar",
+            "will good",
+        ],
         ["d20PFSRD: Wizard"],
         ["https://www.d20pfsrd.com/classes/core-classes/wizard/"],
         notes=(
@@ -261,8 +355,18 @@ CLASSES = [
         kind="class",
     ),
     base_entry(
-        "Magus", "ultimate_magic:magus",
-        ["arcane spellcasting", "martial", "3/4 bab", "d8 hd", "spell combat", "spellstrike", "arcane pool", "magus arcana"],
+        "Magus",
+        "ultimate_magic:magus",
+        [
+            "arcane spellcasting",
+            "martial",
+            "3/4 bab",
+            "d8 hd",
+            "spell combat",
+            "spellstrike",
+            "arcane pool",
+            "magus arcana",
+        ],
         ["d20PFSRD: Magus"],
         ["https://www.d20pfsrd.com/classes/base-classes/magus/"],
         notes=(
@@ -285,7 +389,8 @@ CLASSES = [
 
 RACES = [
     base_entry(
-        "Dwarf", "pfrpg_core:dwarf",
+        "Dwarf",
+        "pfrpg_core:dwarf",
         ["core", "darkvision", "hardy", "slow and steady", "stonecunning"],
         ["d20PFSRD: Dwarf"],
         ["https://www.d20pfsrd.com/races/core-races/dwarf/"],
@@ -306,8 +411,15 @@ RACES = [
         kind="race",
     ),
     base_entry(
-        "Elf", "pfrpg_core:elf",
-        ["core", "low-light vision", "elven immunities", "keen senses", "weapon familiarity"],
+        "Elf",
+        "pfrpg_core:elf",
+        [
+            "core",
+            "low-light vision",
+            "elven immunities",
+            "keen senses",
+            "weapon familiarity",
+        ],
         ["d20PFSRD: Elf"],
         ["https://www.d20pfsrd.com/races/core-races/elf/"],
         notes=(
@@ -323,8 +435,16 @@ RACES = [
         kind="race",
     ),
     base_entry(
-        "Gnome", "pfrpg_core:gnome",
-        ["core", "small", "low-light vision", "gnome magic", "illusion resistance", "keen senses"],
+        "Gnome",
+        "pfrpg_core:gnome",
+        [
+            "core",
+            "small",
+            "low-light vision",
+            "gnome magic",
+            "illusion resistance",
+            "keen senses",
+        ],
         ["d20PFSRD: Gnome"],
         ["https://www.d20pfsrd.com/races/core-races/gnome/"],
         notes=(
@@ -343,7 +463,8 @@ RACES = [
         kind="race",
     ),
     base_entry(
-        "Half-Elf", "pfrpg_core:half_elf",
+        "Half-Elf",
+        "pfrpg_core:half_elf",
         ["core", "low-light vision", "adaptability", "elf blood", "multitalented"],
         ["d20PFSRD: Half-Elf"],
         ["https://www.d20pfsrd.com/races/core-races/half-elf/"],
@@ -361,7 +482,8 @@ RACES = [
         kind="race",
     ),
     base_entry(
-        "Half-Orc", "pfrpg_core:half_orc",
+        "Half-Orc",
+        "pfrpg_core:half_orc",
         ["core", "darkvision", "intimidating", "orc blood", "weapon familiarity"],
         ["d20PFSRD: Half-Orc"],
         ["https://www.d20pfsrd.com/races/core-races/half-orc/"],
@@ -378,7 +500,8 @@ RACES = [
         kind="race",
     ),
     base_entry(
-        "Halfling", "pfrpg_core:halfling",
+        "Halfling",
+        "pfrpg_core:halfling",
         ["core", "small", "fearless", "halfling luck", "keen senses", "sure-footed"],
         ["d20PFSRD: Halfling"],
         ["https://www.d20pfsrd.com/races/core-races/halfling/"],
@@ -395,7 +518,8 @@ RACES = [
         kind="race",
     ),
     base_entry(
-        "Human", "pfrpg_core:human",
+        "Human",
+        "pfrpg_core:human",
         ["core", "bonus feat", "skilled"],
         ["d20PFSRD: Human"],
         ["https://www.d20pfsrd.com/races/core-races/human/"],
@@ -418,7 +542,9 @@ ARCHETYPES = [
         "fighter:archer",
         ["fighter", "archery", "ranged combat", "trick shot"],
         ["d20PFSRD: Fighter Archetype - Archer"],
-        ["https://www.d20pfsrd.com/classes/core-classes/fighter/archetypes/paizo-fighter-archetypes/archer/"],
+        [
+            "https://www.d20pfsrd.com/classes/core-classes/fighter/archetypes/paizo-fighter-archetypes/archer/"
+        ],
         notes=(
             "Archetipo del Fighter orientato al tiro con l'arco. "
             "Modifiche: sostituisce Armor Training 1-4 con Hawkeye (+1 Perception e ranged attack ogni 4 livelli) e Trick Shot (sunder/disarm/trip a distanza). "
@@ -434,7 +560,9 @@ ARCHETYPES = [
         "fighter:two_weapon_warrior",
         ["fighter", "two-weapon fighting", "twin blades", "doublestrike"],
         ["d20PFSRD: Fighter Archetype - Two-Weapon Warrior"],
-        ["https://www.d20pfsrd.com/classes/core-classes/fighter/archetypes/paizo-fighter-archetypes/two-weapon-warrior/"],
+        [
+            "https://www.d20pfsrd.com/classes/core-classes/fighter/archetypes/paizo-fighter-archetypes/two-weapon-warrior/"
+        ],
         notes=(
             "Archetipo del Fighter specializzato in doppia arma. "
             "Modifiche: Doublestrike al 2° (full-round action per attaccare con entrambe le armi, ogni arma colpisce due volte). "
@@ -454,7 +582,9 @@ ARCHETYPES = [
         "fighter:weapon_master",
         ["fighter", "weapon specialization", "single weapon focus"],
         ["d20PFSRD: Fighter Archetype - Weapon Master"],
-        ["https://www.d20pfsrd.com/classes/core-classes/fighter/archetypes/paizo-fighter-archetypes/weapon-master/"],
+        [
+            "https://www.d20pfsrd.com/classes/core-classes/fighter/archetypes/paizo-fighter-archetypes/weapon-master/"
+        ],
         notes=(
             "Archetipo del Fighter votato a un'unica arma. "
             "Modifiche: Weapon Training al 3° (invece del 5°) in un singolo gruppo di armi, bonus +1 ogni 4 livelli (invece che ogni 4 dopo il 5°). "
@@ -472,7 +602,9 @@ ARCHETYPES = [
         "fighter:shielded_fighter",
         ["fighter", "shield", "defensive", "shield bash"],
         ["d20PFSRD: Fighter Archetype - Shielded Fighter"],
-        ["https://www.d20pfsrd.com/classes/core-classes/fighter/archetypes/paizo-fighter-archetypes/shielded-fighter/"],
+        [
+            "https://www.d20pfsrd.com/classes/core-classes/fighter/archetypes/paizo-fighter-archetypes/shielded-fighter/"
+        ],
         notes=(
             "Archetipo del Fighter difensivo con scudo. "
             "Modifiche: Active Defense al 3° (spendere AoO per +1 CA con scudo, scala con livello). "
@@ -489,7 +621,9 @@ ARCHETYPES = [
         "wizard:evoker",
         ["wizard", "evocation school", "arcane school", "blast"],
         ["d20PFSRD: Wizard Arcane School - Evocation"],
-        ["https://www.d20pfsrd.com/classes/core-classes/wizard/arcane-schools/paizo-arcane-schools/evocation/"],
+        [
+            "https://www.d20pfsrd.com/classes/core-classes/wizard/arcane-schools/paizo-arcane-schools/evocation/"
+        ],
         notes=(
             "Archetipo scuola arcana del Wizard. "
             "Modifiche: specializzazione in Evocation, proibisce solitamente Conjuration e Transmutation (a scelta del giocatore). "
@@ -506,7 +640,9 @@ ARCHETYPES = [
         "wizard:conjurer",
         ["wizard", "conjuration school", "arcane school", "summoning"],
         ["d20PFSRD: Wizard Arcane School - Conjuration"],
-        ["https://www.d20pfsrd.com/classes/core-classes/wizard/arcane-schools/paizo-arcane-schools/conjuration/"],
+        [
+            "https://www.d20pfsrd.com/classes/core-classes/wizard/arcane-schools/paizo-arcane-schools/conjuration/"
+        ],
         notes=(
             "Archetipo scuola arcana del Wizard. "
             "Modifiche: specializzazione in Conjuration. "
@@ -523,7 +659,9 @@ ARCHETYPES = [
         "magus:kensai",
         ["magus", "kensai", "weapon focus", "critical", "single weapon"],
         ["d20PFSRD: Magus Archetype - Kensai"],
-        ["https://www.d20pfsrd.com/classes/base-classes/magus/archetypes/paizo-magus-archetypes/kensai/"],
+        [
+            "https://www.d20pfsrd.com/classes/base-classes/magus/archetypes/paizo-magus-archetypes/kensai/"
+        ],
         notes=(
             "Archetipo Kensai del Magus, specializzato in un'unica arma da mischia. "
             "Modifiche: Diminished Spellcasting (meno slot giornalieri, -1 per ogni livello). "
@@ -544,7 +682,9 @@ ARCHETYPES = [
         "magus:bladebound",
         ["magus", "bladebound", "black blade", "sentient weapon"],
         ["d20PFSRD: Magus Archetype - Bladebound"],
-        ["https://www.d20pfsrd.com/classes/base-classes/magus/archetypes/paizo-magus-archetypes/bladebound/"],
+        [
+            "https://www.d20pfsrd.com/classes/base-classes/magus/archetypes/paizo-magus-archetypes/bladebound/"
+        ],
         notes=(
             "Archetipo del Magus con arma senziente. "
             "Modifiche: Black Blade al 3°: lama magica senziente che scala di potere con il Magus. "
@@ -560,7 +700,9 @@ ARCHETYPES = [
         "magus:eldritch_archer",
         ["magus", "eldritch archer", "ranged spellstrike", "archery"],
         ["d20PFSRD: Magus Archetype - Eldritch Archer"],
-        ["https://www.d20pfsrd.com/classes/base-classes/magus/archetypes/paizo-magus-archetypes/eldritch-archer/"],
+        [
+            "https://www.d20pfsrd.com/classes/base-classes/magus/archetypes/paizo-magus-archetypes/eldritch-archer/"
+        ],
         notes=(
             "Archetipo Eldritch Archer del Magus, orientato al combattimento a distanza. "
             "Modifiche: Spell Combat funziona con armi a distanza; richiede una mano libera per caricare. "
@@ -577,7 +719,9 @@ ARCHETYPES = [
         "rogue:thug",
         ["rogue", "thug", "intimidate", "frightening"],
         ["d20PFSRD: Rogue Archetype - Thug"],
-        ["https://www.d20pfsrd.com/classes/core-classes/rogue/archetypes/paizo-rogue-archetypes/thug/"],
+        [
+            "https://www.d20pfsrd.com/classes/core-classes/rogue/archetypes/paizo-rogue-archetypes/thug/"
+        ],
         notes=(
             "Archetipo del Rogue basato su Intimidate. "
             "Modifiche: Frightening (sostituisce trapfinding): quando colpisce con sneak attack può Intimidare come swift action, -1 round shaken diventa frightened. "
@@ -592,7 +736,9 @@ ARCHETYPES = [
         "rogue:scout",
         ["rogue", "scout", "skirmisher", "move action sneak attack"],
         ["d20PFSRD: Rogue Archetype - Scout"],
-        ["https://www.d20pfsrd.com/classes/core-classes/rogue/archetypes/paizo-rogue-archetypes/scout/"],
+        [
+            "https://www.d20pfsrd.com/classes/core-classes/rogue/archetypes/paizo-rogue-archetypes/scout/"
+        ],
         notes=(
             "Archetipo del Rogue mobile. "
             "Modifiche: Skirmisher al 4°: sneak attack quando colpisce dopo aver mosso almeno 3 m. "
@@ -608,7 +754,9 @@ ARCHETYPES = [
         "rogue:knife_master",
         ["rogue", "knife master", "blades", "sneak attack d8"],
         ["d20PFSRD: Rogue Archetype - Knife Master"],
-        ["https://www.d20pfsrd.com/classes/core-classes/rogue/archetypes/paizo-rogue-archetypes/knife-master/"],
+        [
+            "https://www.d20pfsrd.com/classes/core-classes/rogue/archetypes/paizo-rogue-archetypes/knife-master/"
+        ],
         notes=(
             "Archetipo del Rogue con armi da taglio leggere. "
             "Modifiche: Sneak Stab: sneak attack con dagger, kerambit, kukri, punching dagger, starknife o sword cane tira d8 invece di d6. "
@@ -624,7 +772,9 @@ ARCHETYPES = [
         "barbarian:invulnerable_rager",
         ["barbarian", "invulnerable rager", "damage reduction", "tank"],
         ["d20PFSRD: Barbarian Archetype - Invulnerable Rager"],
-        ["https://www.d20pfsrd.com/classes/core-classes/barbarian/archetypes/paizo-barbarian-archetypes/invulnerable-rager/"],
+        [
+            "https://www.d20pfsrd.com/classes/core-classes/barbarian/archetypes/paizo-barbarian-archetypes/invulnerable-rager/"
+        ],
         notes=(
             "Archetipo del Barbariano tank. "
             "Modifiche: Extreme Endurance al 3°: resistenza 1 a freddo o fuoco, aumenta ogni 3 livelli. "
@@ -640,7 +790,9 @@ ARCHETYPES = [
         "barbarian:beast_totem",
         ["barbarian", "beast totem", "rage power", "natural attacks"],
         ["d20PFSRD: Barbarian Rage Power - Beast Totem"],
-        ["https://www.d20pfsrd.com/classes/core-classes/barbarian/rage-powers/paizo-rage-powers/beast-totem/"],
+        [
+            "https://www.d20pfsrd.com/classes/core-classes/barbarian/rage-powers/paizo-rage-powers/beast-totem/"
+        ],
         notes=(
             "Rage Power Totem non archetipo vero e proprio, ma build comune. "
             "Lesser Beast Totem: 2 claw attacks (1d6) durante rage. "
@@ -656,7 +808,9 @@ ARCHETYPES = [
         "paladin:divine_hunter",
         ["paladin", "divine hunter", "ranged smite", "archery"],
         ["d20PFSRD: Paladin Archetype - Divine Hunter"],
-        ["https://www.d20pfsrd.com/classes/core-classes/paladin/archetypes/paizo-paladin-archetypes/divine-hunter/"],
+        [
+            "https://www.d20pfsrd.com/classes/core-classes/paladin/archetypes/paizo-paladin-archetypes/divine-hunter/"
+        ],
         notes=(
             "Archetipo del Paladino a distanza. "
             "Modifiche: Precise Shot come bonus feat al 1° (sostituisce Heavy Armor Proficiency). "
@@ -679,7 +833,9 @@ def main():
         ("archetypes.json", ARCHETYPES),
     ]:
         path = REF_DIR / fname
-        path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+        path.write_text(
+            json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
         print(f"Wrote {len(data)} entries to {path}")
 
 

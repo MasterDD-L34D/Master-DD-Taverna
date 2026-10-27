@@ -11,6 +11,7 @@ Gli archetipi senza race_req NON compaiono: l'assenza dal dataset e' dato
 ("nessun requisito razziale attestato dalla fonte curata"), dichiarato dal
 consumatore, non dal file.
 """
+
 import json
 import sys
 from pathlib import Path
@@ -18,7 +19,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tools import export_archetype_race_reqs as ex
-
 
 ARCHETYPES = {
     "_license": "OGL",

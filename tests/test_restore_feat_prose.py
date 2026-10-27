@@ -1,11 +1,11 @@
 """Test per tools/restore_feat_prose.py — ripristino prosa da FeatDisplay AoN."""
+
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from tools.restore_feat_prose import (appendix_names, apply_restore,
-                                      parse_feat_page)
+from tools.restore_feat_prose import appendix_names, apply_restore, parse_feat_page
 
 # Markup ricalcato su FeatDisplay.aspx reale (cache Elemental Channel).
 FEAT_HTML = """
@@ -19,25 +19,31 @@ def test_parse_feat_page():
     p = parse_feat_page(FEAT_HTML)
     assert p["name"] == "Elemental Channel"
     assert p["source"] == "PRPG Core Rulebook"
-    assert p["flavor"] == "Choose one elemental subtype, such as air, earth, fire, or water."
+    assert (
+        p["flavor"]
+        == "Choose one elemental subtype, such as air, earth, fire, or water."
+    )
     assert p["prerequisites"] == ["Channel energy class feature"]
     assert p["benefit"].startswith("Instead of its normal effect")
     assert "multiple times" not in p["benefit"]  # Special escluso
 
 
 def test_apply_restore_entry_shape():
-    entry = {"name": "Elemental Channel",
-             "source": "PRPG Core Rulebook",
-             "prerequisites": ["old corrupted"],
-             "references": ["Archives of a deity of magic: Elemental Channel"],
-             "description": "Choose one ea bardental subtype...",
-             "tags": ["PRPG Core Rulebook"],
-             "source_id": "prpg_core_rulebook:elemental_channel"}
+    entry = {
+        "name": "Elemental Channel",
+        "source": "PRPG Core Rulebook",
+        "prerequisites": ["old corrupted"],
+        "references": ["Archives of a deity of magic: Elemental Channel"],
+        "description": "Choose one ea bardental subtype...",
+        "tags": ["PRPG Core Rulebook"],
+        "source_id": "prpg_core_rulebook:elemental_channel",
+    }
     p = parse_feat_page(FEAT_HTML)
     out = apply_restore(entry, p)
     assert out["description"] == (
         "Choose one elemental subtype, such as air, earth, fire, or water.\n\n"
-        + p["benefit"])
+        + p["benefit"]
+    )
     assert out["prerequisites"] == ["Channel energy class feature"]
     assert out["references"] == ["Pathfinder PRD: Elemental Channel"]
     assert out["source"] == "PRPG Core Rulebook"  # invariato

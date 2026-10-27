@@ -8,6 +8,7 @@ abilita' di classe il NOME VISUALIZZATO e' letteralmente "Class Skills" per
 tutte, e la classe sta nella `KEY:`. Raggruppare per nome da' UNA voce per
 l'intero gioco -- misurato mentre si scriveva l'estrattore.
 """
+
 import sys
 from pathlib import Path
 

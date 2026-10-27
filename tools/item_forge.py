@@ -7,6 +7,7 @@ tooling/Item-generator, adattate e rese testabili): prezzi, costo
 crafting, LI minimo, aura, CD. Il LLM interviene SOLO per il flavor
 (nome/descrizione), mai per i numeri — badge "deterministico verificato".
 """
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -33,31 +34,37 @@ BONUS_TYPE_FACTOR = {
 AURA_BY_CL = [(5, "Debole"), (11, "Moderata"), (20, "Forte")]
 
 SCHOOLS_IT = {
-    "abjuration": "Abjurazione", "conjuration": "Evocazione",
-    "divination": "Divinazione", "enchantment": "Ammaliamento",
-    "evocation": "Invocazione", "illusion": "Illusione",
-    "necromancy": "Necromanzia", "transmutation": "Trasmutazione",
+    "abjuration": "Abjurazione",
+    "conjuration": "Evocazione",
+    "divination": "Divinazione",
+    "enchantment": "Ammaliamento",
+    "evocation": "Invocazione",
+    "illusion": "Illusione",
+    "necromancy": "Necromanzia",
+    "transmutation": "Trasmutazione",
     "universal": "Universale",
 }
 
 
-def price_spell_item(spell_level: int, caster_level: int,
-                     uses: str = "1/day") -> int:
+def price_spell_item(spell_level: int, caster_level: int, uses: str = "1/day") -> int:
     """Prezzo di un oggetto che replica un incantesimo.
 
     uses: '1/day' | '3/day' | 'unlimited'. Validazione onesta: LI >= minimo
     RAW (2 x livello incantesimo - 1)."""
     if uses not in SPELL_USE_FACTOR:
-        raise ValueError(f"uses non ammesso: {uses!r} (attesi {sorted(SPELL_USE_FACTOR)})")
+        raise ValueError(
+            f"uses non ammesso: {uses!r} (attesi {sorted(SPELL_USE_FACTOR)})"
+        )
     min_cl = min_caster_level(spell_level)
     if caster_level < min_cl:
-        raise ValueError(f"LI {caster_level} sotto il minimo RAW {min_cl} "
-                         f"per incantesimo di livello {spell_level}")
+        raise ValueError(
+            f"LI {caster_level} sotto il minimo RAW {min_cl} "
+            f"per incantesimo di livello {spell_level}"
+        )
     return spell_level * caster_level * SPELL_USE_FACTOR[uses]
 
 
-def price_charged_item(spell_level: int, caster_level: int,
-                       kind: str = "wand") -> int:
+def price_charged_item(spell_level: int, caster_level: int, kind: str = "wand") -> int:
     """Prezzo bacchetta (wand, 750) o bastone (staff, 400), 50 cariche."""
     factor = {"wand": WAND_FACTOR, "staff": STAFF_FACTOR}.get(kind)
     if factor is None:
@@ -72,8 +79,10 @@ def price_bonus_item(bonus: int, bonus_type: str) -> int:
     """Prezzo bonus fisso +X: bonus^2 x fattore del tipo."""
     factor = BONUS_TYPE_FACTOR.get(bonus_type)
     if factor is None:
-        raise ValueError(f"bonus_type sconosciuto: {bonus_type!r} "
-                         f"(attesi {sorted(BONUS_TYPE_FACTOR)})")
+        raise ValueError(
+            f"bonus_type sconosciuto: {bonus_type!r} "
+            f"(attesi {sorted(BONUS_TYPE_FACTOR)})"
+        )
     if bonus < 1:
         raise ValueError("bonus deve essere >= 1")
     return bonus * bonus * factor
@@ -134,7 +143,14 @@ def _spells_by_name():
     global _SPELLS_CACHE
     if _SPELLS_CACHE is None:
         import json
-        path = Path(__file__).resolve().parents[1] / "data" / "reference" / "ogl" / "spells.json"
+
+        path = (
+            Path(__file__).resolve().parents[1]
+            / "data"
+            / "reference"
+            / "ogl"
+            / "spells.json"
+        )
         with open(path, encoding="utf-8") as f:
             catalog = json.load(f)
         _SPELLS_CACHE = {}
@@ -152,12 +168,15 @@ def spell_lookup(name: str) -> dict:
     if key in table:
         return table[key]
     near = [k for k in table if key in k or k in key][:5]
-    raise KeyError(f"incantesimo non trovato nel catalogo: {name!r}"
-                   + (f" (forse: {', '.join(near)})" if near else ""))
+    raise KeyError(
+        f"incantesimo non trovato nel catalogo: {name!r}"
+        + (f" (forse: {', '.join(near)})" if near else "")
+    )
 
 
-def forge_from_spell(name: str, caster_level: int, uses: str = "1/day",
-                     slot: str = "—") -> dict:
+def forge_from_spell(
+    name: str, caster_level: int, uses: str = "1/day", slot: str = "—"
+) -> dict:
     """Blocco deterministico completo per un oggetto che replica un
     incantesimo del catalogo: prezzo, costo crafting, aura, CD, scuola IT,
     rarita'. I numeri sono tutti derivati da regole (badge 'deterministico
@@ -182,8 +201,12 @@ def forge_from_spell(name: str, caster_level: int, uses: str = "1/day",
         "crafting_cost": crafting_cost(price),
         "aura": aura_for_cl(caster_level),
         "school_it": school_it(school_en),
-        "saving_throw": f"CD {save_dc(spell_level)}" if mech.get("saving_throw") else "—",
-        "spell_resistance": "Sì" if (mech.get("spell_resistance") or "").startswith("y") else "No",
+        "saving_throw": (
+            f"CD {save_dc(spell_level)}" if mech.get("saving_throw") else "—"
+        ),
+        "spell_resistance": (
+            "Sì" if (mech.get("spell_resistance") or "").startswith("y") else "No"
+        ),
         "rarity": rarity_for_price(price),
         "reference": entry["source_id"],
     }

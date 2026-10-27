@@ -4,10 +4,17 @@ Gli incontri E1-E4 (campaigns/valdombra/02-avventura) usano 3 creature SRD:
 se il dataset locale perde una di queste, il prereq campagna deve saltare
 in modo VISIBILE, non ritrovarsi al tavolo senza statblock.
 """
+
 import json
 from pathlib import Path
 
-BUILDS = Path(__file__).resolve().parents[1] / "data" / "reference" / "pi_local_only" / "monsters_local.json"
+BUILDS = (
+    Path(__file__).resolve().parents[1]
+    / "data"
+    / "reference"
+    / "pi_local_only"
+    / "monsters_local.json"
+)
 
 
 def _entries():

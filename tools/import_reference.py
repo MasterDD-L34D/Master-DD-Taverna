@@ -10,6 +10,7 @@ Uso:
   python tools/import_reference.py --domain abilities
   python tools/import_reference.py --domain races --write
 """
+
 import argparse
 import json
 import re
@@ -28,12 +29,25 @@ from tools.sanitize_reference_pi import sanitize_text
 
 # Helper condivisi (costanti OGL, slug/clean, parsing tabelle, prerequisiti):
 # definiti in tools/reference_lib.py e re-esportati qui per compatibilita'.
-from tools.reference_lib import (BASE, LICENSE, OGL_DIR, SOURCE,
-                                 _cell_text, _class_skill_matches,
-                                 _header_index, _parse_level, _to_bonus,
-                                 clean, clean_existing_prerequisites,
-                                 extract_prerequisites, slug, source_id,
-                                 split_prereq_string, table_rows, write_catalog)
+from tools.reference_lib import (
+    BASE,
+    LICENSE,
+    OGL_DIR,
+    SOURCE,
+    _cell_text,
+    _class_skill_matches,
+    _header_index,
+    _parse_level,
+    _to_bonus,
+    clean,
+    clean_existing_prerequisites,
+    extract_prerequisites,
+    slug,
+    source_id,
+    split_prereq_string,
+    table_rows,
+    write_catalog,
+)
 
 
 def parse_abilities(html):
@@ -42,50 +56,95 @@ def parse_abilities(html):
     entries = []
     for table in soup.find_all("table"):
         trs = table.find_all("tr")
-        headers = [clean(c.get_text()) for c in trs[0].find_all(["th", "td"])] if trs else []
+        headers = (
+            [clean(c.get_text()) for c in trs[0].find_all(["th", "td"])] if trs else []
+        )
         if "Score" in headers and "Points" in headers:
             for row in table_rows(table):
                 if row.get("Score", "").isdigit():
                     name = f"Score {row['Score']}"
-                    entries.append({
-                        "name": name,
-                        "source": "PFRPG Core",
-                        "source_id": source_id("pfrpg_core", name),
-                        "prerequisites": [],
-                        "tags": ["ability", "point-buy"],
-                        "references": ["AoN: Generating Ability Scores"],
-                        "reference_urls": [BASE + "Rules.aspx?Name=Generating%20Ability%20Scores&Category=Getting%20Started"],
-                        "description": f"Point-buy: il punteggio di caratteristica {row['Score']} costa {row['Points']} punti.",
-                        "mechanics": {"kind": "ability_cost", "score": int(row["Score"]), "cost": int(row["Points"])},
-                    })
+                    entries.append(
+                        {
+                            "name": name,
+                            "source": "PFRPG Core",
+                            "source_id": source_id("pfrpg_core", name),
+                            "prerequisites": [],
+                            "tags": ["ability", "point-buy"],
+                            "references": ["AoN: Generating Ability Scores"],
+                            "reference_urls": [
+                                BASE
+                                + "Rules.aspx?Name=Generating%20Ability%20Scores&Category=Getting%20Started"
+                            ],
+                            "description": f"Point-buy: il punteggio di caratteristica {row['Score']} costa {row['Points']} punti.",
+                            "mechanics": {
+                                "kind": "ability_cost",
+                                "score": int(row["Score"]),
+                                "cost": int(row["Points"]),
+                            },
+                        }
+                    )
         elif "Campaign Type" in headers:
             for row in table_rows(table):
                 name = row.get("Campaign Type", "")
                 if name and row.get("Points", "").lstrip("-").isdigit():
-                    entries.append({
-                        "name": name,
-                        "source": "PFRPG Core",
-                        "source_id": source_id("pfrpg_core", name),
-                        "prerequisites": [],
-                        "tags": ["ability", "point-buy", "campaign"],
-                        "references": ["AoN: Generating Ability Scores"],
-                        "reference_urls": [BASE + "Rules.aspx?Name=Generating%20Ability%20Scores&Category=Getting%20Started"],
-                        "description": f"Point-buy: la campagna {name} assegna {row['Points']} punti.",
-                        "mechanics": {"kind": "campaign_budget", "points": int(row["Points"])},
-                    })
+                    entries.append(
+                        {
+                            "name": name,
+                            "source": "PFRPG Core",
+                            "source_id": source_id("pfrpg_core", name),
+                            "prerequisites": [],
+                            "tags": ["ability", "point-buy", "campaign"],
+                            "references": ["AoN: Generating Ability Scores"],
+                            "reference_urls": [
+                                BASE
+                                + "Rules.aspx?Name=Generating%20Ability%20Scores&Category=Getting%20Started"
+                            ],
+                            "description": f"Point-buy: la campagna {name} assegna {row['Points']} punti.",
+                            "mechanics": {
+                                "kind": "campaign_budget",
+                                "points": int(row["Points"]),
+                            },
+                        }
+                    )
     return entries
 
 
 RACES_CORE = ["Dwarf", "Elf", "Gnome", "Half-Elf", "Half-Orc", "Halfling", "Human"]
-RACES_EXOTIC = ["Catfolk", "Fetchling", "Goblin", "Grippli", "Kasatha", "Kitsune",
-                "Oread", "Samsaran", "Shabti", "Strix", "Suli", "Sylph", "Tengu",
-                "Tiefling", "Vanara", "Vishkanya", "Wayang"]
+RACES_EXOTIC = [
+    "Catfolk",
+    "Fetchling",
+    "Goblin",
+    "Grippli",
+    "Kasatha",
+    "Kitsune",
+    "Oread",
+    "Samsaran",
+    "Shabti",
+    "Strix",
+    "Suli",
+    "Sylph",
+    "Tengu",
+    "Tiefling",
+    "Vanara",
+    "Vishkanya",
+    "Wayang",
+]
 RACES_ALL = RACES_CORE + RACES_EXOTIC
-ABILITY_KEYS = {"strength": "str", "dexterity": "dex", "constitution": "con",
-                "intelligence": "int", "wisdom": "wis", "charisma": "cha",
-                # abbreviazioni AoN (Munavri, Rougarou: '+2 Str, +4 Dex, ...')
-                "str": "str", "dex": "dex", "con": "con",
-                "int": "int", "wis": "wis", "cha": "cha"}
+ABILITY_KEYS = {
+    "strength": "str",
+    "dexterity": "dex",
+    "constitution": "con",
+    "intelligence": "int",
+    "wisdom": "wis",
+    "charisma": "cha",
+    # abbreviazioni AoN (Munavri, Rougarou: '+2 Str, +4 Dex, ...')
+    "str": "str",
+    "dex": "dex",
+    "con": "con",
+    "int": "int",
+    "wis": "wis",
+    "cha": "cha",
+}
 
 
 def _parse_ability_mods(text):
@@ -146,7 +205,7 @@ def _bold_detail(bold, label):
         return clean(text.lstrip(" :"))
     parent_text = clean(bold.parent.get_text()) if bold.parent else label
     if parent_text.startswith(label):
-        return clean(parent_text[len(label):].lstrip(" :"))
+        return clean(parent_text[len(label) :].lstrip(" :"))
     return ""
 
 
@@ -173,14 +232,25 @@ def _iter_section(soup, h1_pred):
     l'h1 (markup malformato), la sezione Subraces e' a SIBLING. Si iterano
     prima i descendants dell'h1 poi i siblings fino alla prossima h1.title."""
     from bs4 import NavigableString, Tag
-    h1 = next((h for h in soup.find_all("h1", class_="title")
-               if h1_pred(clean(h.get_text()))), None)
+
+    h1 = next(
+        (
+            h
+            for h in soup.find_all("h1", class_="title")
+            if h1_pred(clean(h.get_text()))
+        ),
+        None,
+    )
     if h1 is None:
         return
     for el in h1.descendants:
         yield el
     for sib in h1.next_siblings:
-        if isinstance(sib, Tag) and sib.name == "h1" and "title" in (sib.get("class") or []):
+        if (
+            isinstance(sib, Tag)
+            and sib.name == "h1"
+            and "title" in (sib.get("class") or [])
+        ):
             break
         if isinstance(sib, Tag):
             for el in sib.descendants:
@@ -199,20 +269,33 @@ def _section_text_nodes(el):
     la prosa e' figlia diretta dell'h1; il titolo dell'h1 stesso non inquina
     perche' l'accumulo parte solo dopo il primo nome (subrace/trait)."""
     from bs4 import NavigableString
+
     return isinstance(el, NavigableString) and el.parent.name not in (
-        "b", "i", "a", "h2", "h3", "sup", "script", "style")
+        "b",
+        "i",
+        "a",
+        "h2",
+        "h3",
+        "sup",
+        "script",
+        "style",
+    )
 
 
 _SUBRACE_ATTR_RE = re.compile(
-    r"(?:have|has) the ([^.]+?) alternate racial traits?\b", re.I)
+    r"(?:have|has) the ([^.]+?) alternate racial traits?\b", re.I
+)
 
 # Pattern estesi C1 (2026-07-25) per la prosa non regolare delle subrazze.
 # Applicati SOLO con cross-check contro mechanics.alternate_traits della razza
 # (zero invenzioni: un nome che non esiste nel catalogo tratti viene scartato).
 _SUBRACE_ATTR_RES_EXT = [
     re.compile(r"(?:have|has) the ([^.]+?) racial traits?\b", re.I),
-    re.compile(r"(?:well represented by|well suited to take|suited to take|"
-               r"can take|to take) the ([^.]+?) alternate racial traits?\b", re.I),
+    re.compile(
+        r"(?:well represented by|well suited to take|suited to take|"
+        r"can take|to take) the ([^.]+?) alternate racial traits?\b",
+        re.I,
+    ),
     re.compile(r"as well as the ([^.]+?) alternate racial traits?\b", re.I),
     re.compile(r"often ([a-z][a-z ]+?) as well\b", re.I),
 ]
@@ -278,9 +361,14 @@ def parse_race_subraces(html):
         if current:
             desc = clean(" ".join(p for p in parts if p)).lstrip(",; ")
             m = _SUBRACE_ATTR_RE.search(desc)
-            subs.append({"name": current, "source": source,
-                         "description": desc,
-                         "alternate_traits": _split_trait_names(m.group(1)) if m else []})
+            subs.append(
+                {
+                    "name": current,
+                    "source": source,
+                    "description": desc,
+                    "alternate_traits": _split_trait_names(m.group(1)) if m else [],
+                }
+            )
 
     for el in _iter_section(soup, lambda t: t.strip().lower() == "subraces"):
         name_attr = getattr(el, "name", None)
@@ -312,9 +400,14 @@ def parse_race_alternate_traits(html):
 
     def flush():
         if current:
-            traits.append({"name": current, "replaces": list(replaces),
-                           "source": source,
-                           "description": clean(" ".join(p for p in parts if p)).lstrip(",; ")})
+            traits.append(
+                {
+                    "name": current,
+                    "replaces": list(replaces),
+                    "source": source,
+                    "description": clean(" ".join(p for p in parts if p)).lstrip(",; "),
+                }
+            )
 
     for el in _iter_section(soup, lambda t: "alternate racial trait" in t.lower()[:80]):
         name_attr = getattr(el, "name", None)
@@ -376,8 +469,13 @@ def parse_race_favored_class_options(html):
     def flush():
         if current:
             bonus = clean(" ".join(p for p in parts if p)).lstrip("(:;,) ").rstrip(".")
-            options.append({"class": current, "source": source,
-                            "bonus": bonus + "." if bonus else ""})
+            options.append(
+                {
+                    "class": current,
+                    "source": source,
+                    "bonus": bonus + "." if bonus else "",
+                }
+            )
 
     for el in _iter_section(soup, lambda t: "favored class options" in t.lower()[:80]):
         name_attr = getattr(el, "name", None)
@@ -405,11 +503,16 @@ def parse_race(html, race_name):
 
     Favored Class Options NON parse (scope: subrazze + alternate traits)."""
     soup = BeautifulSoup(html, "html.parser")
-    mech = {"ability_mods": {}, "size": None, "speed": None, "traits": [],
-            "languages": {"auto": [], "bonus": []},
-            "subraces": parse_race_subraces(html),
-            "alternate_traits": parse_race_alternate_traits(html),
-            "favored_class_options": parse_race_favored_class_options(html)}
+    mech = {
+        "ability_mods": {},
+        "size": None,
+        "speed": None,
+        "traits": [],
+        "languages": {"auto": [], "bonus": []},
+        "subraces": parse_race_subraces(html),
+        "alternate_traits": parse_race_alternate_traits(html),
+        "favored_class_options": parse_race_favored_class_options(html),
+    }
     for bold in _racial_traits_bolds(soup):
         # I label bold reali possono chiudere con i due punti ("Darkvision:").
         # Il mojibake U+FFFD e' l'en-dash corrotto (cache cp1252): normalizzato
@@ -424,7 +527,12 @@ def parse_race(html, race_name):
                 mech["ability_mods"] = mods
         elif label in ("Tiny", "Small", "Medium", "Large", "Huge"):
             mech["size"] = label
-        elif label in ("Slow and Steady", "Slow Speed", "Slow", "Speed") or label.startswith("Normal Speed"):
+        elif label in (
+            "Slow and Steady",
+            "Slow Speed",
+            "Slow",
+            "Speed",
+        ) or label.startswith("Normal Speed"):
             m = re.search(r"(\d+)\s+feet", detail)
             if m:
                 mech["speed"] = int(m.group(1))
@@ -436,7 +544,9 @@ def parse_race(html, race_name):
             # Forme reali: 'choose from ...' (core) e 'choose any of ...' (Strix).
             bonus = re.search(r"choose (?:from|any of)\s+([^.]+)", detail)
             if bonus:
-                bonus_text = re.sub(r"^the following( languages)?:\s*", "", clean(bonus.group(1)))
+                bonus_text = re.sub(
+                    r"^the following( languages)?:\s*", "", clean(bonus.group(1))
+                )
                 mech["languages"]["bonus"] = _split_languages(bonus_text)
         elif label and label[0].isupper() and detail:
             mech["traits"].append({"name": label, "text": detail})
@@ -447,12 +557,19 @@ def parse_race(html, race_name):
         "source": "PFRPG Core",
         "source_id": source_id("pfrpg_core", race_name),
         "prerequisites": [],
-        "tags": ["race", "core" if race_name in RACES_CORE else "exotic",
-                 mech["size"].lower() if mech["size"] else "race"],
+        "tags": [
+            "race",
+            "core" if race_name in RACES_CORE else "exotic",
+            mech["size"].lower() if mech["size"] else "race",
+        ],
         "references": [f"AoN: {race_name} (Races)"],
-        "reference_urls": [BASE + f"RacesDisplay.aspx?ItemName={race_name.replace(' ', '%20')}"],
-        "description": (f"{race_name}: modificatori {mech['ability_mods']}, taglia {mech['size']}, "
-                        f"velocita' {mech['speed']} ft. Tratti razziali: {traits_desc}."),
+        "reference_urls": [
+            BASE + f"RacesDisplay.aspx?ItemName={race_name.replace(' ', '%20')}"
+        ],
+        "description": (
+            f"{race_name}: modificatori {mech['ability_mods']}, taglia {mech['size']}, "
+            f"velocita' {mech['speed']} ft. Tratti razziali: {traits_desc}."
+        ),
         "mechanics": mech,
     }
 
@@ -485,8 +602,9 @@ def _pi_split_race_sections(entry, local_out):
     for key, kind in (("subraces", "subrace"), ("alternate_traits", "alternate_trait")):
         kept = []
         for item in mech.get(key, []):
-            item["description"] = sanitize_text(item.get("description") or "",
-                                                description=True)
+            item["description"] = sanitize_text(
+                item.get("description") or "", description=True
+            )
             if is_pi_name(item["name"]):
                 local_out.append({"race": entry["name"], "kind": kind, **item})
             else:
@@ -522,7 +640,9 @@ def build_races(write=False):
         for key in ("auto", "bonus"):
             dropped = [lang for lang in langs[key] if lang in RACE_LANGUAGES_PI]
             if dropped:
-                langs[key] = [lang for lang in langs[key] if lang not in RACE_LANGUAGES_PI]
+                langs[key] = [
+                    lang for lang in langs[key] if lang not in RACE_LANGUAGES_PI
+                ]
                 print(f"nota: {race}: filtrate lingue PI: {', '.join(dropped)}")
         _pi_split_race_sections(parsed, local_subraces)
         if race in by_name:
@@ -530,82 +650,136 @@ def build_races(write=False):
         else:
             catalog["entries"].append(parsed)
     if anomalies:
-        print(f"ATTENZIONE: ability_mods mancanti per {len(anomalies)} razze: "
-              f"{', '.join(anomalies)}")
+        print(
+            f"ATTENZIONE: ability_mods mancanti per {len(anomalies)} razze: "
+            f"{', '.join(anomalies)}"
+        )
     if write:
-        write_catalog(path, catalog["entries"],
-                      license_text=catalog.get("_license", LICENSE), source_text=source_text)
+        write_catalog(
+            path,
+            catalog["entries"],
+            license_text=catalog.get("_license", LICENSE),
+            source_text=source_text,
+        )
         local_path = path.parent.parent / "pi_local_only" / "subraces_local.json"
-        local_path.write_text(json.dumps({
-            "_license": "OGL-1.0a",
-            "_source": "Archives of Nethys (local only, not redistributed)",
-            "entries": local_subraces,
-        }, ensure_ascii=False, indent=2), encoding="utf-8")
+        local_path.write_text(
+            json.dumps(
+                {
+                    "_license": "OGL-1.0a",
+                    "_source": "Archives of Nethys (local only, not redistributed)",
+                    "entries": local_subraces,
+                },
+                ensure_ascii=False,
+                indent=2,
+            ),
+            encoding="utf-8",
+        )
         print(f"scritto {local_path} ({len(local_subraces)} entry, NON committare)")
     else:
-        print(f"report: {len(catalog['entries'])} entry, "
-              f"{len(local_subraces)} subraces/trait PI in local (write=False)")
+        print(
+            f"report: {len(catalog['entries'])} entry, "
+            f"{len(local_subraces)} subraces/trait PI in local (write=False)"
+        )
 
 
-CLASSES_CORE = ["Barbarian", "Bard", "Cleric", "Druid", "Fighter", "Monk",
-                "Paladin", "Ranger", "Rogue", "Sorcerer", "Wizard", "Magus"]
+CLASSES_CORE = [
+    "Barbarian",
+    "Bard",
+    "Cleric",
+    "Druid",
+    "Fighter",
+    "Monk",
+    "Paladin",
+    "Ranger",
+    "Rogue",
+    "Sorcerer",
+    "Wizard",
+    "Magus",
+]
 
 # Le 12 classi non-core importate da aonprd (piano
 # planning/2026-07-19-missing-classes-import.md) + le 11 del lotto C4
 # (2026-07-25: Oracle, Summoner, Shaman, Skald, Swashbuckler, Warpriest,
 # Shifter e le 4 occult restanti) + le 5 residue del lotto C4-bis
 # (2026-07-26: Slayer, Ninja, Samurai, Antipaladin, Vigilante).
-CLASSES_MISSING = ["Alchemist", "Arcanist", "Bloodrager", "Brawler", "Cavalier",
-                   "Gunslinger", "Hunter", "Inquisitor", "Investigator",
-                   "Kineticist", "Medium", "Witch",
-                   "Oracle", "Summoner", "Shaman", "Skald", "Swashbuckler",
-                   "Warpriest", "Shifter", "Mesmerist", "Occultist", "Psychic",
-                   "Spiritualist",
-                   "Slayer", "Ninja", "Samurai", "Antipaladin", "Vigilante"]
+CLASSES_MISSING = [
+    "Alchemist",
+    "Arcanist",
+    "Bloodrager",
+    "Brawler",
+    "Cavalier",
+    "Gunslinger",
+    "Hunter",
+    "Inquisitor",
+    "Investigator",
+    "Kineticist",
+    "Medium",
+    "Witch",
+    "Oracle",
+    "Summoner",
+    "Shaman",
+    "Skald",
+    "Swashbuckler",
+    "Warpriest",
+    "Shifter",
+    "Mesmerist",
+    "Occultist",
+    "Psychic",
+    "Spiritualist",
+    "Slayer",
+    "Ninja",
+    "Samurai",
+    "Antipaladin",
+    "Vigilante",
+]
 
 # Fonte onesta per classe (default "PFRPG Core" per le non mappate). Lo slug di
 # source_id resta "pfrpg_core" per TUTTE le classi (decisione controller:
 # nessun consumer dipende dal libro fonte e l'unicita' e' gia' garantita).
-CLASS_SOURCES = {"Alchemist": "Advanced Player's Guide",
-                 "Cavalier": "Advanced Player's Guide",
-                 "Inquisitor": "Advanced Player's Guide",
-                 "Witch": "Advanced Player's Guide",
-                 "Gunslinger": "Ultimate Combat",
-                 "Arcanist": "Advanced Class Guide",
-                 "Bloodrager": "Advanced Class Guide",
-                 "Brawler": "Advanced Class Guide",
-                 "Hunter": "Advanced Class Guide",
-                 "Investigator": "Advanced Class Guide",
-                 "Kineticist": "Occult Adventures",
-                 "Medium": "Occult Adventures",
-                 "Magus": "Ultimate Magic",
-                 "Oracle": "Advanced Player's Guide",
-                 "Summoner": "Advanced Player's Guide",
-                 "Shaman": "Advanced Class Guide",
-                 "Skald": "Advanced Class Guide",
-                 "Swashbuckler": "Advanced Class Guide",
-                 "Warpriest": "Advanced Class Guide",
-                 "Shifter": "Ultimate Wilderness",
-                 "Mesmerist": "Occult Adventures",
-                 "Occultist": "Occult Adventures",
-                 "Psychic": "Occult Adventures",
-                 "Spiritualist": "Occult Adventures",
-                 "Slayer": "Advanced Class Guide",
-                 "Ninja": "Ultimate Combat",
-                 "Samurai": "Ultimate Combat",
-                 "Antipaladin": "Advanced Player's Guide",
-                 "Vigilante": "Ultimate Intrigue"}
+CLASS_SOURCES = {
+    "Alchemist": "Advanced Player's Guide",
+    "Cavalier": "Advanced Player's Guide",
+    "Inquisitor": "Advanced Player's Guide",
+    "Witch": "Advanced Player's Guide",
+    "Gunslinger": "Ultimate Combat",
+    "Arcanist": "Advanced Class Guide",
+    "Bloodrager": "Advanced Class Guide",
+    "Brawler": "Advanced Class Guide",
+    "Hunter": "Advanced Class Guide",
+    "Investigator": "Advanced Class Guide",
+    "Kineticist": "Occult Adventures",
+    "Medium": "Occult Adventures",
+    "Magus": "Ultimate Magic",
+    "Oracle": "Advanced Player's Guide",
+    "Summoner": "Advanced Player's Guide",
+    "Shaman": "Advanced Class Guide",
+    "Skald": "Advanced Class Guide",
+    "Swashbuckler": "Advanced Class Guide",
+    "Warpriest": "Advanced Class Guide",
+    "Shifter": "Ultimate Wilderness",
+    "Mesmerist": "Occult Adventures",
+    "Occultist": "Occult Adventures",
+    "Psychic": "Occult Adventures",
+    "Spiritualist": "Occult Adventures",
+    "Slayer": "Advanced Class Guide",
+    "Ninja": "Ultimate Combat",
+    "Samurai": "Ultimate Combat",
+    "Antipaladin": "Advanced Player's Guide",
+    "Vigilante": "Ultimate Intrigue",
+}
 
 # Tag di classe per libro fonte: core (CRB), base (APG/UC/UM/UI), hybrid (ACG),
 # occult (OA). KeyError voluto (fail-fast) se una fonte non e' mappata.
-CLASS_SOURCE_TAGS = {"PFRPG Core": "core",
-                     "Advanced Player's Guide": "base",
-                     "Ultimate Combat": "base",
-                     "Ultimate Magic": "base",
-                     "Advanced Class Guide": "hybrid",
-                     "Occult Adventures": "occult",
-                     "Ultimate Wilderness": "base",
-                     "Ultimate Intrigue": "base"}
+CLASS_SOURCE_TAGS = {
+    "PFRPG Core": "core",
+    "Advanced Player's Guide": "base",
+    "Ultimate Combat": "base",
+    "Ultimate Magic": "base",
+    "Advanced Class Guide": "hybrid",
+    "Occult Adventures": "occult",
+    "Ultimate Wilderness": "base",
+    "Ultimate Intrigue": "base",
+}
 
 
 def parse_spells_known(soup):
@@ -630,8 +804,11 @@ def parse_spells_known(soup):
             lvl = _parse_level(row.get("Level", ""))
             if not lvl:
                 continue
-            circles = {k: v for k, v in row.items()
-                       if k != "Level" and v and v not in ("-", "—")}
+            circles = {
+                k: v
+                for k, v in row.items()
+                if k != "Level" and v and v not in ("-", "—")
+            }
             if circles:
                 known[lvl] = circles
         return known
@@ -648,14 +825,25 @@ def parse_class_features(soup):
     levels da match sullo Special della progressione (C2, 2026-07-25); []
     se nessun match (proficiency, feature fuori tabella)."""
     from bs4 import NavigableString, Tag
+
     feats = []
-    h2 = next((h for h in soup.find_all("h2", class_="title")
-               if "class features" in clean(h.get_text()).lower()), None)
+    h2 = next(
+        (
+            h
+            for h in soup.find_all("h2", class_="title")
+            if "class features" in clean(h.get_text()).lower()
+        ),
+        None,
+    )
     if h2 is None:
         return feats
     seq = []
     for el in h2.next_siblings:
-        if isinstance(el, Tag) and el.name == "h2" and "title" in (el.get("class") or []):
+        if (
+            isinstance(el, Tag)
+            and el.name == "h2"
+            and "title" in (el.get("class") or [])
+        ):
             break
         if isinstance(el, Tag) and el.name in ("p", "div"):
             seq.extend(el.children)
@@ -666,9 +854,12 @@ def parse_class_features(soup):
         # Niente controllo tabella: la pagina e' dentro una layout-table, ma
         # i bold dell'header di progressione restano annidati nella tabella e
         # non compaiono mai come sibling top-level in seq.
-        return (isinstance(el, Tag) and el.name == "b"
-                and isinstance(el.next_sibling, NavigableString)
-                and str(el.next_sibling).lstrip().startswith(":"))
+        return (
+            isinstance(el, Tag)
+            and el.name == "b"
+            and isinstance(el.next_sibling, NavigableString)
+            and str(el.next_sibling).lstrip().startswith(":")
+        )
 
     current = None
     for el in seq:
@@ -677,8 +868,11 @@ def parse_class_features(soup):
                 feats.append(current)
             name_raw = clean(el.get_text())
             m = re.match(r"^(.*?)(?:\s*\((Ex|Su|Sp)\))?$", name_raw)
-            current = {"name": m.group(1).strip(), "kind": m.group(2),
-                       "text_parts": [str(el.next_sibling)]}
+            current = {
+                "name": m.group(1).strip(),
+                "kind": m.group(2),
+                "text_parts": [str(el.next_sibling)],
+            }
         elif current is not None:
             if isinstance(el, Tag):
                 current["text_parts"].append(el.get_text(" "))
@@ -690,8 +884,9 @@ def parse_class_features(soup):
     for f in feats:
         text = clean(" ".join(f.pop("text_parts"))).lstrip(":").strip()
         if f["name"] and text:
-            out.append({"name": f["name"], "kind": f["kind"],
-                        "levels": [], "text": text})
+            out.append(
+                {"name": f["name"], "kind": f["kind"], "levels": [], "text": text}
+            )
     return out
 
 
@@ -729,16 +924,26 @@ def parse_class(html, class_name):
     NON incantesimi RAW (decisione controller, vedi piano
     planning/2026-07-19-missing-classes-import.md)."""
     soup = BeautifulSoup(html, "html.parser")
-    mech = {"hd": None, "starting_wealth": None, "class_skills": [],
-            "skill_points_per_level": None, "proficiencies": None, "progression": []}
+    mech = {
+        "hd": None,
+        "starting_wealth": None,
+        "class_skills": [],
+        "skill_points_per_level": None,
+        "proficiencies": None,
+        "progression": [],
+    }
     text = clean(soup.get_text(" ")).replace("×", "x")
     hd = re.search(r"Hit Die\D{0,3}(d\d+)", text)
     if hd:
         mech["hd"] = hd.group(1)
-    wealth = re.search(r"Starting Wealth\D{0,3}([\ddx ]+ gp(?:\s*\(average [\d,]+ gp\.?\))?)", text)
+    wealth = re.search(
+        r"Starting Wealth\D{0,3}([\ddx ]+ gp(?:\s*\(average [\d,]+ gp\.?\))?)", text
+    )
     if wealth:
         mech["starting_wealth"] = wealth.group(1).strip()
-    sp = re.search(r"Skill (?:Points|Ranks) (?:per|at Each) (?:Level|lvl)\D{0,3}(\d+)", text, re.I)
+    sp = re.search(
+        r"Skill (?:Points|Ranks) (?:per|at Each) (?:Level|lvl)\D{0,3}(\d+)", text, re.I
+    )
     if sp:
         mech["skill_points_per_level"] = int(sp.group(1))
     skills_match = re.search(r"class skills (?:are|of [^:]+:)\s*([^.]+)\.", text, re.I)
@@ -771,7 +976,9 @@ def parse_class(html, class_name):
     prof_label = re.search(r"Weapon and Armor Proficien\w+\s*:?\s*", text, re.I)
     if prof_label:
         kept = []
-        for s in re.findall(r"[^.]+\.", text[prof_label.end():prof_label.end() + 1000]):
+        for s in re.findall(
+            r"[^.]+\.", text[prof_label.end() : prof_label.end() + 1000]
+        ):
             s = s.strip()
             if "proficien" in s.lower():
                 # Residuo di parentetica aperta nella frase precedente e
@@ -779,7 +986,7 @@ def parse_class(html, class_name):
                 # proficient...'): scarta il prefisso fino a ')'.
                 close = s.find(")")
                 if close != -1 and "(" not in s[:close]:
-                    s = s[close + 1:].strip()
+                    s = s[close + 1 :].strip()
                 kept.append(s)
             elif s.startswith("("):
                 continue
@@ -798,25 +1005,42 @@ def parse_class(html, class_name):
             break
     if table:
         trs = table.find_all("tr", recursive=False)
-        for tr in trs[header_idx + 1:]:
-            cells = [clean(c.get_text()) for c in tr.find_all(["th", "td"], recursive=False)]
+        for tr in trs[header_idx + 1 :]:
+            cells = [
+                clean(c.get_text()) for c in tr.find_all(["th", "td"], recursive=False)
+            ]
             if len(cells) != len(headers) or not any(cells):
                 continue
             row = dict(zip(headers, cells))
             lvl = _parse_level(row.get("Level", ""))
             if not lvl:
                 continue
-            entry = {"level": lvl,
-                     "bab": _to_bonus(row.get("Base Attack Bonus", "")),
-                     "fort": _to_bonus(row.get("Fort Save", "")),
-                     "ref": _to_bonus(row.get("Ref Save", "")),
-                     "will": _to_bonus(row.get("Will Save", "")),
-                     "special": [clean(s) for s in row.get("Special", "").split(",") if clean(s)]}
+            entry = {
+                "level": lvl,
+                "bab": _to_bonus(row.get("Base Attack Bonus", "")),
+                "fort": _to_bonus(row.get("Fort Save", "")),
+                "ref": _to_bonus(row.get("Ref Save", "")),
+                "will": _to_bonus(row.get("Will Save", "")),
+                "special": [
+                    clean(s) for s in row.get("Special", "").split(",") if clean(s)
+                ],
+            }
             spells = {}
             extra = {}
             for k, v in row.items():
-                if k in ("Level", "Base Attack Bonus", "Fort Save", "Ref Save",
-                         "Will Save", "Special") or not v or v in ("-", "—"):
+                if (
+                    k
+                    in (
+                        "Level",
+                        "Base Attack Bonus",
+                        "Fort Save",
+                        "Ref Save",
+                        "Will Save",
+                        "Special",
+                    )
+                    or not v
+                    or v in ("-", "—")
+                ):
                     continue
                 # spells_per_day solo per colonne-cerchio (0-9); le altre
                 # colonne di classe (Monk: Unarmed Damage, AC Bonus...) vanno
@@ -836,9 +1060,11 @@ def parse_class(html, class_name):
             entry["spells_known"] = known[entry["level"]]
     mech["features"] = parse_class_features(soup)
     _attach_feature_levels(mech)
-    desc = (f"{class_name}: HD {mech['hd']}, skill points {mech['skill_points_per_level']}+Int. "
-            f"Class skills: {', '.join(mech['class_skills'][:8])}. "
-            f"Progressione su {len(mech['progression'])} livelli.")
+    desc = (
+        f"{class_name}: HD {mech['hd']}, skill points {mech['skill_points_per_level']}+Int. "
+        f"Class skills: {', '.join(mech['class_skills'][:8])}. "
+        f"Progressione su {len(mech['progression'])} livelli."
+    )
     source = CLASS_SOURCES.get(class_name, "PFRPG Core")
     return {
         "name": class_name,
@@ -863,7 +1089,9 @@ def build_classes(write=False):
     # Fail-fast sulle fonti (come CLASS_SOURCE_TAGS[source] in parse_class):
     # ogni classe non-core deve avere la fonte onesta mappata.
     senza_fonte = [c for c in CLASSES_MISSING if c not in CLASS_SOURCES]
-    assert not senza_fonte, f"classi senza fonte in CLASS_SOURCES: {', '.join(senza_fonte)}"
+    assert (
+        not senza_fonte
+    ), f"classi senza fonte in CLASS_SOURCES: {', '.join(senza_fonte)}"
     path = OGL_DIR / "classes.json"
     with open(path, encoding="utf-8") as f:
         catalog = json.load(f)
@@ -874,22 +1102,32 @@ def build_classes(write=False):
     for cls in CLASSES_CORE + CLASSES_MISSING:
         url = BASE + f"ClassDisplay.aspx?ItemName={cls}"
         parsed = parse_class(fetch(url), cls)
-        assert len(parsed["mechanics"]["progression"]) == 20, (
-            f"{cls}: attesi 20 livelli, trovati {len(parsed['mechanics']['progression'])}")
+        assert (
+            len(parsed["mechanics"]["progression"]) == 20
+        ), f"{cls}: attesi 20 livelli, trovati {len(parsed['mechanics']['progression'])}"
         assert parsed["mechanics"]["hd"], f"{cls}: HD non parsato"
         if cls in by_name:
             by_name[cls].update(parsed)
         else:
             catalog["entries"].append(parsed)
     if write:
-        write_catalog(path, catalog["entries"],
-                      license_text=catalog.get("_license", LICENSE), source_text=source_text)
+        write_catalog(
+            path,
+            catalog["entries"],
+            license_text=catalog.get("_license", LICENSE),
+            source_text=source_text,
+        )
     else:
-        print(f"report: {len(catalog['entries'])} entry (write=False, nessuna scrittura)")
+        print(
+            f"report: {len(catalog['entries'])} entry (write=False, nessuna scrittura)"
+        )
 
 
 def build_abilities(write=False):
-    url = BASE + "Rules.aspx?Name=Generating%20Ability%20Scores&Category=Getting%20Started"
+    url = (
+        BASE
+        + "Rules.aspx?Name=Generating%20Ability%20Scores&Category=Getting%20Started"
+    )
     entries = parse_abilities(fetch(url))
     assert len(entries) >= 16, f"abilities: attese >=16 entry, trovate {len(entries)}"
     if write:
@@ -898,14 +1136,43 @@ def build_abilities(write=False):
         print(f"report: {len(entries)} entry (write=False, nessuna scrittura)")
 
 
-SKILL_NAMES = ["Acrobatics", "Appraise", "Bluff", "Climb", "Craft", "Diplomacy",
-               "Disable Device", "Disguise", "Escape Artist", "Fly", "Handle Animal",
-               "Heal", "Intimidate", "Knowledge (Arcana)", "Knowledge (Dungeoneering)",
-               "Knowledge (Engineering)", "Knowledge (Geography)", "Knowledge (History)",
-               "Knowledge (Local)", "Knowledge (Nature)", "Knowledge (Nobility)",
-               "Knowledge (Planes)", "Knowledge (Religion)", "Linguistics", "Perception",
-               "Perform", "Profession", "Ride", "Sense Motive", "Sleight of Hand",
-               "Spellcraft", "Stealth", "Survival", "Swim", "Use Magic Device"]
+SKILL_NAMES = [
+    "Acrobatics",
+    "Appraise",
+    "Bluff",
+    "Climb",
+    "Craft",
+    "Diplomacy",
+    "Disable Device",
+    "Disguise",
+    "Escape Artist",
+    "Fly",
+    "Handle Animal",
+    "Heal",
+    "Intimidate",
+    "Knowledge (Arcana)",
+    "Knowledge (Dungeoneering)",
+    "Knowledge (Engineering)",
+    "Knowledge (Geography)",
+    "Knowledge (History)",
+    "Knowledge (Local)",
+    "Knowledge (Nature)",
+    "Knowledge (Nobility)",
+    "Knowledge (Planes)",
+    "Knowledge (Religion)",
+    "Linguistics",
+    "Perception",
+    "Perform",
+    "Profession",
+    "Ride",
+    "Sense Motive",
+    "Sleight of Hand",
+    "Spellcraft",
+    "Stealth",
+    "Survival",
+    "Swim",
+    "Use Magic Device",
+]
 
 
 def SKILL_HEADER_RE(header):
@@ -915,7 +1182,11 @@ def SKILL_HEADER_RE(header):
         return header, None, False, False
     name = clean(m.group(1))
     parts = [clean(p) for p in m.group(2).split(";")]
-    key = parts[0].lower()[:3] if parts and re.match(r"^(Str|Dex|Con|Int|Wis|Cha)$", parts[0]) else None
+    key = (
+        parts[0].lower()[:3]
+        if parts and re.match(r"^(Str|Dex|Con|Int|Wis|Cha)$", parts[0])
+        else None
+    )
     trained = any("Trained Only" in p for p in parts[1:])
     acp = any("Armor Check Penalty" in p for p in parts[1:])
     return name, key, trained, acp
@@ -935,7 +1206,10 @@ def parse_skill(html, skill_name):
         candidate = clean(tag.get_text())
         # Nome esatto (case-insensitive): evita match substring ("craft" in
         # "spellcraft") e l'h2 di navigazione con l'elenco di tutte le skill.
-        if SKILL_HEADER_RE(candidate)[1] and SKILL_HEADER_RE(candidate)[0].lower() == skill_name.lower():
+        if (
+            SKILL_HEADER_RE(candidate)[1]
+            and SKILL_HEADER_RE(candidate)[0].lower() == skill_name.lower()
+        ):
             header = candidate
             break
     header = header or skill_name
@@ -946,13 +1220,21 @@ def parse_skill(html, skill_name):
         "source": "PFRPG Core",
         "source_id": source_id("pfrpg_core", name),
         "prerequisites": [],
-        "tags": ["skill", key] + (["trained-only"] if trained else []) + (["acp"] if acp else []),
+        "tags": ["skill", key]
+        + (["trained-only"] if trained else [])
+        + (["acp"] if acp else []),
         "references": [f"AoN: {name} (Skills)"],
         "reference_urls": [BASE + f"Skills.aspx?ItemName={name.replace(' ', '%20')}"],
-        "description": (f"{name} ({key.upper()}): skill{' trained only' if trained else ''}"
-                        f"{' con armor check penalty' if acp else ''}."),
-        "mechanics": {"key_ability": key, "trained_only": trained,
-                      "armor_check_penalty": acp, "class_skills_of": []},
+        "description": (
+            f"{name} ({key.upper()}): skill{' trained only' if trained else ''}"
+            f"{' con armor check penalty' if acp else ''}."
+        ),
+        "mechanics": {
+            "key_ability": key,
+            "trained_only": trained,
+            "armor_check_penalty": acp,
+            "class_skills_of": [],
+        },
     }
 
 
@@ -977,23 +1259,29 @@ def build_skills(write=False):
             knowledge_html = fetch(BASE + "Skills.aspx?ItemName=Knowledge")
         entry = parse_skill(knowledge_html, "Knowledge")
         mech = entry["mechanics"]
-        print(f"nota: {skill}: pagina specifica assente su AoN, meccaniche da 'Knowledge' generica")
+        print(
+            f"nota: {skill}: pagina specifica assente su AoN, meccaniche da 'Knowledge' generica"
+        )
         entry["name"] = skill
         entry["source_id"] = source_id("pfrpg_core", skill)
         entry["references"] = ["AoN: Knowledge (Skills)"]
         entry["reference_urls"] = [BASE + "Skills.aspx?ItemName=Knowledge"]
-        entry["description"] = (f"{skill} ({mech['key_ability'].upper()}): skill"
-                                f"{' trained only' if mech['trained_only'] else ''}"
-                                f"{' con armor check penalty' if mech['armor_check_penalty'] else ''}"
-                                f" (campo di Knowledge).")
+        entry["description"] = (
+            f"{skill} ({mech['key_ability'].upper()}): skill"
+            f"{' trained only' if mech['trained_only'] else ''}"
+            f"{' con armor check penalty' if mech['armor_check_penalty'] else ''}"
+            f" (campo di Knowledge)."
+        )
         entries.append(entry)
     classes_path = OGL_DIR / "classes.json"
     with open(classes_path, encoding="utf-8") as f:
         classes = json.load(f)["entries"]
     for entry in entries:
         for cls in classes:
-            if any(_class_skill_matches(entry["name"], cs)
-                   for cs in cls.get("mechanics", {}).get("class_skills", [])):
+            if any(
+                _class_skill_matches(entry["name"], cs)
+                for cs in cls.get("mechanics", {}).get("class_skills", [])
+            ):
                 entry["mechanics"]["class_skills_of"].append(cls["name"])
     if write:
         write_catalog(OGL_DIR / "skills.json", entries)
@@ -1043,7 +1331,9 @@ def parse_equipment_table(html, kind, group):
         if not trs:
             continue
         headers = [_cell_text(c) for c in trs[0].find_all(["th", "td"])]
-        name_idx = next((headers.index(k) for k in ("Name", "Item") if k in headers), None)
+        name_idx = next(
+            (headers.index(k) for k in ("Name", "Item") if k in headers), None
+        )
         if name_idx is None:
             continue
         for tr in trs[1:]:
@@ -1055,7 +1345,10 @@ def parse_equipment_table(html, kind, group):
             name = row.pop("Name", "") or row.pop("Item", "")
             if not name:
                 continue
-            mech = {_mech_key(k): (None if v in ("-", "", "—") else v) for k, v in row.items()}
+            mech = {
+                _mech_key(k): (None if v in ("-", "", "—") else v)
+                for k, v in row.items()
+            }
             desc_parts = [f"{name} ({kind}, {group})"]
             if mech.get("cost"):
                 desc_parts.append(f"costo {mech['cost']}")
@@ -1069,17 +1362,19 @@ def parse_equipment_table(html, kind, group):
                 # href AoN con spazi letterali ('ItemName=Battle aspergillum'):
                 # quote li rende URL validi senza ri-encodare quelli gia' ok.
                 urls.insert(0, quote(urljoin(BASE, link["href"]), safe=":/?=&()%';,+%"))
-            entries.append({
-                "name": name,
-                "source": "PFRPG Core",
-                "source_id": source_id("pfrpg_core", name),
-                "prerequisites": [],
-                "tags": ["equipment", kind, group],
-                "references": [f"AoN: Equipment ({kind} {group})"],
-                "reference_urls": urls,
-                "description": ", ".join(desc_parts).rstrip(".") + ".",
-                "mechanics": mech,
-            })
+            entries.append(
+                {
+                    "name": name,
+                    "source": "PFRPG Core",
+                    "source_id": source_id("pfrpg_core", name),
+                    "prerequisites": [],
+                    "tags": ["equipment", kind, group],
+                    "references": [f"AoN: Equipment ({kind} {group})"],
+                    "reference_urls": urls,
+                    "description": ", ".join(desc_parts).rstrip(".") + ".",
+                    "mechanics": mech,
+                }
+            )
     return entries
 
 
@@ -1099,7 +1394,9 @@ def parse_item_source(html):
     m = re.search(r"Source\s+(.+?)\s+pg\.?", text)
     if not m:
         return None
-    books = [clean(b) for b in re.findall(r"([^,]+?)\s+pg\.?\s*\d+", text[m.start(1):])]
+    books = [
+        clean(b) for b in re.findall(r"([^,]+?)\s+pg\.?\s*\d+", text[m.start(1) :])
+    ]
     if not books:
         return None
     for book in books:
@@ -1136,14 +1433,18 @@ def build_equipment(write=False):
         else:
             missing.append(e["name"])
             print(f"warning: fonte non trovata per {e['name']}")
-    print(f"attribuzione: {found}/{total} fonti da pagine dettaglio, "
-          f"{len(missing)} fallback 'PFRPG Core'")
+    print(
+        f"attribuzione: {found}/{total} fonti da pagine dettaglio, "
+        f"{len(missing)} fallback 'PFRPG Core'"
+    )
     # Stesso oggetto in piu' tabelle (es. Klar weapon+shield): source_id
     # univoco nel catalogo, vince la prima occorrenza.
     seen, unique = set(), []
     for e in entries:
         if e["source_id"] in seen:
-            print(f"nota: duplicato scartato {e['source_id']} ({'/'.join(e['tags'][1:])})")
+            print(
+                f"nota: duplicato scartato {e['source_id']} ({'/'.join(e['tags'][1:])})"
+            )
             continue
         seen.add(e["source_id"])
         unique.append(e)
@@ -1159,7 +1460,13 @@ def build_equipment(write=False):
         print(f"report: {len(entries)} entry (write=False, nessuna scrittura)")
 
 
-TRAIT_CATEGORIES = ["Basic (Combat)", "Basic (Faith)", "Basic (Magic)", "Basic (Social)", "Equipment"]
+TRAIT_CATEGORIES = [
+    "Basic (Combat)",
+    "Basic (Faith)",
+    "Basic (Magic)",
+    "Basic (Social)",
+    "Equipment",
+]
 
 
 def _trait_body_lines(header):
@@ -1212,7 +1519,9 @@ def parse_traits(html, category):
     soup = BeautifulSoup(html, "html.parser")
     entries = []
     seen_headers = set()
-    for link in soup.find_all("a", href=re.compile(r"TraitDisplay\.aspx\?ItemName=", re.I)):
+    for link in soup.find_all(
+        "a", href=re.compile(r"TraitDisplay\.aspx\?ItemName=", re.I)
+    ):
         header = link.find_parent(["h1", "h2", "h3", "h4"])
         if header is None or id(header) in seen_headers:
             continue
@@ -1241,31 +1550,65 @@ def parse_traits(html, category):
         description = _strip_suggested(" ".join(desc_lines))
         if not description:
             continue
-        entries.append({
-            "name": name,
-            "source": source or "Ultimate Campaign",
-            "source_id": source_id(slug(source) if source else "ultimate_campaign", name),
-            "prerequisites": [req] if req and req.lower() != "none" else [],
-            "tags": ["trait", slug(category)],
-            "references": [f"AoN: Traits ({category})"],
-            "reference_urls": [quote(urljoin(BASE, link["href"]), safe=":/?=&()%';,+%")],
-            "description": description,
-            "mechanics": {"category": category},
-        })
+        entries.append(
+            {
+                "name": name,
+                "source": source or "Ultimate Campaign",
+                "source_id": source_id(
+                    slug(source) if source else "ultimate_campaign", name
+                ),
+                "prerequisites": [req] if req and req.lower() != "none" else [],
+                "tags": ["trait", slug(category)],
+                "references": [f"AoN: Traits ({category})"],
+                "reference_urls": [
+                    quote(urljoin(BASE, link["href"]), safe=":/?=&()%';,+%")
+                ],
+                "description": description,
+                "mechanics": {"category": category},
+            }
+        )
     return entries
 
 
 # Supplemento PI Golarion specifico per i tratti (toponimi/etnie/fazioni/
 # forme aggettivali non coperte da legal_filter.PI_WORDS). NON aggiungerle a
 # PI_WORDS: impatterebbe i cataloghi gia' committati (triage separato futuro).
-TRAITS_PI_SUPPLEMENT = frozenset({
-    "Korvosa", "Magnimar", "Riddleport", "Lastwall", "Mendev", "Nidal",
-    "Westcrown", "Cassomir", "Sargava", "Thrune", "Mwangi", "Shackles",
-    "Linnorm", "Kelesh", "Ulfen", "Shoanti", "Varisian", "Chelish", "Taldan",
-    "Qadiran", "Inner Sea", "Hellknight", "Red Mantis", "Whispering Way",
-    "Technic League", "Eagle Knight", "Tar-Baphon", "Acadamae", "Mediogalti",
-    "Sargavan", "Garundi", "Vudrani",
-})
+TRAITS_PI_SUPPLEMENT = frozenset(
+    {
+        "Korvosa",
+        "Magnimar",
+        "Riddleport",
+        "Lastwall",
+        "Mendev",
+        "Nidal",
+        "Westcrown",
+        "Cassomir",
+        "Sargava",
+        "Thrune",
+        "Mwangi",
+        "Shackles",
+        "Linnorm",
+        "Kelesh",
+        "Ulfen",
+        "Shoanti",
+        "Varisian",
+        "Chelish",
+        "Taldan",
+        "Qadiran",
+        "Inner Sea",
+        "Hellknight",
+        "Red Mantis",
+        "Whispering Way",
+        "Technic League",
+        "Eagle Knight",
+        "Tar-Baphon",
+        "Acadamae",
+        "Mediogalti",
+        "Sargavan",
+        "Garundi",
+        "Vudrani",
+    }
+)
 
 _TRAITS_PI_SUPPLEMENT_RES = {
     term: re.compile(rf"\b{re.escape(term)}\b", re.IGNORECASE)
@@ -1286,11 +1629,17 @@ def _trait_pi_hits(entry):
         for term, pattern in _TRAITS_PI_SUPPLEMENT_RES.items():
             m = pattern.search(text)
             if m:
-                hits.append({"type": "word", "term": term,
-                             "context": text[max(0, m.start() - 30):m.end() + 30]})
+                hits.append(
+                    {
+                        "type": "word",
+                        "term": term,
+                        "context": text[max(0, m.start() - 30) : m.end() + 30],
+                    }
+                )
     if "pathfinder society" in entry.get("source", "").lower():
-        hits.append({"type": "phrase", "term": "Pathfinder Society",
-                     "context": entry["source"]})
+        hits.append(
+            {"type": "phrase", "term": "Pathfinder Society", "context": entry["source"]}
+        )
     return hits
 
 
@@ -1328,7 +1677,9 @@ def build_traits(write=False):
             lines = []
             for e, hits in sorted(removed, key=lambda x: x[0]["name"]):
                 terms = sorted({h["term"] for h in hits})
-                lines.append(f"{e['name']} [{e['mechanics']['category']}]: {', '.join(terms)}")
+                lines.append(
+                    f"{e['name']} [{e['mechanics']['category']}]: {', '.join(terms)}"
+                )
             path = OGL_DIR.parents[2] / "reports" / "pi_removed_traits.txt"
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -1457,13 +1808,16 @@ def enrich_feats(write=False):
             # una description non basta (e la cache feat-card solo se esiste).
             if card_lookup is None:
                 from tools.enrich_reference import normalize_name
+
                 card_lookup, card_key = _feat_card_prereq_lookup(), normalize_name
             found = card_lookup.get(card_key(entry.get("name", "")), [])
             source = "card"
         if not found:
             if index_lookup is None:
                 index_lookup = parse_feats_index(fetch(BASE + "Feats.aspx"))
-            found = split_prereq_string(index_lookup.get(card_key(entry.get("name", "")), ""))
+            found = split_prereq_string(
+                index_lookup.get(card_key(entry.get("name", "")), "")
+            )
             source = "index"
         if found and source == "index" and any(_find_pi(p) for p in found):
             skipped_pi += 1
@@ -1476,26 +1830,39 @@ def enrich_feats(write=False):
                 filled += 1
         else:
             no_info += 1
-    print(f"feats: gia' presenti {already}, riempiti {filled}, "
-          f"da indice AoN {filled_index}, senza info {no_info} "
-          f"(di cui saltati per PI {skipped_pi}); autoreferenziali scartati "
-          f"{selfref_dropped}, punti finali rimossi {dots_stripped}")
+    print(
+        f"feats: gia' presenti {already}, riempiti {filled}, "
+        f"da indice AoN {filled_index}, senza info {no_info} "
+        f"(di cui saltati per PI {skipped_pi}); autoreferenziali scartati "
+        f"{selfref_dropped}, punti finali rimossi {dots_stripped}"
+    )
     assert already + filled + filled_index + no_info == len(catalog["entries"])
     if write:
-        write_catalog(path, catalog["entries"],
-                      license_text=catalog.get("_license", LICENSE),
-                      source_text=catalog.get("_source", SOURCE))
+        write_catalog(
+            path,
+            catalog["entries"],
+            license_text=catalog.get("_license", LICENSE),
+            source_text=catalog.get("_source", SOURCE),
+        )
 
 
-DOMAINS = {"abilities": build_abilities, "races": build_races, "classes": build_classes,
-           "skills": build_skills, "equipment": build_equipment, "traits": build_traits,
-           "feats": enrich_feats}
+DOMAINS = {
+    "abilities": build_abilities,
+    "races": build_races,
+    "classes": build_classes,
+    "skills": build_skills,
+    "equipment": build_equipment,
+    "traits": build_traits,
+    "feats": enrich_feats,
+}
 
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--domain", required=True, choices=sorted(DOMAINS))
-    ap.add_argument("--write", action="store_true", help="scrivi il catalogo (default: solo report)")
+    ap.add_argument(
+        "--write", action="store_true", help="scrivi il catalogo (default: solo report)"
+    )
     args = ap.parse_args(argv)
     print(f"domain: {args.domain} (write={args.write})")
     DOMAINS[args.domain](write=args.write)

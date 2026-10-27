@@ -8,6 +8,7 @@ Non include lore, nomi propri di setting o Product Identity.
 Uso:
     python tools/enrich_items.py [--dry-run]
 """
+
 from __future__ import annotations
 
 import argparse
@@ -55,157 +56,1055 @@ def extract_quantity(name: str) -> int | None:
 # ---------------------------------------------------------------------------
 WEAPONS: dict[str, dict[str, Any]] = {
     # simple
-    "dagger": {"prof": "simple", "hands": "light", "dmg": "1d4", "crit": "19-20/x2", "type": "piercing or slashing", "ranged": False},
-    "pugnale": {"prof": "simple", "hands": "light", "dmg": "1d4", "crit": "19-20/x2", "type": "piercing or slashing", "ranged": False},
-    "lightmace": {"prof": "simple", "hands": "light", "dmg": "1d6", "crit": "x2", "type": "bludgeoning", "ranged": False},
-    "heavymace": {"prof": "simple", "hands": "one-handed", "dmg": "1d8", "crit": "x2", "type": "bludgeoning", "ranged": False},
-    "sickle": {"prof": "simple", "hands": "light", "dmg": "1d6", "crit": "x2", "type": "slashing", "ranged": False},
-    "club": {"prof": "simple", "hands": "one-handed", "dmg": "1d6", "crit": "x2", "type": "bludgeoning", "ranged": False},
-    "quarterstaff": {"prof": "simple", "hands": "two-handed", "dmg": "1d6/1d6", "crit": "x2", "type": "bludgeoning", "ranged": False, "double": True},
-    "spear": {"prof": "simple", "hands": "two-handed", "dmg": "1d8", "crit": "x3", "type": "piercing", "ranged": False},
-    "lancia": {"prof": "simple", "hands": "two-handed", "dmg": "1d8", "crit": "x3", "type": "piercing", "ranged": False},
-    "crossbowlight": {"prof": "simple", "hands": "light", "dmg": "1d8", "crit": "19-20/x2", "type": "piercing", "ranged": True},
-    "crossbowheavy": {"prof": "simple", "hands": "two-handed", "dmg": "1d10", "crit": "19-20/x2", "type": "piercing", "ranged": True},
-    "sling": {"prof": "simple", "hands": "light", "dmg": "1d4", "crit": "x2", "type": "bludgeoning", "ranged": True},
-    "fionda": {"prof": "simple", "hands": "light", "dmg": "1d4", "crit": "x2", "type": "bludgeoning", "ranged": True},
+    "dagger": {
+        "prof": "simple",
+        "hands": "light",
+        "dmg": "1d4",
+        "crit": "19-20/x2",
+        "type": "piercing or slashing",
+        "ranged": False,
+    },
+    "pugnale": {
+        "prof": "simple",
+        "hands": "light",
+        "dmg": "1d4",
+        "crit": "19-20/x2",
+        "type": "piercing or slashing",
+        "ranged": False,
+    },
+    "lightmace": {
+        "prof": "simple",
+        "hands": "light",
+        "dmg": "1d6",
+        "crit": "x2",
+        "type": "bludgeoning",
+        "ranged": False,
+    },
+    "heavymace": {
+        "prof": "simple",
+        "hands": "one-handed",
+        "dmg": "1d8",
+        "crit": "x2",
+        "type": "bludgeoning",
+        "ranged": False,
+    },
+    "sickle": {
+        "prof": "simple",
+        "hands": "light",
+        "dmg": "1d6",
+        "crit": "x2",
+        "type": "slashing",
+        "ranged": False,
+    },
+    "club": {
+        "prof": "simple",
+        "hands": "one-handed",
+        "dmg": "1d6",
+        "crit": "x2",
+        "type": "bludgeoning",
+        "ranged": False,
+    },
+    "quarterstaff": {
+        "prof": "simple",
+        "hands": "two-handed",
+        "dmg": "1d6/1d6",
+        "crit": "x2",
+        "type": "bludgeoning",
+        "ranged": False,
+        "double": True,
+    },
+    "spear": {
+        "prof": "simple",
+        "hands": "two-handed",
+        "dmg": "1d8",
+        "crit": "x3",
+        "type": "piercing",
+        "ranged": False,
+    },
+    "lancia": {
+        "prof": "simple",
+        "hands": "two-handed",
+        "dmg": "1d8",
+        "crit": "x3",
+        "type": "piercing",
+        "ranged": False,
+    },
+    "crossbowlight": {
+        "prof": "simple",
+        "hands": "light",
+        "dmg": "1d8",
+        "crit": "19-20/x2",
+        "type": "piercing",
+        "ranged": True,
+    },
+    "crossbowheavy": {
+        "prof": "simple",
+        "hands": "two-handed",
+        "dmg": "1d10",
+        "crit": "19-20/x2",
+        "type": "piercing",
+        "ranged": True,
+    },
+    "sling": {
+        "prof": "simple",
+        "hands": "light",
+        "dmg": "1d4",
+        "crit": "x2",
+        "type": "bludgeoning",
+        "ranged": True,
+    },
+    "fionda": {
+        "prof": "simple",
+        "hands": "light",
+        "dmg": "1d4",
+        "crit": "x2",
+        "type": "bludgeoning",
+        "ranged": True,
+    },
     # martial
-    "throwingaxe": {"prof": "martial", "hands": "light", "dmg": "1d6", "crit": "x2", "type": "slashing", "ranged": True},
-    "lighthammer": {"prof": "martial", "hands": "light", "dmg": "1d4", "crit": "x2", "type": "bludgeoning", "ranged": False},
-    "martelloleggero": {"prof": "martial", "hands": "light", "dmg": "1d4", "crit": "x2", "type": "bludgeoning", "ranged": False},
-    "handaxe": {"prof": "martial", "hands": "light", "dmg": "1d6", "crit": "x3", "type": "slashing", "ranged": False},
-    "kukri": {"prof": "martial", "hands": "light", "dmg": "1d4", "crit": "18-20/x2", "type": "slashing", "ranged": False},
-    "shortsword": {"prof": "martial", "hands": "light", "dmg": "1d6", "crit": "19-20/x2", "type": "piercing", "ranged": False},
-    "spadacorta": {"prof": "martial", "hands": "light", "dmg": "1d6", "crit": "19-20/x2", "type": "piercing", "ranged": False},
-    "battleaxe": {"prof": "martial", "hands": "one-handed", "dmg": "1d8", "crit": "x3", "type": "slashing", "ranged": False},
-    "asciadabattaglia": {"prof": "martial", "hands": "one-handed", "dmg": "1d8", "crit": "x3", "type": "slashing", "ranged": False},
-    "flail": {"prof": "martial", "hands": "one-handed", "dmg": "1d8", "crit": "x2", "type": "bludgeoning", "ranged": False},
-    "longsword": {"prof": "martial", "hands": "one-handed", "dmg": "1d8", "crit": "19-20/x2", "type": "slashing", "ranged": False},
-    "spadalunga": {"prof": "martial", "hands": "one-handed", "dmg": "1d8", "crit": "19-20/x2", "type": "slashing", "ranged": False},
-    "heavyflail": {"prof": "martial", "hands": "two-handed", "dmg": "1d10", "crit": "19-20/x2", "type": "bludgeoning", "ranged": False},
-    "falchion": {"prof": "martial", "hands": "two-handed", "dmg": "2d4", "crit": "18-20/x2", "type": "slashing", "ranged": False},
-    "glaive": {"prof": "martial", "hands": "two-handed", "dmg": "1d10", "crit": "x3", "type": "slashing", "ranged": False, "reach": True},
-    "greataxe": {"prof": "martial", "hands": "two-handed", "dmg": "1d12", "crit": "x3", "type": "slashing", "ranged": False},
-    "asciabipenne": {"prof": "martial", "hands": "two-handed", "dmg": "1d12", "crit": "x3", "type": "slashing", "ranged": False},
-    "greatclub": {"prof": "martial", "hands": "two-handed", "dmg": "1d10", "crit": "x2", "type": "bludgeoning", "ranged": False},
-    "greatsword": {"prof": "martial", "hands": "two-handed", "dmg": "2d6", "crit": "19-20/x2", "type": "slashing", "ranged": False},
-    "halberd": {"prof": "martial", "hands": "two-handed", "dmg": "1d10", "crit": "x3", "type": "piercing or slashing", "ranged": False, "reach": True},
-    "lance": {"prof": "martial", "hands": "two-handed", "dmg": "1d8", "crit": "x3", "type": "piercing", "ranged": False, "reach": True, "special": "deals double damage when used from the back of a charging mount"},
-    "lanciadacavalleria": {"prof": "martial", "hands": "two-handed", "dmg": "1d8", "crit": "x3", "type": "piercing", "ranged": False, "reach": True, "special": "deals double damage when used from the back of a charging mount"},
-    "lancialunga": {"prof": "martial", "hands": "two-handed", "dmg": "1d8", "crit": "x3", "type": "piercing", "ranged": False, "reach": True},
-    "ranseur": {"prof": "martial", "hands": "two-handed", "dmg": "2d4", "crit": "x3", "type": "piercing", "ranged": False, "reach": True},
-    "scythe": {"prof": "martial", "hands": "two-handed", "dmg": "2d4", "crit": "x4", "type": "piercing or slashing", "ranged": False},
-    "longbow": {"prof": "martial", "hands": "two-handed", "dmg": "1d8", "crit": "x3", "type": "piercing", "ranged": True},
-    "arcolungo": {"prof": "martial", "hands": "two-handed", "dmg": "1d8", "crit": "x3", "type": "piercing", "ranged": True},
-    "compositelongbow": {"prof": "martial", "hands": "two-handed", "dmg": "1d8", "crit": "x3", "type": "piercing", "ranged": True, "special": "adds Strength bonus to damage up to the listed rating"},
-    "shortbow": {"prof": "martial", "hands": "two-handed", "dmg": "1d6", "crit": "x3", "type": "piercing", "ranged": True},
+    "throwingaxe": {
+        "prof": "martial",
+        "hands": "light",
+        "dmg": "1d6",
+        "crit": "x2",
+        "type": "slashing",
+        "ranged": True,
+    },
+    "lighthammer": {
+        "prof": "martial",
+        "hands": "light",
+        "dmg": "1d4",
+        "crit": "x2",
+        "type": "bludgeoning",
+        "ranged": False,
+    },
+    "martelloleggero": {
+        "prof": "martial",
+        "hands": "light",
+        "dmg": "1d4",
+        "crit": "x2",
+        "type": "bludgeoning",
+        "ranged": False,
+    },
+    "handaxe": {
+        "prof": "martial",
+        "hands": "light",
+        "dmg": "1d6",
+        "crit": "x3",
+        "type": "slashing",
+        "ranged": False,
+    },
+    "kukri": {
+        "prof": "martial",
+        "hands": "light",
+        "dmg": "1d4",
+        "crit": "18-20/x2",
+        "type": "slashing",
+        "ranged": False,
+    },
+    "shortsword": {
+        "prof": "martial",
+        "hands": "light",
+        "dmg": "1d6",
+        "crit": "19-20/x2",
+        "type": "piercing",
+        "ranged": False,
+    },
+    "spadacorta": {
+        "prof": "martial",
+        "hands": "light",
+        "dmg": "1d6",
+        "crit": "19-20/x2",
+        "type": "piercing",
+        "ranged": False,
+    },
+    "battleaxe": {
+        "prof": "martial",
+        "hands": "one-handed",
+        "dmg": "1d8",
+        "crit": "x3",
+        "type": "slashing",
+        "ranged": False,
+    },
+    "asciadabattaglia": {
+        "prof": "martial",
+        "hands": "one-handed",
+        "dmg": "1d8",
+        "crit": "x3",
+        "type": "slashing",
+        "ranged": False,
+    },
+    "flail": {
+        "prof": "martial",
+        "hands": "one-handed",
+        "dmg": "1d8",
+        "crit": "x2",
+        "type": "bludgeoning",
+        "ranged": False,
+    },
+    "longsword": {
+        "prof": "martial",
+        "hands": "one-handed",
+        "dmg": "1d8",
+        "crit": "19-20/x2",
+        "type": "slashing",
+        "ranged": False,
+    },
+    "spadalunga": {
+        "prof": "martial",
+        "hands": "one-handed",
+        "dmg": "1d8",
+        "crit": "19-20/x2",
+        "type": "slashing",
+        "ranged": False,
+    },
+    "heavyflail": {
+        "prof": "martial",
+        "hands": "two-handed",
+        "dmg": "1d10",
+        "crit": "19-20/x2",
+        "type": "bludgeoning",
+        "ranged": False,
+    },
+    "falchion": {
+        "prof": "martial",
+        "hands": "two-handed",
+        "dmg": "2d4",
+        "crit": "18-20/x2",
+        "type": "slashing",
+        "ranged": False,
+    },
+    "glaive": {
+        "prof": "martial",
+        "hands": "two-handed",
+        "dmg": "1d10",
+        "crit": "x3",
+        "type": "slashing",
+        "ranged": False,
+        "reach": True,
+    },
+    "greataxe": {
+        "prof": "martial",
+        "hands": "two-handed",
+        "dmg": "1d12",
+        "crit": "x3",
+        "type": "slashing",
+        "ranged": False,
+    },
+    "asciabipenne": {
+        "prof": "martial",
+        "hands": "two-handed",
+        "dmg": "1d12",
+        "crit": "x3",
+        "type": "slashing",
+        "ranged": False,
+    },
+    "greatclub": {
+        "prof": "martial",
+        "hands": "two-handed",
+        "dmg": "1d10",
+        "crit": "x2",
+        "type": "bludgeoning",
+        "ranged": False,
+    },
+    "greatsword": {
+        "prof": "martial",
+        "hands": "two-handed",
+        "dmg": "2d6",
+        "crit": "19-20/x2",
+        "type": "slashing",
+        "ranged": False,
+    },
+    "halberd": {
+        "prof": "martial",
+        "hands": "two-handed",
+        "dmg": "1d10",
+        "crit": "x3",
+        "type": "piercing or slashing",
+        "ranged": False,
+        "reach": True,
+    },
+    "lance": {
+        "prof": "martial",
+        "hands": "two-handed",
+        "dmg": "1d8",
+        "crit": "x3",
+        "type": "piercing",
+        "ranged": False,
+        "reach": True,
+        "special": "deals double damage when used from the back of a charging mount",
+    },
+    "lanciadacavalleria": {
+        "prof": "martial",
+        "hands": "two-handed",
+        "dmg": "1d8",
+        "crit": "x3",
+        "type": "piercing",
+        "ranged": False,
+        "reach": True,
+        "special": "deals double damage when used from the back of a charging mount",
+    },
+    "lancialunga": {
+        "prof": "martial",
+        "hands": "two-handed",
+        "dmg": "1d8",
+        "crit": "x3",
+        "type": "piercing",
+        "ranged": False,
+        "reach": True,
+    },
+    "ranseur": {
+        "prof": "martial",
+        "hands": "two-handed",
+        "dmg": "2d4",
+        "crit": "x3",
+        "type": "piercing",
+        "ranged": False,
+        "reach": True,
+    },
+    "scythe": {
+        "prof": "martial",
+        "hands": "two-handed",
+        "dmg": "2d4",
+        "crit": "x4",
+        "type": "piercing or slashing",
+        "ranged": False,
+    },
+    "longbow": {
+        "prof": "martial",
+        "hands": "two-handed",
+        "dmg": "1d8",
+        "crit": "x3",
+        "type": "piercing",
+        "ranged": True,
+    },
+    "arcolungo": {
+        "prof": "martial",
+        "hands": "two-handed",
+        "dmg": "1d8",
+        "crit": "x3",
+        "type": "piercing",
+        "ranged": True,
+    },
+    "compositelongbow": {
+        "prof": "martial",
+        "hands": "two-handed",
+        "dmg": "1d8",
+        "crit": "x3",
+        "type": "piercing",
+        "ranged": True,
+        "special": "adds Strength bonus to damage up to the listed rating",
+    },
+    "shortbow": {
+        "prof": "martial",
+        "hands": "two-handed",
+        "dmg": "1d6",
+        "crit": "x3",
+        "type": "piercing",
+        "ranged": True,
+    },
     # exotic
-    "bastardsword": {"prof": "exotic", "hands": "one-handed", "dmg": "1d10", "crit": "19-20/x2", "type": "slashing", "ranged": False},
-    "dwarvenwaraxe": {"prof": "exotic", "hands": "one-handed", "dmg": "1d10", "crit": "x3", "type": "slashing", "ranged": False},
-    "asciananicadaguerra": {"prof": "exotic", "hands": "one-handed", "dmg": "1d10", "crit": "x3", "type": "slashing", "ranged": False},
-    "asciadaguerananica": {"prof": "exotic", "hands": "one-handed", "dmg": "1d10", "crit": "x3", "type": "slashing", "ranged": False},
-    "asciadaguerrananica": {"prof": "exotic", "hands": "one-handed", "dmg": "1d10", "crit": "x3", "type": "slashing", "ranged": False},
-    "whip": {"prof": "exotic", "hands": "one-handed", "dmg": "1d3", "crit": "x2", "type": "slashing", "ranged": False, "reach": True, "special": "trip, disarm; does not threaten squares and deals no damage to armored targets"},
-    "frusta": {"prof": "exotic", "hands": "one-handed", "dmg": "1d3", "crit": "x2", "type": "slashing", "ranged": False, "reach": True, "special": "trip, disarm; does not threaten squares and deals no damage to armored targets"},
-    "kama": {"prof": "exotic", "hands": "light", "dmg": "1d6", "crit": "x2", "type": "slashing", "ranged": False, "special": "trip, monk"},
-    "nunchaku": {"prof": "exotic", "hands": "light", "dmg": "1d6", "crit": "x2", "type": "bludgeoning", "ranged": False, "special": "disarm, monk"},
-    "sai": {"prof": "exotic", "hands": "light", "dmg": "1d4", "crit": "x2", "type": "bludgeoning", "ranged": False, "special": "disarm, monk"},
-    "handcrossbow": {"prof": "exotic", "hands": "light", "dmg": "1d4", "crit": "19-20/x2", "type": "piercing", "ranged": True},
-    "repeatingheavycrossbow": {"prof": "exotic", "hands": "two-handed", "dmg": "1d10", "crit": "19-20/x2", "type": "piercing", "ranged": True, "special": "holds 5 bolts in a magazine"},
-    "bolas": {"prof": "exotic", "hands": "light", "dmg": "1d4", "crit": "x2", "type": "bludgeoning", "ranged": True, "special": "trip"},
-    "net": {"prof": "exotic", "hands": "two-handed", "dmg": "—", "crit": "—", "type": "—", "ranged": True, "special": "entangle"},
+    "bastardsword": {
+        "prof": "exotic",
+        "hands": "one-handed",
+        "dmg": "1d10",
+        "crit": "19-20/x2",
+        "type": "slashing",
+        "ranged": False,
+    },
+    "dwarvenwaraxe": {
+        "prof": "exotic",
+        "hands": "one-handed",
+        "dmg": "1d10",
+        "crit": "x3",
+        "type": "slashing",
+        "ranged": False,
+    },
+    "asciananicadaguerra": {
+        "prof": "exotic",
+        "hands": "one-handed",
+        "dmg": "1d10",
+        "crit": "x3",
+        "type": "slashing",
+        "ranged": False,
+    },
+    "asciadaguerananica": {
+        "prof": "exotic",
+        "hands": "one-handed",
+        "dmg": "1d10",
+        "crit": "x3",
+        "type": "slashing",
+        "ranged": False,
+    },
+    "asciadaguerrananica": {
+        "prof": "exotic",
+        "hands": "one-handed",
+        "dmg": "1d10",
+        "crit": "x3",
+        "type": "slashing",
+        "ranged": False,
+    },
+    "whip": {
+        "prof": "exotic",
+        "hands": "one-handed",
+        "dmg": "1d3",
+        "crit": "x2",
+        "type": "slashing",
+        "ranged": False,
+        "reach": True,
+        "special": "trip, disarm; does not threaten squares and deals no damage to armored targets",
+    },
+    "frusta": {
+        "prof": "exotic",
+        "hands": "one-handed",
+        "dmg": "1d3",
+        "crit": "x2",
+        "type": "slashing",
+        "ranged": False,
+        "reach": True,
+        "special": "trip, disarm; does not threaten squares and deals no damage to armored targets",
+    },
+    "kama": {
+        "prof": "exotic",
+        "hands": "light",
+        "dmg": "1d6",
+        "crit": "x2",
+        "type": "slashing",
+        "ranged": False,
+        "special": "trip, monk",
+    },
+    "nunchaku": {
+        "prof": "exotic",
+        "hands": "light",
+        "dmg": "1d6",
+        "crit": "x2",
+        "type": "bludgeoning",
+        "ranged": False,
+        "special": "disarm, monk",
+    },
+    "sai": {
+        "prof": "exotic",
+        "hands": "light",
+        "dmg": "1d4",
+        "crit": "x2",
+        "type": "bludgeoning",
+        "ranged": False,
+        "special": "disarm, monk",
+    },
+    "handcrossbow": {
+        "prof": "exotic",
+        "hands": "light",
+        "dmg": "1d4",
+        "crit": "19-20/x2",
+        "type": "piercing",
+        "ranged": True,
+    },
+    "repeatingheavycrossbow": {
+        "prof": "exotic",
+        "hands": "two-handed",
+        "dmg": "1d10",
+        "crit": "19-20/x2",
+        "type": "piercing",
+        "ranged": True,
+        "special": "holds 5 bolts in a magazine",
+    },
+    "bolas": {
+        "prof": "exotic",
+        "hands": "light",
+        "dmg": "1d4",
+        "crit": "x2",
+        "type": "bludgeoning",
+        "ranged": True,
+        "special": "trip",
+    },
+    "net": {
+        "prof": "exotic",
+        "hands": "two-handed",
+        "dmg": "—",
+        "crit": "—",
+        "type": "—",
+        "ranged": True,
+        "special": "entangle",
+    },
     # firearms (exotic)
-    "pistol": {"prof": "exotic", "hands": "one-handed", "dmg": "1d8", "crit": "x4", "type": "piercing", "ranged": True, "firearm": True},
-    "musket": {"prof": "exotic", "hands": "two-handed", "dmg": "1d12", "crit": "x4", "type": "piercing", "ranged": True, "firearm": True},
-    "musketpesante": {"prof": "exotic", "hands": "two-handed", "dmg": "1d12", "crit": "x4", "type": "piercing", "ranged": True, "firearm": True},
-    "duelingpistol": {"prof": "exotic", "hands": "one-handed", "dmg": "1d8", "crit": "x3", "type": "piercing", "ranged": True, "firearm": True},
+    "pistol": {
+        "prof": "exotic",
+        "hands": "one-handed",
+        "dmg": "1d8",
+        "crit": "x4",
+        "type": "piercing",
+        "ranged": True,
+        "firearm": True,
+    },
+    "musket": {
+        "prof": "exotic",
+        "hands": "two-handed",
+        "dmg": "1d12",
+        "crit": "x4",
+        "type": "piercing",
+        "ranged": True,
+        "firearm": True,
+    },
+    "musketpesante": {
+        "prof": "exotic",
+        "hands": "two-handed",
+        "dmg": "1d12",
+        "crit": "x4",
+        "type": "piercing",
+        "ranged": True,
+        "firearm": True,
+    },
+    "duelingpistol": {
+        "prof": "exotic",
+        "hands": "one-handed",
+        "dmg": "1d8",
+        "crit": "x3",
+        "type": "piercing",
+        "ranged": True,
+        "firearm": True,
+    },
 }
 
 ARMORS: dict[str, dict[str, Any]] = {
-    "padded": {"type": "light", "bonus": 1, "maxdex": 8, "pen": 0, "spell": 5, "weight": 10},
-    "armaturaleggera": {"type": "light", "bonus": 2, "maxdex": 6, "pen": 0, "spell": 10, "weight": 15},
-    "leather": {"type": "light", "bonus": 2, "maxdex": 6, "pen": 0, "spell": 10, "weight": 15},
-    "cuoiorinforzato": {"type": "light", "bonus": 2, "maxdex": 6, "pen": 0, "spell": 10, "weight": 15},
-    "cuoiotinforzata": {"type": "light", "bonus": 2, "maxdex": 6, "pen": 0, "spell": 10, "weight": 15},
-    "cuoiotinforzata": {"type": "light", "bonus": 2, "maxdex": 6, "pen": 0, "spell": 10, "weight": 15},
-    "armaturadicuoiorinforzata": {"type": "light", "bonus": 2, "maxdex": 6, "pen": 0, "spell": 10, "weight": 15},
-    "studdedleather": {"type": "light", "bonus": 3, "maxdex": 5, "pen": -1, "spell": 15, "weight": 20},
-    "cuoioborchiato": {"type": "light", "bonus": 3, "maxdex": 5, "pen": -1, "spell": 15, "weight": 20},
-    "chainshirt": {"type": "light", "bonus": 4, "maxdex": 4, "pen": -2, "spell": 20, "weight": 25},
-    "giacodimaglia": {"type": "light", "bonus": 4, "maxdex": 4, "pen": -2, "spell": 20, "weight": 25},
-    "giacodimaglialeggera": {"type": "light", "bonus": 4, "maxdex": 4, "pen": -2, "spell": 20, "weight": 25},
-    "hide": {"type": "medium", "bonus": 4, "maxdex": 4, "pen": -3, "spell": 20, "weight": 25},
-    "pellerinforzata": {"type": "medium", "bonus": 4, "maxdex": 4, "pen": -3, "spell": 20, "weight": 25},
-    "pellechiodata": {"type": "medium", "bonus": 4, "maxdex": 4, "pen": -3, "spell": 20, "weight": 25},
-    "scalemail": {"type": "medium", "bonus": 5, "maxdex": 4, "pen": -4, "spell": 25, "weight": 30},
-    "corazzaascaglie": {"type": "medium", "bonus": 5, "maxdex": 4, "pen": -4, "spell": 25, "weight": 30},
-    "armaturaascaglie": {"type": "medium", "bonus": 5, "maxdex": 4, "pen": -4, "spell": 25, "weight": 30},
-    "chainmail": {"type": "medium", "bonus": 6, "maxdex": 2, "pen": -5, "spell": 30, "weight": 40},
-    "cottadimaglia": {"type": "medium", "bonus": 6, "maxdex": 2, "pen": -5, "spell": 30, "weight": 40},
-    "cottadimaglialeggerarinforzata": {"type": "medium", "bonus": 6, "maxdex": 2, "pen": -5, "spell": 30, "weight": 40},
-    "breastplate": {"type": "medium", "bonus": 6, "maxdex": 3, "pen": -4, "spell": 25, "weight": 30},
-    "corazzaapiastre": {"type": "medium", "bonus": 6, "maxdex": 3, "pen": -4, "spell": 25, "weight": 30},
-    "corazzadicuoiotemprato": {"type": "medium", "bonus": 6, "maxdex": 3, "pen": -4, "spell": 25, "weight": 30},
-    "corazzarinforzata": {"type": "medium", "bonus": 6, "maxdex": 3, "pen": -4, "spell": 25, "weight": 30},
-    "armaturalamellare": {"type": "medium", "bonus": 6, "maxdex": 3, "pen": -5, "spell": 25, "weight": 35},
-    "corazzalamellare": {"type": "medium", "bonus": 6, "maxdex": 3, "pen": -5, "spell": 25, "weight": 35},
-    "splintmail": {"type": "heavy", "bonus": 7, "maxdex": 0, "pen": -7, "spell": 40, "weight": 45},
-    "bandedmail": {"type": "heavy", "bonus": 7, "maxdex": 1, "pen": -6, "spell": 35, "weight": 35},
-    "halfplate": {"type": "heavy", "bonus": 8, "maxdex": 0, "pen": -7, "spell": 40, "weight": 50},
-    "corazzadipiastreleggermenterinforzata": {"type": "heavy", "bonus": 8, "maxdex": 0, "pen": -7, "spell": 40, "weight": 50},
-    "fullplate": {"type": "heavy", "bonus": 9, "maxdex": 1, "pen": -6, "spell": 35, "weight": 50},
-    "armaturacompleta": {"type": "heavy", "bonus": 9, "maxdex": 1, "pen": -6, "spell": 35, "weight": 50},
-    "corazzadiapiastre": {"type": "heavy", "bonus": 9, "maxdex": 1, "pen": -6, "spell": 35, "weight": 50},
-    "corazzadipietrascolpita": {"type": "heavy", "bonus": 9, "maxdex": 1, "pen": -6, "spell": 35, "weight": 75},
-    "corazzadiseta": {"type": "light", "bonus": 1, "maxdex": 8, "pen": 0, "spell": 0, "weight": 4},
-    "armaturavivente": {"type": "medium", "bonus": 5, "maxdex": 3, "pen": -4, "spell": 20, "weight": 25},
+    "padded": {
+        "type": "light",
+        "bonus": 1,
+        "maxdex": 8,
+        "pen": 0,
+        "spell": 5,
+        "weight": 10,
+    },
+    "armaturaleggera": {
+        "type": "light",
+        "bonus": 2,
+        "maxdex": 6,
+        "pen": 0,
+        "spell": 10,
+        "weight": 15,
+    },
+    "leather": {
+        "type": "light",
+        "bonus": 2,
+        "maxdex": 6,
+        "pen": 0,
+        "spell": 10,
+        "weight": 15,
+    },
+    "cuoiorinforzato": {
+        "type": "light",
+        "bonus": 2,
+        "maxdex": 6,
+        "pen": 0,
+        "spell": 10,
+        "weight": 15,
+    },
+    "cuoiotinforzata": {
+        "type": "light",
+        "bonus": 2,
+        "maxdex": 6,
+        "pen": 0,
+        "spell": 10,
+        "weight": 15,
+    },
+    "cuoiotinforzata": {
+        "type": "light",
+        "bonus": 2,
+        "maxdex": 6,
+        "pen": 0,
+        "spell": 10,
+        "weight": 15,
+    },
+    "armaturadicuoiorinforzata": {
+        "type": "light",
+        "bonus": 2,
+        "maxdex": 6,
+        "pen": 0,
+        "spell": 10,
+        "weight": 15,
+    },
+    "studdedleather": {
+        "type": "light",
+        "bonus": 3,
+        "maxdex": 5,
+        "pen": -1,
+        "spell": 15,
+        "weight": 20,
+    },
+    "cuoioborchiato": {
+        "type": "light",
+        "bonus": 3,
+        "maxdex": 5,
+        "pen": -1,
+        "spell": 15,
+        "weight": 20,
+    },
+    "chainshirt": {
+        "type": "light",
+        "bonus": 4,
+        "maxdex": 4,
+        "pen": -2,
+        "spell": 20,
+        "weight": 25,
+    },
+    "giacodimaglia": {
+        "type": "light",
+        "bonus": 4,
+        "maxdex": 4,
+        "pen": -2,
+        "spell": 20,
+        "weight": 25,
+    },
+    "giacodimaglialeggera": {
+        "type": "light",
+        "bonus": 4,
+        "maxdex": 4,
+        "pen": -2,
+        "spell": 20,
+        "weight": 25,
+    },
+    "hide": {
+        "type": "medium",
+        "bonus": 4,
+        "maxdex": 4,
+        "pen": -3,
+        "spell": 20,
+        "weight": 25,
+    },
+    "pellerinforzata": {
+        "type": "medium",
+        "bonus": 4,
+        "maxdex": 4,
+        "pen": -3,
+        "spell": 20,
+        "weight": 25,
+    },
+    "pellechiodata": {
+        "type": "medium",
+        "bonus": 4,
+        "maxdex": 4,
+        "pen": -3,
+        "spell": 20,
+        "weight": 25,
+    },
+    "scalemail": {
+        "type": "medium",
+        "bonus": 5,
+        "maxdex": 4,
+        "pen": -4,
+        "spell": 25,
+        "weight": 30,
+    },
+    "corazzaascaglie": {
+        "type": "medium",
+        "bonus": 5,
+        "maxdex": 4,
+        "pen": -4,
+        "spell": 25,
+        "weight": 30,
+    },
+    "armaturaascaglie": {
+        "type": "medium",
+        "bonus": 5,
+        "maxdex": 4,
+        "pen": -4,
+        "spell": 25,
+        "weight": 30,
+    },
+    "chainmail": {
+        "type": "medium",
+        "bonus": 6,
+        "maxdex": 2,
+        "pen": -5,
+        "spell": 30,
+        "weight": 40,
+    },
+    "cottadimaglia": {
+        "type": "medium",
+        "bonus": 6,
+        "maxdex": 2,
+        "pen": -5,
+        "spell": 30,
+        "weight": 40,
+    },
+    "cottadimaglialeggerarinforzata": {
+        "type": "medium",
+        "bonus": 6,
+        "maxdex": 2,
+        "pen": -5,
+        "spell": 30,
+        "weight": 40,
+    },
+    "breastplate": {
+        "type": "medium",
+        "bonus": 6,
+        "maxdex": 3,
+        "pen": -4,
+        "spell": 25,
+        "weight": 30,
+    },
+    "corazzaapiastre": {
+        "type": "medium",
+        "bonus": 6,
+        "maxdex": 3,
+        "pen": -4,
+        "spell": 25,
+        "weight": 30,
+    },
+    "corazzadicuoiotemprato": {
+        "type": "medium",
+        "bonus": 6,
+        "maxdex": 3,
+        "pen": -4,
+        "spell": 25,
+        "weight": 30,
+    },
+    "corazzarinforzata": {
+        "type": "medium",
+        "bonus": 6,
+        "maxdex": 3,
+        "pen": -4,
+        "spell": 25,
+        "weight": 30,
+    },
+    "armaturalamellare": {
+        "type": "medium",
+        "bonus": 6,
+        "maxdex": 3,
+        "pen": -5,
+        "spell": 25,
+        "weight": 35,
+    },
+    "corazzalamellare": {
+        "type": "medium",
+        "bonus": 6,
+        "maxdex": 3,
+        "pen": -5,
+        "spell": 25,
+        "weight": 35,
+    },
+    "splintmail": {
+        "type": "heavy",
+        "bonus": 7,
+        "maxdex": 0,
+        "pen": -7,
+        "spell": 40,
+        "weight": 45,
+    },
+    "bandedmail": {
+        "type": "heavy",
+        "bonus": 7,
+        "maxdex": 1,
+        "pen": -6,
+        "spell": 35,
+        "weight": 35,
+    },
+    "halfplate": {
+        "type": "heavy",
+        "bonus": 8,
+        "maxdex": 0,
+        "pen": -7,
+        "spell": 40,
+        "weight": 50,
+    },
+    "corazzadipiastreleggermenterinforzata": {
+        "type": "heavy",
+        "bonus": 8,
+        "maxdex": 0,
+        "pen": -7,
+        "spell": 40,
+        "weight": 50,
+    },
+    "fullplate": {
+        "type": "heavy",
+        "bonus": 9,
+        "maxdex": 1,
+        "pen": -6,
+        "spell": 35,
+        "weight": 50,
+    },
+    "armaturacompleta": {
+        "type": "heavy",
+        "bonus": 9,
+        "maxdex": 1,
+        "pen": -6,
+        "spell": 35,
+        "weight": 50,
+    },
+    "corazzadiapiastre": {
+        "type": "heavy",
+        "bonus": 9,
+        "maxdex": 1,
+        "pen": -6,
+        "spell": 35,
+        "weight": 50,
+    },
+    "corazzadipietrascolpita": {
+        "type": "heavy",
+        "bonus": 9,
+        "maxdex": 1,
+        "pen": -6,
+        "spell": 35,
+        "weight": 75,
+    },
+    "corazzadiseta": {
+        "type": "light",
+        "bonus": 1,
+        "maxdex": 8,
+        "pen": 0,
+        "spell": 0,
+        "weight": 4,
+    },
+    "armaturavivente": {
+        "type": "medium",
+        "bonus": 5,
+        "maxdex": 3,
+        "pen": -4,
+        "spell": 20,
+        "weight": 25,
+    },
 }
 
 SHIELDS: dict[str, dict[str, Any]] = {
     "buckler": {"type": "light", "bonus": 1, "pen": -1, "spell": 5, "weight": 5},
-    "shieldlightwood": {"type": "light", "bonus": 1, "pen": -1, "spell": 5, "weight": 5},
-    "shieldlightsteel": {"type": "light", "bonus": 1, "pen": -1, "spell": 5, "weight": 6},
-    "scudoleggeroinlegno": {"type": "light", "bonus": 1, "pen": -1, "spell": 5, "weight": 5},
-    "shieldheavywood": {"type": "heavy", "bonus": 2, "pen": -2, "spell": 15, "weight": 10},
-    "shieldheavysteel": {"type": "heavy", "bonus": 2, "pen": -2, "spell": 15, "weight": 15},
+    "shieldlightwood": {
+        "type": "light",
+        "bonus": 1,
+        "pen": -1,
+        "spell": 5,
+        "weight": 5,
+    },
+    "shieldlightsteel": {
+        "type": "light",
+        "bonus": 1,
+        "pen": -1,
+        "spell": 5,
+        "weight": 6,
+    },
+    "scudoleggeroinlegno": {
+        "type": "light",
+        "bonus": 1,
+        "pen": -1,
+        "spell": 5,
+        "weight": 5,
+    },
+    "shieldheavywood": {
+        "type": "heavy",
+        "bonus": 2,
+        "pen": -2,
+        "spell": 15,
+        "weight": 10,
+    },
+    "shieldheavysteel": {
+        "type": "heavy",
+        "bonus": 2,
+        "pen": -2,
+        "spell": 15,
+        "weight": 15,
+    },
     "scudopesante": {"type": "heavy", "bonus": 2, "pen": -2, "spell": 15, "weight": 15},
-    "scudopesanteinacciaio": {"type": "heavy", "bonus": 2, "pen": -2, "spell": 15, "weight": 15},
+    "scudopesanteinacciaio": {
+        "type": "heavy",
+        "bonus": 2,
+        "pen": -2,
+        "spell": 15,
+        "weight": 15,
+    },
     "towermield": {"type": "tower", "bonus": 4, "pen": -10, "spell": 50, "weight": 45},
     "scudotorre": {"type": "tower", "bonus": 4, "pen": -10, "spell": 50, "weight": 45},
 }
 
 # Prezzi base stimati per oggetti meravigliosi canonici (gp)
 WONDROUS_BASE_PRICE: dict[str, dict[str, Any]] = {
-    "amuletofnaturalarmor": {"slot": "neck", "spell": "barkskin", "cl": 5, "aura": "faint transmutation", "bonus_cost": lambda b: b * b * 2000},
-    "beltofgiantstrength": {"slot": "belt", "spell": "bull's strength", "cl": 8, "aura": "faint transmutation", "bonus_cost": lambda b: b * b * 4000},
-    "beltofdexterity": {"slot": "belt", "spell": "cat's grace", "cl": 8, "aura": "faint transmutation", "bonus_cost": lambda b: b * b * 4000},
-    "beltofconstitution": {"slot": "belt", "spell": "bear's endurance", "cl": 8, "aura": "faint transmutation", "bonus_cost": lambda b: b * b * 4000},
-    "beltofphysicalmight": {"slot": "belt", "spell": "bull's strength / bear's endurance", "cl": 12, "aura": "moderate transmutation", "bonus_cost": lambda b: b * b * 10000},
-    "headbandofvastintelligence": {"slot": "headband", "spell": "fox's cunning", "cl": 8, "aura": "faint transmutation", "bonus_cost": lambda b: b * b * 4000},
-    "headbandofalluringcharisma": {"slot": "headband", "spell": "eagle's splendor", "cl": 8, "aura": "faint transmutation", "bonus_cost": lambda b: b * b * 4000},
-    "headbandofinspiredwisdom": {"slot": "headband", "spell": "owl's wisdom", "cl": 8, "aura": "faint transmutation", "bonus_cost": lambda b: b * b * 4000},
-    "headbandofmentalprowess": {"slot": "headband", "spell": "fox's cunning / eagle's splendor", "cl": 12, "aura": "moderate transmutation", "bonus_cost": lambda b: b * b * 10000},
-    "bracersofarmor": {"slot": "wrists", "spell": "mage armor", "cl": 7, "aura": "faint conjuration", "bonus_cost": lambda b: b * b * 1000},
-    "cloakofresistance": {"slot": "shoulders", "spell": "resistance", "cl": 5, "aura": "faint abjuration", "bonus_cost": lambda b: b * b * 1000},
-    "ringofprotection": {"slot": "ring", "spell": "shield of faith", "cl": 5, "aura": "faint abjuration", "bonus_cost": lambda b: b * b * 2000},
-    "glovesofdexterity": {"slot": "hands", "spell": "cat's grace", "cl": 8, "aura": "faint transmutation", "bonus_cost": lambda b: b * b * 4000},
-    "bootsofspeed": {"slot": "feet", "spell": "haste", "cl": 10, "aura": "moderate transmutation", "price": 12000},
-    "cloakofelvenkind": {"slot": "shoulders", "spell": "pass without trace", "cl": 3, "aura": "faint transmutation", "price": 2500},
-    "bagofholding": {"slot": "none", "spell": "secret chest", "cl": 9, "aura": "moderate conjuration", "price": {1: 2500, 2: 5000, 3: 7400, 4: 10000}},
-    "handyhaversack": {"slot": "none", "spell": "secret chest", "cl": 9, "aura": "moderate conjuration", "price": 2000},
-    "pearlofpower": {"slot": "none", "spell": "—", "cl": None, "aura": "strong conjuration", "price": {1: 1000, 2: 4000, 3: 9000, 4: 16000, 5: 25000, 6: 36000, 7: 49000, 8: 64000, 9: 81000}},
-    "ringofevasion": {"slot": "ring", "spell": "jump", "cl": 7, "aura": "moderate transmutation", "price": 25000},
-    "ringoffeatherfalling": {"slot": "ring", "spell": "feather fall", "cl": 1, "aura": "faint transmutation", "price": 2200},
-    "ringofwizardry": {"slot": "ring", "spell": "limited wish", "cl": 11, "aura": "moderate (no school)", "price": {1: 20000, 2: 40000, 3: 70000, 4: 100000}},
-    "ringoftheshootingstar": {"slot": "ring", "spell": "scorching ray", "cl": 10, "aura": "moderate evocation", "price": 42000},
-    "robeofarcaneheritage": {"slot": "body", "spell": "—", "cl": 9, "aura": "moderate transmutation", "price": 16000},
-    "vigilantemask": {"slot": "head", "spell": "disguise self", "cl": 3, "aura": "faint illusion", "price": 5000},
+    "amuletofnaturalarmor": {
+        "slot": "neck",
+        "spell": "barkskin",
+        "cl": 5,
+        "aura": "faint transmutation",
+        "bonus_cost": lambda b: b * b * 2000,
+    },
+    "beltofgiantstrength": {
+        "slot": "belt",
+        "spell": "bull's strength",
+        "cl": 8,
+        "aura": "faint transmutation",
+        "bonus_cost": lambda b: b * b * 4000,
+    },
+    "beltofdexterity": {
+        "slot": "belt",
+        "spell": "cat's grace",
+        "cl": 8,
+        "aura": "faint transmutation",
+        "bonus_cost": lambda b: b * b * 4000,
+    },
+    "beltofconstitution": {
+        "slot": "belt",
+        "spell": "bear's endurance",
+        "cl": 8,
+        "aura": "faint transmutation",
+        "bonus_cost": lambda b: b * b * 4000,
+    },
+    "beltofphysicalmight": {
+        "slot": "belt",
+        "spell": "bull's strength / bear's endurance",
+        "cl": 12,
+        "aura": "moderate transmutation",
+        "bonus_cost": lambda b: b * b * 10000,
+    },
+    "headbandofvastintelligence": {
+        "slot": "headband",
+        "spell": "fox's cunning",
+        "cl": 8,
+        "aura": "faint transmutation",
+        "bonus_cost": lambda b: b * b * 4000,
+    },
+    "headbandofalluringcharisma": {
+        "slot": "headband",
+        "spell": "eagle's splendor",
+        "cl": 8,
+        "aura": "faint transmutation",
+        "bonus_cost": lambda b: b * b * 4000,
+    },
+    "headbandofinspiredwisdom": {
+        "slot": "headband",
+        "spell": "owl's wisdom",
+        "cl": 8,
+        "aura": "faint transmutation",
+        "bonus_cost": lambda b: b * b * 4000,
+    },
+    "headbandofmentalprowess": {
+        "slot": "headband",
+        "spell": "fox's cunning / eagle's splendor",
+        "cl": 12,
+        "aura": "moderate transmutation",
+        "bonus_cost": lambda b: b * b * 10000,
+    },
+    "bracersofarmor": {
+        "slot": "wrists",
+        "spell": "mage armor",
+        "cl": 7,
+        "aura": "faint conjuration",
+        "bonus_cost": lambda b: b * b * 1000,
+    },
+    "cloakofresistance": {
+        "slot": "shoulders",
+        "spell": "resistance",
+        "cl": 5,
+        "aura": "faint abjuration",
+        "bonus_cost": lambda b: b * b * 1000,
+    },
+    "ringofprotection": {
+        "slot": "ring",
+        "spell": "shield of faith",
+        "cl": 5,
+        "aura": "faint abjuration",
+        "bonus_cost": lambda b: b * b * 2000,
+    },
+    "glovesofdexterity": {
+        "slot": "hands",
+        "spell": "cat's grace",
+        "cl": 8,
+        "aura": "faint transmutation",
+        "bonus_cost": lambda b: b * b * 4000,
+    },
+    "bootsofspeed": {
+        "slot": "feet",
+        "spell": "haste",
+        "cl": 10,
+        "aura": "moderate transmutation",
+        "price": 12000,
+    },
+    "cloakofelvenkind": {
+        "slot": "shoulders",
+        "spell": "pass without trace",
+        "cl": 3,
+        "aura": "faint transmutation",
+        "price": 2500,
+    },
+    "bagofholding": {
+        "slot": "none",
+        "spell": "secret chest",
+        "cl": 9,
+        "aura": "moderate conjuration",
+        "price": {1: 2500, 2: 5000, 3: 7400, 4: 10000},
+    },
+    "handyhaversack": {
+        "slot": "none",
+        "spell": "secret chest",
+        "cl": 9,
+        "aura": "moderate conjuration",
+        "price": 2000,
+    },
+    "pearlofpower": {
+        "slot": "none",
+        "spell": "—",
+        "cl": None,
+        "aura": "strong conjuration",
+        "price": {
+            1: 1000,
+            2: 4000,
+            3: 9000,
+            4: 16000,
+            5: 25000,
+            6: 36000,
+            7: 49000,
+            8: 64000,
+            9: 81000,
+        },
+    },
+    "ringofevasion": {
+        "slot": "ring",
+        "spell": "jump",
+        "cl": 7,
+        "aura": "moderate transmutation",
+        "price": 25000,
+    },
+    "ringoffeatherfalling": {
+        "slot": "ring",
+        "spell": "feather fall",
+        "cl": 1,
+        "aura": "faint transmutation",
+        "price": 2200,
+    },
+    "ringofwizardry": {
+        "slot": "ring",
+        "spell": "limited wish",
+        "cl": 11,
+        "aura": "moderate (no school)",
+        "price": {1: 20000, 2: 40000, 3: 70000, 4: 100000},
+    },
+    "ringoftheshootingstar": {
+        "slot": "ring",
+        "spell": "scorching ray",
+        "cl": 10,
+        "aura": "moderate evocation",
+        "price": 42000,
+    },
+    "robeofarcaneheritage": {
+        "slot": "body",
+        "spell": "—",
+        "cl": 9,
+        "aura": "moderate transmutation",
+        "price": 16000,
+    },
+    "vigilantemask": {
+        "slot": "head",
+        "spell": "disguise self",
+        "cl": 3,
+        "aura": "faint illusion",
+        "price": 5000,
+    },
 }
 
 
 # ---------------------------------------------------------------------------
 # Generatori di descrizione
 # ---------------------------------------------------------------------------
-def _weapon_description(name: str, key: str, bonus: int | None = None, special_terms: list[str] | None = None) -> str:
+def _weapon_description(
+    name: str,
+    key: str,
+    bonus: int | None = None,
+    special_terms: list[str] | None = None,
+) -> str:
     w = WEAPONS[key]
     prof = w["prof"]
     hands = w["hands"]
@@ -219,16 +1118,22 @@ def _weapon_description(name: str, key: str, bonus: int | None = None, special_t
     special = w.get("special", "")
     terms = special_terms or []
     parts = ["Italiano:"]
-    parts.append(f"{name} è un'arma {prof} {'a distanza' if ranged else 'da mischia'}, {hands}.")
+    parts.append(
+        f"{name} è un'arma {prof} {'a distanza' if ranged else 'da mischia'}, {hands}."
+    )
     if bonus:
-        parts.append(f"Ha un bonus di miglioramento +{bonus} ai tiri per colpire e ai danni.")
+        parts.append(
+            f"Ha un bonus di miglioramento +{bonus} ai tiri per colpire e ai danni."
+        )
     parts.append(f"Danno base: {dmg}; critico {crit}; tipo di danno: {dmg_type}.")
     if reach:
         parts.append("Ha reach.")
     if double:
         parts.append("È un'arma double.")
     if firearm:
-        parts.append("È un'arma da fuoco; utilizza munizioni e polvere nera, minaccia su 20/x4 e ha malfunzioni possibili.")
+        parts.append(
+            "È un'arma da fuoco; utilizza munizioni e polvere nera, minaccia su 20/x4 e ha malfunzioni possibili."
+        )
     if special:
         parts.append(f"Speciale: {special}.")
     if terms:
@@ -237,37 +1142,69 @@ def _weapon_description(name: str, key: str, bonus: int | None = None, special_t
     return " ".join(parts)
 
 
-def _armor_description(name: str, key: str, bonus: int | None = None, special_terms: list[str] | None = None) -> str:
+def _armor_description(
+    name: str,
+    key: str,
+    bonus: int | None = None,
+    special_terms: list[str] | None = None,
+) -> str:
     a = ARMORS[key]
     parts = ["Italiano:"]
     parts.append(f"{name} è un'armatura {a['type']}.")
     total_bonus = (a["bonus"] + bonus) if bonus else a["bonus"]
     parts.append(f"Bonus totale all'armatura: +{total_bonus}.")
-    parts.append(f"Max Dex: {a['maxdex']}; penalità armatura: {a['pen']}; fallimento incantesimi: {a['spell']}%; peso: {a['weight']} lb.")
+    parts.append(
+        f"Max Dex: {a['maxdex']}; penalità armatura: {a['pen']}; fallimento incantesimi: {a['spell']}%; peso: {a['weight']} lb."
+    )
     terms = special_terms or []
     if "mithral" in terms or "mithral" in normalize_name(name):
-        parts.append("In mithral: tratttata come un grado di armatura più leggero, +2 Max Dex, riduzione penalità di 3, riduzione fallimento incantesimi di 10%, metà peso.")
-    if "adamantina" in terms or "adamantina" in normalize_name(name) or "adamantio" in normalize_name(name):
-        parts.append("In adamantina: fornisce damage reduction 3/— se pesante, 1/— se leggera, 2/— se media.")
+        parts.append(
+            "In mithral: tratttata come un grado di armatura più leggero, +2 Max Dex, riduzione penalità di 3, riduzione fallimento incantesimi di 10%, metà peso."
+        )
+    if (
+        "adamantina" in terms
+        or "adamantina" in normalize_name(name)
+        or "adamantio" in normalize_name(name)
+    ):
+        parts.append(
+            "In adamantina: fornisce damage reduction 3/— se pesante, 1/— se leggera, 2/— se media."
+        )
     if terms:
         parts.append(f"Proprietà aggiuntive indicate dal nome: {', '.join(terms)}.")
     return " ".join(parts)
 
 
-def _shield_description(name: str, key: str, bonus: int | None = None, special_terms: list[str] | None = None) -> str:
+def _shield_description(
+    name: str,
+    key: str,
+    bonus: int | None = None,
+    special_terms: list[str] | None = None,
+) -> str:
     s = SHIELDS[key]
     total_bonus = (s["bonus"] + bonus) if bonus else s["bonus"]
     parts = ["Italiano:"]
     parts.append(f"{name} è uno scudo {s['type']}.")
-    parts.append(f"Bonus allo scudo: +{total_bonus}; penalità armatura: {s['pen']}; fallimento incantesimi: {s['spell']}%; peso: {s['weight']} lb.")
+    parts.append(
+        f"Bonus allo scudo: +{total_bonus}; penalità armatura: {s['pen']}; fallimento incantesimi: {s['spell']}%; peso: {s['weight']} lb."
+    )
     if "bashing" in (special_terms or []):
-        parts.append("Proprietà bashing: gli attacchi di shield bash contano come se lo scudo fosse di due taglie superiori.")
+        parts.append(
+            "Proprietà bashing: gli attacchi di shield bash contano come se lo scudo fosse di due taglie superiori."
+        )
     if special_terms:
-        parts.append(f"Proprietà aggiuntive indicate dal nome: {', '.join(special_terms)}.")
+        parts.append(
+            f"Proprietà aggiuntive indicate dal nome: {', '.join(special_terms)}."
+        )
     return " ".join(parts)
 
 
-def _wondrous_bonus_description(name: str, family: str, bonus: int | None, ability: str | None = None, extra: str = "") -> str:
+def _wondrous_bonus_description(
+    name: str,
+    family: str,
+    bonus: int | None,
+    ability: str | None = None,
+    extra: str = "",
+) -> str:
     base = WONDROUS_BASE_PRICE.get(family)
     if not base:
         return ""
@@ -283,7 +1220,9 @@ def _wondrous_bonus_description(name: str, family: str, bonus: int | None, abili
             price = price.get(bonus, 0) if bonus else 0
     parts = ["Italiano:"]
     if ability:
-        parts.append(f"{name} è un oggetto meraviglioso da indossare ({slot}) che conferisce un bonus di miglioramento +{bonus} al punteggio di {ability}.")
+        parts.append(
+            f"{name} è un oggetto meraviglioso da indossare ({slot}) che conferisce un bonus di miglioramento +{bonus} al punteggio di {ability}."
+        )
     else:
         parts.append(f"{name} è un oggetto meraviglioso da indossare ({slot}).")
     if cl:
@@ -299,20 +1238,42 @@ def _wondrous_bonus_description(name: str, family: str, bonus: int | None, abili
     return " ".join(parts)
 
 
-def _consumable_spell_description(name: str, item_type: str, spell: str, level: int, cl: int | None = None, quantity: int | None = None, charges: int | None = None) -> str:
+def _consumable_spell_description(
+    name: str,
+    item_type: str,
+    spell: str,
+    level: int,
+    cl: int | None = None,
+    quantity: int | None = None,
+    charges: int | None = None,
+) -> str:
     cl = cl or (level * 2 - 1)
     parts = ["Italiano:"]
     if item_type == "potion":
-        parts.append(f"{name} è una pozione che lancia {spell} come incantesimo di livello {level} (CL {cl}).")
-        parts.append(f"L'effetto dura 1 round x CL o come indicato dalla descrizione dell'incantesimo; può essere bevuta come azione standard.")
+        parts.append(
+            f"{name} è una pozione che lancia {spell} come incantesimo di livello {level} (CL {cl})."
+        )
+        parts.append(
+            f"L'effetto dura 1 round x CL o come indicato dalla descrizione dell'incantesimo; può essere bevuta come azione standard."
+        )
     elif item_type == "scroll":
-        parts.append(f"{name} è una pergamena che lancia {spell} come incantesimo di livello {level} (CL {cl}).")
-        parts.append(f"Richiede Decipher Script DC 20 + livello incantesimo e uso della lista incantesimi appropriata per attivarla.")
+        parts.append(
+            f"{name} è una pergamena che lancia {spell} come incantesimo di livello {level} (CL {cl})."
+        )
+        parts.append(
+            f"Richiede Decipher Script DC 20 + livello incantesimo e uso della lista incantesimi appropriata per attivarla."
+        )
     elif item_type == "wand":
-        parts.append(f"{name} è una bacchetta che lancia {spell} come incantesimo di livello {level} (CL {cl}).")
-        parts.append(f"Richiede Uso Congegni Magici per attivare; ogni uso consuma 1 carica.")
+        parts.append(
+            f"{name} è una bacchetta che lancia {spell} come incantesimo di livello {level} (CL {cl})."
+        )
+        parts.append(
+            f"Richiede Uso Congegni Magici per attivare; ogni uso consuma 1 carica."
+        )
     else:
-        parts.append(f"{name} è un consumabile che duplica l'effetto di {spell} (livello {level}, CL {cl}).")
+        parts.append(
+            f"{name} è un consumabile che duplica l'effetto di {spell} (livello {level}, CL {cl})."
+        )
     if quantity:
         parts.append(f"Quantità inclusa: {quantity}.")
     if charges:
@@ -464,13 +1425,20 @@ def _exact_template(name: str) -> dict[str, Any] | None:
         }
 
     # Perle del potere
-    m = re.search(r"pearl of power\s*\(?([0-9]+)(?:th|rd|nd|st)?\)?", name, flags=re.IGNORECASE)
+    m = re.search(
+        r"pearl of power\s*\(?([0-9]+)(?:th|rd|nd|st)?\)?", name, flags=re.IGNORECASE
+    )
     if m or "pearlofpower" in key:
         level = int(m.group(1)) if m else 1
-        price = WONDROUS_BASE_PRICE["pearlofpower"]["price"].get(level, level * level * 1000)
+        price = WONDROUS_BASE_PRICE["pearlofpower"]["price"].get(
+            level, level * level * 1000
+        )
         return {
             "description": f"Italiano: Pearl of Power ({level}th). Consente al possessore di recuperare un incantesimo preparato o slot incantesimo di livello {level} già lanciato, una volta al giorno. Aura strong conjuration; CL 17th; Slot none; Price {price} gp; Weight —. Construction Requirements: Craft Wondrous Item, creator must be able to cast spells of the level to be recalled.",
-            "prerequisites": ["Craft Wondrous Item", "creator must be able to cast spells of the level to be recalled"],
+            "prerequisites": [
+                "Craft Wondrous Item",
+                "creator must be able to cast spells of the level to be recalled",
+            ],
             "tags": ["wondrous", "slot:none", "spell-recovery"],
             "source": "Pathfinder Core Rulebook",
             "source_id": "CRB",
@@ -497,14 +1465,25 @@ def _exact_template(name: str) -> dict[str, Any] | None:
         return {
             "description": "Italiano: Bracers of Falcon's Aim. Bracciali che conferiscono +1 competence bonus ai tiri per colpire a distanza e il beneficio del talento Improved Critical con armi a distanza da tiro (solo per i tiri, non si cumula). Aura faint transmutation; CL 3rd; Slot wrists; Price 4,000 gp; Weight 1 lb. Construction Requirements: Craft Wondrous Item, hunter's eye.",
             "prerequisites": ["Craft Wondrous Item", "hunter's eye"],
-            "tags": ["wondrous", "slot:wrist", "ranged", "damage:piercing", "class:ranger", "class:hunter"],
+            "tags": [
+                "wondrous",
+                "slot:wrist",
+                "ranged",
+                "damage:piercing",
+                "class:ranger",
+                "class:hunter",
+            ],
             "source": "Pathfinder Ultimate Equipment",
             "source_id": "UE",
         }
     if key == "beltofphysicalmight2strcon":
         return {
             "description": "Italiano: Belt of Physical Might +2 (Str/Con). Cintura che conferisce +2 enhancement bonus a Strength e Constitution. Trattare come bonus temporaneo per le prime 24 ore. Aura moderate transmutation; CL 12th; Slot belt; Price 10,000 gp; Weight 1 lb. Construction Requirements: Craft Wondrous Item, bull's strength, bear's endurance.",
-            "prerequisites": ["Craft Wondrous Item", "bull's strength", "bear's endurance"],
+            "prerequisites": [
+                "Craft Wondrous Item",
+                "bull's strength",
+                "bear's endurance",
+            ],
             "tags": ["wondrous", "slot:belt", "enhancement"],
             "source": "Pathfinder Ultimate Equipment",
             "source_id": "UE",
@@ -512,7 +1491,11 @@ def _exact_template(name: str) -> dict[str, Any] | None:
     if key == "headbandofmentalprowess2intcha":
         return {
             "description": "Italiano: Headband of Mental Prowess +2 (Int/Cha). Fascia che conferisce +2 enhancement bonus a Intelligence e Charisma. Trattare come bonus temporaneo per le prime 24 ore. Una skill associata per ogni +2 bonus riceve rank pari ai HD. Aura moderate transmutation; CL 12th; Slot headband; Price 10,000 gp; Weight 1 lb. Construction Requirements: Craft Wondrous Item, fox's cunning, eagle's splendor.",
-            "prerequisites": ["Craft Wondrous Item", "fox's cunning", "eagle's splendor"],
+            "prerequisites": [
+                "Craft Wondrous Item",
+                "fox's cunning",
+                "eagle's splendor",
+            ],
             "tags": ["wondrous", "slot:headband", "enhancement"],
             "source": "Pathfinder Ultimate Equipment",
             "source_id": "UE",
@@ -520,7 +1503,11 @@ def _exact_template(name: str) -> dict[str, Any] | None:
     if key == "robeofarcaneheritage":
         return {
             "description": "Italiano: Robe of Arcane Heritage. Veste che aumenta di 4 livelli effettivi il sorcerer bloodline class feature per determinare i bloodline powers, ma non per gli spells known. Aura moderate transmutation; CL 9th; Slot body; Price 16,000 gp; Weight 1 lb. Construction Requirements: Craft Wondrous Item, sorcerer bloodline class feature, caster level 8th.",
-            "prerequisites": ["Craft Wondrous Item", "sorcerer bloodline class feature", "caster level 8th"],
+            "prerequisites": [
+                "Craft Wondrous Item",
+                "sorcerer bloodline class feature",
+                "caster level 8th",
+            ],
             "tags": ["wondrous", "slot:body", "class:sorcerer"],
             "source": "Pathfinder Core Rulebook",
             "source_id": "CRB",
@@ -567,7 +1554,12 @@ def _exact_template(name: str) -> dict[str, Any] | None:
         }
 
     # Gear / kit
-    if key in ("kitavventuriero", "kittendaavventuriero", "kitdavventuriero", "adventurerskit"):
+    if key in (
+        "kitavventuriero",
+        "kittendaavventuriero",
+        "kitdavventuriero",
+        "adventurerskit",
+    ):
         return {
             "description": "Italiano: Kit da avventuriero. Contiene l'equipaggiamento base per un'avventura: zaino, sacco a pelo, razioni, corda, torce, acciarino e altri oggetti utili. Fornisce i tool necessari per viaggiare ed esplorare.",
             "tags": ["gear", "kit", "equipment", "nonmagical"],
@@ -649,7 +1641,11 @@ def _exact_template(name: str) -> dict[str, Any] | None:
     if key in WEAPONS:
         return {
             "description": _weapon_description(name, key),
-            "tags": ["weapon", WEAPONS[key]["prof"], "melee" if not WEAPONS[key].get("ranged") else "ranged"],
+            "tags": [
+                "weapon",
+                WEAPONS[key]["prof"],
+                "melee" if not WEAPONS[key].get("ranged") else "ranged",
+            ],
             "source": "Pathfinder Core Rulebook",
             "source_id": "CRB",
         }
@@ -739,7 +1735,11 @@ def _match_weapon_variant(name: str, key: str) -> dict[str, Any] | None:
         return {
             "description": _weapon_description(name, wkey, bonus, terms),
             "prerequisites": _make_prereq_arms_armor(bonus, None),
-            "tags": ["weapon", WEAPONS[wkey]["prof"], "melee" if not WEAPONS[wkey].get("ranged") else "ranged"],
+            "tags": [
+                "weapon",
+                WEAPONS[wkey]["prof"],
+                "melee" if not WEAPONS[wkey].get("ranged") else "ranged",
+            ],
             "source": "Pathfinder Core Rulebook",
             "source_id": "CRB",
         }
@@ -772,7 +1772,9 @@ def _match_shield_variant(name: str, key: str) -> dict[str, Any] | None:
         terms = _extract_special_terms(name)
         return {
             "description": _shield_description(name, skey, bonus, terms),
-            "prerequisites": _make_prereq_arms_armor(bonus, "bashing" if "bashing" in terms else None),
+            "prerequisites": _make_prereq_arms_armor(
+                bonus, "bashing" if "bashing" in terms else None
+            ),
             "tags": ["armor", "shield", SHIELDS[skey]["type"]],
             "source": "Pathfinder Core Rulebook",
             "source_id": "CRB",
@@ -782,7 +1784,11 @@ def _match_shield_variant(name: str, key: str) -> dict[str, Any] | None:
 
 WONDROUS_FAMILIES: dict[str, dict[str, Any]] = {
     "amuletofnaturalarmor": {
-        "names": ["amuletodellarmaturanaturale", "amuletodellanaturalearmatura", "amuletofnaturalarmor"],
+        "names": [
+            "amuletodellarmaturanaturale",
+            "amuletodellanaturalearmatura",
+            "amuletofnaturalarmor",
+        ],
         "ability": None,
         "extra": "",
     },
@@ -822,7 +1828,12 @@ WONDROUS_FAMILIES: dict[str, dict[str, Any]] = {
         "extra": "Conferisce un bonus di armatura +{bonus} alla CA.",
     },
     "cloakofresistance": {
-        "names": ["mantellodellaresistenza", "mantellodiresistenza", "mantelloresistente", "cloakofresistance"],
+        "names": [
+            "mantellodellaresistenza",
+            "mantellodiresistenza",
+            "mantelloresistente",
+            "cloakofresistance",
+        ],
         "ability": None,
         "extra": "Conferisce un bonus di resistenza +{bonus} a tutti i tiri salvezza.",
     },
@@ -842,11 +1853,21 @@ def _match_wondrous_family(name: str, key: str) -> dict[str, Any] | None:
                     # Se non c'è bonus ma il nome implica un bonus (es. +1 omesso?), prova default 1
                     bonus = 1
                 ability = info.get("ability")
-                extra = info.get("extra", "").format(bonus=bonus) if info.get("extra") else ""
+                extra = (
+                    info.get("extra", "").format(bonus=bonus)
+                    if info.get("extra")
+                    else ""
+                )
                 return {
-                    "description": _wondrous_bonus_description(name, family, bonus, ability, extra),
+                    "description": _wondrous_bonus_description(
+                        name, family, bonus, ability, extra
+                    ),
                     "prerequisites": _make_prereq_wondrous(family),
-                    "tags": ["wondrous", f"slot:{WONDROUS_BASE_PRICE[family].get('slot', 'none')}", "enhancement"],
+                    "tags": [
+                        "wondrous",
+                        f"slot:{WONDROUS_BASE_PRICE[family].get('slot', 'none')}",
+                        "enhancement",
+                    ],
                     "source": "Pathfinder Core Rulebook",
                     "source_id": "CRB",
                 }
@@ -867,9 +1888,21 @@ SPELLS_LOOKUP: dict[str, dict[str, Any]] = {
     "fireball": {"spell": "fireball", "level": 3, "cl": 5},
     "bless": {"spell": "bless", "level": 1, "cl": 1},
     "benedizione": {"spell": "bless", "level": 1, "cl": 1},
-    "invocare alleato naturale i": {"spell": "summon nature's ally I", "level": 1, "cl": 1},
-    "invocare alleato naturale ii": {"spell": "summon nature's ally II", "level": 2, "cl": 3},
-    "summon nature's ally ii": {"spell": "summon nature's ally II", "level": 2, "cl": 3},
+    "invocare alleato naturale i": {
+        "spell": "summon nature's ally I",
+        "level": 1,
+        "cl": 1,
+    },
+    "invocare alleato naturale ii": {
+        "spell": "summon nature's ally II",
+        "level": 2,
+        "cl": 3,
+    },
+    "summon nature's ally ii": {
+        "spell": "summon nature's ally II",
+        "level": 2,
+        "cl": 3,
+    },
 }
 
 
@@ -909,7 +1942,15 @@ def _match_consumable(name: str, key: str) -> dict[str, Any] | None:
             charges = quantity or 50
             quantity = None
         return {
-            "description": _consumable_spell_description(name, item_type, matched["spell"], matched["level"], cl or matched["cl"], quantity, charges),
+            "description": _consumable_spell_description(
+                name,
+                item_type,
+                matched["spell"],
+                matched["level"],
+                cl or matched["cl"],
+                quantity,
+                charges,
+            ),
             "tags": ["consumable", item_type],
             "source": "Pathfinder Core Rulebook",
             "source_id": "CRB",
@@ -978,8 +2019,17 @@ def _fallback_wondrous(name: str, key: str) -> dict[str, Any] | None:
     elif "bracciali" in lowered or "bracers" in lowered:
         slot = "wrists"
         effect = "Bracciali magici che conferiscono bonus di armatura o competence a prove specifiche."
-    elif "diadema" in lowered or "headband" in lowered or "mitria" in lowered or "cappuccio" in lowered:
-        slot = "headband" if "headband" in lowered or "diadema" in lowered or "mitria" in lowered else "head"
+    elif (
+        "diadema" in lowered
+        or "headband" in lowered
+        or "mitria" in lowered
+        or "cappuccio" in lowered
+    ):
+        slot = (
+            "headband"
+            if "headband" in lowered or "diadema" in lowered or "mitria" in lowered
+            else "head"
+        )
         effect = "Oggetto per la testa che conferisce bonus a caratteristiche mentali o competenze."
     elif "veste" in lowered or "robe" in lowered or "cappa" in lowered:
         slot = "body" if "veste" in lowered or "robe" in lowered else "shoulders"
@@ -1016,7 +2066,11 @@ def _fallback_kit(name: str, key: str) -> dict[str, Any] | None:
     lowered = name.lower()
     if "kit" in lowered or "set" in lowered:
         return {
-            "description": _gear_description(name, "kit", "Fornisce gli strumenti necessari per attività specifiche; può conferire competence bonus a prove di abilità pertinenti."),
+            "description": _gear_description(
+                name,
+                "kit",
+                "Fornisce gli strumenti necessari per attività specifiche; può conferire competence bonus a prove di abilità pertinenti.",
+            ),
             "tags": ["gear", "kit", "equipment", "nonmagical"],
             "source": "Autogenerated",
             "source_id": "AUTO",
@@ -1026,28 +2080,69 @@ def _fallback_kit(name: str, key: str) -> dict[str, Any] | None:
 
 def _fallback_generic(name: str, key: str) -> dict[str, Any] | None:
     lowered = name.lower()
-    if any(w in lowered for w in ["armatura", "armor", "corazza", "scudo", "shield", "giaco", "cotta", "piastre", "pelle"]):
+    if any(
+        w in lowered
+        for w in [
+            "armatura",
+            "armor",
+            "corazza",
+            "scudo",
+            "shield",
+            "giaco",
+            "cotta",
+            "piastre",
+            "pelle",
+        ]
+    ):
         return {
             "description": f"Italiano: {name} è un'armatura o uno scudo. Il nome indica bonus di miglioramento, materiali speciali o proprietà magiche che modificano bonus alla CA, Max Dex, penalità e fallimento incantesimi.",
             "tags": ["armor", "defense"],
             "source": "Autogenerated",
             "source_id": "AUTO",
         }
-    if any(w in lowered for w in ["arma", "weapon", "spada", "ascia", "lancia", "martello", "pugnale", "dagger", "longsword", "arco", "bow", "musket", "pistol", "frusta", "kukri", "kama", "falchion", "falchion"]):
+    if any(
+        w in lowered
+        for w in [
+            "arma",
+            "weapon",
+            "spada",
+            "ascia",
+            "lancia",
+            "martello",
+            "pugnale",
+            "dagger",
+            "longsword",
+            "arco",
+            "bow",
+            "musket",
+            "pistol",
+            "frusta",
+            "kukri",
+            "kama",
+            "falchion",
+            "falchion",
+        ]
+    ):
         return {
             "description": f"Italiano: {name} è un'arma. Il nome indica una o più proprietà speciali (bonus di miglioramento, materiale o ability) che si applicano ai tiri per colpire e ai danni secondo le regole delle armi magiche.",
             "tags": ["weapon", "martial", "melee"],
             "source": "Autogenerated",
             "source_id": "AUTO",
         }
-    if any(w in lowered for w in ["pozione", "potion", "bacchetta", "wand", "pergamena", "scroll"]):
+    if any(
+        w in lowered
+        for w in ["pozione", "potion", "bacchetta", "wand", "pergamena", "scroll"]
+    ):
         return {
             "description": f"Italiano: {name} è un oggetto consumabile magico che duplica l'effetto di un incantesimo noto, attivabile secondo le regole di pozioni, bacchette o pergamene.",
             "tags": ["consumable"],
             "source": "Autogenerated",
             "source_id": "AUTO",
         }
-    if any(w in lowered for w in ["munizioni", "cartucce", "polvere", "frecce", "dardi", "proiettili"]):
+    if any(
+        w in lowered
+        for w in ["munizioni", "cartucce", "polvere", "frecce", "dardi", "proiettili"]
+    ):
         return {
             "description": f"Italiano: {name} è munizione o materiale alchemico per armi a distanza o da fuoco. Può fornire bonus al danno o effetti speciali secondo il tipo.",
             "tags": ["gear", "ammunition", "equipment", "nonmagical"],
@@ -1107,10 +2202,16 @@ def _enrich_entry_logic(entry: dict[str, Any]) -> bool:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Arricchisce items.json con descrizioni meccaniche")
+    parser = argparse.ArgumentParser(
+        description="Arricchisce items.json con descrizioni meccaniche"
+    )
     parser.add_argument("--dry-run", action="store_true", help="Non scrive il file")
-    parser.add_argument("--force", action="store_true", help="Sovrascrive anche entry già descritte")
-    parser.add_argument("--output", type=Path, help="Percorso output (default: sovrascrive items.json)")
+    parser.add_argument(
+        "--force", action="store_true", help="Sovrascrive anche entry già descritte"
+    )
+    parser.add_argument(
+        "--output", type=Path, help="Percorso output (default: sovrascrive items.json)"
+    )
     args = parser.parse_args()
 
     data = json.loads(ITEMS_PATH.read_text(encoding="utf-8"))
@@ -1119,14 +2220,18 @@ def main() -> None:
     enriched = 0
     skipped = 0
     for entry in entries:
-        if not args.force and (entry.get("description") or entry.get("short_description")):
+        if not args.force and (
+            entry.get("description") or entry.get("short_description")
+        ):
             skipped += 1
             continue
         if _enrich_entry_logic(entry):
             enriched += 1
 
     total = len(entries)
-    covered = sum(1 for e in entries if e.get("description") or e.get("short_description"))
+    covered = sum(
+        1 for e in entries if e.get("description") or e.get("short_description")
+    )
     print(f"Entry totali: {total}")
     print(f"Arricchite in questa run: {enriched}")
     print(f"Saltate (già descritte): {skipped}")

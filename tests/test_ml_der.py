@@ -1,5 +1,6 @@
 """Test per src/ml/der.py — harness DER su input sintetici noti (niente
 modello reale: segmenti costruiti a mano, stesso pattern dei test diarize)."""
+
 import sys
 from pathlib import Path
 
@@ -87,10 +88,13 @@ def test_hungarian_matches_brute_force_optimum():
     from src.ml.der import _grid, _precompute, _score_precomputed
 
     ref = [
-        _seg(0.0, 2.0, "A"), _seg(1.0, 3.0, "B"), _seg(3.0, 5.0, "C"),
+        _seg(0.0, 2.0, "A"),
+        _seg(1.0, 3.0, "B"),
+        _seg(3.0, 5.0, "C"),
     ]
     hyp = [
-        _seg(0.2, 2.2, "S1"), _seg(1.1, 2.8, "S2"),
+        _seg(0.2, 2.2, "S1"),
+        _seg(1.1, 2.8, "S2"),
         _seg(4.0, 6.0, "S3"),  # parte oltre la fine della ref: fa
     ]
     r = compute_der(ref, hyp)

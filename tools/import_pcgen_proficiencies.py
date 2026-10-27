@@ -54,6 +54,7 @@ Uso:
   --pcgen-repo PATH  (default %PCGEN_REPO% o C:/Users/VGit/Downloads/pcgen-repo)
   --out-dir PATH     (default <pathmaster sibling>/packages/rules-engine-v2/src/data)
 """
+
 from __future__ import annotations
 
 import argparse
@@ -66,11 +67,19 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tools.import_pcgen_lst import (  # noqa: E402
-    DATA_SUBDIR, DEFAULT_OUT_DIR, DEFAULT_PCGEN_REPO, DESC_POLICY,
-    LICENSE_TEXT, _pcgen_commit, _split_pipes, iter_lst_records,
+    DATA_SUBDIR,
+    DEFAULT_OUT_DIR,
+    DEFAULT_PCGEN_REPO,
+    DESC_POLICY,
+    LICENSE_TEXT,
+    _pcgen_commit,
+    _split_pipes,
+    iter_lst_records,
 )
 from tools.import_pcgen_classes import (  # noqa: E402
-    BOOK_CLASS_FILES, _known_classes, extract_level_gate,
+    BOOK_CLASS_FILES,
+    _known_classes,
+    extract_level_gate,
     parse_ability_grant,
 )
 
@@ -130,8 +139,7 @@ FEAT_PROF_MAP = {
 }
 
 # "Exotic Weapon Proficiency (Katana)" -> arma esplicita.
-_FEAT_CHOICE_RE = re.compile(
-    r"^(?:Exotic|Martial) Weapon Proficiency \((.+)\)$")
+_FEAT_CHOICE_RE = re.compile(r"^(?:Exotic|Martial) Weapon Proficiency \((.+)\)$")
 
 # SUPPLEMENTO CURATO (Fase A 2026-08-08): gap del dato PCGen colmati a mano
 # col RAW verificato su AoN — MAI silenzioso: ogni grant porta
@@ -146,30 +154,47 @@ _FEAT_CHOICE_RE = re.compile(
 # come le restrizioni druidiche D6).
 CURATED_SUPPLEMENT: dict[str, list[dict]] = {
     "Vigilante": [
-        {"kind": "weapon_type", "value": "simple", "level": 1,
-         "curated": True,
-         "raw": "CURATO: RAW UI p.9 (AoN ClassDisplay Vigilante, 2026-08-08) "
-                "— il record PCGen omette il grant separato delle semplici"},
-        {"kind": "armor_type", "value": "light", "level": 1,
-         "curated": True,
-         "raw": "CURATO: RAW UI p.9 (AoN ClassDisplay Vigilante, 2026-08-08) "
-                "— il record PCGen omette il grant separato delle leggere"},
+        {
+            "kind": "weapon_type",
+            "value": "simple",
+            "level": 1,
+            "curated": True,
+            "raw": "CURATO: RAW UI p.9 (AoN ClassDisplay Vigilante, 2026-08-08) "
+            "— il record PCGen omette il grant separato delle semplici",
+        },
+        {
+            "kind": "armor_type",
+            "value": "light",
+            "level": 1,
+            "curated": True,
+            "raw": "CURATO: RAW UI p.9 (AoN ClassDisplay Vigilante, 2026-08-08) "
+            "— il record PCGen omette il grant separato delle leggere",
+        },
     ],
     "Shifter": [
-        {"kind": "armor_type", "value": "light", "level": 1,
-         "curated": True,
-         "raw": "CURATO: RAW UW p.26 (AoN ClassDisplay Shifter, 2026-08-08) "
-                "— il record PCGen omette il grant separato delle leggere"},
+        {
+            "kind": "armor_type",
+            "value": "light",
+            "level": 1,
+            "curated": True,
+            "raw": "CURATO: RAW UW p.26 (AoN ClassDisplay Shifter, 2026-08-08) "
+            "— il record PCGen omette il grant separato delle leggere",
+        },
     ],
 }
 
 # Valori ARMORTYPE= (con e senza prefisso ArmorProf, entrambe attestate).
 ARMORTYPE_MAP = {
-    "Light": ("armor_type", "light"), "ArmorProfLight": ("armor_type", "light"),
-    "Medium": ("armor_type", "medium"), "ArmorProfMedium": ("armor_type", "medium"),
-    "Heavy": ("armor_type", "heavy"), "ArmorProfHeavy": ("armor_type", "heavy"),
-    "Shield": ("shield", None), "ArmorProfShield": ("shield", None),
-    "Tower": ("tower_shield", None), "ArmorProfTower": ("tower_shield", None),
+    "Light": ("armor_type", "light"),
+    "ArmorProfLight": ("armor_type", "light"),
+    "Medium": ("armor_type", "medium"),
+    "ArmorProfMedium": ("armor_type", "medium"),
+    "Heavy": ("armor_type", "heavy"),
+    "ArmorProfHeavy": ("armor_type", "heavy"),
+    "Shield": ("shield", None),
+    "ArmorProfShield": ("shield", None),
+    "Tower": ("tower_shield", None),
+    "ArmorProfTower": ("tower_shield", None),
     "TowerShield": ("tower_shield", None),
 }
 
@@ -186,15 +211,21 @@ WEAPONPROF_TYPE_MAP = {
 }
 
 _MOD_NAME = re.compile(r"^CATEGORY=([^|]+)\|(.+)\.MOD$")
-_STANDARD_SUFFIXES = (" ~ Standard Class Full", " ~ Standard Class",
-                      " ~ Standard Ex-Class")
+_STANDARD_SUFFIXES = (
+    " ~ Standard Class Full",
+    " ~ Standard Class",
+    " ~ Standard Ex-Class",
+)
 
 # Parti di KEY (dopo split " ~ ") che identificano il record proficienze di
 # una classe: l'ALTRA parte e' la classe. Forme attestate (ricognizione
 # 2026-08-08). I record degli archetipi matchano ma li filtra known_classes.
 _PROF_RECORD_PARTS = {
-    "weapon and armor proficiency", "weapon and armor proficiencies",
-    "armor and weapon proficiencies", "proficiencies", "weapon proficiencies",
+    "weapon and armor proficiency",
+    "weapon and armor proficiencies",
+    "armor and weapon proficiencies",
+    "proficiencies",
+    "weapon proficiencies",
 }
 
 
@@ -215,8 +246,9 @@ def _grant(kind: str, value: str | None, level: int, raw: str) -> dict:
     return g
 
 
-def parse_auto_weaponprof(value: str, raw: str,
-                          report: dict | None = None) -> list[dict]:
+def parse_auto_weaponprof(
+    value: str, raw: str, report: dict | None = None
+) -> list[dict]:
     """Segmenti di un AUTO:WEAPONPROF (senza il prefisso) -> grants."""
     grants: list[dict] = []
     conditions: list[str] = []
@@ -230,10 +262,11 @@ def parse_auto_weaponprof(value: str, raw: str,
         elif seg == "DEITYWEAPONS":
             grants.append(_grant("deity_weapons", None, 1, raw))
         elif seg.startswith("TYPE=Weapon Group "):
-            grants.append(_grant("weapon_group",
-                                 seg[len("TYPE=Weapon Group "):], 1, raw))
+            grants.append(
+                _grant("weapon_group", seg[len("TYPE=Weapon Group ") :], 1, raw)
+            )
         elif seg.startswith("TYPE="):
-            mapped = WEAPONPROF_TYPE_MAP.get(seg[len("TYPE="):])
+            mapped = WEAPONPROF_TYPE_MAP.get(seg[len("TYPE=") :])
             if mapped:
                 grants.append(_grant(*mapped, 1, raw))
             else:
@@ -247,8 +280,9 @@ def parse_auto_weaponprof(value: str, raw: str,
     return grants
 
 
-def parse_auto_armorprof(value: str, raw: str,
-                         report: dict | None = None) -> list[dict]:
+def parse_auto_armorprof(
+    value: str, raw: str, report: dict | None = None
+) -> list[dict]:
     grants: list[dict] = []
     conditions: list[str] = []
     for seg in _split_pipes(value):
@@ -257,7 +291,7 @@ def parse_auto_armorprof(value: str, raw: str,
         if seg.startswith("PRE") or seg.startswith("!PRE"):
             conditions.append(seg)
             continue
-        name = seg[len("ARMORTYPE="):] if seg.startswith("ARMORTYPE=") else seg
+        name = seg[len("ARMORTYPE=") :] if seg.startswith("ARMORTYPE=") else seg
         mapped = ARMORTYPE_MAP.get(name)
         if mapped:
             grants.append(_grant(*mapped, 1, raw))
@@ -273,19 +307,20 @@ def parse_auto_armorprof(value: str, raw: str,
 def _report_unmapped(report: dict | None, name: str) -> None:
     if report is not None:
         report.setdefault("unmapped_names", {})[name] = (
-            report.setdefault("unmapped_names", {}).get(name, 0) + 1)
+            report.setdefault("unmapped_names", {}).get(name, 0) + 1
+        )
 
 
-def resolve_grant_name(name: str, level: int, raw: str, shared: dict,
-                       report: dict | None = None) -> list[dict]:
+def resolve_grant_name(
+    name: str, level: int, raw: str, shared: dict, report: dict | None = None
+) -> list[dict]:
     """Un nome di grant ABILITY -> fatti di proficienza (o report)."""
     if name in GRANT_NAME_MAP:
         kind, value = GRANT_NAME_MAP[name]
         g = _grant(kind, value, level, raw)
         return [g]
     if name.startswith("TYPE=Weapon Group "):
-        return [_grant("weapon_group", name[len("TYPE=Weapon Group "):],
-                       level, raw)]
+        return [_grant("weapon_group", name[len("TYPE=Weapon Group ") :], level, raw)]
     if name == "TYPE=Monk":
         # Forma attestata (1 occorrenza): gruppo armi Monk come TYPE nudo.
         return [_grant("weapon_group", "Monk", level, raw)]
@@ -309,33 +344,36 @@ def resolve_grant_name(name: str, level: int, raw: str, shared: dict,
     return []
 
 
-def record_prof_facts(tags, raw: str, shared: dict,
-                      report: dict | None = None) -> list[dict]:
+def record_prof_facts(
+    tags, raw: str, shared: dict, report: dict | None = None
+) -> list[dict]:
     """I fatti di proficienza PORTATI da un record (AUTO + grant Internal/
     FEAT suoi propri), senza attribuzione di classe."""
     grants: list[dict] = []
     for k, value in tags:
         if k == "AUTO" and value.startswith("WEAPONPROF|"):
-            grants.extend(parse_auto_weaponprof(value[len("WEAPONPROF|"):],
-                                                raw, report))
+            grants.extend(
+                parse_auto_weaponprof(value[len("WEAPONPROF|") :], raw, report)
+            )
         elif k == "AUTO" and value.startswith("ARMORPROF|"):
-            grants.extend(parse_auto_armorprof(value[len("ARMORPROF|"):],
-                                               raw, report))
+            grants.extend(parse_auto_armorprof(value[len("ARMORPROF|") :], raw, report))
         elif k == "ABILITY":
             grant = parse_ability_grant(value)
             if grant["pool"] not in ("Internal", "FEAT"):
                 continue
             level = extract_level_gate(grant["conditions"])
             for n in grant["names"]:
-                grants.extend(resolve_grant_name(n, level, raw, shared,
-                                                 report))
+                grants.extend(resolve_grant_name(n, level, raw, shared, report))
     return grants
 
 
-def parse_lst_text(text: str, source_book: str,
-                   shared: dict | None = None,
-                   known_classes: set | None = None,
-                   report: dict | None = None) -> dict:
+def parse_lst_text(
+    text: str,
+    source_book: str,
+    shared: dict | None = None,
+    known_classes: set | None = None,
+    report: dict | None = None,
+) -> dict:
     """Un file LST -> {classe: {"grants": [...]}} (solo fatti di proficienza).
 
     `shared` = tabella nome-record -> fatti (record condivisi, liste
@@ -364,7 +402,7 @@ def parse_lst_text(text: str, source_book: str,
         class_name = None
         for suffix in _STANDARD_SUFFIXES:
             if target.endswith(suffix):
-                class_name = target[:-len(suffix)]
+                class_name = target[: -len(suffix)]
                 break
         if class_name is None:
             class_name = target
@@ -379,8 +417,10 @@ def parse_lst_text(text: str, source_book: str,
             raw_ref = f"{source_book}:{line[:120]}"
             if grant["pool"] in ("Internal", "FEAT"):
                 for n in grant["names"]:
-                    add(class_name, resolve_grant_name(n, level, raw_ref,
-                                                       shared, report))
+                    add(
+                        class_name,
+                        resolve_grant_name(n, level, raw_ref, shared, report),
+                    )
             else:
                 # Altri pool (Special Ability, pool di classe come "Magus
                 # Class Feature"): si risolvono SOLO i nomi che portano fatti
@@ -389,8 +429,10 @@ def parse_lst_text(text: str, source_book: str,
                 # sono feature di classe: fuori dominio, non contate.
                 for n in grant["names"]:
                     if n in shared or n in GRANT_NAME_MAP or n in FEAT_PROF_MAP:
-                        add(class_name, resolve_grant_name(n, level, raw_ref,
-                                                           shared, report))
+                        add(
+                            class_name,
+                            resolve_grant_name(n, level, raw_ref, shared, report),
+                        )
 
     # -- record proficienze della classe (KEY "<Classe> ~ <prof>") -----------
     for name, tags in iter_lst_records(text):
@@ -400,8 +442,7 @@ def parse_lst_text(text: str, source_book: str,
             continue
         if known_classes is not None and class_name not in known_classes:
             continue
-        add(class_name, record_prof_facts(tags, f"{source_book}:{key}",
-                                          shared, report))
+        add(class_name, record_prof_facts(tags, f"{source_book}:{key}", shared, report))
     # Dedupe per classe: un record "Weapon Proficiencies ~ X" e' sia
     # attribuito direttamente sia risolto via grant che lo referenzia.
     for cls in out:
@@ -409,8 +450,9 @@ def parse_lst_text(text: str, source_book: str,
     return out
 
 
-def collect_shared_records(records, source_book: str,
-                           report: dict | None = None) -> dict:
+def collect_shared_records(
+    records, source_book: str, report: dict | None = None
+) -> dict:
     """Nome/KEY -> fatti di proficienza, per OGNI record che ne porta.
 
     Copre le liste Internal ("Weapon Proficiencies ~ Monk"), i record
@@ -432,11 +474,13 @@ def collect_shared_records(records, source_book: str,
         facts: list[dict] = []
         for k, value in tags:
             if k == "AUTO" and value.startswith("WEAPONPROF|"):
-                facts.extend(parse_auto_weaponprof(value[len("WEAPONPROF|"):],
-                                                   raw, report))
+                facts.extend(
+                    parse_auto_weaponprof(value[len("WEAPONPROF|") :], raw, report)
+                )
             elif k == "AUTO" and value.startswith("ARMORPROF|"):
-                facts.extend(parse_auto_armorprof(value[len("ARMORPROF|"):],
-                                                  raw, report))
+                facts.extend(
+                    parse_auto_armorprof(value[len("ARMORPROF|") :], raw, report)
+                )
         return facts
 
     for name, tags, key in indexed:
@@ -470,8 +514,11 @@ def _dedupe(grants: list[dict]) -> list[dict]:
     return out
 
 
-def build_file(pcgen_root: Path, corpus_classes: list[str] | None = None,
-               generated_by: str = "Master-DD-Taverna/tools/import_pcgen_proficiencies.py") -> dict:
+def build_file(
+    pcgen_root: Path,
+    corpus_classes: list[str] | None = None,
+    generated_by: str = "Master-DD-Taverna/tools/import_pcgen_proficiencies.py",
+) -> dict:
     known = _known_classes(pcgen_root)
     report: dict = {"unmapped_names": {}}
     by_class: dict[str, dict] = {}
@@ -497,19 +544,21 @@ def build_file(pcgen_root: Path, corpus_classes: list[str] | None = None,
     shared: dict[str, list[dict]] = {}
     for book, path in unique_files:
         for name, facts in collect_shared_records(
-                iter_lst_records(path.read_text(encoding="utf-8",
-                                                errors="replace")),
-                book).items():
+            iter_lst_records(path.read_text(encoding="utf-8", errors="replace")), book
+        ).items():
             shared.setdefault(name, []).extend(facts)
 
     # Seconda passata: i grant veri (MOD + record di classe).
     for book, path in unique_files:
         parsed = parse_lst_text(
-            path.read_text(encoding="utf-8", errors="replace"), book,
-            shared=shared, known_classes=known, report=report)
+            path.read_text(encoding="utf-8", errors="replace"),
+            book,
+            shared=shared,
+            known_classes=known,
+            report=report,
+        )
         for cls, data in parsed.items():
-            by_class.setdefault(cls, {"grants": []})["grants"].extend(
-                data["grants"])
+            by_class.setdefault(cls, {"grants": []})["grants"].extend(data["grants"])
 
     classes_out = {}
     all_grants = 0
@@ -523,10 +572,10 @@ def build_file(pcgen_root: Path, corpus_classes: list[str] | None = None,
         for supp in CURATED_SUPPLEMENT.get(cls, []):
             key = (supp["kind"], supp.get("value"), supp["level"])
             if (supp["kind"], supp.get("value")) not in {
-                    (g["kind"], g.get("value")) for g in grants}:
+                (g["kind"], g.get("value")) for g in grants
+            }:
                 grants.append(dict(supp))
-                grants.sort(key=lambda g: (g["kind"], str(g.get("value")),
-                                           g["level"]))
+                grants.sort(key=lambda g: (g["kind"], str(g.get("value")), g["level"]))
                 curated_applied += 1
         classes_out[cls] = {"grants": grants}
         all_grants += len(grants)
@@ -544,10 +593,12 @@ def build_file(pcgen_root: Path, corpus_classes: list[str] | None = None,
 
     return {
         "_provenance": {
-            "source": ("PCGen data sets (github.com/PCGen/pcgen), "
-                       f"{DATA_SUBDIR}/roleplaying_game/* "
-                       "(AUTO:WEAPONPROF/AUTO:ARMORPROF + grant Internal/FEAT "
-                       "dei file di classe, record condivisi risolti)"),
+            "source": (
+                "PCGen data sets (github.com/PCGen/pcgen), "
+                f"{DATA_SUBDIR}/roleplaying_game/* "
+                "(AUTO:WEAPONPROF/AUTO:ARMORPROF + grant Internal/FEAT "
+                "dei file di classe, record condivisi risolti)"
+            ),
             "pcgen_commit": _pcgen_commit(pcgen_root),
             "generated_by": generated_by,
             "license": LICENSE_TEXT,
@@ -564,7 +615,8 @@ def build_file(pcgen_root: Path, corpus_classes: list[str] | None = None,
                 "I nomi di grant non risolti sono SOLO in "
                 "counts.unmapped_names, mai indovinati. I grant ABILITY di "
                 "feature non di proficienza sono fuori dominio (scope: solo "
-                "proficienze)."),
+                "proficienze)."
+            ),
         },
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "counts": {
@@ -605,8 +657,9 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     out_path = args.out_dir / OUTPUT_FILE
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(json.dumps(doc, indent=1, ensure_ascii=False) + "\n",
-                        encoding="utf-8")
+    out_path.write_text(
+        json.dumps(doc, indent=1, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
     print(f"scritto {out_path}", file=sys.stderr)
     return 0
 

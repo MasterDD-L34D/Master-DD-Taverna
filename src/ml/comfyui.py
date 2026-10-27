@@ -8,6 +8,7 @@ ML_IMG_COMFY_MODEL (default sdxl; anche suffix engine comfyui-<model>).
 LoRA (IMG-07): registry nominato in ML_IMG_LORAS (JSON
 {"alias": {"file": "...", "strength": 0.8}}), richiesto per-alias dalla API.
 """
+
 from __future__ import annotations
 
 import json
@@ -23,8 +24,10 @@ from src.ml.imagine import ImagineUnavailable, _seed_from
 
 DEFAULT_COMFY_URL = "http://127.0.0.1:8188"
 
-_UNREACHABLE_MSG = ("ComfyUI non raggiungibile su {base} (avvia: "
-                    "run_nvidia_gpu.bat in ComfyUI_windows_portable)")
+_UNREACHABLE_MSG = (
+    "ComfyUI non raggiungibile su {base} (avvia: "
+    "run_nvidia_gpu.bat in ComfyUI_windows_portable)"
+)
 
 
 class _ComfyDown(ImagineUnavailable):
@@ -41,20 +44,30 @@ def parse_loras() -> dict:
     except json.JSONDecodeError as exc:
         raise ImagineUnavailable("ML_IMG_LORAS non e' JSON valido") from exc
     if not isinstance(data, dict):
-        raise ImagineUnavailable("ML_IMG_LORAS deve essere una mappa alias -> {file, strength}")
+        raise ImagineUnavailable(
+            "ML_IMG_LORAS deve essere una mappa alias -> {file, strength}"
+        )
     return data
 
 
 class ComfyUIEngine:
-    def __init__(self, base_url: str, model: str, loras: dict | None = None,
-                 timeout_s: int = 600, poll_interval_s: float = 1.0):
+    def __init__(
+        self,
+        base_url: str,
+        model: str,
+        loras: dict | None = None,
+        timeout_s: int = 600,
+        poll_interval_s: float = 1.0,
+    ):
         if model not in MODELS:
             raise ImagineUnavailable(
-                f"modello ComfyUI sconosciuto: {model!r} (attesi: {', '.join(MODELS)})")
+                f"modello ComfyUI sconosciuto: {model!r} (attesi: {', '.join(MODELS)})"
+            )
         if not base_url:
             raise ImagineUnavailable(
                 "ML_IMG_ENGINE=comfyui richiede ML_IMG_COMFY_URL "
-                "(es. http://127.0.0.1:8188)")
+                "(es. http://127.0.0.1:8188)"
+            )
         self._base = base_url.rstrip("/")
         self._model = model
         self._loras = loras if loras is not None else parse_loras()
@@ -67,7 +80,8 @@ class ComfyUIEngine:
             url,
             data=json.dumps(payload).encode("utf-8") if payload is not None else None,
             headers={"content-type": "application/json"} if payload is not None else {},
-            method="POST" if payload is not None else "GET")
+            method="POST" if payload is not None else "GET",
+        )
         try:
             with urllib.request.urlopen(req, timeout=60) as resp:
                 return json.loads(resp.read())
@@ -78,7 +92,8 @@ class ComfyUIEngine:
             except Exception:
                 body = ""
             raise ImagineUnavailable(
-                f"ComfyUI: HTTP {exc.code} da {url.split(self._base)[-1]}: {body}") from exc
+                f"ComfyUI: HTTP {exc.code} da {url.split(self._base)[-1]}: {body}"
+            ) from exc
         except (urllib.error.URLError, ConnectionError, OSError) as exc:
             raise _ComfyDown(_UNREACHABLE_MSG.format(base=self._base)) from exc
 
@@ -96,9 +111,13 @@ class ComfyUIEngine:
         cmd = os.environ.get("ML_IMG_COMFY_START_CMD", "")
         if not cmd:
             return False
-        subprocess.Popen(cmd, cwd=os.environ.get("ML_IMG_COMFY_START_CWD") or None,
-                         shell=True,
-                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.Popen(
+            cmd,
+            cwd=os.environ.get("ML_IMG_COMFY_START_CWD") or None,
+            shell=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
         timeout_s = int(os.environ.get("ML_IMG_COMFY_START_TIMEOUT_S", "180"))
         deadline = time.monotonic() + timeout_s
         while time.monotonic() < deadline:
@@ -107,21 +126,35 @@ class ComfyUIEngine:
             time.sleep(max(self._poll_s, 0.5))
         return False
 
-    def generate(self, prompt: str, width: int, height: int,
-                 seed: int | None, lora: str | None = None,
-                 negative_prompt: str | None = None) -> dict:
+    def generate(
+        self,
+        prompt: str,
+        width: int,
+        height: int,
+        seed: int | None,
+        lora: str | None = None,
+        negative_prompt: str | None = None,
+    ) -> dict:
         try:
-            return self._generate_once(prompt, width, height, seed, lora,
-                                       negative_prompt)
+            return self._generate_once(
+                prompt, width, height, seed, lora, negative_prompt
+            )
         except _ComfyDown:
             if self._autostart():
-                return self._generate_once(prompt, width, height, seed, lora,
-                                           negative_prompt)
+                return self._generate_once(
+                    prompt, width, height, seed, lora, negative_prompt
+                )
             raise ImagineUnavailable(_UNREACHABLE_MSG.format(base=self._base))
 
-    def _generate_once(self, prompt: str, width: int, height: int,
-                       seed: int | None, lora: str | None = None,
-                       negative_prompt: str | None = None) -> dict:
+    def _generate_once(
+        self,
+        prompt: str,
+        width: int,
+        height: int,
+        seed: int | None,
+        lora: str | None = None,
+        negative_prompt: str | None = None,
+    ) -> dict:
         seed_val = _seed_from(prompt, seed, negative_prompt)
         lora_spec = None
         if lora:
@@ -129,13 +162,23 @@ class ComfyUIEngine:
             if not lora_spec:
                 raise ImagineUnavailable(
                     f"lora sconosciuto: {lora!r} (registry ML_IMG_LORAS: "
-                    f"{', '.join(self._loras) or 'vuoto'})")
-        wf = build_workflow(self._model, prompt, width, height, seed_val,
-                            lora=lora_spec, negative_prompt=negative_prompt or "")
+                    f"{', '.join(self._loras) or 'vuoto'})"
+                )
+        wf = build_workflow(
+            self._model,
+            prompt,
+            width,
+            height,
+            seed_val,
+            lora=lora_spec,
+            negative_prompt=negative_prompt or "",
+        )
         posted = self._json(f"{self._base}/prompt", {"prompt": wf})
         pid = posted.get("prompt_id")
         if not pid:
-            raise ImagineUnavailable(f"ComfyUI: risposta /prompt senza prompt_id: {posted!r}")
+            raise ImagineUnavailable(
+                f"ComfyUI: risposta /prompt senza prompt_id: {posted!r}"
+            )
 
         deadline = time.monotonic() + self._timeout_s
         images = None
@@ -152,19 +195,24 @@ class ComfyUIEngine:
             time.sleep(self._poll_s)
         if not images:
             raise ImagineUnavailable(
-                f"ComfyUI: timeout dopo {self._timeout_s}s in attesa del risultato")
+                f"ComfyUI: timeout dopo {self._timeout_s}s in attesa del risultato"
+            )
 
         img = images[0]
-        qs = urllib.parse.urlencode({
-            "filename": img["filename"],
-            "subfolder": img.get("subfolder", ""),
-            "type": img.get("type", "output"),
-        })
+        qs = urllib.parse.urlencode(
+            {
+                "filename": img["filename"],
+                "subfolder": img.get("subfolder", ""),
+                "type": img.get("type", "output"),
+            }
+        )
         try:
             with urllib.request.urlopen(f"{self._base}/view?{qs}", timeout=60) as resp:
                 png = resp.read()
         except (urllib.error.URLError, ConnectionError, OSError) as exc:
-            raise ImagineUnavailable("ComfyUI: impossibile scaricare l'immagine prodotta") from exc
+            raise ImagineUnavailable(
+                "ComfyUI: impossibile scaricare l'immagine prodotta"
+            ) from exc
         if not png.startswith(b"\x89PNG"):
             raise ImagineUnavailable("ComfyUI: l'output non e' un PNG")
         return {"png": png, "width": width, "height": height, "engine": self.name}

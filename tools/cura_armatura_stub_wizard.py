@@ -21,6 +21,7 @@ stesso. Se non combaciano, lo script fallisce e non scrive.
 
 Uso: .venv/Scripts/python tools/cura_armatura_stub_wizard.py [--dry-run]
 """
+
 from __future__ import annotations
 
 import argparse
@@ -49,7 +50,11 @@ def _cura(node, path, rel):
         for k in list(node.keys()):
             v = node[k]
             p = f"{path}.{k}" if path else k
-            if isinstance(v, list) and k in ("equipaggiamento", "inventario") and VOCE in v:
+            if (
+                isinstance(v, list)
+                and k in ("equipaggiamento", "inventario")
+                and VOCE in v
+            ):
                 node[k] = [x for x in v if x != VOCE]
                 rimossi.append(f"{rel}: {p}")
             elif isinstance(v, str) and RIGA_MD in v:
@@ -83,7 +88,9 @@ def _verifica_vs_stub(doc, rel):
         mode=qp.get("mode"),
         body=doc.get("body_params") or None,
     )
-    sheet_stub = (payload.get("export") or {}).get("sheet_payload") or payload.get("sheet") or {}
+    sheet_stub = (
+        (payload.get("export") or {}).get("sheet_payload") or payload.get("sheet") or {}
+    )
     sheet_file = (doc.get("export") or {}).get("sheet_payload") or {}
     errori = []
     for campo in ("equipaggiamento", "inventario"):
@@ -113,7 +120,9 @@ def main():
                     errori.append(f"{rel}: attesa la voce '{VOCE}', assente")
                     continue
                 if not atteso_sporco and sporco:
-                    errori.append(f"{rel}: famiglia evoker attesa pulita, voce presente")
+                    errori.append(
+                        f"{rel}: famiglia evoker attesa pulita, voce presente"
+                    )
                     continue
                 if not sporco:
                     continue
@@ -131,13 +140,19 @@ def main():
                     "motivo": "fallback stub inventava armatura per classe non competente (PR #545)",
                     "verifica": "liste equip/inventario identiche all'output attuale di build_stub_payload",
                 }
-                doc["_normalized"] = {**(doc.get("_normalized") or {}), "curaArmaturaStub": cura}
+                doc["_normalized"] = {
+                    **(doc.get("_normalized") or {}),
+                    "curaArmaturaStub": cura,
+                }
                 if not args.dry_run:
                     path.write_text(
-                        json.dumps(doc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+                        json.dumps(doc, ensure_ascii=False, indent=2) + "\n",
+                        encoding="utf-8",
                     )
                 scritti += 1
-                print(f"{'[dry] ' if args.dry_run else ''}curato {rel}: {len(rimossi)} punti")
+                print(
+                    f"{'[dry] ' if args.dry_run else ''}curato {rel}: {len(rimossi)} punti"
+                )
 
     if errori:
         print("\nERRORI:", file=sys.stderr)

@@ -10,6 +10,7 @@ Uso:
     .venv/Scripts/python tools/eval_rag_retrieval.py --write    # salva reports/rag_eval_report.json (gitignored? no: committato)
     .venv/Scripts/python tools/eval_rag_retrieval.py --fail-under 0.8   # exit 1 sotto soglia
 """
+
 from __future__ import annotations
 
 import argparse
@@ -61,10 +62,17 @@ def translate_query(query: str) -> str:
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--write", action="store_true")
-    ap.add_argument("--fail-under", type=float, default=None,
-                    help="exit 1 se l'hit rate scende sotto questa soglia (0-1)")
-    ap.add_argument("--translate", action="store_true",
-                    help="applica il lessico IT->EN alle query (esperimento mitigazione)")
+    ap.add_argument(
+        "--fail-under",
+        type=float,
+        default=None,
+        help="exit 1 se l'hit rate scende sotto questa soglia (0-1)",
+    )
+    ap.add_argument(
+        "--translate",
+        action="store_true",
+        help="applica il lessico IT->EN alle query (esperimento mitigazione)",
+    )
     args = ap.parse_args()
 
     spec = json.loads(QUESTIONS_PATH.read_text(encoding="utf-8"))
@@ -93,11 +101,20 @@ def main() -> int:
                 break
         ok = found_at is not None
         hits += ok
-        results.append({"id": q["id"], "query": q["query"], "expected": q["expected"],
-                        "hit": ok, "rank": found_at,
-                        "top_source": chunks[0].get("source", "") if chunks else ""})
+        results.append(
+            {
+                "id": q["id"],
+                "query": q["query"],
+                "expected": q["expected"],
+                "hit": ok,
+                "rank": found_at,
+                "top_source": chunks[0].get("source", "") if chunks else "",
+            }
+        )
         mark = "OK " if ok else "MISS"
-        print(f"[{mark}] #{found_at or '-'} {q['id']}: {q['query']!r} -> {q['expected']}")
+        print(
+            f"[{mark}] #{found_at or '-'} {q['id']}: {q['query']!r} -> {q['expected']}"
+        )
 
     total = len(results)
     rate = hits / total if total else 0.0
@@ -105,9 +122,20 @@ def main() -> int:
 
     if args.write:
         REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
-        REPORT_PATH.write_text(json.dumps(
-            {"top_k": top_k, "hits": hits, "total": total, "rate": rate,
-             "results": results}, ensure_ascii=False, indent=2), encoding="utf-8")
+        REPORT_PATH.write_text(
+            json.dumps(
+                {
+                    "top_k": top_k,
+                    "hits": hits,
+                    "total": total,
+                    "rate": rate,
+                    "results": results,
+                },
+                ensure_ascii=False,
+                indent=2,
+            ),
+            encoding="utf-8",
+        )
         print(f"Report: {REPORT_PATH}")
 
     if args.fail_under is not None and rate < args.fail_under:

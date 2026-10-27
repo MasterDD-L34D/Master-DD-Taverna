@@ -10,19 +10,19 @@ Privacy (design E3): gli embedding sono calcolati in memoria e MAI persistiti;
 il WORM contiene solo l'audio originale (REQ-001). Voiceprint persistente
 (REQ-012) resta fuori scope v1: richiede design consenso/storage biometrico.
 """
+
 from __future__ import annotations
 
 import numpy as np
 
 from src.ml.asr import AsrUnavailable, TranscriptSegment
 
-MIN_SEG_SECONDS = 0.6    # sotto: embedding inaffidabile -> eredita l'etichetta
+MIN_SEG_SECONDS = 0.6  # sotto: embedding inaffidabile -> eredita l'etichetta
 DEFAULT_THRESHOLD = 0.30  # distanza coseno per aprire un cluster nuovo
 
 
 def _cosine_distance(a, b):
-    return 1.0 - float(np.dot(a, b)
-                       / (np.linalg.norm(a) * np.linalg.norm(b) + 1e-10))
+    return 1.0 - float(np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b) + 1e-10))
 
 
 def _default_encoder():
@@ -30,13 +30,14 @@ def _default_encoder():
         from resemblyzer import VoiceEncoder
     except ImportError as exc:
         raise AsrUnavailable(
-            "resemblyzer non installato: pip install resemblyzer "
-            "(o diarize=false)") from exc
+            "resemblyzer non installato: pip install resemblyzer " "(o diarize=false)"
+        ) from exc
     return VoiceEncoder()
 
 
-def diarize_segments(wav, sample_rate, segments, threshold=DEFAULT_THRESHOLD,
-                     encoder=None):
+def diarize_segments(
+    wav, sample_rate, segments, threshold=DEFAULT_THRESHOLD, encoder=None
+):
     """Etichette speaker per i segmenti whisper.
 
     wav: float32 mono a sample_rate Hz (come decode_audio di faster-whisper).

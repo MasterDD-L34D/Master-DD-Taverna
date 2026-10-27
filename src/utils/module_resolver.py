@@ -21,7 +21,6 @@ from typing import Pattern
 
 from ..config import BASE_DIR, DATA_DIR, MODULES_DIR
 
-
 MODULE_URI_PATTERN: Pattern[str] = re.compile(
     r"^(module|asset|template|reference)://(.+)$"
 )

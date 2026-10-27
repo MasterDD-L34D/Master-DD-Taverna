@@ -1,4 +1,5 @@
 """Test per tools/fix_reference_strings.py — bonifica references sanitize-order."""
+
 import sys
 from pathlib import Path
 
@@ -8,8 +9,7 @@ from tools.fix_reference_strings import fix_entry
 
 
 def test_fix_entry_replaces_corrupted_reference():
-    e = {"name": "X", "references": ["Archives of a deity of magic: X",
-                                     "d20PFSRD: X"]}
+    e = {"name": "X", "references": ["Archives of a deity of magic: X", "d20PFSRD: X"]}
     out, n = fix_entry(e)
     assert out["references"] == ["Pathfinder PRD: X", "d20PFSRD: X"]
     assert n == 1

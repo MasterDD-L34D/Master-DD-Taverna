@@ -7,6 +7,7 @@ con PI vanno in pi_local_only, mai neutralizzati), i possessivi, l'ordine
 frasi-prima-di-parole ("Archives of Nethys" prima di "Nethys") e
 l'idempotenza sui testi gia' parzialmente sanitize ("the inner sea region").
 """
+
 import json
 import sys
 from pathlib import Path
@@ -52,7 +53,10 @@ class TestWordBoundary:
         # Ordine frasi-prima-di-parole: la regola frase-level deve scattare
         # prima di "Nethys" -> "a deity of magic" (bug storico documentato nel
         # triage: "Archives of a deity of magic" in tutto il catalogo).
-        assert sanitize_text("Archives of Nethys: Acrobatics") == "Pathfinder PRD: Acrobatics"
+        assert (
+            sanitize_text("Archives of Nethys: Acrobatics")
+            == "Pathfinder PRD: Acrobatics"
+        )
 
 
 class TestInnerSea:
@@ -61,14 +65,18 @@ class TestInnerSea:
 
     def test_inner_sea_con_articolo(self):
         # "the Inner Sea" non deve raddoppiare l'articolo.
-        assert sanitize_text("colleges of the Inner Sea", description=True) == \
-            "colleges of the inner sea region"
+        assert (
+            sanitize_text("colleges of the Inner Sea", description=True)
+            == "colleges of the inner sea region"
+        )
 
     def test_inner_sea_region_con_articolo(self):
         # Forma originale AoN "the Inner Sea region": normalizzata senza
         # raddoppi ("the the inner sea region region" e' la corruzione naive).
-        assert sanitize_text("throughout the Inner Sea region", description=True) == \
-            "throughout the inner sea region"
+        assert (
+            sanitize_text("throughout the Inner Sea region", description=True)
+            == "throughout the inner sea region"
+        )
 
     def test_inner_sea_idempotente(self):
         # Testo gia' sanitize: non raddoppiare ("the the inner sea region region").
@@ -77,9 +85,13 @@ class TestInnerSea:
 
     def test_inner_sea_ripara_raddoppio_storico(self):
         # Corruzione da sanitize parziale storica: riportata alla forma canonica.
-        assert sanitize_text("scattered throughout the the inner sea region region.",
-                             description=True) == \
-            "scattered throughout the inner sea region."
+        assert (
+            sanitize_text(
+                "scattered throughout the the inner sea region region.",
+                description=True,
+            )
+            == "scattered throughout the inner sea region."
+        )
 
     def test_doppia_applicazione_identica(self):
         text = "schools of the Inner Sea and beyond"
@@ -89,12 +101,16 @@ class TestInnerSea:
     def test_an_inner_sea_articolo(self):
         # Edge case da review: "an Inner Sea" non deve produrre il raddoppio
         # d'articolo "an the inner sea region".
-        assert sanitize_text("an Inner Sea port", description=True) == \
-            "the inner sea region port"
+        assert (
+            sanitize_text("an Inner Sea port", description=True)
+            == "the inner sea region port"
+        )
 
     def test_an_inner_sea_region_articolo(self):
-        assert sanitize_text("an Inner Sea region port", description=True) == \
-            "the inner sea region port"
+        assert (
+            sanitize_text("an Inner Sea region port", description=True)
+            == "the inner sea region port"
+        )
 
 
 class TestNomeMaiToccato:
@@ -127,44 +143,62 @@ class TestPossessivi:
         # Termine che finisce con apostrofo: il boundary regex deve reggerlo.
         # (L'articolo "the" residuo e' comportamento storico del replacement,
         # fuori scope correggerlo qui.)
-        assert sanitize_text("the Sodden Lands' coast") == "the a storm-ravaged coast's coast"
+        assert (
+            sanitize_text("the Sodden Lands' coast")
+            == "the a storm-ravaged coast's coast"
+        )
 
 
 class TestTerminiDescriptionOnly:
     def test_aldori_solo_in_description(self):
         # I nuovi termini (Aldori, Hellknight, Nex, ...) si applicano SOLO al
         # campo description, mai ai prerequisites (policy Task 2).
-        e = entry("Duelist", prereq=["Aldori Dueling Disciple"],
-                  desc="the Roaring Falls method of Aldori swordplay")
+        e = entry(
+            "Duelist",
+            prereq=["Aldori Dueling Disciple"],
+            desc="the Roaring Falls method of Aldori swordplay",
+        )
         out = sanitize_entry(e)
         assert out["prerequisites"] == ["Aldori Dueling Disciple"]
         assert "Aldori" not in out["description"]
 
     def test_aldori_dueling_sword_articolo(self):
-        assert sanitize_text("wielding an Aldori dueling sword", description=True) == \
-            "wielding a dueling sword"
+        assert (
+            sanitize_text("wielding an Aldori dueling sword", description=True)
+            == "wielding a dueling sword"
+        )
 
     def test_hellknight_con_articolo(self):
-        assert sanitize_text("your status as a Hellknight", description=True) == \
-            "your status as a knight of a strict order"
+        assert (
+            sanitize_text("your status as a Hellknight", description=True)
+            == "your status as a knight of a strict order"
+        )
 
     def test_nex(self):
-        assert sanitize_text("the Arclords of Nex", description=True) == \
-            "the Arclords of a mage-ruled realm"
+        assert (
+            sanitize_text("the Arclords of Nex", description=True)
+            == "the Arclords of a mage-ruled realm"
+        )
 
     def test_worldwound_con_articolo(self):
-        assert sanitize_text("such as the Worldwound or the Abyss", description=True) == \
-            "such as a demon-blighted land or the Abyss"
+        assert (
+            sanitize_text("such as the Worldwound or the Abyss", description=True)
+            == "such as a demon-blighted land or the Abyss"
+        )
 
     def test_aroden_description_only(self):
         # Regola aggiunta per la policy traits (Task 3 esteso).
-        assert sanitize_text("various Analects of Aroden", description=True) == \
-            "various Analects of a dead god"
+        assert (
+            sanitize_text("various Analects of Aroden", description=True)
+            == "various Analects of a dead god"
+        )
 
     def test_aroden_possessivo(self):
         # L'apostrofo resta fuori dal match: il boundary regge "'s".
-        assert sanitize_text("portions of Aroden's advice", description=True) == \
-            "portions of a dead god's advice"
+        assert (
+            sanitize_text("portions of Aroden's advice", description=True)
+            == "portions of a dead god's advice"
+        )
 
     def test_arodenite_non_toccato(self):
         # Forma aggettivale: il boundary non matcha dentro "Arodenite"
@@ -173,15 +207,19 @@ class TestTerminiDescriptionOnly:
         assert sanitize_text(text, description=True) == text
 
     def test_sothis(self):
-        assert sanitize_text("the government of Sothis", description=True) == \
-            "the government of a desert metropolis"
+        assert (
+            sanitize_text("the government of Sothis", description=True)
+            == "the government of a desert metropolis"
+        )
 
     def test_osiria_variante_osirion(self):
         # Fix quality review (Task 3): "Osiria" (variante di Osirion nel
         # prereq di Bureaucrat's Favored) usa la stessa forma neutra della
         # famiglia Osirion, nel set BASE (disciplina prereq dei feats).
-        assert sanitize_text("the court of the Black Dome in Osiria") == \
-            "the court of the Black Dome in an ancient desert kingdom"
+        assert (
+            sanitize_text("the court of the Black Dome in Osiria")
+            == "the court of the Black Dome in an ancient desert kingdom"
+        )
 
     def test_osiria_non_corrompe_osirian(self):
         # Il boundary non matcha "Osiria" dentro "Osirian".
@@ -203,7 +241,9 @@ class TestCampiTecniciIntoccati:
         out = sanitize_entry(e)
         assert out["source"] == "Inner Sea World Guide"
         assert out["source_id"] == "inner_sea_world_guide:scholar"
-        assert out["reference_urls"] == ["https://aonprd.com/FeatDisplay.aspx?ItemName=Scholar"]
+        assert out["reference_urls"] == [
+            "https://aonprd.com/FeatDisplay.aspx?ItemName=Scholar"
+        ]
         assert out["_license"] == "OGL-1.0a"
         assert out["description"] == "schools of the inner sea region"
 
@@ -229,16 +269,19 @@ class TestMainRepoWide:
         catalog = {
             "_license": "OGL-1.0a",
             "_source": "test",
-            "entries": [{
-                "name": "Aldori Style",
-                "description": "tradizione di spada Aldori nelle terre della Inner Sea",
-                "prerequisites": [],
-            }],
+            "entries": [
+                {
+                    "name": "Aldori Style",
+                    "description": "tradizione di spada Aldori nelle terre della Inner Sea",
+                    "prerequisites": [],
+                }
+            ],
         }
         ogl = tmp_path / "ogl"
         ogl.mkdir()
         (ogl / "feats.json").write_text(
-            json.dumps(catalog, ensure_ascii=False), encoding="utf-8")
+            json.dumps(catalog, ensure_ascii=False), encoding="utf-8"
+        )
         monkeypatch.setattr(sanitize_mod, "OGL_DIR", ogl)
         assert sanitize_mod.main() == 0
         out = json.loads((ogl / "feats.json").read_text(encoding="utf-8"))

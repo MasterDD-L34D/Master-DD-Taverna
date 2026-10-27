@@ -1,11 +1,11 @@
 """Test per tools/expand_spells_gist.py — espansione spells da cache gist."""
+
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from tools.expand_spells_gist import (gist_to_entry, is_pi_name,
-                                      new_gist_records)
+from tools.expand_spells_gist import gist_to_entry, is_pi_name, new_gist_records
 
 GIST_SAMPLE = {
     "name": "Ablative Sphere",
@@ -32,7 +32,8 @@ def test_gist_to_entry_builds_catalog_shape():
     assert "slot:3" in e["tags"]
     assert "class:sorcerer" in e["tags"] and "class:wizard" in e["tags"]
     assert e["reference_urls"] == [
-        "https://aonprd.com/SpellDisplay.aspx?ItemName=Ablative%20Sphere"]
+        "https://aonprd.com/SpellDisplay.aspx?ItemName=Ablative%20Sphere"
+    ]
     mech = e["mechanics"]
     assert mech["school"] == "abjuration"
     assert mech["spell_level"] == {"sorcerer/wizard": 3}
@@ -44,9 +45,9 @@ def test_gist_to_entry_builds_catalog_shape():
 def test_new_gist_records_skips_existing_and_inverted():
     local_names = ["Acid Arrow", "Greater Invisibility"]
     gist = [
-        {"name": "Acid Arrow"},                     # gia' presente
-        {"name": "Invisibility, Greater"},          # forma invertita di una locale
-        {"name": "Ablative Sphere"},                # nuova
+        {"name": "Acid Arrow"},  # gia' presente
+        {"name": "Invisibility, Greater"},  # forma invertita di una locale
+        {"name": "Ablative Sphere"},  # nuova
     ]
     nuovi = new_gist_records(local_names, gist)
     assert [g["name"] for g in nuovi] == ["Ablative Sphere"]

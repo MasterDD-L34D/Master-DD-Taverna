@@ -1,4 +1,5 @@
 """Motore deterministico di creazione PG livelli 1-20 (nessun LLM)."""
+
 import re
 
 from src.pc import catalogs
@@ -25,11 +26,17 @@ def _check_prereq(prereq, ctx):
     m = re.search(r"level\s+(\d+)(?:st|nd|rd|th)", text, re.I)
     if m:
         needed = int(m.group(1))
-        return needed <= ctx["class_level"], f"richiede livello {needed} (personaggio lv{ctx['class_level']})"
+        return (
+            needed <= ctx["class_level"],
+            f"richiede livello {needed} (personaggio lv{ctx['class_level']})",
+        )
     m = re.search(r"(\d+)(?:st|nd|rd|th)-level", text, re.I)
     if m:
         needed = int(m.group(1))
-        return needed <= ctx["class_level"], f"richiede livello {needed} (personaggio lv{ctx['class_level']})"
+        return (
+            needed <= ctx["class_level"],
+            f"richiede livello {needed} (personaggio lv{ctx['class_level']})",
+        )
     if "proficien" in text.lower():
         return True, f"proficiency: {text} (assunta da classe)"
     m = re.search(r"(\d+)\s+ranks?", text, re.I)
@@ -37,11 +44,17 @@ def _check_prereq(prereq, ctx):
         n = int(m.group(1))
         skill_ref = re.sub(r"\s*\d+\s+ranks?.*$", "", text, flags=re.I).strip(" ,;")
         if n > ctx["class_level"]:
-            return False, f"richiede {n} ranks (personaggio lv{ctx['class_level']}) ({text})"
+            return (
+                False,
+                f"richiede {n} ranks (personaggio lv{ctx['class_level']}) ({text})",
+            )
         if skill_ref:
             have = ctx.get("skills", {}).get(skill_ref, {}).get("ranks", 0)
             if have < n:
-                return False, f"richiede {n} rank{'s' if n > 1 else ''} in {skill_ref} (presenti {have} nel draft)"
+                return (
+                    False,
+                    f"richiede {n} rank{'s' if n > 1 else ''} in {skill_ref} (presenti {have} nel draft)",
+                )
         return True, f"{n} rank: {text}"
     if re.search(r"rank", text, re.I):
         return True, f"skill rank: {text} (forma non verificabile, accettata)"
@@ -103,13 +116,22 @@ def validate_feats(draft, sheet):
     granted = _granted_feats(draft)
     granted_norm = {_norm_feat_name(g) for g in granted}
     chosen = [f for f in draft.feats if _norm_feat_name(f) not in granted_norm]
-    ctx = {"abilities": dict(sheet["abilities"]), "bab": sheet["bab"],
-           "feats": chosen + granted, "skills": sheet.get("skills", {}),
-           "class_level": draft.level}
-    allowed = ((draft.level + 1) // 2 + (1 if draft.race == "Human" else 0)
-               + _class_bonus_feats(draft.class_, draft.level))
+    ctx = {
+        "abilities": dict(sheet["abilities"]),
+        "bab": sheet["bab"],
+        "feats": chosen + granted,
+        "skills": sheet.get("skills", {}),
+        "class_level": draft.level,
+    }
+    allowed = (
+        (draft.level + 1) // 2
+        + (1 if draft.race == "Human" else 0)
+        + _class_bonus_feats(draft.class_, draft.level)
+    )
     if len(chosen) > allowed:
-        sheet["errors"].append(f"feat: {len(chosen)} selezionati su {allowed} consentiti al lv{draft.level}")
+        sheet["errors"].append(
+            f"feat: {len(chosen)} selezionati su {allowed} consentiti al lv{draft.level}"
+        )
     for name in chosen:
         # Selezioni parentetiche: feats.json espande alcune voci ("Weapon Focus
         # (Longsword)") ma non altre ("Skill Focus (Perception)"): si prova il
@@ -199,7 +221,9 @@ def validate_spells(draft, sheet):
     cls = catalogs.get_class(draft.class_)
     progression = cls["mechanics"]["progression"]
     if not any(row.get("spells_per_day") for row in progression):
-        sheet["errors"].append(f"incantesimi: {draft.class_} non e' una classe incantatrice")
+        sheet["errors"].append(
+            f"incantesimi: {draft.class_} non e' una classe incantatrice"
+        )
         return
     castable = _castable_circles(progression[draft.level - 1].get("spells_per_day"))
     out = []
@@ -215,10 +239,12 @@ def validate_spells(draft, sheet):
         if level not in castable:
             sheet["errors"].append(
                 f"{name}: cerchio {level} non castabile da {draft.class_} "
-                f"al lv{draft.level} (nessuno slot)")
+                f"al lv{draft.level} (nessuno slot)"
+            )
             continue
-        out.append({"name": name, "level": level,
-                    "school": spell["mechanics"].get("school")})
+        out.append(
+            {"name": name, "level": level, "school": spell["mechanics"].get("school")}
+        )
     sheet["spells"] = out
 
 
@@ -296,16 +322,24 @@ def apply_equipment(draft, sheet):
             continue
         cost = _parse_cost(item["mechanics"].get("cost"))
         spent += cost
-        items.append({"name": name, "cost": cost, "mechanics": item["mechanics"],
-                      "tags": item.get("tags", [])})
+        items.append(
+            {
+                "name": name,
+                "cost": cost,
+                "mechanics": item["mechanics"],
+                "tags": item.get("tags", []),
+            }
+        )
     spent = round(spent, 2)
     if spent > wealth:
         if strict:
             sheet["errors"].append(
-                f"wealth: spesi {spent:.2f} gp oltre la ricchezza iniziale {wealth:.2f} gp")
+                f"wealth: spesi {spent:.2f} gp oltre la ricchezza iniziale {wealth:.2f} gp"
+            )
         else:
             sheet["warnings"].append(
-                f"wealth: spesi {spent:.2f} gp oltre WBL {wealth:.2f} gp")
+                f"wealth: spesi {spent:.2f} gp oltre WBL {wealth:.2f} gp"
+            )
     sheet["gold_remaining"] = round(wealth - spent, 2)
     sheet["equipment"] = items
     mods = {ab: ability_mod(sc) for ab, sc in sheet["abilities"].items()}
@@ -328,7 +362,8 @@ def apply_equipment(draft, sheet):
             sheet["errors"].append("indossabili piu' armature: usa la migliore")
         else:
             sheet["warnings"].append(
-                "indossabili piu' armature: usata la migliore per la CA")
+                "indossabili piu' armature: usata la migliore per la CA"
+            )
     if armors:
         best = max(armors, key=lambda a: a[0])
         armor = best[0]
@@ -349,9 +384,15 @@ def apply_equipment(draft, sheet):
         dmg = m.get("dmg_m", "-")
         if not is_ranged and mod != 0:
             dmg = f"{dmg}{'+' if mod > 0 else ''}{mod}"
-        attacks.append({"weapon": it["name"], "bonus": sheet["bab"] + mod + size_bonus,
-                        "damage": dmg,
-                        "critical": m.get("critical"), "range": m.get("range")})
+        attacks.append(
+            {
+                "weapon": it["name"],
+                "bonus": sheet["bab"] + mod + size_bonus,
+                "damage": dmg,
+                "critical": m.get("critical"),
+                "range": m.get("range"),
+            }
+        )
     sheet["attacks"] = attacks
 
 
@@ -365,7 +406,9 @@ def apply_abilities(draft):
         errors.append(f"metodo non supportato: {draft.method} (solo point-buy)")
         return {"abilities": {}, "errors": errors, "warnings": warnings}
     if set(draft.abilities) != set(ABILS):
-        errors.append(f"abilities: attese {sorted(ABILS)}, ricevute {sorted(draft.abilities)}")
+        errors.append(
+            f"abilities: attese {sorted(ABILS)}, ricevute {sorted(draft.abilities)}"
+        )
     for ab, score in draft.abilities.items():
         if not isinstance(score, int) or not 7 <= score <= 18:
             errors.append(f"abilities[{ab}] non valida: {score!r} (atteso int 7..18)")
@@ -377,14 +420,18 @@ def apply_abilities(draft):
         return {"abilities": {}, "errors": errors, "warnings": warnings}
     spent = sum(catalogs.ability_cost(v) for v in draft.abilities.values())
     if spent > budget:
-        errors.append(f"point-buy: {spent} punti spesi oltre il budget {budget} ({draft.campaign_type})")
+        errors.append(
+            f"point-buy: {spent} punti spesi oltre il budget {budget} ({draft.campaign_type})"
+        )
     race = catalogs.get_race(draft.race)
     if race is None:
         errors.append(f"razza sconosciuta: {draft.race}")
         return {"abilities": {}, "errors": errors, "warnings": warnings}
     mods = race["mechanics"].get("ability_mods", {})
     if not mods.get("any") and draft.race_bonus_ability:
-        warnings.append(f"race_bonus_ability ignorato per {draft.race} (nessun bonus a scelta)")
+        warnings.append(
+            f"race_bonus_ability ignorato per {draft.race} (nessun bonus a scelta)"
+        )
     final = dict(draft.abilities)
     if mods.get("any"):
         if not draft.race_bonus_ability:
@@ -414,9 +461,15 @@ def build_character(draft):
     final = abilities["abilities"]
     mods = {ab: ability_mod(sc) for ab, sc in final.items()} if final else {}
     cls = catalogs.get_class(draft.class_)
-    sheet = {"name": draft.name, "race": draft.race, "class": draft.class_,
-             "level": draft.level, "abilities": final,
-             "errors": errors, "warnings": warnings}
+    sheet = {
+        "name": draft.name,
+        "race": draft.race,
+        "class": draft.class_,
+        "level": draft.level,
+        "abilities": final,
+        "errors": errors,
+        "warnings": warnings,
+    }
     if errors:
         return sheet
     if cls is None:
@@ -429,17 +482,23 @@ def build_character(draft):
         errors.append(f"hp_method non valido: {draft.hp_method}")
         return sheet
     if draft.favored_class_bonus not in ("hp", "skill"):
-        errors.append(f"favored_class_bonus non valido: {draft.favored_class_bonus} (atteso hp o skill)")
+        errors.append(
+            f"favored_class_bonus non valido: {draft.favored_class_bonus} (atteso hp o skill)"
+        )
         return sheet
     mech = cls["mechanics"]
     lvl = mech["progression"][draft.level - 1]
     hd = int(mech["hd"][1:])
     per_level = hd if draft.hp_method == "max" else hd // 2 + 1
     favored_hp = draft.level if draft.favored_class_bonus == "hp" else 0
-    sheet["hp"] = hd + (draft.level - 1) * per_level + mods["con"] * draft.level + favored_hp
-    sheet["saves"] = {"fort": lvl["fort"] + mods["con"],
-                      "ref": lvl["ref"] + mods["dex"],
-                      "will": lvl["will"] + mods["wis"]}
+    sheet["hp"] = (
+        hd + (draft.level - 1) * per_level + mods["con"] * draft.level + favored_hp
+    )
+    sheet["saves"] = {
+        "fort": lvl["fort"] + mods["con"],
+        "ref": lvl["ref"] + mods["dex"],
+        "will": lvl["will"] + mods["wis"],
+    }
     sheet["bab"] = lvl["bab"]
     sheet["special"] = list(lvl.get("special", []))
     if lvl.get("spells_per_day"):
@@ -463,14 +522,22 @@ def build_character(draft):
             errors.append(f"skill sconosciuta: {name}")
             continue
         if not 0 < ranks <= draft.level:
-            errors.append(f"{name}: {ranks} ranks non validi (1..{draft.level} al lv{draft.level})")
+            errors.append(
+                f"{name}: {ranks} ranks non validi (1..{draft.level} al lv{draft.level})"
+            )
         key = sk["mechanics"]["key_ability"]
-        is_class_skill = any(catalogs.class_skill_matches(name, cs) for cs in class_skills)
+        is_class_skill = any(
+            catalogs.class_skill_matches(name, cs) for cs in class_skills
+        )
         class_bonus = 3 if ranks >= 1 and is_class_skill else 0
         if sk["mechanics"].get("trained_only") and not is_class_skill and ranks > 0:
             warnings.append(f"{name}: trained only e non di classe per {draft.class_}")
-        out[name] = {"ranks": ranks, "ability": key,
-                     "total": ranks + mods[key] + class_bonus, "class_skill": is_class_skill}
+        out[name] = {
+            "ranks": ranks,
+            "ability": key,
+            "total": ranks + mods[key] + class_bonus,
+            "class_skill": is_class_skill,
+        }
     sheet["skills"] = out
     validate_feats(draft, sheet)
     validate_spells(draft, sheet)
@@ -485,32 +552,55 @@ def render_markdown(sheet):
     if sheet.get("errors"):
         return "# Errori di validazione\n" + "\n".join(sheet["errors"]) + "\n"
     mods = {ab: ability_mod(sc) for ab, sc in sheet["abilities"].items()}
-    lines = [f"# {sheet['name']}",
-             f"{sheet['race']} {sheet['class']} {sheet.get('level', 1)} — PF: {sheet['hp']} — CA: {sheet['ac']} — Iniziativa: {_signed(sheet['initiative'])}",
-             "",
-             "**Caratteristiche**: " + ", ".join(
-                 f"{ab.upper()} {sc} ({_signed(mods[ab])})"
-                 for ab, sc in sheet["abilities"].items()),
-             f"**TS**: Tempra {_signed(sheet['saves']['fort'])}, "
-             f"Riflessi {_signed(sheet['saves']['ref'])}, "
-             f"Volonta' {_signed(sheet['saves']['will'])} — BAB +{sheet['bab']}"]
+    lines = [
+        f"# {sheet['name']}",
+        f"{sheet['race']} {sheet['class']} {sheet.get('level', 1)} — PF: {sheet['hp']} — CA: {sheet['ac']} — Iniziativa: {_signed(sheet['initiative'])}",
+        "",
+        "**Caratteristiche**: "
+        + ", ".join(
+            f"{ab.upper()} {sc} ({_signed(mods[ab])})"
+            for ab, sc in sheet["abilities"].items()
+        ),
+        f"**TS**: Tempra {_signed(sheet['saves']['fort'])}, "
+        f"Riflessi {_signed(sheet['saves']['ref'])}, "
+        f"Volonta' {_signed(sheet['saves']['will'])} — BAB +{sheet['bab']}",
+    ]
     if sheet.get("attacks"):
-        lines.append("**Attacchi**: " + "; ".join(f"{a['weapon']} {_signed(a['bonus'])} ({a['damage']})" for a in sheet["attacks"]))
+        lines.append(
+            "**Attacchi**: "
+            + "; ".join(
+                f"{a['weapon']} {_signed(a['bonus'])} ({a['damage']})"
+                for a in sheet["attacks"]
+            )
+        )
     if sheet.get("skills"):
-        lines.append("**Skill**: " + ", ".join(f"{n} {_signed(s['total'])}" for n, s in sheet["skills"].items()))
+        lines.append(
+            "**Skill**: "
+            + ", ".join(
+                f"{n} {_signed(s['total'])}" for n, s in sheet["skills"].items()
+            )
+        )
     if sheet.get("feats"):
         lines.append("**Talenti**: " + ", ".join(sheet["feats"]))
     if sheet.get("traits"):
         lines.append("**Tratti**: " + ", ".join(sheet["traits"]))
     if sheet.get("spells"):
-        lines.append("**Incantesimi**: " + ", ".join(
-            f"{s['name']} ({s['level']}°, {s['school']})" for s in sheet["spells"]))
+        lines.append(
+            "**Incantesimi**: "
+            + ", ".join(
+                f"{s['name']} ({s['level']}°, {s['school']})" for s in sheet["spells"]
+            )
+        )
         if sheet.get("spells_per_day"):
-            lines.append("**Slot/giorno**: " + ", ".join(
-                f"{k}={v}" for k, v in sheet["spells_per_day"].items()))
+            lines.append(
+                "**Slot/giorno**: "
+                + ", ".join(f"{k}={v}" for k, v in sheet["spells_per_day"].items())
+            )
     if sheet.get("equipment"):
-        lines.append(f"**Equip** (oro restante {sheet.get('gold_remaining', 0):.2f} gp): "
-                     + ", ".join(i["name"] for i in sheet["equipment"]))
+        lines.append(
+            f"**Equip** (oro restante {sheet.get('gold_remaining', 0):.2f} gp): "
+            + ", ".join(i["name"] for i in sheet["equipment"])
+        )
     if sheet.get("warnings"):
         lines.append("_Note_: " + " | ".join(sheet["warnings"]))
     return "\n".join(lines) + "\n"

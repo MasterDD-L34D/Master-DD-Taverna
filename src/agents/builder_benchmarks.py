@@ -10,6 +10,7 @@ Fonti:
 - Bench-Pressing: Character Creation by the Numbers
   https://rpgwillikers.wordpress.com/2015/09/29/bench-pressing-character-creation-by-the-numbers/
 """
+
 from __future__ import annotations
 
 from typing import Any
@@ -24,26 +25,206 @@ from typing import Any
 # good_save: bonus save "good"
 # poor_save: bonus save "poor"
 _MONSTER_STATS: dict[int, dict[str, int]] = {
-    1: {"hp": 15, "ac": 12, "high_atk": 2, "low_atk": 1, "avg_dmg": 5, "primary_dc": 12, "good_save": 4, "poor_save": 1},
-    2: {"hp": 20, "ac": 14, "high_atk": 4, "low_atk": 3, "avg_dmg": 7, "primary_dc": 13, "good_save": 5, "poor_save": 1},
-    3: {"hp": 30, "ac": 15, "high_atk": 6, "low_atk": 4, "avg_dmg": 9, "primary_dc": 14, "good_save": 6, "poor_save": 2},
-    4: {"hp": 40, "ac": 17, "high_atk": 8, "low_atk": 6, "avg_dmg": 12, "primary_dc": 15, "good_save": 7, "poor_save": 3},
-    5: {"hp": 55, "ac": 18, "high_atk": 10, "low_atk": 7, "avg_dmg": 15, "primary_dc": 15, "good_save": 8, "poor_save": 4},
-    6: {"hp": 70, "ac": 19, "high_atk": 12, "low_atk": 8, "avg_dmg": 18, "primary_dc": 16, "good_save": 9, "poor_save": 5},
-    7: {"hp": 85, "ac": 20, "high_atk": 13, "low_atk": 10, "avg_dmg": 22, "primary_dc": 17, "good_save": 10, "poor_save": 6},
-    8: {"hp": 100, "ac": 21, "high_atk": 15, "low_atk": 11, "avg_dmg": 26, "primary_dc": 18, "good_save": 11, "poor_save": 7},
-    9: {"hp": 115, "ac": 23, "high_atk": 17, "low_atk": 12, "avg_dmg": 30, "primary_dc": 18, "good_save": 12, "poor_save": 8},
-    10: {"hp": 130, "ac": 24, "high_atk": 18, "low_atk": 13, "avg_dmg": 33, "primary_dc": 19, "good_save": 13, "poor_save": 9},
-    11: {"hp": 145, "ac": 25, "high_atk": 19, "low_atk": 14, "avg_dmg": 37, "primary_dc": 20, "good_save": 14, "poor_save": 10},
-    12: {"hp": 160, "ac": 27, "high_atk": 21, "low_atk": 15, "avg_dmg": 41, "primary_dc": 21, "good_save": 15, "poor_save": 11},
-    13: {"hp": 180, "ac": 28, "high_atk": 22, "low_atk": 16, "avg_dmg": 45, "primary_dc": 21, "good_save": 16, "poor_save": 12},
-    14: {"hp": 200, "ac": 29, "high_atk": 23, "low_atk": 17, "avg_dmg": 48, "primary_dc": 22, "good_save": 17, "poor_save": 12},
-    15: {"hp": 220, "ac": 30, "high_atk": 24, "low_atk": 18, "avg_dmg": 52, "primary_dc": 23, "good_save": 18, "poor_save": 13},
-    16: {"hp": 240, "ac": 31, "high_atk": 26, "low_atk": 19, "avg_dmg": 60, "primary_dc": 24, "good_save": 19, "poor_save": 14},
-    17: {"hp": 270, "ac": 32, "high_atk": 27, "low_atk": 20, "avg_dmg": 67, "primary_dc": 24, "good_save": 20, "poor_save": 15},
-    18: {"hp": 300, "ac": 33, "high_atk": 28, "low_atk": 21, "avg_dmg": 75, "primary_dc": 25, "good_save": 20, "poor_save": 16},
-    19: {"hp": 330, "ac": 34, "high_atk": 29, "low_atk": 22, "avg_dmg": 82, "primary_dc": 26, "good_save": 21, "poor_save": 16},
-    20: {"hp": 370, "ac": 36, "high_atk": 30, "low_atk": 23, "avg_dmg": 90, "primary_dc": 27, "good_save": 22, "poor_save": 17},
+    1: {
+        "hp": 15,
+        "ac": 12,
+        "high_atk": 2,
+        "low_atk": 1,
+        "avg_dmg": 5,
+        "primary_dc": 12,
+        "good_save": 4,
+        "poor_save": 1,
+    },
+    2: {
+        "hp": 20,
+        "ac": 14,
+        "high_atk": 4,
+        "low_atk": 3,
+        "avg_dmg": 7,
+        "primary_dc": 13,
+        "good_save": 5,
+        "poor_save": 1,
+    },
+    3: {
+        "hp": 30,
+        "ac": 15,
+        "high_atk": 6,
+        "low_atk": 4,
+        "avg_dmg": 9,
+        "primary_dc": 14,
+        "good_save": 6,
+        "poor_save": 2,
+    },
+    4: {
+        "hp": 40,
+        "ac": 17,
+        "high_atk": 8,
+        "low_atk": 6,
+        "avg_dmg": 12,
+        "primary_dc": 15,
+        "good_save": 7,
+        "poor_save": 3,
+    },
+    5: {
+        "hp": 55,
+        "ac": 18,
+        "high_atk": 10,
+        "low_atk": 7,
+        "avg_dmg": 15,
+        "primary_dc": 15,
+        "good_save": 8,
+        "poor_save": 4,
+    },
+    6: {
+        "hp": 70,
+        "ac": 19,
+        "high_atk": 12,
+        "low_atk": 8,
+        "avg_dmg": 18,
+        "primary_dc": 16,
+        "good_save": 9,
+        "poor_save": 5,
+    },
+    7: {
+        "hp": 85,
+        "ac": 20,
+        "high_atk": 13,
+        "low_atk": 10,
+        "avg_dmg": 22,
+        "primary_dc": 17,
+        "good_save": 10,
+        "poor_save": 6,
+    },
+    8: {
+        "hp": 100,
+        "ac": 21,
+        "high_atk": 15,
+        "low_atk": 11,
+        "avg_dmg": 26,
+        "primary_dc": 18,
+        "good_save": 11,
+        "poor_save": 7,
+    },
+    9: {
+        "hp": 115,
+        "ac": 23,
+        "high_atk": 17,
+        "low_atk": 12,
+        "avg_dmg": 30,
+        "primary_dc": 18,
+        "good_save": 12,
+        "poor_save": 8,
+    },
+    10: {
+        "hp": 130,
+        "ac": 24,
+        "high_atk": 18,
+        "low_atk": 13,
+        "avg_dmg": 33,
+        "primary_dc": 19,
+        "good_save": 13,
+        "poor_save": 9,
+    },
+    11: {
+        "hp": 145,
+        "ac": 25,
+        "high_atk": 19,
+        "low_atk": 14,
+        "avg_dmg": 37,
+        "primary_dc": 20,
+        "good_save": 14,
+        "poor_save": 10,
+    },
+    12: {
+        "hp": 160,
+        "ac": 27,
+        "high_atk": 21,
+        "low_atk": 15,
+        "avg_dmg": 41,
+        "primary_dc": 21,
+        "good_save": 15,
+        "poor_save": 11,
+    },
+    13: {
+        "hp": 180,
+        "ac": 28,
+        "high_atk": 22,
+        "low_atk": 16,
+        "avg_dmg": 45,
+        "primary_dc": 21,
+        "good_save": 16,
+        "poor_save": 12,
+    },
+    14: {
+        "hp": 200,
+        "ac": 29,
+        "high_atk": 23,
+        "low_atk": 17,
+        "avg_dmg": 48,
+        "primary_dc": 22,
+        "good_save": 17,
+        "poor_save": 12,
+    },
+    15: {
+        "hp": 220,
+        "ac": 30,
+        "high_atk": 24,
+        "low_atk": 18,
+        "avg_dmg": 52,
+        "primary_dc": 23,
+        "good_save": 18,
+        "poor_save": 13,
+    },
+    16: {
+        "hp": 240,
+        "ac": 31,
+        "high_atk": 26,
+        "low_atk": 19,
+        "avg_dmg": 60,
+        "primary_dc": 24,
+        "good_save": 19,
+        "poor_save": 14,
+    },
+    17: {
+        "hp": 270,
+        "ac": 32,
+        "high_atk": 27,
+        "low_atk": 20,
+        "avg_dmg": 67,
+        "primary_dc": 24,
+        "good_save": 20,
+        "poor_save": 15,
+    },
+    18: {
+        "hp": 300,
+        "ac": 33,
+        "high_atk": 28,
+        "low_atk": 21,
+        "avg_dmg": 75,
+        "primary_dc": 25,
+        "good_save": 20,
+        "poor_save": 16,
+    },
+    19: {
+        "hp": 330,
+        "ac": 34,
+        "high_atk": 29,
+        "low_atk": 22,
+        "avg_dmg": 82,
+        "primary_dc": 26,
+        "good_save": 21,
+        "poor_save": 16,
+    },
+    20: {
+        "hp": 370,
+        "ac": 36,
+        "high_atk": 30,
+        "low_atk": 23,
+        "avg_dmg": 90,
+        "primary_dc": 27,
+        "good_save": 22,
+        "poor_save": 17,
+    },
 }
 
 # Dado vita medio per classe (valore intero arrotondato).
@@ -126,7 +307,13 @@ def _monster_stats(level: int) -> dict[str, int]:
     return _MONSTER_STATS[level]
 
 
-def _tier_label(value: float, blue: float, green: float, orange: float, higher_is_better: bool = True) -> str:
+def _tier_label(
+    value: float,
+    blue: float,
+    green: float,
+    orange: float,
+    higher_is_better: bool = True,
+) -> str:
     """Restituisce 'blue', 'green', 'orange' o 'red' confrontando value con i target.
 
     Per statistiche dove più è meglio (DPR, AC, PF, saves).
@@ -197,10 +384,10 @@ def compute_benchmarks(level: int, focus: str | None = None) -> dict[str, Any]:
     # per calcolare il danno atteso per round.
     expected_round_dmg = round(stats["avg_dmg"] * 0.6, 1)
     hp = {
-        "blue": round(expected_round_dmg * 4),   # sopravvive a ~4 round
-        "green": round(expected_round_dmg * 2.5), # sopravvive a ~2-3 round
-        "orange": round(expected_round_dmg * 1.5), # sopravvive a ~1-2 round
-        "red": round(expected_round_dmg * 0.75),   # sopravvive a meno di 1 round
+        "blue": round(expected_round_dmg * 4),  # sopravvive a ~4 round
+        "green": round(expected_round_dmg * 2.5),  # sopravvive a ~2-3 round
+        "orange": round(expected_round_dmg * 1.5),  # sopravvive a ~1-2 round
+        "red": round(expected_round_dmg * 0.75),  # sopravvive a meno di 1 round
     }
 
     benchmarks = {
@@ -224,7 +411,9 @@ def _normalize_class(class_name: str | None) -> str:
     return class_name.lower().strip()
 
 
-def estimated_hp(level: int, class_name: str | None, con_mod: int = 2, favored_class_bonus: int = 0) -> int:
+def estimated_hp(
+    level: int, class_name: str | None, con_mod: int = 2, favored_class_bonus: int = 0
+) -> int:
     """Stima realistica dei PF per classe e livello."""
     level = max(1, min(20, level))
     hd_avg = _HIT_DIE.get(_normalize_class(class_name), 4)
@@ -301,15 +490,35 @@ def evaluate_build(
     saves = stats.get("saves", {}) or {}
 
     evals: dict[str, Any] = {
-        "PF": {"value": pf, "tier": _tier_label(pf, b["hp"]["blue"], b["hp"]["green"], b["hp"]["orange"])},
-        "CA": {"value": ca, "tier": _tier_label(ca, b["ac"]["blue"], b["ac"]["green"], b["ac"]["orange"])},
-        "DPR": {"value": dpr, "tier": _tier_label(dpr, b["dpr"]["blue"], b["dpr"]["green"], b["dpr"]["orange"])},
+        "PF": {
+            "value": pf,
+            "tier": _tier_label(
+                pf, b["hp"]["blue"], b["hp"]["green"], b["hp"]["orange"]
+            ),
+        },
+        "CA": {
+            "value": ca,
+            "tier": _tier_label(
+                ca, b["ac"]["blue"], b["ac"]["green"], b["ac"]["orange"]
+            ),
+        },
+        "DPR": {
+            "value": dpr,
+            "tier": _tier_label(
+                dpr, b["dpr"]["blue"], b["dpr"]["green"], b["dpr"]["orange"]
+            ),
+        },
     }
 
     save_tiers = {}
     for save_name in ("Tempra", "Riflessi", "Volonta"):
         val = int(saves.get(save_name, 0) or 0)
-        save_tiers[save_name] = {"value": val, "tier": _tier_label(val, b["saves"]["blue"], b["saves"]["green"], b["saves"]["orange"])}
+        save_tiers[save_name] = {
+            "value": val,
+            "tier": _tier_label(
+                val, b["saves"]["blue"], b["saves"]["green"], b["saves"]["orange"]
+            ),
+        }
     evals["saves"] = save_tiers
 
     # Assegna meta_tier complessivo.
@@ -331,22 +540,43 @@ def evaluate_build(
     # Focus-specific adjustments: un focus DPR/tank/control può scendere a T3 se la stat
     # principale è almeno green e non ci sono difese red.
     if meta_tier == "T4":
-        if focus == "dpr" and evals["DPR"]["tier"] in ("blue", "green") and all(t != "red" for t in all_tiers):
+        if (
+            focus == "dpr"
+            and evals["DPR"]["tier"] in ("blue", "green")
+            and all(t != "red" for t in all_tiers)
+        ):
             meta_tier = "T3"
-        elif focus == "tank" and evals["PF"]["tier"] in ("blue", "green") and evals["CA"]["tier"] != "red" and all(t != "red" for t in all_tiers):
+        elif (
+            focus == "tank"
+            and evals["PF"]["tier"] in ("blue", "green")
+            and evals["CA"]["tier"] != "red"
+            and all(t != "red" for t in all_tiers)
+        ):
             meta_tier = "T3"
-        elif focus == "control" and "red" not in (evals["CA"]["tier"], save_tiers["Volonta"]["tier"], save_tiers["Tempra"]["tier"]):
+        elif focus == "control" and "red" not in (
+            evals["CA"]["tier"],
+            save_tiers["Volonta"]["tier"],
+            save_tiers["Tempra"]["tier"],
+        ):
             # Per control la DPR può essere red purché le difese siano solide.
             meta_tier = "T3"
-        elif focus == "support" and "red" not in (evals["CA"]["tier"], save_tiers["Volonta"]["tier"], save_tiers["Tempra"]["tier"]):
+        elif focus == "support" and "red" not in (
+            evals["CA"]["tier"],
+            save_tiers["Volonta"]["tier"],
+            save_tiers["Tempra"]["tier"],
+        ):
             # Per support la DPR può essere red purché le difese siano solide.
             meta_tier = "T3"
 
     notes = []
     if evals["DPR"]["tier"] == "red":
-        notes.append("DPR sotto la soglia orange; la build fatica a contribuire in combattimento.")
+        notes.append(
+            "DPR sotto la soglia orange; la build fatica a contribuire in combattimento."
+        )
     if evals["CA"]["tier"] == "red":
-        notes.append("CA troppo bassa per il livello; il personaggio verrà colpito troppo spesso.")
+        notes.append(
+            "CA troppo bassa per il livello; il personaggio verrà colpito troppo spesso."
+        )
     if any(s["tier"] == "red" for s in save_tiers.values()):
         bad = [name for name, s in save_tiers.items() if s["tier"] == "red"]
         notes.append(f"Salvataggi critici troppo bassi: {', '.join(bad)}.")

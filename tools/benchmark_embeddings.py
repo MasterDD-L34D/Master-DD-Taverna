@@ -4,6 +4,7 @@
 Confronta il modello sentence-transformers attuale con modelli Ollama
 embeddings su query italiane e inglesi contro il catalogo reference.
 """
+
 import json
 import os
 import sys
@@ -15,21 +16,62 @@ import numpy as np
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 REFERENCE_DIR = PROJECT_ROOT / "data" / "reference"
-OUT_PATH = Path(sys.argv[1]) if len(sys.argv) > 1 else PROJECT_ROOT / ".." / ".." / "sessione-2026-07-16" / "rapporti" / "embedding_benchmark.json"
+OUT_PATH = (
+    Path(sys.argv[1])
+    if len(sys.argv) > 1
+    else PROJECT_ROOT
+    / ".."
+    / ".."
+    / "sessione-2026-07-16"
+    / "rapporti"
+    / "embedding_benchmark.json"
+)
 OUT_PATH = Path(OUT_PATH).resolve()
 
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434")
 
 # Domande di test (italiano e inglese) con target atteso
 QUERIES = [
-    {"lang": "it", "text": "quali sono i prerequisiti del talento Furious Focus", "target": "reference::feats::Furious Focus"},
-    {"lang": "it", "text": "cosa fa il talento Power Attack", "target": "reference::feats::Power Attack"},
-    {"lang": "it", "text": "talento per attacco con due armi", "target": "reference::feats::Two-Weapon Fighting"},
-    {"lang": "it", "text": "incantesimo per curare ferite", "target": "reference::spells::Cure Light Wounds"},
-    {"lang": "en", "text": "prerequisites of Furious Focus", "target": "reference::feats::Furious Focus"},
-    {"lang": "en", "text": "what does Power Attack do", "target": "reference::feats::Power Attack"},
-    {"lang": "en", "text": "two weapon fighting feat", "target": "reference::feats::Two-Weapon Fighting"},
-    {"lang": "en", "text": "heal wounds spell", "target": "reference::spells::Cure Light Wounds"},
+    {
+        "lang": "it",
+        "text": "quali sono i prerequisiti del talento Furious Focus",
+        "target": "reference::feats::Furious Focus",
+    },
+    {
+        "lang": "it",
+        "text": "cosa fa il talento Power Attack",
+        "target": "reference::feats::Power Attack",
+    },
+    {
+        "lang": "it",
+        "text": "talento per attacco con due armi",
+        "target": "reference::feats::Two-Weapon Fighting",
+    },
+    {
+        "lang": "it",
+        "text": "incantesimo per curare ferite",
+        "target": "reference::spells::Cure Light Wounds",
+    },
+    {
+        "lang": "en",
+        "text": "prerequisites of Furious Focus",
+        "target": "reference::feats::Furious Focus",
+    },
+    {
+        "lang": "en",
+        "text": "what does Power Attack do",
+        "target": "reference::feats::Power Attack",
+    },
+    {
+        "lang": "en",
+        "text": "two weapon fighting feat",
+        "target": "reference::feats::Two-Weapon Fighting",
+    },
+    {
+        "lang": "en",
+        "text": "heal wounds spell",
+        "target": "reference::spells::Cure Light Wounds",
+    },
 ]
 
 
@@ -66,6 +108,7 @@ def normalize(vec: np.ndarray) -> np.ndarray:
 
 def make_ollama_encoder(model: str):
     """Return an encoder function backed by Ollama /api/embed (batch)."""
+
     def _encode(texts: list[str]) -> np.ndarray:
         # Truncate aggressively: Ollama embedding models have limited context
         # and some do not honour the truncate flag for very long inputs.
@@ -78,18 +121,24 @@ def make_ollama_encoder(model: str):
         resp.raise_for_status()
         data = resp.json()
         return np.array(data["embeddings"], dtype=np.float32)
+
     return _encode
 
 
 def make_sentence_transformers_encoder(model: str):
     from sentence_transformers import SentenceTransformer
+
     enc = SentenceTransformer(model)
+
     def _encode(texts: list[str]) -> np.ndarray:
         return enc.encode(texts, convert_to_numpy=True, show_progress_bar=False)
+
     return _encode
 
 
-def search(query_emb: np.ndarray, doc_embs: np.ndarray, sources: list[str], top_k: int = 5):
+def search(
+    query_emb: np.ndarray, doc_embs: np.ndarray, sources: list[str], top_k: int = 5
+):
     sim = (doc_embs @ query_emb.T).flatten()
     top_idx = np.argsort(sim)[::-1][:top_k]
     return [
@@ -117,22 +166,36 @@ def evaluate_model(model_name: str, encoder_type: str, encode_fn, entries: list[
 
         top = search(q_emb, doc_embs, sources, top_k=5)
         target_rank = next((r["rank"] for r in top if r["source"] == q["target"]), None)
-        target_score = next((r["score"] for r in top if r["source"] == q["target"]), None)
-        results.append({
-            "lang": q["lang"],
-            "query": q["text"],
-            "target": q["target"],
-            "target_rank": target_rank,
-            "target_score": round(target_score, 4) if target_score else None,
-            "top_5": top,
-            "query_time_seconds": round(query_time, 3),
-        })
+        target_score = next(
+            (r["score"] for r in top if r["source"] == q["target"]), None
+        )
+        results.append(
+            {
+                "lang": q["lang"],
+                "query": q["text"],
+                "target": q["target"],
+                "target_rank": target_rank,
+                "target_score": round(target_score, 4) if target_score else None,
+                "top_5": top,
+                "query_time_seconds": round(query_time, 3),
+            }
+        )
         status = f"rank={target_rank}" if target_rank else "MISS"
         print(f"  [{q['lang']}] {q['text'][:40]:<40} -> {status}")
 
-    mrr = sum(1.0 / r["target_rank"] for r in results if r["target_rank"]) / len(results)
-    it_mrr = sum(1.0 / r["target_rank"] for r in results if r["lang"] == "it" and r["target_rank"]) / sum(1 for r in results if r["lang"] == "it")
-    en_mrr = sum(1.0 / r["target_rank"] for r in results if r["lang"] == "en" and r["target_rank"]) / sum(1 for r in results if r["lang"] == "en")
+    mrr = sum(1.0 / r["target_rank"] for r in results if r["target_rank"]) / len(
+        results
+    )
+    it_mrr = sum(
+        1.0 / r["target_rank"]
+        for r in results
+        if r["lang"] == "it" and r["target_rank"]
+    ) / sum(1 for r in results if r["lang"] == "it")
+    en_mrr = sum(
+        1.0 / r["target_rank"]
+        for r in results
+        if r["lang"] == "en" and r["target_rank"]
+    ) / sum(1 for r in results if r["lang"] == "en")
 
     return {
         "model": model_name,
@@ -158,45 +221,63 @@ def main():
     }
 
     # Modello attuale (sentence-transformers)
-    report["models"].append(evaluate_model(
-        "paraphrase-multilingual-MiniLM-L12-v2",
-        "sentence-transformers",
-        make_sentence_transformers_encoder("paraphrase-multilingual-MiniLM-L12-v2"),
-        entries,
-    ))
+    report["models"].append(
+        evaluate_model(
+            "paraphrase-multilingual-MiniLM-L12-v2",
+            "sentence-transformers",
+            make_sentence_transformers_encoder("paraphrase-multilingual-MiniLM-L12-v2"),
+            entries,
+        )
+    )
 
     # Modelli embeddings Ollama disponibili
-    for ollama_model in []:  # modelli ollama rimossi nel cleanup 2026-07-25 (solo sentence-transformers)
+    for (
+        ollama_model
+    ) in (
+        []
+    ):  # modelli ollama rimossi nel cleanup 2026-07-25 (solo sentence-transformers)
         try:
-            report["models"].append(evaluate_model(
-                ollama_model, "ollama", make_ollama_encoder(ollama_model), entries
-            ))
+            report["models"].append(
+                evaluate_model(
+                    ollama_model, "ollama", make_ollama_encoder(ollama_model), entries
+                )
+            )
         except Exception as exc:
             print(f"  ERRORE con {ollama_model}: {exc}")
-            report["models"].append({
-                "model": ollama_model,
-                "encoder_type": "ollama",
-                "error": str(exc),
-            })
+            report["models"].append(
+                {
+                    "model": ollama_model,
+                    "encoder_type": "ollama",
+                    "error": str(exc),
+                }
+            )
 
     # Prova mpnet multilingue se riesce a scaricarsi entro i tempi
     try:
-        report["models"].append(evaluate_model(
-            "paraphrase-multilingual-mpnet-base-v2",
-            "sentence-transformers",
-            make_sentence_transformers_encoder("paraphrase-multilingual-mpnet-base-v2"),
-            entries,
-        ))
+        report["models"].append(
+            evaluate_model(
+                "paraphrase-multilingual-mpnet-base-v2",
+                "sentence-transformers",
+                make_sentence_transformers_encoder(
+                    "paraphrase-multilingual-mpnet-base-v2"
+                ),
+                entries,
+            )
+        )
     except Exception as exc:
         print(f"  ERRORE con paraphrase-multilingual-mpnet-base-v2: {exc}")
-        report["models"].append({
-            "model": "paraphrase-multilingual-mpnet-base-v2",
-            "encoder_type": "sentence-transformers",
-            "error": str(exc),
-        })
+        report["models"].append(
+            {
+                "model": "paraphrase-multilingual-mpnet-base-v2",
+                "encoder_type": "sentence-transformers",
+                "error": str(exc),
+            }
+        )
 
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    OUT_PATH.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    OUT_PATH.write_text(
+        json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
     print(f"\nReport salvato in: {OUT_PATH}")
 
 

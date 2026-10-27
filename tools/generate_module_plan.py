@@ -18,6 +18,7 @@ Usage:
 
 If a report is missing, the entry will be flagged as "Report mancante".
 """
+
 from __future__ import annotations
 
 import argparse

@@ -50,8 +50,10 @@ from jsonschema.exceptions import ValidationError
 try:  # pragma: no cover - percorso solo in ambienti con utils disponibile
     from utils.aon_detector import is_aon_url  # type: ignore
 except ModuleNotFoundError:  # pragma: no cover - usato in CI/ambienti vanilla
+
     def is_aon_url(url: str) -> bool:
         return "aonprd.com" in (url or "").lower()
+
 
 # Lista di classi PF1e target supportate dal builder
 PF1E_CLASSES: List[str] = [

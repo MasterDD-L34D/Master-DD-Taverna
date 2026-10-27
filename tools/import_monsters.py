@@ -12,6 +12,7 @@ L'output e' un catalogo reference compatibile con header `_license` e `_source`.
 I dati vanno in `data/reference/pi_local_only/` (gia' .gitignore): non vengono
 commessi perche' derivati da Archives of Nethys.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -21,9 +22,10 @@ import subprocess
 import sys
 from pathlib import Path
 
-
 REPO_ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_OUTPUT = REPO_ROOT / "data" / "reference" / "pi_local_only" / "monsters_local.json"
+DEFAULT_OUTPUT = (
+    REPO_ROOT / "data" / "reference" / "pi_local_only" / "monsters_local.json"
+)
 
 
 def _source_id(name: str) -> str:
@@ -59,10 +61,14 @@ def _statblock(m: dict) -> str:
         parts.append(f"HP {hp.get('total', '?')} ({hp.get('long', '')})")
     ac = m.get("AC", {})
     if isinstance(ac, dict):
-        parts.append(f"AC {ac.get('AC', '?')}, touch {ac.get('touch', '?')}, flat-footed {ac.get('flat_footed', '?')}")
+        parts.append(
+            f"AC {ac.get('AC', '?')}, touch {ac.get('touch', '?')}, flat-footed {ac.get('flat_footed', '?')}"
+        )
     saves = m.get("saves", {})
     if isinstance(saves, dict):
-        parts.append(f"Fort {saves.get('fort', '?')}, Ref {saves.get('ref', '?')}, Will {saves.get('will', '?')}")
+        parts.append(
+            f"Fort {saves.get('fort', '?')}, Ref {saves.get('ref', '?')}, Will {saves.get('will', '?')}"
+        )
     attacks = m.get("attacks", {})
     if isinstance(attacks, dict):
         for atk_type, atk_list in attacks.items():
@@ -167,11 +173,19 @@ def convert_monsters(monsters, limit: int | None = None) -> list[dict]:
             url, monster = "unknown", item
         name = monster.get("title1", monster.get("title2", "Unknown"))
         sources = monster.get("sources", [{}])
-        source = sources[0].get("name", "Pathfinder RPG Bestiary") if sources else "Pathfinder RPG Bestiary"
+        source = (
+            sources[0].get("name", "Pathfinder RPG Bestiary")
+            if sources
+            else "Pathfinder RPG Bestiary"
+        )
         source_page = sources[0].get("page", "") if sources else ""
         tags = ["monster", monster.get("type", ""), monster.get("size", "")]
         alignment = monster.get("alignment", {})
-        align_clean = alignment.get("cleaned", "") if isinstance(alignment, dict) else str(alignment)
+        align_clean = (
+            alignment.get("cleaned", "")
+            if isinstance(alignment, dict)
+            else str(alignment)
+        )
         if align_clean:
             tags.append(align_clean)
         for subtype in monster.get("subtypes", []):
@@ -187,18 +201,26 @@ def convert_monsters(monsters, limit: int | None = None) -> list[dict]:
         if stat:
             desc_parts.append("Statblock: " + _clean_text(stat))
 
-        entries.append({
-            "name": name,
-            "source": source,
-            "source_id": _source_id(name),
-            "prerequisites": [],
-            "tags": tags,
-            "references": [_clean_text(f"{source}{f' p. {source_page}' if source_page else ''}")],
-            "reference_urls": [_url(name)],
-            "description": "\n\n".join(desc_parts),
-            "mechanics": _mechanics(monster),
-            "notes": _clean_text(f"Converted from PathfinderMonsterDatabase ({url})"),
-        })
+        entries.append(
+            {
+                "name": name,
+                "source": source,
+                "source_id": _source_id(name),
+                "prerequisites": [],
+                "tags": tags,
+                "references": [
+                    _clean_text(
+                        f"{source}{f' p. {source_page}' if source_page else ''}"
+                    )
+                ],
+                "reference_urls": [_url(name)],
+                "description": "\n\n".join(desc_parts),
+                "mechanics": _mechanics(monster),
+                "notes": _clean_text(
+                    f"Converted from PathfinderMonsterDatabase ({url})"
+                ),
+            }
+        )
         if limit and len(entries) >= limit:
             break
     return entries
@@ -208,11 +230,13 @@ def _find_data_json(source_dir: Path, letter: str | None) -> Path | None:
     candidates = []
     if letter:
         candidates.append(source_dir / "data" / letter / "data.json")
-    candidates.extend([
-        source_dir / "data" / "full" / "data.json",
-        source_dir / "data" / "poc" / "data.json",
-        source_dir / "data" / "data.json",
-    ])
+    candidates.extend(
+        [
+            source_dir / "data" / "full" / "data.json",
+            source_dir / "data" / "poc" / "data.json",
+            source_dir / "data" / "data.json",
+        ]
+    )
     for c in candidates:
         if c.exists():
             return c
@@ -227,18 +251,39 @@ def _clone_pathfinder_monster_db(target: Path) -> Path:
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Importa mostri da PathfinderMonsterDatabase")
-    ap.add_argument("--source-dir", type=Path, help="Directory del clone di PathfinderMonsterDatabase")
-    ap.add_argument("--input", type=Path, help="Path specifico a data.json (sovrascrive l'auto-ricerca)")
-    ap.add_argument("--output", type=Path, default=DEFAULT_OUTPUT, help="Path di output")
+    ap = argparse.ArgumentParser(
+        description="Importa mostri da PathfinderMonsterDatabase"
+    )
+    ap.add_argument(
+        "--source-dir",
+        type=Path,
+        help="Directory del clone di PathfinderMonsterDatabase",
+    )
+    ap.add_argument(
+        "--input",
+        type=Path,
+        help="Path specifico a data.json (sovrascrive l'auto-ricerca)",
+    )
+    ap.add_argument(
+        "--output", type=Path, default=DEFAULT_OUTPUT, help="Path di output"
+    )
     ap.add_argument("--letter", help="Lettera sottodirectory in data/ da usare")
     ap.add_argument("--limit", type=int, help="Numero massimo di mostri da importare")
-    ap.add_argument("--clone", action="store_true", help="Clona PathfinderMonsterDatabase se --source-dir non esiste")
+    ap.add_argument(
+        "--clone",
+        action="store_true",
+        help="Clona PathfinderMonsterDatabase se --source-dir non esiste",
+    )
     args = ap.parse_args()
 
     source_dir = args.source_dir
     if source_dir is None:
-        default_clone = REPO_ROOT.parent.parent / "sessione-2026-07-16" / "ricerca" / "PathfinderMonsterDatabase"
+        default_clone = (
+            REPO_ROOT.parent.parent
+            / "sessione-2026-07-16"
+            / "ricerca"
+            / "PathfinderMonsterDatabase"
+        )
         if default_clone.exists():
             source_dir = default_clone
         elif args.clone:

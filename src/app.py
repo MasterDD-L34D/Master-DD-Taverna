@@ -43,9 +43,12 @@ from .metadata_parser import (
     reference_catalog_version as _reference_catalog_version,
 )
 from .builder.stub_builder import StubBuilderError, build_stub_payload
-from .storage_helpers import list_files as _list_files, taverna_saves_metadata as _taverna_saves_metadata, taverna_saves_metrics as _taverna_saves_metrics
+from .storage_helpers import (
+    list_files as _list_files,
+    taverna_saves_metadata as _taverna_saves_metadata,
+    taverna_saves_metrics as _taverna_saves_metrics,
+)
 from .rag.router import router as rag_router
-
 
 REFERENCE_MANIFEST_PATH = (
     Path(__file__).resolve().parent.parent / "data" / "reference" / "manifest.json"
@@ -518,11 +521,14 @@ async def metrics(_: None = Depends(require_metrics_access)) -> Response:
 
     return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
 
+
 app.include_router(router)
 app.include_router(rag_router)
 try:
     from src.ml.router import router as ml_router
+
     app.include_router(ml_router)
 except Exception as exc:  # pragma: no cover - la guardia non deve fermare l'app
     import logging
+
     logging.getLogger(__name__).warning("router /ml non registrato: %s", exc)

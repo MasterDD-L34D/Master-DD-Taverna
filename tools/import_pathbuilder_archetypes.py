@@ -45,6 +45,7 @@ Uso:
   --raw-dir PATH   (default data/reference/pi_local_only/pathbuilder)
   --out-dir PATH   (default <pathmaster sibling>/packages/rules-engine-v2/src/data)
 """
+
 from __future__ import annotations
 
 import argparse
@@ -56,8 +57,9 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_RAW_DIR = REPO_ROOT / "data/reference/pi_local_only/pathbuilder"
-DEFAULT_OUT_DIR = (REPO_ROOT.parent / "pathmaster-dd"
-                   / "packages/rules-engine-v2/src/data")
+DEFAULT_OUT_DIR = (
+    REPO_ROOT.parent / "pathmaster-dd" / "packages/rules-engine-v2/src/data"
+)
 
 SEP_LIST = "&"
 
@@ -81,7 +83,7 @@ def _split_list(raw: str | None) -> list[str]:
 def _class_key(path: Path) -> str:
     name = path.name
     assert name.startswith("data_archetypes_") and name.endswith(".xml")
-    return name[len("data_archetypes_"):-len(".xml")]
+    return name[len("data_archetypes_") : -len(".xml")]
 
 
 def parse_archetype_file(path: Path) -> tuple[dict[str, dict], int]:
@@ -94,13 +96,15 @@ def parse_archetype_file(path: Path) -> tuple[dict[str, dict], int]:
     for row in iter_rows(ET.parse(path).getroot()):
         name = row.findtext("ArchetypeName")
         if name is not None:
-            current = {"source": row.findtext("Source"), "race": None,
-                       "entries": []}
+            current = {"source": row.findtext("Source"), "race": None, "entries": []}
             archetypes[name.strip()] = current
         if current is None:
             raise ValueError(f"{path.name}: riga senza blocco archetipo aperto")
         if row.findtext("Race"):
-            if current["race"] is not None and current["race"] != row.findtext("Race").strip():
+            if (
+                current["race"] is not None
+                and current["race"] != row.findtext("Race").strip()
+            ):
                 raise ValueError(f"{path.name}: race non uniforme nel blocco")
             current["race"] = row.findtext("Race").strip()
         special = row.findtext("ArchetypeSpecial")
@@ -143,41 +147,46 @@ def main(argv=None) -> int:
     raw_dir = Path(args.raw_dir)
     classes = import_archetypes(raw_dir)
 
-    all_entries = [(cls, name, e)
-                   for cls, archs in classes.items()
-                   for name, arch in archs.items()
-                   for e in arch["entries"]]
+    all_entries = [
+        (cls, name, e)
+        for cls, archs in classes.items()
+        for name, arch in archs.items()
+        for e in arch["entries"]
+    ]
     without_level = [
         {"class": cls, "archetype": name, "special": e["special"]}
-        for cls, name, e in all_entries if e["level"] is None]
+        for cls, name, e in all_entries
+        if e["level"] is None
+    ]
     # righe saltate = 5.069 righe totali meno le entries raccolte
     total_rows = sum(
         len(iter_rows(ET.parse(p).getroot()))
-        for p in sorted(glob.glob(str(raw_dir / "data_archetypes_*.xml"))))
+        for p in sorted(glob.glob(str(raw_dir / "data_archetypes_*.xml")))
+    )
     skipped = total_rows - len(all_entries)
 
     payload = {
         "_provenance": {
             "source": "Pathbuilder 1e raw data (res/raw dell'APK), "
-                      "data_archetypes_*.xml (42 classi)",
+            "data_archetypes_*.xml (42 classi)",
             "generated_by": "Master-DD-Taverna/tools/import_pathbuilder_archetypes.py",
             "generated_at": datetime.now(timezone.utc).isoformat(),
             "license": "Pathbuilder 1e raw data (APK da BlueStacks utente, permesso "
-                       "concesso 2026-08-02). Meccaniche e nomi: OGL 1.0a. <Details> "
-                       "degli archetipi: testo Paizo (Product Identity) — MAI esportato "
-                       "(resta nel dataset PI local-only, gitignored).",
+            "concesso 2026-08-02). Meccaniche e nomi: OGL 1.0a. <Details> "
+            "degli archetipi: testo Paizo (Product Identity) — MAI esportato "
+            "(resta nel dataset PI local-only, gitignored).",
             "desc_policy": "Solo nomi + meccaniche strutturate (special, level, "
-                           "replaced[], changed[], source, race): MAI la <Details> "
-                           "delle voci. Il catalogo curato catalogs/archetypes.ts "
-                           "(46 archetipi) RESTA INTATTO e vince sempre sui duplicati: "
-                           "questo dataset e' additivo.",
+            "replaced[], changed[], source, race): MAI la <Details> "
+            "delle voci. Il catalogo curato catalogs/archetypes.ts "
+            "(46 archetipi) RESTA INTATTO e vince sempre sui duplicati: "
+            "questo dataset e' additivo.",
             "effecthook_policy": "effectHook e' il nome dell'hook interno Pathbuilder "
-                                 "(EffectMethod, camelCase): dichiarato come hook, NON "
-                                 "decodificato e NON un effetto del motore.",
+            "(EffectMethod, camelCase): dichiarato come hook, NON "
+            "decodificato e NON un effetto del motore.",
             "level_policy": "level SOLO dal dato; 3 entries senza <Level> nel dataset "
-                            "hanno level null dichiarato (report), mai inventato. I "
-                            "suffissi progressivi (+N, ' N') restano parte dei nomi "
-                            "replaced/changed: la progressione e' un dato onesto.",
+            "hanno level null dichiarato (report), mai inventato. I "
+            "suffissi progressivi (+N, ' N') restano parte dei nomi "
+            "replaced/changed: la progressione e' un dato onesto.",
             "format_notes_doc": "tools/import_pathbuilder_archetypes.py (docstring)",
         },
         "counts": {
@@ -193,8 +202,10 @@ def main(argv=None) -> int:
         "classes": classes,
     }
 
-    print(f"classi: {len(classes)}, archetipi: {payload['counts']['archetypes']}, "
-          f"entries: {len(all_entries)}")
+    print(
+        f"classi: {len(classes)}, archetipi: {payload['counts']['archetypes']}, "
+        f"entries: {len(all_entries)}"
+    )
     print(f"entries senza level nel dato (dichiarate): {len(without_level)}")
     print(f"sentinelle Completed saltate: {skipped}")
     per_class = {c: len(a) for c, a in classes.items()}
@@ -204,8 +215,9 @@ def main(argv=None) -> int:
         out_dir = Path(args.out_dir)
         out_dir.mkdir(parents=True, exist_ok=True)
         path = out_dir / "pathbuilder-archetypes.json"
-        path.write_text(json.dumps(payload, indent=1, ensure_ascii=False) + "\n",
-                        encoding="utf-8")
+        path.write_text(
+            json.dumps(payload, indent=1, ensure_ascii=False) + "\n", encoding="utf-8"
+        )
         print(f"scritto {path}")
     return 0
 

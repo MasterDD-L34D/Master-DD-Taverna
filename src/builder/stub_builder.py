@@ -30,7 +30,10 @@ class StubBuilderError(Exception):
 
 _ARCHETYPES_PATH = (
     Path(__file__).resolve().parent.parent.parent
-    / "data" / "reference" / "ogl" / "archetypes.json"
+    / "data"
+    / "reference"
+    / "ogl"
+    / "archetypes.json"
 )
 
 # Grant esplicito di competenza nelle armature ("proficient with ... light
@@ -783,9 +786,7 @@ def build_stub_payload(
                 }
             )
         if progression:
-            base_hp = (
-                wizard_snapshot.get("pf", base_hp) if wizard_snapshot else base_hp
-            )
+            base_hp = wizard_snapshot.get("pf", base_hp) if wizard_snapshot else base_hp
     elif is_cutpurse:
         for entry in cutpurse_levels:
             progression.append(
@@ -874,7 +875,12 @@ def build_stub_payload(
     # copre le classi del corpus; una classe non elencata riceve la riga
     # generica come prima.
     classi_senza_armatura = {
-        "wizard", "sorcerer", "witch", "arcanist", "monk", "psychic",
+        "wizard",
+        "sorcerer",
+        "witch",
+        "arcanist",
+        "monk",
+        "psychic",
     }
     equip_full = []
     if wizard_levels:
@@ -965,9 +971,7 @@ def build_stub_payload(
         "statistiche_chiave": {
             "attacco": attack_text,
             "danni": damage_text,
-            "ca": (
-                ac_block.get("totale", 17) if isinstance(ac_block, Mapping) else 17
-            ),
+            "ca": (ac_block.get("totale", 17) if isinstance(ac_block, Mapping) else 17),
         },
         "pf_totali": base_hp,
         "hp": {"totali": base_hp, "per_livello": hp_progression},

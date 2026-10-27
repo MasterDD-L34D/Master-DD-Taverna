@@ -4,7 +4,6 @@ import argparse
 from datetime import date
 from pathlib import Path
 
-
 DEFAULT_CHANGELOG = Path("reports/changelog_2025-12-26.md")
 DEFAULT_PYTEST_LOG = Path("reports/qa_log.md")
 DEFAULT_ATTESTATO = Path("reports/coverage_attestato_2025-12-11.md")

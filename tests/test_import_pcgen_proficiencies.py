@@ -20,13 +20,13 @@ base resta (gli swap degli archetipi sono fuori scope D6, dichiarati).
 DEITYWEAPONS -> flag deity (la divinita' non e' sulla scheda: unknown dal
 motore). %LIST (scelte) e segmenti non mappati -> report, MAI buttati via.
 """
+
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tools import import_pcgen_proficiencies as imp
-
 
 LST = """\
 # Class Name	Hit Dice	Type
@@ -65,8 +65,13 @@ def test_explicit_weapons_from_ability_record():
     classes = _parse()
     wizard = classes["Wizard"]
     explicit = sorted(g["value"] for g in wizard["grants"] if g["kind"] == "weapon")
-    assert explicit == ["Club", "Crossbow (Heavy)", "Crossbow (Light)",
-                        "Dagger", "Quarterstaff"]
+    assert explicit == [
+        "Club",
+        "Crossbow (Heavy)",
+        "Crossbow (Light)",
+        "Dagger",
+        "Quarterstaff",
+    ]
     assert any(g["kind"] == "auto_weapons" for g in wizard["grants"])
 
 
@@ -84,8 +89,11 @@ def test_deity_weapons_flagged_via_internal_record():
 def test_level_gate_from_prevargteq():
     classes = _parse()
     magus = classes["Magus"]
-    medium = next(g for g in magus["grants"]
-                  if g["kind"] == "armor_type" and g["value"] == "medium")
+    medium = next(
+        g
+        for g in magus["grants"]
+        if g["kind"] == "armor_type" and g["value"] == "medium"
+    )
     assert medium["level"] == 7
 
 
@@ -96,8 +104,10 @@ def test_standard_class_full_suffix_stripped():
 
 def test_firearms_from_named_grant():
     classes = _parse()
-    assert any(g["kind"] == "weapon_type" and g["value"] == "firearm"
-               for g in classes["Gunslinger"]["grants"])
+    assert any(
+        g["kind"] == "weapon_type" and g["value"] == "firearm"
+        for g in classes["Gunslinger"]["grants"]
+    )
 
 
 def test_type_auto_segment_in_explicit_list_becomes_auto_not_weapon():
@@ -128,20 +138,19 @@ import os  # noqa: E402
 
 import pytest  # noqa: E402
 
-REAL_ROOT = Path(os.environ.get(
-    "PCGEN_REPO", r"C:\Users\VGit\Downloads\pcgen-repo"))
+REAL_ROOT = Path(os.environ.get("PCGEN_REPO", r"C:\Users\VGit\Downloads\pcgen-repo"))
 
 
-@pytest.mark.skipif(not (REAL_ROOT / "data/pathfinder/paizo").is_dir(),
-                    reason="clone PCGen assente")
+@pytest.mark.skipif(
+    not (REAL_ROOT / "data/pathfinder/paizo").is_dir(), reason="clone PCGen assente"
+)
 def test_dati_reali_vigilante_shifter_proficiencies():
     doc = imp.build_file(REAL_ROOT)
     classes = doc["classes"]
     assert "Vigilante" in classes  # Ultimate Intrigue
-    assert "Shifter" in classes    # Ultimate Wilderness
+    assert "Shifter" in classes  # Ultimate Wilderness
 
-    vig = {(g["kind"], g.get("value"))
-           for g in classes["Vigilante"]["grants"]}
+    vig = {(g["kind"], g.get("value")) for g in classes["Vigilante"]["grants"]}
     # record reale ui_abilities_class.lst (verificato 2026-08-08):
     # TYPE=WeaponProfMartial + TYPE=ArmorProfMedium + TYPE=ShieldProf
     assert ("weapon_type", "martial") in vig
@@ -153,10 +162,16 @@ def test_dati_reali_vigilante_shifter_proficiencies():
     # ma il RAW si' — "proficient with all simple and martial weapons,
     # light armor, medium armor, and shields (except tower shields)"
     # (UI p.9, AoN ClassDisplay Vigilante verificato 2026-08-08).
-    vig_simple = [g for g in classes["Vigilante"]["grants"]
-                  if g["kind"] == "weapon_type" and g.get("value") == "simple"]
-    vig_light = [g for g in classes["Vigilante"]["grants"]
-                 if g["kind"] == "armor_type" and g.get("value") == "light"]
+    vig_simple = [
+        g
+        for g in classes["Vigilante"]["grants"]
+        if g["kind"] == "weapon_type" and g.get("value") == "simple"
+    ]
+    vig_light = [
+        g
+        for g in classes["Vigilante"]["grants"]
+        if g["kind"] == "armor_type" and g.get("value") == "light"
+    ]
     assert len(vig_simple) == 1 and vig_simple[0]["curated"] is True
     assert len(vig_light) == 1 and vig_light[0]["curated"] is True
 
@@ -171,6 +186,7 @@ def test_dati_reali_vigilante_shifter_proficiencies():
     # ClassDisplay Shifter verificato 2026-08-08: "proficient with light
     # and medium armor"); il divieto del metallo resta NON modellato
     # (dichiarato, come le restrizioni druidiche D6)
-    light = [g for g in shifter
-             if g["kind"] == "armor_type" and g.get("value") == "light"]
+    light = [
+        g for g in shifter if g["kind"] == "armor_type" and g.get("value") == "light"
+    ]
     assert len(light) == 1 and light[0]["curated"] is True

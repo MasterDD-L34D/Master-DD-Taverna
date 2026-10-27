@@ -1,4 +1,5 @@
 """Test per tools/reference_fetch.py (cache logic, nessuna rete)."""
+
 import sys
 from pathlib import Path
 

@@ -14,7 +14,9 @@ def _write_json(path: Path, payload: object) -> None:
     path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
 
-def test_reference_contract_accepts_manifest_and_payload_alignment(tmp_path: Path) -> None:
+def test_reference_contract_accepts_manifest_and_payload_alignment(
+    tmp_path: Path,
+) -> None:
     _write_json(tmp_path / "data/reference/spells.json", [{"name": "A"}])
     _write_json(tmp_path / "data/reference/feats.json", [{"name": "B"}, {"name": "C"}])
     _write_json(tmp_path / "data/reference/items.json", [{"name": "D"}])
@@ -47,7 +49,9 @@ def test_reference_contract_accepts_manifest_and_payload_alignment(tmp_path: Pat
     assert warnings == []
 
 
-def test_reference_contract_requires_spells_feats_items_in_manifest(tmp_path: Path) -> None:
+def test_reference_contract_requires_spells_feats_items_in_manifest(
+    tmp_path: Path,
+) -> None:
     _write_json(tmp_path / "data/reference/spells.json", [{"name": "A"}])
     _write_json(
         tmp_path / "data/reference/manifest.json",
@@ -66,7 +70,9 @@ def test_reference_contract_requires_spells_feats_items_in_manifest(tmp_path: Pa
     assert any("dataset obbligatori mancanti" in err for err in errors)
 
 
-def test_reference_contract_fails_on_reference_catalog_version_mismatch(tmp_path: Path) -> None:
+def test_reference_contract_fails_on_reference_catalog_version_mismatch(
+    tmp_path: Path,
+) -> None:
     _write_json(tmp_path / "data/reference/spells.json", [{"name": "A"}])
     _write_json(tmp_path / "data/reference/feats.json", [{"name": "B"}])
     _write_json(tmp_path / "data/reference/items.json", [{"name": "C"}])

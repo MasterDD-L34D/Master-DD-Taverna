@@ -6,12 +6,15 @@ compatibilita' con i consumatori esistenti. Qui vivono solo costanti e
 funzioni pure (stdlib + duck-typing sulle tabelle BeautifulSoup): niente
 fetch di rete, niente filtri PI — quelli restano nei moduli di dominio.
 """
+
 import json
 import re
 from pathlib import Path
 
 OGL_DIR = Path(__file__).resolve().parents[1] / "data/reference/ogl"
-LICENSE = "Open Game Content under OGL 1.0a. See LICENSE-OGL.txt and COPYRIGHT_NOTICE.txt."
+LICENSE = (
+    "Open Game Content under OGL 1.0a. See LICENSE-OGL.txt and COPYRIGHT_NOTICE.txt."
+)
 SOURCE = "Pathfinder RPG Reference Document © 2011 Paizo Publishing, LLC; Archives of Nethys (aonprd.com)."
 
 BASE = "https://aonprd.com/"
@@ -82,7 +85,9 @@ def _header_index(table):
     hanno una riga di gruppo ('Spells Per Day' con colspan) sopra gli header;
     i wrapper di layout annidano la tabella: celle dirette, non ricorsive."""
     for idx, tr in enumerate(table.find_all("tr", recursive=False)[:3]):
-        headers = [clean(c.get_text()) for c in tr.find_all(["th", "td"], recursive=False)]
+        headers = [
+            clean(c.get_text()) for c in tr.find_all(["th", "td"], recursive=False)
+        ]
         if "Level" in headers and "Base Attack Bonus" in headers:
             return idx, headers
     return None, []

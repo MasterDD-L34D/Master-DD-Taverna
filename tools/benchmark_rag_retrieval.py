@@ -10,6 +10,7 @@ Uso:
 
 Salva/legge un file JSON con i risultati per confronto prima/dopo.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -24,7 +25,6 @@ from sentence_transformers import SentenceTransformer
 
 from src.rag.retriever import Retriever
 from src.rag.store import VectorStore
-
 
 DEFAULT_QUERIES = [
     "cosa fa il talento Power Attack in Pathfinder 1E?",
@@ -85,7 +85,10 @@ def main() -> None:
     print(f"Caricamento vector store: {args.store_dir}")
     store = VectorStore(args.store_dir)
     if not store.is_ready():
-        print("ERRORE: vector store non inizializzato. Esegui prima python tools/index_rag.py", file=sys.stderr)
+        print(
+            "ERRORE: vector store non inizializzato. Esegui prima python tools/index_rag.py",
+            file=sys.stderr,
+        )
         sys.exit(1)
 
     print(f"Caricamento modello embeddings: {args.model}")
@@ -122,7 +125,11 @@ def main() -> None:
             print(f"  {i}. {h['source']} [{h['score']:.4f}]")
             print(f"     {h['text'][:160].replace(chr(10), ' ')}")
 
-    report = {"queries": results, "model": args.model, "store_count": store.meta.get("count", 0)}
+    report = {
+        "queries": results,
+        "model": args.model,
+        "store_count": store.meta.get("count", 0),
+    }
 
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)

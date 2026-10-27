@@ -73,7 +73,10 @@ def process_file(path: Path, check: bool) -> str:
     if not isinstance(payload, dict):
         return "skip"
 
-    has_snapshot = isinstance(payload.get("benchmark"), dict) and "dpr_snapshot" in payload["benchmark"]
+    has_snapshot = (
+        isinstance(payload.get("benchmark"), dict)
+        and "dpr_snapshot" in payload["benchmark"]
+    )
     touched = _mark_benchmark(payload.get("benchmark"))
     composite = payload.get("composite")
     if isinstance(composite, dict):

@@ -1,11 +1,14 @@
 """Test per tools/enrich_equipment_descriptions.py — description flavor da pagine dettaglio AoN."""
+
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from tools.enrich_equipment_descriptions import (enrich_entry,
-                                                 parse_equipment_description)
+from tools.enrich_equipment_descriptions import (
+    enrich_entry,
+    parse_equipment_description,
+)
 
 CHAINMAIL_HTML = """
 <html><body>
@@ -26,12 +29,15 @@ def test_parse_equipment_description_missing_section():
 
 
 def test_enrich_entry_appends_flavor_once():
-    entry = {"name": "Chainmail",
-             "description": "Chainmail (armor, medium), costo 150 gp, peso 40 lbs."}
+    entry = {
+        "name": "Chainmail",
+        "description": "Chainmail (armor, medium), costo 150 gp, peso 40 lbs.",
+    }
     out = enrich_entry(entry, "Unlike a chain shirt, it covers the torso.")
     assert out["description"] == (
         "Chainmail (armor, medium), costo 150 gp, peso 40 lbs.\n\n"
-        "Unlike a chain shirt, it covers the torso.")
+        "Unlike a chain shirt, it covers the torso."
+    )
     # idempotenza: secondo passaggio non raddoppia
     out2 = enrich_entry(out, "Unlike a chain shirt, it covers the torso.")
     assert out2["description"] == out["description"]

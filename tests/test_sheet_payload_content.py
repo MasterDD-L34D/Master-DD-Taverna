@@ -1,7 +1,6 @@
 import json
 from pathlib import Path
 
-
 BUILD_DIR = Path("src/data/builds")
 
 

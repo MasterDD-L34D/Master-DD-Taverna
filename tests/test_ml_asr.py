@@ -1,11 +1,11 @@
 """Test per src/ml/asr.py — engine ASR astratto, fake e factory."""
+
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.ml.asr import (AsrUnavailable, FakeAsrEngine, TranscriptSegment,
-                        get_asr_engine)
+from src.ml.asr import AsrUnavailable, FakeAsrEngine, TranscriptSegment, get_asr_engine
 
 
 def test_fake_engine_returns_contract_shape():
