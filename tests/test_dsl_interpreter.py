@@ -657,3 +657,38 @@ def test_call_saltato_invalida_scratch_stale(tmp_path):
         s for e in it.events for s in e.get("update_parziale", {}).get("saltati", [])
     ]
     assert "call:doppia" in saltati and "build_state.risultato" in saltati
+
+
+# ---- ES2: review Codex PR #553 giro 3 (2 findings P2) ----
+
+
+def test_variabili_locali_jinja_non_sono_non_legate(tmp_path):
+    # Codex P2 (giro 3): le variabili bound dai loop/set interni al
+    # template ('{% for x in values %}{{ x }}') NON sono dipendenze esterne:
+    # la scansione deve essere scope-aware come find_undeclared_variables
+    k = _mini(
+        tmp_path,
+        "commands:\n  /go:\n    params: [values]\n"
+        "    action:\n"
+        "      - set: build_state.xs\n"
+        "        value: '{% for x in values %}{{ x }}{% endfor %}'\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go", values=[1, 2])
+    assert it.state["build_state"]["xs"] == 12  # native env: output adiacenti
+    assert not [e for e in it.events if "update_parziale" in e]
+
+
+def test_uguale_in_template_non_rende_named_l_argomento(tmp_path):
+    # Codex P2 (giro 3): '{{ n == 1 }}' e' un argomento POSIZIONALE (l'= e'
+    # dentro l'espressione): renderizzato a 'True' deve legarsi al param
+    k = _mini(
+        tmp_path,
+        "commands:\n  /inner:\n    params: [flag]\n"
+        "    action: [{set: build_state.f, value: '{{ flag }}'}]\n"
+        "  /go:\n    params: [n]\n"
+        "    action: [{command: '/inner {{ n == 1 }}'}]\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go", n=1)
+    assert it.state["build_state"]["f"] is True  # bool nativo dal render

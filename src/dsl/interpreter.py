@@ -64,23 +64,33 @@ class _ProtectedOccurrences(NodeVisitor):
 
 @lru_cache(maxsize=None)
 def _tmpl_exposed(tmpl: str) -> frozenset:
-    """Nomi con ALMENO un'occorrenza SENZA fallback (or/default): su questi
-    un nome non legato e' un wipe. I nomi con tutte le occorrenze protette
-    restano fuori: il render li risolve da solo (None e' falsy: 'n or X'
-    prende X) senza wipe (idioma Codex P2: '/inner count={{ n or 3 }}').
-    Non parseggiabile -> insieme vuoto: la scansione non salta mai per un
-    refuso di sintassi (lo segnalano i gate G3/static_check)."""
+    """Nomi liberi (scope-aware: find_undeclared_variables esclude le
+    variabili bound da for/set interni al template) con ALMENO un'occorrenza
+    SENZA fallback (or/default): su questi un nome non legato e' un wipe.
+    I nomi con tutte le occorrenze protette restano fuori: il render li
+    risolve da solo (None e' falsy: 'n or X' prende X) senza wipe (idioma
+    Codex P2: '/inner count={{ n or 3 }}'). Non parseggiabile -> insieme
+    vuoto: la scansione non salta mai per un refuso di sintassi (lo
+    segnalano i gate G3/static_check)."""
     try:
         parsed = _PARSE_ENV.parse(tmpl)
     except jinja2.TemplateSyntaxError:
         return frozenset()
+    liberi = find_undeclared_variables(parsed)
     prot = _ProtectedOccurrences()
     prot.visit(parsed)
     return frozenset(
         nm.name
         for nm in parsed.find_all(jinja2.nodes.Name)
-        if id(nm) not in prot.protected
+        if nm.name in liberi and id(nm) not in prot.protected
     )
+
+
+def _is_named_arg(tok: str) -> bool:
+    """True se il token e' un argomento named (k=v): l'assegnamento si
+    riconosce solo FUORI dalle espressioni template — '{{ n == 1 }}' e'
+    posizionale (Codex P2, review PR #553 giro 3)."""
+    return "=" in re.sub(r"\{\{.*?\}\}|\{%.*?%\}", "", tok)
 
 
 def _referenced_vars(node: Any) -> set:
@@ -792,7 +802,7 @@ class Interpreter:
         )  # nome comando: mai droppato, mai renderizzato da solo
         for tok in toks[1:]:
             slot = -1
-            if "=" not in tok:
+            if not _is_named_arg(tok):
                 slot = pos
                 pos += 1
             if self._unresolvable(tok, params):
