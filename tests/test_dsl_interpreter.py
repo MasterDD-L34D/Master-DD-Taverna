@@ -1461,3 +1461,59 @@ def test_run_input_modulo_reale_play_game(tmp_path):
         "GameMode.OnboardingTheme.universe"
     )
     assert any("Scegli universo" in o for o in it.output_log)
+
+
+def test_run_input_yes_no_lega_boolean(tmp_path):
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {portrait_done: false}
+    T:
+      p:
+        prompt: "Ritratto?"
+        parse:
+          yes_no: {key: gen}
+        actions:
+          - if: "{{gen}}"
+            then:
+              - set: "@GameMode.shared.portrait_done"
+                value: true
+        end: true
+commands:
+  /s: {action: [{goto_state: GameMode.T.p}]}
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/s")
+    it.run_input("sì")
+    assert get_path(it.state, "game_mode.shared.portrait_done") is True
+    assert get_path(it.state, "runtime.current_state") == "IDLE"
+
+
+def test_run_input_end_action_vince_su_next(tmp_path):
+    # Codex P2 #559: un'action `- end: true` chiude il wizard; il next
+    # del nodo NON riapre il flusso (pattern Chase.turn)
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {}
+    T:
+      loop:
+        prompt: "Turno"
+        parse:
+          any: {set: risposta, value: "{{input}}"}
+        actions:
+          - if: '{{ risposta == "fine" }}'
+            then:
+              - end: true
+        next: loop
+commands:
+  /s: {action: [{goto_state: GameMode.T.loop}]}
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/s")
+    it.run_input("fine")
+    assert get_path(it.state, "runtime.current_state") == "IDLE"
+    it.run_input("ancora")  # fuori wizard: evento, nessun prompt turno
+    assert [e.get("input_fuori_wizard") for e in it.events] == ["ancora"]

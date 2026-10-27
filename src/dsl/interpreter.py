@@ -404,7 +404,9 @@ class Interpreter:
             kernel.data.get("state_machine", {}).get("GameMode", {}).get("shared")
         )
         if isinstance(_gm_shared, dict):
-            self.state["game_mode"] = _copy.deepcopy(_gm_shared)
+            # Codex P1 #559: un livello `shared` — letture e scritture
+            # usano entrambe game_mode.shared.* (@GameMode.shared -> _tp)
+            self.state["game_mode"] = {"shared": _copy.deepcopy(_gm_shared)}
         self.scratch: dict[str, Any] = {}
         self.output_log: list[str] = []
         self.noop_log: list[dict[str, str]] = []
@@ -622,6 +624,10 @@ class Interpreter:
                 self.output_log.append(str(g.get("on_fail") or "guard fallita"))
                 return  # si resta sul nodo, nessuna azione/avanzamento
         self._run_actions(node.get("actions") or [], params, _depth)
+        # Codex P2 #559: un'action (end/command/goto) puo' aver spostato
+        # lo stato: onorata, il next del nodo NON la sovrascrive
+        if get_path(self.state, "runtime.current_state") != cur:
+            return
         nxt = node.get("next")
         if node.get("end") or nxt in (None, ""):
             set_path(self.state, "runtime.current_state", "IDLE")
@@ -651,7 +657,7 @@ class Interpreter:
     def _match_parse(self, parse: dict, text: str, params: dict) -> Any:
         """Gerarchia ADR 014: map esatta > regex (ordine) > any/any_list.
         Groups regex legati in params. None = nessun match."""
-        reserved = ("regex", "groups", "any", "any_list")
+        reserved = ("regex", "groups", "any", "any_list", "yes_no")
         for key, action in parse.items():
             if key in reserved:
                 continue
@@ -674,6 +680,19 @@ class Interpreter:
                 s.strip() for s in text.split(sep)
             ]
             return self._MATCH_NO_ACTION
+        yn = parse.get("yes_no")
+        if isinstance(yn, dict):
+            # Codex P1 #559: nodo portrait — sì/no legato come boolean
+            # al param dichiarato (key), consumato dalle actions via if
+            key = str(yn.get("key") or "yes_no")
+            t = text.strip().lower()
+            if t in ("sì", "si", "sí", "yes", "y", "true", "1"):
+                params[key] = True
+                return self._MATCH_NO_ACTION
+            if t in ("no", "n", "false", "0"):
+                params[key] = False
+                return self._MATCH_NO_ACTION
+            return None
         if parse.get("any") is not None:
             return parse["any"]
         return None
