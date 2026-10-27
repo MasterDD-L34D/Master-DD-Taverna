@@ -14,10 +14,14 @@ qualunque edit futuro ai moduli.
 
 ## ES2 — sessione per-modulo (scope ratificato)
 
-1. **Decisione D8/MEDIA-9 esplicita**: l'update parziale azzera i campi
-   dichiarati-non-passati. Va resa una semantic choice documentata con
-   evento `campi azzerati` — mai silenziosa (perdita dati a ogni update
-   parziale e' il rischio principale in produzione).
+1. ~~**Decisione D8/MEDIA-9 esplicita**~~ ✅ **RISOLTA 2026-10-27 — ADR 008,
+   PR #553 merged (squash `027e4f5`), 5 giri review Codex (12 findings P2)
+   recepiti.** Nota di cronaca: il punto era scritto nell'ipotesi "azzera i
+   campi"; la decisione grillata col owner e' andata nel segno opposto
+   (update parziale = merge, campi non passati INVARIATI, mai wipe a None;
+   `None` esplicito scrive = cancellazione voluta). Implementato: scansione
+   statica per-occorrenza con fallback (or/default), evento aggregato
+   `update_parziale`, divieto `value: null` collegato al gate G3.
 2. **Collisioni nomi comando tra moduli** (es. `/update_build` in
    Taverna_NPC vs minmax_builder): oggi mitigate dal perimetro `only=` dei
    replay; ES2 introduce namespace per-modulo.
@@ -29,6 +33,16 @@ qualunque edit futuro ai moduli.
    utente/modello (homebrew), l'isolamento va a livello di processo —
    prerequisito ES2/ES3, non un fix locale (vedi modello di minaccia in
    `src/dsl/interpreter.py`).
+
+## Ordine proposto per il residuo ES2 (da ratificare)
+
+I punti 2 e 3 sono lo stesso lavoro: i verbi sessione operano su uno stato
+per-modulo, e quel per-modulo E' il namespace dei comandi. Fetta unica:
+censimento verbi sessione → stato/namespace per-modulo → save/load sessione
+su disco (repo-sanctioned). Punto 4 separato: valutazione @var@ con
+grill, probabile esito "fuori perimetro" (mini-lingua autonoma del
+state_machine, 13 referti G3 gia' pinna come documentazione brew). Punto 5
+gia' documentato nell'interprete, resta nota per ES3.
 
 ## Chiuso in ES1 — non riaprire
 
