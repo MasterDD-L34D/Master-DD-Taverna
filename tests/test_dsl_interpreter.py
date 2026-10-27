@@ -1121,3 +1121,50 @@ def test_export_dir_port_scrive_su_disco(tmp_path, monkeypatch):
     assert ExportDirPort().write("md", "x") == "export_2.md"
     assert (target / "export_2.md").exists()
     assert (target / "export_1.json").exists()  # nessuna sovrascrittura
+
+
+# ---- Namespace comandi: collisioni rendicontate (ADR 011) ----
+
+
+def test_loader_rendiconda_shadowed_e_vince_ultimo(tmp_path):
+    # ADR 011: la sovrascrittura silenziosa diventa ispezionabile —
+    # shadowed[name] = origini in ordine di caricamento, vincitore ultimo
+    (tmp_path / "aaa_mod.txt").write_text(
+        "commands:\n  /go: {action: [{output: da aaa}]}\n", encoding="utf-8"
+    )
+    (tmp_path / "zzz_mod.txt").write_text(
+        "commands:\n  /go: {action: [{output: da zzz}]}\n", encoding="utf-8"
+    )
+    k = load_kernel(tmp_path)
+    assert k.commands["/go"]["origin"] == "zzz_mod.txt"
+    assert k.shadowed == {"/go": ["aaa_mod.txt", "zzz_mod.txt"]}
+
+
+def test_loader_niente_shadowed_senza_collisioni(tmp_path):
+    (tmp_path / "uno.txt").write_text(
+        "commands:\n  /a: {action: [{output: x}]}\n", encoding="utf-8"
+    )
+    (tmp_path / "due.txt").write_text(
+        "commands:\n  /b: {action: [{output: y}]}\n", encoding="utf-8"
+    )
+    k = load_kernel(tmp_path)
+    assert k.shadowed == {}
+
+
+def test_censimento_collisioni_moduli_reali(kernel):
+    # ADR 011: censimento 2026-10-27 — 22 nomi in collisione su 12 moduli.
+    # Chi cura una collisione (rename authoring) aggiorna questo test
+    # consapevolmente: il numero e' un gate, non un accidente.
+    assert len(kernel.shadowed) == 22
+    for nome in ("/update_build", "/status", "/explain_rule", "/export_vtt"):
+        assert nome in kernel.shadowed
+    # il vincitore e' sempre l'ultima origine della lista (ordine di load)
+    for nome, origini in kernel.shadowed.items():
+        assert kernel.commands[nome]["origin"] == origini[-1]
+
+
+def test_coverage_report_espose_shadowed(kernel):
+    # ADR 011: i gate G2 vedono le collisioni, mai silenziose
+    report = Interpreter(kernel).coverage_report()
+    assert len(report["shadowed"]) == 22
+    assert "/update_build" in report["shadowed"]
