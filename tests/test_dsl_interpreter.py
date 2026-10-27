@@ -1014,12 +1014,15 @@ def test_moduli_template_senza_is_not_None_maiuscolo():
 
 
 class FakeExportPort:
-    """Porta export in-memory (ADR 010): i verbi non toccano disco."""
+    """Porta export in-memory (ADR 010): i verbi non toccano disco.
+    Replica la semantica di naming della porta vera: contatore dalla
+    directory (qui: dal numero di file scritti)."""
 
     def __init__(self):
         self.files: dict = {}
 
-    def write(self, name: str, content: str) -> str:
+    def write(self, ext: str, content: str) -> str:
+        name = f"export_{len(self.files) + 1}.{ext}"
         self.files[name] = content
         return name
 
@@ -1045,7 +1048,6 @@ def test_export_persiste_ultimo_output(tmp_path):
     it.run_command("/go")
     assert port.files == {"export_1.json": '{"wbl": {"current_gp": 100}}'}
     assert it.output_log[-1] == "file: export_1.json"
-    assert it.state["runtime"]["export_counter"] == 1
 
 
 def test_export_formato_con_fallback_quando_param_assente(tmp_path):
@@ -1102,19 +1104,20 @@ def test_export_contatore_deterministico_tra_comandi(tmp_path):
     it.run_command("/a")
     it.run_command("/b")
     assert sorted(port.files) == ["export_1.json", "export_2.md"]
-    assert it.state["runtime"]["export_counter"] == 2
 
 
 def test_export_dir_port_scrive_su_disco(tmp_path, monkeypatch):
     # ADR 010: ExportDirPort reale — scrittura atomica, env override,
-    # rilettura dal disco
+    # rilettura del contatore dalla directory: una seconda istanza NON
+    # riparte da export_1 (review Codex P1 #555 giro 1)
     from src.dsl.store import ExportDirPort
 
     target = tmp_path / "out"
     monkeypatch.setenv("MASTERS_DD_EXPORTS_PATH", str(target))
     p = ExportDirPort()
-    name = p.write("export_1.json", '{"a": 1}')
-    assert name == "export_1.json"
+    assert p.write("json", '{"a": 1}') == "export_1.json"
     assert (target / "export_1.json").read_text(encoding="utf-8") == '{"a": 1}'
-    assert ExportDirPort().write("export_2.md", "x") == "export_2.md"
+    # istanza nuova, stessa directory: il contatore deriva dai file
+    assert ExportDirPort().write("md", "x") == "export_2.md"
     assert (target / "export_2.md").exists()
+    assert (target / "export_1.json").exists()  # nessuna sovrascrittura

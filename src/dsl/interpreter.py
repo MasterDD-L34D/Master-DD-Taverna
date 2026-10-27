@@ -998,9 +998,11 @@ class Interpreter:
 
     def _v_export(self, a, params, depth):
         # ES2-a3 (ADR 010): forma scalare - export: <fmt>. Persiste l'ULTIMO
-        # output (il documento appena renderizzato) su porta export, nome
-        # deterministico export_<n>.<ext> — il formato e' reso da template,
-        # quindi whitelist: mai un nome file arbitrario da input utente.
+        # output (il documento appena renderizzato) su porta export. Il
+        # formato e' reso da template, quindi whitelist: mai un nome file
+        # arbitrario da input utente. Il NOME export_<n>.<ext> lo assegna la
+        # porta dal contenuto della directory (mai un contatore volatile in
+        # stato: review Codex P1 #555 giro 1).
         if self._skip_node(a.get("export"), "export:formato", params):
             return
         fmt = self._rn(a.get("export"), params)
@@ -1011,9 +1013,7 @@ class Interpreter:
         if not self.output_log:
             self.events.append({"export_senza_output": ext})
             return
-        counter = (get_path(self.state, "runtime.export_counter") or 0) + 1
-        name = self.export_port.write(f"export_{counter}.{ext}", self.output_log[-1])
-        set_path(self.state, "runtime.export_counter", counter)
+        name = self.export_port.write(ext, self.output_log[-1])
         self.scratch["exported_path"] = name
 
     # -- report di copertura (G2) ----------------------------------------

@@ -98,8 +98,11 @@ def default_exports_path() -> Path:
 
 class ExportDirPort:
     """Porta export (ADR 010): directory di file testuali, scrittura
-    atomica. Il NOME del file lo decide il chiamante (verbo), gia'
-    whitelistato — la porta si fida come JsonFilePort (in-process)."""
+    atomica. La porta ASSEGNA il nome: il contatore deriva dai file gia'
+    presenti (la directory e' la verita' persistente) — un interprete
+    nuovo non riparte da export_1 e non sovrascrive l'export di una
+    sessione precedente (review Codex P1 #555 giro 1). L'estensione
+    arriva dal verbo, gia' whitelistata."""
 
     def __init__(self, path: os.PathLike | str | None = None) -> None:
         if path is None:
@@ -107,7 +110,17 @@ class ExportDirPort:
             path = env if env else default_exports_path()
         self.path = Path(path)
 
-    def write(self, name: str, content: str) -> str:
+    def write(self, ext: str, content: str) -> str:
+        n = 1
+        if self.path.exists():
+            for f in self.path.glob("export_*.*"):
+                if f.suffix == ".tmp":
+                    continue
+                try:
+                    n = max(n, int(f.name.split(".")[0].removeprefix("export_")) + 1)
+                except ValueError:
+                    pass  # ponytail: nome non numerico non conteggia
+        name = f"export_{n}.{ext}"
         self.path.mkdir(parents=True, exist_ok=True)
         tmp = self.path / (name + ".tmp")
         tmp.write_text(content, encoding="utf-8")

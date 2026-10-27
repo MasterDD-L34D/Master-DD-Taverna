@@ -35,9 +35,12 @@ nell'output successivo — nessun file e' mai stato scritto (verbo no-op).
 3. **Persistenza**: porta `ExportDirPort` iniettata
    (`Interpreter(kernel, port=None, export_port=None)`), directory
    `var/exports/` (gitignored; env `MASTERS_DD_EXPORTS_PATH`), nome
-   deterministico `export_<n>.<ext>` con `<n>` da
-   `runtime.export_counter` (increment solo su scrittura riuscita —
-   deterministico, ispezionabile, mai now/random). Scrittura atomica
+   `export_<n>.<ext>` ASSEGNATO DALLA PORTA: il contatore deriva dai
+   file già presenti nella directory (la directory è la verità
+   persistente), mai da stato volatile dell'interprete — un interprete
+   nuovo non riparte da `export_1` e non sovrascrive l'export di una
+   sessione precedente (correzione post-review Codex P1, PR #555:
+   `runtime.export_counter` era volatile). Scrittura atomica
    (tmp + os.replace). Il path scritto va in scratch `exported_path`
    (visibile agli action successivi dello stesso comando; lo scratch
    non tracima fuori dal comando — MEDIA-8).
