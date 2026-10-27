@@ -252,34 +252,55 @@ ESEGUIBILI = frozenset(
     }
 )
 
-# ES1: no-op dichiarati (ES2-fetta-b = state machine; dominio = ES3; RAG =
-# banco). ES2-a1 ha reso eseguibili save/load/list/emit/replace_placeholder;
-# ES2-a3 ha reso eseguibile export.
+# ES1: no-op dichiarati. ES2-a1 save/load/list/emit/replace_placeholder,
+# ES2-a3 export, ES2-b goto_state resi eseguibili; ES3 (ADR 013) ha reso
+# eseguibili gli 11 verbi dominio con helper omonimi (DOMAIN_VERBS).
+# ES4 = routing (match/match_any/invoke).
+# ES3 (ADR 013): verbi dominio = zucchero su helper omonimi gia' nei moduli
+# (verificati nel `helpers:` dei rispettivi file). Un unico _v_domain_call
+# li serve tutti: `as` e' escluso dai kwargs perche' keyword Python.
+DOMAIN_VERBS = frozenset(
+    {
+        "compute_xp_budget_estimate",
+        "classify_balance_label",
+        "estimate_party_benchmarks",
+        "estimate_enemy_benchmarks",
+        "detect_risks",
+        "compute_effective_cr_from_enemies",
+        "build_risk_heatmap",
+        "build_top_risks",
+        "build_buylist",
+        "find_and_consume_item",
+        "find_and_update_item",
+    }
+)
+
+# ES3 (ADR 013): verbi dichiarati senza helper omonimo — restano NO_OP con
+# motivo "non_implementato" (mai competenza finta), log backlog.
+_NO_HELPER_VERBS = frozenset(
+    {
+        "generate_enemies_from_biome",
+        "analyze_meta_results",
+        "search_meta_sources",
+        "run_qagates",
+        "cross_reference_class",
+        "find_in_list",
+    }
+)
+
 NO_OP = frozenset(
     {
-        "input",
         "roll",
         "match",
         "match_any",
         "invoke",
         "search_meta_sources",
         "find_in_list",
-        "find_and_consume_item",
-        "find_and_update_item",
         "run_qagates",
         "cross_reference_class",
-        # dominio Encounter_Designer / benchmark (ES3 o mai)
+        # ES3 (ADR 013): dichiarati senza helper — motivo "non_implementato"
         "generate_enemies_from_biome",
-        "compute_xp_budget_estimate",
-        "compute_effective_cr_from_enemies",
-        "classify_balance_label",
-        "estimate_party_benchmarks",
-        "estimate_enemy_benchmarks",
-        "detect_risks",
-        "build_buylist",
         "analyze_meta_results",
-        "build_risk_heatmap",
-        "build_top_risks",
     }
 )
 
@@ -594,12 +615,19 @@ class Interpreter:
             self._dispatch(action, params, depth)
 
     def _dispatch(self, a: dict, params: dict, depth: int) -> None:
-        verb = next((k for k in a if k in ESEGUIBILI or k in NO_OP), None)
+        verb = next(
+            (k for k in a if k in ESEGUIBILI or k in NO_OP or k in DOMAIN_VERBS),
+            None,
+        )
         if verb is None:
             self.noop_log.append({"verb": "?", "raw": str(a)[:120]})
             return
+        if verb in DOMAIN_VERBS:
+            self._v_domain_call(verb, a, params)
+            return
         if verb in NO_OP:
-            self.noop_log.append({"verb": verb})
+            reason = "non_implementato" if verb in _NO_HELPER_VERBS else "declared"
+            self.noop_log.append({"verb": verb, "reason": reason})
             return
         getattr(self, f"_v_{verb}")(a, params, depth)
 
@@ -814,6 +842,33 @@ class Interpreter:
         result = fn(**kwargs)
         if a.get("return_as"):
             self.scratch[a["return_as"]] = result
+
+    def _v_domain_call(self, verb: str, a: dict, params: dict) -> None:
+        # ADR 013: il verbo dominio e' zucchero su `call <helper omonimo>` —
+        # i params del verbo sono i kwargs dell'helper, `as` e' il nome
+        # scratch del risultato (escluso dai kwargs: keyword Python).
+        # Convenzioni identiche a _v_call: _skip_node ADR 008, helper non
+        # compilato rendicontato, scratch stale rimosso.
+        spec = a.get(verb) or {}
+        as_name = spec.get("as")
+        # ADR 008: _skip_node solo sui kwargs (come `with` in _v_call) —
+        # `as` e' il nome di SCRITTURA del risultato, non un param letto
+        if self._skip_node(
+            {k: v for k, v in spec.items() if k != "as"},
+            f"domain:{verb}",
+            params,
+        ):
+            if as_name:
+                self.scratch.pop(as_name, None)
+            return
+        fn = self._g.get(verb)  # nomi dominio sono identificatori safe
+        if not callable(fn):
+            self.noop_log.append({"verb": verb, "motivo": "helper non compilato"})
+            return
+        kwargs = {k: self._rn(v, params) for k, v in spec.items() if k != "as"}
+        result = fn(**kwargs)
+        if as_name:
+            self.scratch[as_name] = result
 
     def _v_compute(self, a, params, depth):
         body = (a.get("logic") or "").rstrip()
@@ -1062,7 +1117,7 @@ class Interpreter:
             report["totale"] += 1
             verbs: set[str] = set()
             self._collect_verbs(cmd.get("action") or [], verbs)
-            unknown = verbs - ESEGUIBILI - NO_OP
+            unknown = verbs - ESEGUIBILI - NO_OP - DOMAIN_VERBS
             missing_tmpl = [
                 t
                 for t in self._templates_in(cmd.get("action") or [])
