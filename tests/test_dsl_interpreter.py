@@ -1941,3 +1941,28 @@ commands:
     it = Interpreter(_mini(tmp_path, mini))
     it.run_command("/go")
     assert [e for e in it.events if "avanzamento_profondita_max" in e]
+
+
+def test_goto_interattivo_rispetta_guard_tema(tmp_path):
+    # Codex P2 #559 giro 10: goto su nodo CON prompt sotto tema guardato —
+    # guard valutato prima di atterrare, nessuna action del nodo
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {}
+    K:
+      when: "{{ false }}"
+      p:
+        prompt: "Tema guardato?"
+        parse:
+          any: {set: "@GameMode.shared.accepted", value: true}
+        end: true
+commands:
+  /go: {action: [{goto_state: GameMode.K.p}]}
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/go")
+    assert [e for e in it.events if "wizard_guard_falso" in e]
+    assert get_path(it.state, "game_mode.shared.accepted") is None
+    assert get_path(it.state, "runtime.current_state") != "GameMode.K.p"  # mai atterrato

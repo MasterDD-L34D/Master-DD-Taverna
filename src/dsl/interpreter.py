@@ -996,20 +996,11 @@ class Interpreter:
         if motivo:
             self.events.append({"stato_non_valido": str(target)[:80], "motivo": motivo})
             return
-        set_path(self.state, "runtime.current_state", target)
         node = get_path(sm, target)  # flat -> None; dotted -> nodo wizard
-        if isinstance(node, dict) and node.get("prompt"):
-            self.output_log.append(self._rs(node["prompt"], params))
-        elif isinstance(node, dict):
-            # Codex P2 #559 giro 7: atterraggio action-only via comando
-            # (/chase_start, /gamble) — le actions girano all'arrivo e si
-            # avanza (stesso _advance dei nodi end/action-only).
-            # giro 9: guard del nodo E del tema PRIMA delle arrival actions
-            # (come _advance sul path next); depth+1 contro self-goto e
-            # cicli action-only (sennò RecursionError fuori dal bound)
-            if depth + 1 > 20:
-                self.events.append({"avanzamento_profondita_max": target})
-                return
+        if isinstance(node, dict):
+            # Codex P2 #559 giri 9-10: guard del nodo E del tema PRIMA di
+            # OGNI atterraggio goto (interattivo o action-only) — falso =
+            # wizard_guard_falso e si resta sul nodo corrente
             if node.get("when") is not None and not self._cond(node["when"], params):
                 self.events.append({"wizard_guard_falso": target})
                 return
@@ -1020,6 +1011,17 @@ class Interpreter:
                 and not self._cond(theme["when"], params)
             ):
                 self.events.append({"wizard_guard_falso": target})
+                return
+        set_path(self.state, "runtime.current_state", target)
+        if isinstance(node, dict) and node.get("prompt"):
+            self.output_log.append(self._rs(node["prompt"], params))
+        elif isinstance(node, dict):
+            # Codex P2 #559 giro 7: atterraggio action-only via comando
+            # (/chase_start, /gamble) — le actions girano all'arrivo e si
+            # avanza (stesso _advance dei nodi end/action-only); depth+1
+            # contro self-goto e cicli action-only (mai RecursionError)
+            if depth + 1 > 20:
+                self.events.append({"avanzamento_profondita_max": target})
                 return
             self._run_actions(node.get("actions") or [], params, depth + 1)
             if get_path(self.state, "runtime.current_state") == target:
