@@ -36,7 +36,7 @@ Per obiettivi, milestone e decisioni architetturali sulle build/moduli consulta 
 
 Nota: `docs/module_index.md` elenca tutti i moduli richiesti e documenta anche le cartelle di servizio (es. `quarantine/`, `taverna_saves/`) che non rientrano nel flusso API standard ma vanno tracciate lì; per i dettagli su moduli obbligatori/di servizio vedi la [sezione dedicata](docs/module_index.md#cartelle-di-servizio).
 
-Nota: `var/sessions/` contiene l'archivio sessione locale dell'interprete DSL (ADR 009): è gitignored e `git clean -fdx` lo cancella — le sessioni salvate non vanno committate.
+Nota: `var/sessions/` contiene l'archivio sessione locale dell'interprete DSL (ADR 009) e `var/exports/` gli artefatti prodotti dal verbo `export` (ADR 010): sono gitignored e `git clean -fdx` li cancella — sessioni ed export salvati non vanno committati.
 
 ### Requisiti
 

@@ -24,7 +24,7 @@ from jinja2.visitor import NodeVisitor
 
 from .loader import DENIED_BUILTINS, Kernel, _safe_import
 from .state import get_path, set_path
-from .store import JsonFilePort
+from .store import EXPORT_EXTENSIONS, ExportDirPort, JsonFilePort
 
 MAX_DEPTH = 8
 _MISSING = object()
@@ -245,15 +245,17 @@ ESEGUIBILI = frozenset(
         "list_session_keys",
         "emit_event",
         "replace_placeholder",
+        # ES2-a3 (ADR 010): export — persiste l'ultimo output su porta
+        "export",
     }
 )
 
 # ES1: no-op dichiarati (ES2-fetta-b = state machine; dominio = ES3; RAG =
-# banco). ES2-a1 ha reso eseguibili save/load/list/emit/replace_placeholder.
+# banco). ES2-a1 ha reso eseguibili save/load/list/emit/replace_placeholder;
+# ES2-a3 ha reso eseguibile export.
 NO_OP = frozenset(
     {
         "input",
-        "export",
         "goto_state",
         "roll",
         "match",
@@ -343,7 +345,12 @@ def _builtins() -> dict[str, Any]:
 
 
 class Interpreter:
-    def __init__(self, kernel: Kernel, port: JsonFilePort | None = None):
+    def __init__(
+        self,
+        kernel: Kernel,
+        port: JsonFilePort | None = None,
+        export_port: ExportDirPort | None = None,
+    ):
         self.kernel = kernel
         # ADR 009: l'archivio sessione vive nell'interprete (mai in
         # load_kernel). Default lazy-safe: senza file esistente la porta e'
@@ -364,6 +371,8 @@ class Interpreter:
                 "qa_result",
             )
         }
+        # ADR 010: porta export iniettata come la porta sessione (ADR 009)
+        self.export_port = export_port if export_port is not None else ExportDirPort()
         self.scratch: dict[str, Any] = {}
         self.output_log: list[str] = []
         self.noop_log: list[dict[str, str]] = []
@@ -986,6 +995,26 @@ class Interpreter:
         for k, v in self.scratch.items():
             if isinstance(v, str) and placeholder in v:
                 self.scratch[k] = v.replace(placeholder, str(value))
+
+    def _v_export(self, a, params, depth):
+        # ES2-a3 (ADR 010): forma scalare - export: <fmt>. Persiste l'ULTIMO
+        # output (il documento appena renderizzato) su porta export. Il
+        # formato e' reso da template, quindi whitelist: mai un nome file
+        # arbitrario da input utente. Il NOME export_<n>.<ext> lo assegna la
+        # porta dal contenuto della directory (mai un contatore volatile in
+        # stato: review Codex P1 #555 giro 1).
+        if self._skip_node(a.get("export"), "export:formato", params):
+            return
+        fmt = self._rn(a.get("export"), params)
+        ext = str(fmt).strip().lower() if fmt is not None else ""
+        if ext not in EXPORT_EXTENSIONS:
+            self.events.append({"formato_export_non_valido": str(fmt)[:40]})
+            return
+        if not self.output_log:
+            self.events.append({"export_senza_output": ext})
+            return
+        name = self.export_port.write(ext, self.output_log[-1])
+        self.scratch["exported_path"] = name
 
     # -- report di copertura (G2) ----------------------------------------
 

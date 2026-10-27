@@ -80,3 +80,49 @@ class JsonFilePort:
 
     def emit(self, topic: str, payload: Any) -> None:
         self.events_log.append({"topic": topic, "payload": payload})
+
+
+_ENV_EXPORTS_PATH = "MASTERS_DD_EXPORTS_PATH"
+
+# ADR 010: estensioni che il verbo export puo' produrre — il formato e'
+# reso da template (quindi influenzabile da input utente): mai un nome
+# file arbitrario, mai path traversal.
+EXPORT_EXTENSIONS = frozenset(
+    {"json", "md", "markdown", "txt", "brew", "zip", "pdf", "canvas"}
+)
+
+
+def default_exports_path() -> Path:
+    return Path(__file__).resolve().parents[2] / "var" / "exports"
+
+
+class ExportDirPort:
+    """Porta export (ADR 010): directory di file testuali, scrittura
+    atomica. La porta ASSEGNA il nome: il contatore deriva dai file gia'
+    presenti (la directory e' la verita' persistente) — un interprete
+    nuovo non riparte da export_1 e non sovrascrive l'export di una
+    sessione precedente (review Codex P1 #555 giro 1). L'estensione
+    arriva dal verbo, gia' whitelistata."""
+
+    def __init__(self, path: os.PathLike | str | None = None) -> None:
+        if path is None:
+            env = os.environ.get(_ENV_EXPORTS_PATH)
+            path = env if env else default_exports_path()
+        self.path = Path(path)
+
+    def write(self, ext: str, content: str) -> str:
+        n = 1
+        if self.path.exists():
+            for f in self.path.glob("export_*.*"):
+                if f.suffix == ".tmp":
+                    continue
+                try:
+                    n = max(n, int(f.name.split(".")[0].removeprefix("export_")) + 1)
+                except ValueError:
+                    pass  # ponytail: nome non numerico non conteggia
+        name = f"export_{n}.{ext}"
+        self.path.mkdir(parents=True, exist_ok=True)
+        tmp = self.path / (name + ".tmp")
+        tmp.write_text(content, encoding="utf-8")
+        os.replace(tmp, self.path / name)
+        return name
