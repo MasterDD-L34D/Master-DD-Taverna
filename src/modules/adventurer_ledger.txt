@@ -1,6 +1,6 @@
 module_name: Libro Mastro dell’Avventuriero
-version: 1.7
-last_updated: 2026-07-18
+version: 1.8
+last_updated: 2026-10-27
 inherits_from: base_profile.txt
 type: economy/loot/crafting
 
@@ -1359,12 +1359,29 @@ commands:
     description: Vende item al sell_rate (qty, guard non trovato, rounding, vendor cap).
     params: [item_name_or_id, qty, rate]
     action:
+      # ADR 008: default prima, override condizionale — riferire un param
+      # opzionale non passato in un set mutante lo rende no-op (e il
+      # consume dell'item avverrebbe senza pagamento)
       - set: local.rate
-        value: '{{ float(rate) if rate is not none else float(policies.sell_rate) }}'
+        value: '{{ float(policies.sell_rate) }}'
+      - if: '{{ rate is not none }}'
+        then:
+          - set: local.rate
+            value: '{{ float(rate) }}'
       - set: local.qty
-        value: '{{ int(qty or 1) }}'
+        value: 1
+      - if: '{{ qty is not none }}'
+        then:
+          - set: local.qty
+            value: '{{ int(qty) }}'
+      # review Codex P2 #558 giro 4: qty<1 non tocca l'inventario
+      # (take = min(q, curq) con q negativa CREA oggetti)
+      - if: '{{ local.qty < 1 }}'
+        then:
+          - output: "⚠️ Quantità non valida: {{local.qty}}. Uso: /sell <item> [qty≥1] [rate]"
+          - abort: E-SELL-QTY
       - find_and_consume_item:
-          from: loot_state.inventory
+          from_list: loot_state.inventory
           filter: { by: 'name_or_id', value: '{{item_name_or_id}}' }
           qty: '{{local.qty}}'
           as: sold
@@ -1461,7 +1478,7 @@ commands:
     params: [item_name_or_id]
     action:
       - find_and_consume_item:
-          from: loot_state.inventory
+          from_list: loot_state.inventory
           filter: { by: 'name_or_id', value: '{{item_name_or_id}}' }
           qty: 9999
           as: rem
@@ -1787,6 +1804,13 @@ flow:
     policy: "Dopo ogni azione mostra 1 CTA utile (es. /audit_wbl o /export_loot)."
 
 changelog:
+  - version: 1.8
+    date: 2026-10-27
+    notes: >
+      • ADR 013 (ES3): allineati args dei verbi dominio alla firma helper —
+        `/sell` e `/remove_item` passano `from_list:` a `find_and_consume_item`
+        (era `from:`, TypeError al call-time).  
+
   - version: 1.2
     date: 2025-08-15
     notes: >

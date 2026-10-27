@@ -1233,3 +1233,119 @@ def test_goto_state_moduli_reali(kernel: Kernel):
         get_path(it.state, "runtime.current_state") == "GameMode.OnboardingTheme.lang"
     )
     assert any("Scegli lingua" in o for o in it.output_log)
+
+
+# ---- Verbi dominio: zucchero su helper omonimi (ADR 013) ----------------
+
+DOMAIN_MINI = """\
+helpers:
+  compute_xp_budget_estimate:
+    params: [party_level, party_size]
+    logic: |
+      return int(party_level) * int(party_size)
+commands:
+  /enc:
+    params: [lvl]
+    action:
+      - compute_xp_budget_estimate:
+          {party_level: "{{lvl}}", party_size: "4", as: xp}
+      - output: "XP={{xp}}"
+  /enc_noas:
+    action:
+      - compute_xp_budget_estimate: {party_level: "2", party_size: "3"}
+  /enc_unbound:
+    params: [mancante]
+    action:
+      - compute_xp_budget_estimate:
+          {party_level: "{{mancante}}", party_size: "4", as: xp}
+  /auto:
+    action:
+      - generate_enemies_from_biome: {biome: x, as: suggeriti}
+  /inp:
+    action:
+      - {input: "x"}
+"""
+
+
+def test_domain_verb_chiama_helper_omonimo(tmp_path):
+    it = Interpreter(_mini(tmp_path, DOMAIN_MINI))
+    it.run_command("/enc", lvl=3)
+    # MEDIA-8: lo scratch di un comando non tracima — il risultato si
+    # dimostra nell'output renderizzato nel comando stesso
+    assert it.output_log == ["XP=12"]
+
+
+def test_domain_verb_senza_as_non_scrive_scratch(tmp_path):
+    it = Interpreter(_mini(tmp_path, DOMAIN_MINI))
+    it.run_command("/enc_noas")
+    assert it.noop_log == []
+    assert "xp" not in it.scratch
+
+
+def test_domain_verb_param_non_legato_no_op(tmp_path):
+    # ADR 008: param non legato -> il verbo e' no-op, mai un None fabbricato
+    it = Interpreter(_mini(tmp_path, DOMAIN_MINI))
+    it.run_command("/enc_unbound")
+    assert "xp" not in it.scratch
+
+
+def test_verbo_senza_helper_motivo_non_implementato(tmp_path):
+    it = Interpreter(_mini(tmp_path, DOMAIN_MINI))
+    it.run_command("/auto")
+    assert it.noop_log == [
+        {"verb": "generate_enemies_from_biome", "reason": "non_implementato"}
+    ]
+
+
+def test_input_rimosso_da_no_op_rumoreso(tmp_path):
+    # ADR 013: `input` fuori da NO_OP — un uso come verbo e' "?" rumoroso,
+    # mai swallowing silenzioso
+    it = Interpreter(_mini(tmp_path, DOMAIN_MINI))
+    it.run_command("/inp")
+    assert it.noop_log and it.noop_log[0]["verb"] == "?"
+
+
+def test_domain_verb_moduli_reali(tmp_path):
+    # ADR 013 pin: /auto_balance (Encounter_Designer) — XP = 100*lvl*size*mult
+    k = load_kernel(MODULES, only=("Encounter_Designer.txt",))
+    it = Interpreter(k)
+    it.state["encounter_state"] = {
+        "party": {"average_level": 5, "size": 4, "rules": {}},
+        "difficulty": {"target": "Moderate"},
+        "enemies": [],
+    }
+    it.run_command("/auto_balance")
+    snap = it.state["encounter_state"]["balance_snapshot"]
+    assert snap["xp_budget_est"] == 2000
+    assert snap["labels"] == ["unrated"]
+
+
+def test_domain_verb_risolve_bare_ref_a_oggetto_stato(tmp_path):
+    # Codex P2 (#558): in_list: loot_state.inventory e' una ref nuda —
+    # l'helper deve ricevere la LISTA viva (e mutarla), non la stringa
+    mini = """\
+helpers:
+  find_and_update_item:
+    params: [in_list, filter, set]
+    logic: |
+      items = in_list or []
+      key, val = (filter or {}).get("by"), str((filter or {}).get("value"))
+      for it in items:
+        if str(it.get(key)) == val:
+          for k, v in (set or {}).items():
+            it[k] = v
+          return True
+      return False
+commands:
+  /tagga:
+    params: [nome]
+    action:
+      - find_and_update_item:
+          {in_list: loot_state.inventory, filter: {by: name, value: "{{nome}}"}, set: {tagged: true}, as: ok}
+      - output: "ok={{ok}}"
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.state["loot_state"]["inventory"] = [{"name": "spada", "tagged": False}]
+    it.run_command("/tagga", nome="spada")
+    assert it.state["loot_state"]["inventory"][0]["tagged"] is True
+    assert it.output_log == ["ok=True"]
