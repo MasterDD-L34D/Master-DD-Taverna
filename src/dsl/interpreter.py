@@ -616,8 +616,11 @@ class Interpreter:
             if known:
                 # Codex P2 #559 giro 3: l'input intero va al dispatcher —
                 # gli argomenti dopo il nome arrivano al comando (spec
-                # parser quote-aware), non si scarta tutto dopo il nome
-                self._dispatch_command(text, _depth, {"input": text})
+                # parser quote-aware), non si scarta tutto dopo il nome.
+                # Codex P1 #559 giro 7: render=False — l'input utente NON
+                # e' un template del repo: mai _rn (Jinja non sandboxed),
+                # gli argomenti restano letterali.
+                self._dispatch_command(text, _depth, {"input": text}, render=False)
                 return
             # comando sconosciuto: il nodo lo consuma come testo (ES4
             # aggiungera' il router davanti)
@@ -986,6 +989,13 @@ class Interpreter:
         node = get_path(sm, target)  # flat -> None; dotted -> nodo wizard
         if isinstance(node, dict) and node.get("prompt"):
             self.output_log.append(self._rs(node["prompt"], params))
+        elif isinstance(node, dict):
+            # Codex P2 #559 giro 7: atterraggio action-only via comando
+            # (/chase_start, /gamble) — le actions girano all'arrivo e si
+            # avanza (stesso _advance dei nodi end/action-only)
+            self._run_actions(node.get("actions") or [], params, depth)
+            if get_path(self.state, "runtime.current_state") == target:
+                self._advance(sm, target, node, params, depth + 1)
 
     def _v_switch(self, a, params, depth):
         guards = self._guard_ctx(params)
@@ -1135,7 +1145,12 @@ class Interpreter:
         self._dispatch_command(a.get("route"), depth, params)
 
     def _dispatch_command(
-        self, spec: Any, depth: int, params: dict, extra: dict | None = None
+        self,
+        spec: Any,
+        depth: int,
+        params: dict,
+        extra: dict | None = None,
+        render: bool = True,
     ) -> None:
         if depth >= MAX_DEPTH:
             raise DslAbort(f"ricorsione command: oltre profondita {MAX_DEPTH}")
@@ -1160,15 +1175,16 @@ class Interpreter:
             if not _is_named_arg(tok):
                 slot = pos
                 pos += 1
-            if self._unresolvable(tok, params):
+            if render and self._unresolvable(tok, params):
                 self._saltati.append(f"arg:{tok[:80]}")
                 continue
             kept.append(tok)
             if slot >= 0:
                 slots.append(slot)
-        rendered = self._rn(
-            " ".join([head, *kept]), params
-        )  # Codex P2: render prima di tokenizzare
+        rendered = (
+            self._rn(" ".join([head, *kept]), params) if render else " ".join([head, *kept])
+        )  # Codex P2: render prima di tokenizzare; giro 7: solo per i
+        # comandi del repo — l'input utente arriva letterale (render=False)
         tokens = shlex.split(rendered)
         if not tokens:
             return

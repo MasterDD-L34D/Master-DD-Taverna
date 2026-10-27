@@ -1767,3 +1767,62 @@ commands:
     it.run_command("/s")
     it.run_input("accetta")
     assert get_path(it.state, "game_mode.shared.accepted") is True
+
+
+def test_run_input_slash_utente_mai_renderizzato(tmp_path):
+    # Codex P1 #559 giro 7: l'input slash utente NON passa da _rn —
+    # Jinja non sandboxed non e' esposta all'input (RCE via template)
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {}
+    T:
+      p:
+        prompt: "Fermo?"
+        parse:
+          any: {set: risposta, value: "{{input}}"}
+        end: true
+commands:
+  /s: {action: [{goto_state: GameMode.T.p}]}
+  /segna:
+    params: [val]
+    action:
+      - set: preso
+        value: "{{val}}"
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/s")
+    it.run_input('/segna val="{{ 7 * 7 }}"')
+    assert it.state.get("preso") == "{{ 7 * 7 }}"  # letterale, non 49
+    assert get_path(it.state, "runtime.current_state") == "GameMode.T.p"
+
+
+def test_goto_su_action_only_esegue_e_avanza(tmp_path):
+    # Codex P2 #559 giro 7: goto_state su nodo senza prompt (Chase.entry,
+    # Gambling) — le actions girano all'arrivo e si avanza al nodo
+    # interattivo, non si resta parcheggiati senza parser
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {}
+    T:
+      entry:
+        actions:
+          - set: "@GameMode.shared.entrato"
+            value: true
+        next: turno
+      turno:
+        prompt: "Turno 1?"
+        parse:
+          any: {set: risposta, value: "{{input}}"}
+        end: true
+commands:
+  /chase_start: {action: [{goto_state: GameMode.T.entry}]}
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/chase_start")
+    assert get_path(it.state, "game_mode.shared.entrato") is True
+    assert get_path(it.state, "runtime.current_state") == "GameMode.T.turno"
+    assert it.output_log[-1] == "Turno 1?"
