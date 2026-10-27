@@ -44,16 +44,24 @@ class JsonFilePort:
             self._data = json.loads(self.path.read_text(encoding="utf-8"))
 
     def save(self, key: str, value: Any) -> None:
-        """Scrittura atomica (tmp + os.replace). Il commit in memoria avviene
-        SOLO dopo la serializzazione: un valore non serializzabile (TypeError
-        da json.dumps) non resta ne' in _data ne' su disco (review Codex P2,
-        PR #554). Lo snapshot e' deepcopy del chiamante (verb), non qui."""
-        payload = json.dumps({**self._data, key: value}, ensure_ascii=False, indent=1)
+        """Scrittura atomica (tmp + os.replace) in read-modify-write: ogni
+        save rilegge il file dal disco prima di fondere — due istanze sulla
+        stessa path non si sovrascrivono a vicenda (review Codex P1, PR #554
+        giro 2; rimane TOCTOU tra processi concorrenti: out of scope, il
+        modello e' sequenziale in-process). Il commit in memoria avviene SOLO
+        dopo la serializzazione: un valore non serializzabile (TypeError da
+        json.dumps) non resta ne' in _data ne' su disco (giro 1). Lo snapshot
+        e' deepcopy del chiamante (verb), non qui."""
+        fresh: dict[str, Any] = {}
+        if self.path.exists():
+            fresh = json.loads(self.path.read_text(encoding="utf-8"))
+        fresh[key] = value
+        payload = json.dumps(fresh, ensure_ascii=False, indent=1)
         self.path.parent.mkdir(parents=True, exist_ok=True)
         tmp = self.path.with_suffix(self.path.suffix + ".tmp")
         tmp.write_text(payload, encoding="utf-8")
         os.replace(tmp, self.path)
-        self._data[key] = value
+        self._data = fresh
 
     def load(self, key: str) -> Any:
         return self._data.get(key)

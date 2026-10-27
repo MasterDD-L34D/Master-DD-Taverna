@@ -926,6 +926,29 @@ def test_porta_onora_env_path(tmp_path, monkeypatch):
     assert JsonFilePort().load("build_X") == {"a": 1}
 
 
+def test_save_con_param_omesso_non_fabbrica_chiave(tmp_path):
+    # P2 review Codex #554 giro 2: il param omesso non deve rendere la
+    # chiave valida 'build_None' — la scrittura e' saltata con evento
+    k = _mini(tmp_path, SESSIONE_MINI)
+    port = FakePort()
+    it = Interpreter(k, port=port)
+    it.run_command("/save")  # nome omesso
+    assert not port.data
+    assert any("update_parziale" in str(e) for e in it.events)
+
+
+def test_due_porte_stesso_file_non_si_sovrascrivono(tmp_path):
+    # P1 review Codex #554 giro 2: read-modify-write — il save di B non
+    # cancella l'entry scritta da A sulla stessa path
+    from src.dsl.store import JsonFilePort
+
+    path = tmp_path / "store.json"
+    JsonFilePort(path).save("build_A", {"x": 1})
+    JsonFilePort(path).save("build_B", {"x": 2})
+    data = json.loads(path.read_text(encoding="utf-8"))
+    assert data == {"build_A": {"x": 1}, "build_B": {"x": 2}}
+
+
 def test_valore_non_serializzabile_fallisce_esplicito(tmp_path):
     # ADR 009: mai str() silenzioso — evento e nessuna scrittura
     from src.dsl.store import JsonFilePort

@@ -906,14 +906,25 @@ class Interpreter:
 
     # -- ES2-a1: archivio sessione (ADR 009) ------------------------------
 
+    def _session_key(self, spec: dict, params: dict, verb: str) -> str | None:
+        """Render + whitelist della chiave, UN punto per i verbi sessione:
+        None + evento se la chiave referenzia nomi non legati (param omesso:
+        mai una 'build_None' fabbricata, review Codex P2 #554 giro 2) o non
+        rispetta la whitelist (mai sanificazione)."""
+        if self._skip_node(spec.get("key"), f"{verb}:key", params):
+            return None
+        key = self._rn(spec.get("key"), params)
+        if not isinstance(key, str) or not SESSION_KEY_RE.match(key):
+            self.events.append(
+                {"chiave_sessione_non_valida": str(key)[:80], "verb": verb}
+            )
+            return None
+        return key
+
     def _v_save_session(self, a, params, depth):
         s = a["save_session"]
-        key = self._rn(s.get("key"), params)
-        if not isinstance(key, str) or not SESSION_KEY_RE.match(key):
-            # confine fiducia: rifiuto con evento, mai sanificazione
-            self.events.append(
-                {"chiave_sessione_non_valida": str(key)[:80], "verb": "save_session"}
-            )
+        key = self._session_key(s, params, "save_session")
+        if key is None:
             return
         if self._skip_node(s.get("value"), f"save_session:{key}", params):
             return
@@ -932,11 +943,14 @@ class Interpreter:
 
     def _v_load_session(self, a, params, depth):
         s = a["load_session"]
-        key = self._rn(s.get("key"), params)
-        self.scratch[s["as"]] = self.port.load(key) if isinstance(key, str) else None
+        key = self._session_key(s, params, "load_session")
+        self.scratch[s["as"]] = self.port.load(key) if key is not None else None
 
     def _v_list_session_keys(self, a, params, depth):
         s = a["list_session_keys"]
+        if self._skip_node(s.get("prefix"), "list_session_keys:prefix", params):
+            self.scratch[s["as"]] = []  # mai una lista da prefisso fabbricato
+            return
         prefix = self._rn(s.get("prefix"), params)
         self.scratch[s["as"]] = (
             self.port.list(prefix) if isinstance(prefix, str) else []
