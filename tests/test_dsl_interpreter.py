@@ -50,12 +50,13 @@ def test_toggle_rules_abp_off(interp: Interpreter):
     assert interp.state["build_state"]["rules"]["abp_active"] is False
 
 
-def test_update_build_sovrascrive_tutti_i_campi(interp: Interpreter):
+def test_update_build_merge_parciale(interp: Interpreter):
     before = copy.deepcopy(interp.state)
     interp.run_command("/update_build", nome="Grog", razza="Mezzorco")
     bs = interp.state["build_state"]
-    # semantica reale del file (pin 2026-10-26): 8 campi dichiarati-non
-    # passati riscritti a None; statistiche_chiave azzerato e poi RICOSTRUITO
+    # ADR 008 (ri-pin 2026-10-27): i campi dichiarati-non passati NON sono
+    # piu' azzerati a None — le scritture su param non legato sono no-op e
+    # i campi restano ASSENTI; statistiche_chiave azzerato e poi RICOSTRUITO
     # dai derived del comando stesso; fonti_meta svuotato dalla scan branch
     for campo in (
         "ruolo",
@@ -66,12 +67,15 @@ def test_update_build_sovrascrive_tutti_i_campi(interp: Interpreter):
         "background",
         "fonti",
     ):
-        assert bs[campo] is None, f"{campo} atteso None, trovato {bs[campo]!r}"
+        assert campo not in bs, f"{campo} atteso assente, trovato {bs[campo]!r}"
     assert bs["nome"] == "Grog"
     assert bs["razza"] == "Mezzorco"
     assert bs["statistiche_chiave"] == {"CA": 10, "meta_tier": "Tier1"}
     assert bs["fonti_meta"] == []
     assert bs["derived"]["core"] == {"initiative_mod": 0, "speed_total": 30}
+    # evento aggregato ADR 008: il merge parziale e' documentato, mai silenzioso
+    ev = [e for e in interp.events if "update_parziale" in e]
+    assert ev and ev[0]["update_parziale"]["comando"] == "/update_build"
     # nessuna mutazione fuori dai campi del comando, i suoi derivati e i
     # sotto-stati scritti dal /run_benchmark annidato (meta_cache, label)
     diff = {
@@ -81,15 +85,8 @@ def test_update_build_sovrascrive_tutti_i_campi(interp: Interpreter):
     }
     atteso = {
         "nome",
-        "ruolo",
-        "classi",
         "razza",
-        "statistiche",
-        "salvezze",
-        "tratti",
         "statistiche_chiave",
-        "background",
-        "fonti",
         "fonti_meta",
         "sinergie",
         "derived",
@@ -100,12 +97,14 @@ def test_update_build_sovrascrive_tutti_i_campi(interp: Interpreter):
     assert diff <= atteso, f"mutazioni fuori perimetro: {diff - atteso}"
 
 
-def test_set_profile_scrittura_annidata(interp: Interpreter):
+def test_set_profile_param_non_passato_assente(interp: Interpreter):
     interp.run_command("/set_profile", lingue="Elfico, Comune", allineamento="CN")
-    assert interp.state["build_state"]["profile"]["lingue"] == "Elfico, Comune"
-    assert interp.state["build_state"]["profile"]["allineamento"] == "CN"
-    # param dichiarato non passato: riscritto a None (semantica D2)
-    assert interp.state["build_state"]["profile"]["xp"] is None
+    profile = interp.state["build_state"]["profile"]
+    assert profile["lingue"] == "Elfico, Comune"
+    assert profile["allineamento"] == "CN"
+    # ADR 008 (ri-pin 2026-10-27): xp dichiarato non passato = non legato:
+    # la scrittura e' no-op, la chiave resta ASSENTE (non None)
+    assert "xp" not in profile
 
 
 # ---- G2 copertura: ogni comando dei moduli classificato ----
@@ -152,6 +151,9 @@ G3_PIN = {
 def test_g3_statico(kernel: Kernel):
     esiti = kernel.static_check()
     assert esiti["logic_errori"] == [], esiti["logic_errori"][:5]
+    # ADR 008 (Codex P2 giro 4): il divieto value:null e' un gate vero,
+    # non solo un campo restituito — sui moduli del repo deve essere vuoto
+    assert esiti["null_errori"] == [], esiti["null_errori"][:5]
     # BASSA-13: pin normalizzato — gli indici degli array non contano
     # (fix modulo che sposta una action non deve far saltare il gate);
     # vige il vincolo "nessun referto nuovo e conteggio non cresce"
@@ -399,3 +401,337 @@ def test_compute_forma_espresione(tmp_path):
     it.run_command("/go", n=4, q=3, v=2.5)
     assert it.state["uno"] == 8
     assert it.state["due"] == 7.5
+
+
+# ---- ES2: update parziale (ADR 008 — merge su param non legato) ----
+
+UPDATE_MINI = """
+commands:
+  /update:
+    params: [nome, ruolo, classi]
+    action:
+      - set: build_state.nome
+        value: "{{ nome }}"
+      - set: build_state.ruolo
+        value: "{{ ruolo }}"
+      - set: build_state.classi
+        value: "{{ classi }}"
+"""
+
+
+def test_update_parciale_merge_e_evento(tmp_path):
+    # param non legato: no-op, lo stato conserva il valore esistente
+    it = Interpreter(_mini(tmp_path, UPDATE_MINI))
+    it.state["build_state"]["ruolo"] = "Tank"
+    it.run_command("/update", nome="Grog")
+    assert it.state["build_state"]["nome"] == "Grog"
+    assert it.state["build_state"]["ruolo"] == "Tank"  # non azzerato
+    ev = [e for e in it.events if "update_parziale" in e]
+    assert ev, f"evento mancante: {it.events}"
+    assert ev[0]["update_parziale"]["comando"] == "/update"
+    assert ev[0]["update_parziale"]["saltati"] == [
+        "build_state.ruolo",
+        "build_state.classi",
+    ]
+
+
+def test_param_none_esplicito_e_cancellazione_voluta(tmp_path):
+    # None PASSATO esplicitamente e' legato: scrive None, non e' un salto
+    it = Interpreter(_mini(tmp_path, UPDATE_MINI))
+    it.run_command("/update", nome="Grog", ruolo=None)
+    assert "ruolo" in it.state["build_state"]  # scritto (None), non saltato
+    ev = [e for e in it.events if "update_parziale" in e]
+    assert "build_state.ruolo" not in ev[0]["update_parziale"]["saltati"]
+
+
+def test_template_misto_salta_intera_action(tmp_path):
+    # '{{nome}} {{ruolo}}' con ruolo non legato: niente scrittura parziale falsa
+    k = _mini(
+        tmp_path,
+        "commands:\n  /go:\n    params: [nome, ruolo]\n    action:\n"
+        '      - set: build_state.etichetta\n        value: "{{ nome }} {{ ruolo }}"\n',
+    )
+    it = Interpreter(k)
+    it.run_command("/go", nome="Grog")
+    assert "etichetta" not in it.state["build_state"]
+    assert any(
+        "build_state.etichetta" in e.get("update_parziale", {}).get("saltati", [])
+        for e in it.events
+    )
+
+
+def test_contaminazione_scratch_return_as(tmp_path):
+    # call saltato con return_as -> tmp non legato per il resto del comando
+    k = _mini(
+        tmp_path,
+        "helpers:\n  doppia:\n    params: [v]\n    logic: |\n      return (v or 0) * 2\n"
+        "commands:\n  /go:\n    params: [x]\n    action:\n"
+        "      - call: doppia\n        with: {v: '{{ x }}'}\n        return_as: tmp\n"
+        "      - set: build_state.risultato\n        value: '{{ tmp }}'\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go")
+    assert "risultato" not in it.state["build_state"]
+    saltati = [e for e in it.events if "update_parziale" in e][0]["update_parziale"][
+        "saltati"
+    ]
+    assert "call:doppia" in saltati and "build_state.risultato" in saltati
+
+
+def test_spec_comando_token_non_legato_scolto(tmp_path):
+    # '/inner count={{ n }}' con n non legato: il token viene scartato e
+    # /inner vede count non legato (no wipe silenzioso 'count=None')
+    k = _mini(
+        tmp_path,
+        "commands:\n  /inner:\n    params: [count]\n"
+        "    action: [{set: build_state.count, value: '{{ count }}'}]\n"
+        "  /go:\n    params: [n]\n    action: [{command: '/inner count={{ n }}'}]\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go")
+    assert "count" not in it.state["build_state"]
+    eventi = [e["update_parziale"] for e in it.events if "update_parziale" in e]
+    assert any(
+        ev["comando"] == "/inner" and ev["param_non_legati"] == ["count"]
+        for ev in eventi
+    )
+    assert any(any(s.startswith("arg:") for s in ev["saltati"]) for ev in eventi)
+
+
+def test_value_null_vietato_al_caricamento(tmp_path):
+    # value: null su verbo mutante = gate rosso (ADR 008, divieto)
+    k = _mini(
+        tmp_path,
+        "commands:\n  /go:\n    action: [{set: build_state.x, value: null}]\n",
+    )
+    esiti = k.static_check()
+    assert esiti["null_errori"], "divieto value:null non rilevato"
+
+
+def test_value_assente_su_set_vietato(tmp_path):
+    # value mancante su set (a.get('value') -> None) = stesso wipe: vietato
+    k = _mini(
+        tmp_path,
+        "commands:\n  /go:\n    action: [{set: build_state.x}]\n",
+    )
+    assert k.static_check()["null_errori"], "value assente non rilevato"
+
+
+# ---- ES2: review Codex PR #553 (4 findings P2) ----
+
+
+def test_nome_da_chiave_stato_flatten_non_saltato(tmp_path):
+    # Codex P2-1: '{{ name }}' che risolve a una chiave flatten di stato
+    # (ctx.update(root) in _ctx) NON e' non legato: la scrittura avviene
+    k = _mini(
+        tmp_path,
+        "commands:\n  /go:\n    action:\n"
+        "      - set: build_state.name\n        value: Grog\n"
+        "      - set: build_state.copia\n        value: '{{ name }}'\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go")
+    assert it.state["build_state"]["copia"] == "Grog"
+    assert not [e for e in it.events if "update_parziale" in e]
+
+
+def test_guardia_is_not_none_mantiene_semantica_pre_es2(tmp_path):
+    # Codex P2-2: le CONDIZIONI vedono il param dichiarato-non passato come
+    # None (semantica pre-ES1, ADR 008: guardie mai scansionate). Senza il
+    # fix, Undefined is not none -> True ed il ramo then scrive lo stesso
+    k = _mini(
+        tmp_path,
+        "commands:\n  /go:\n    params: [n]\n    action:\n"
+        "      - if: '{{ n is not none }}'\n"
+        "        then: [{set: build_state.x, value: pieno}]\n"
+        "      - set: build_state.fuori\n        value: sempre\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go")
+    assert "x" not in it.state["build_state"]  # ramo then NON entrato
+    assert it.state["build_state"]["fuori"] == "sempre"
+    it2 = Interpreter(k)
+    it2.run_command("/go", n=5)
+    assert it2.state["build_state"]["x"] == "pieno"
+
+
+def test_posizionale_dropped_non_shifta_i_successivi(tmp_path):
+    # Codex P2-3: '/inner {{ a }} {{ b }}' con solo b legato: il token di a
+    # e' scartato ma il suo slot posizionale resta — b arriva a 'second'
+    k = _mini(
+        tmp_path,
+        "commands:\n  /inner:\n    params: [first, second]\n"
+        "    action:\n"
+        "      - set: build_state.f\n        value: '{{ first }}'\n"
+        "      - set: build_state.s\n        value: '{{ second }}'\n"
+        "  /go:\n    params: [b]\n"
+        "    action: [{command: '/inner {{ a }} {{ b }}'}]\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go", b="B")
+    assert it.state["build_state"]["s"] == "B"
+    assert "f" not in it.state["build_state"]
+
+
+def test_quoted_arg_con_template_dropped_intero(tmp_path):
+    # Codex P2-4: 'text="{{ n }} suffix"' con n non legato: l'argomento
+    # quoted e' UN token — drop intero, mai ValueError di shlex per quote
+    # spezzate ne' scrittura parziale
+    k = _mini(
+        tmp_path,
+        "commands:\n  /inner:\n    params: [text]\n"
+        "    action: [{set: build_state.t, value: '{{ text }}'}]\n"
+        "  /go:\n    params: [n]\n"
+        "    action: [{command: '/inner text=\"{{ n }} suffix\"'}]\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go")
+    assert "t" not in it.state["build_state"]
+    saltati = [
+        s for e in it.events for s in e.get("update_parziale", {}).get("saltati", [])
+    ]
+    assert any(s.startswith("arg:") for s in saltati)
+    # con n legato il quoted arg rende intero e viene scritto
+    it2 = Interpreter(k)
+    it2.run_command("/go", n="N")
+    assert it2.state["build_state"]["t"] == "N suffix"
+
+
+# ---- ES2: review Codex PR #553 giro 2 (3 findings P2) ----
+
+
+def test_filtro_o_aritmetica_su_non_legato_dropped_prima_del_render(tmp_path):
+    # Codex P2 (giro 2): '/inner count={{ n|int }}' con n omesso — la
+    # sentinella-stringa verrebbe coercita dal filtro (count=0, wipe muto)
+    # e '{{ n + 1 }}' abortirebbe col TypeError. Il token va droppato PRIMA
+    # del render: nessuna scrittura, nessun abort, arg: registrato
+    k = _mini(
+        tmp_path,
+        "commands:\n  /inner:\n    params: [count]\n"
+        "    action: [{set: build_state.c, value: '{{ count }}'}]\n"
+        "  /go:\n    params: [n]\n"
+        "    action:\n"
+        "      - command: '/inner count={{ n|int }}'\n"
+        "      - command: '/inner count={{ n + 1 }}'\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go")  # non deve alzare TypeError
+    assert "c" not in it.state["build_state"]
+    saltati = [
+        s for e in it.events for s in e.get("update_parziale", {}).get("saltati", [])
+    ]
+    assert len([s for s in saltati if s.startswith("arg:")]) == 2
+
+
+def test_fallback_per_occorrenza_non_per_nome(tmp_path):
+    # Codex P2 (giro 2): '{{ n|default("fallback") }} {{ n }}' con n omesso
+    # — l'occorrenza NON protetta rende il template misto: salta tutto
+    k = _mini(
+        tmp_path,
+        "commands:\n  /go:\n    params: [n]\n"
+        "    action:\n"
+        "      - set: build_state.x\n"
+        "        value: '{{ n|default(\"fallback\") }} {{ n }}'\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go")
+    assert "x" not in it.state["build_state"]
+    it2 = Interpreter(k)
+    it2.run_command("/go", n="N")
+    assert it2.state["build_state"]["x"] == "N N"  # n legato: default non scatta
+
+
+def test_call_saltato_invalida_scratch_stale(tmp_path):
+    # Codex P2 (giro 2): call con return_as saltata dopo che tmp e' stato
+    # valorizzato — il valore stale non deve sopravvivere: il set dipendente
+    # salta (tmp e' di nuovo non risolvibile)
+    k = _mini(
+        tmp_path,
+        "helpers:\n  doppia:\n    params: [v]\n    logic: |\n      return (v or 0) * 2\n"
+        "commands:\n  /go:\n    params: [n]\n    action:\n"
+        "      - call: doppia\n        with: {v: 1}\n        return_as: tmp\n"
+        "      - call: doppia\n        with: {v: '{{ n }}'}\n        return_as: tmp\n"
+        "      - set: build_state.risultato\n        value: '{{ tmp }}'\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go")
+    assert "risultato" not in it.state["build_state"]
+    saltati = [
+        s for e in it.events for s in e.get("update_parziale", {}).get("saltati", [])
+    ]
+    assert "call:doppia" in saltati and "build_state.risultato" in saltati
+
+
+# ---- ES2: review Codex PR #553 giro 3 (2 findings P2) ----
+
+
+def test_variabili_locali_jinja_non_sono_non_legate(tmp_path):
+    # Codex P2 (giro 3): le variabili bound dai loop/set interni al
+    # template ('{% for x in values %}{{ x }}') NON sono dipendenze esterne:
+    # la scansione deve essere scope-aware come find_undeclared_variables
+    k = _mini(
+        tmp_path,
+        "commands:\n  /go:\n    params: [values]\n"
+        "    action:\n"
+        "      - set: build_state.xs\n"
+        "        value: '{% for x in values %}{{ x }}{% endfor %}'\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go", values=[1, 2])
+    assert it.state["build_state"]["xs"] == 12  # native env: output adiacenti
+    assert not [e for e in it.events if "update_parziale" in e]
+
+
+def test_uguale_in_template_non_rende_named_l_argomento(tmp_path):
+    # Codex P2 (giro 3): '{{ n == 1 }}' e' un argomento POSIZIONALE (l'= e'
+    # dentro l'espressione): renderizzato a 'True' deve legarsi al param
+    k = _mini(
+        tmp_path,
+        "commands:\n  /inner:\n    params: [flag]\n"
+        "    action: [{set: build_state.f, value: '{{ flag }}'}]\n"
+        "  /go:\n    params: [n]\n"
+        "    action: [{command: '/inner {{ n == 1 }}'}]\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go", n=1)
+    assert it.state["build_state"]["f"] is True  # bool nativo dal render
+
+
+# ---- ES2: review Codex PR #553 giro 4 (2 findings P2 + gate collegato) ----
+
+
+def test_fallback_protetto_maschera_param_omesso_su_omonimo_stato(tmp_path):
+    # Codex P2 (giro 4): '{{ n or 3 }}' con n dichiarato omesso deve
+    # risolvere il fallback (3, semantica pre-ES1), non l'omonima chiave di
+    # stato (build_state.n = 7)
+    k = _mini(
+        tmp_path,
+        "commands:\n  /go:\n    params: [n]\n"
+        "    action:\n"
+        "      - set: build_state.altro\n        value: '{{ n or 3 }}'\n",
+    )
+    it = Interpreter(k)
+    it.state["build_state"]["n"] = 7
+    it.run_command("/go")
+    assert it.state["build_state"]["altro"] == 3
+
+
+def test_template_che_espande_in_piu_argomenti_mantiene_slot(tmp_path):
+    # Codex P2 (giro 4): '{{ words }}' non quotato con words='one two' rende
+    # DUE argomenti shlex — i successivi argomenti prendono gli slot in
+    # sequenza ('tail' non va scartato)
+    k = _mini(
+        tmp_path,
+        "commands:\n  /inner:\n    params: [first, second, third]\n"
+        "    action:\n"
+        "      - set: build_state.f\n        value: '{{ first }}'\n"
+        "      - set: build_state.s\n        value: '{{ second }}'\n"
+        "      - set: build_state.t\n        value: '{{ third }}'\n"
+        "  /go:\n    params: [words]\n"
+        "    action: [{command: '/inner {{ words }} tail'}]\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go", words="one two")
+    assert it.state["build_state"]["f"] == "one"
+    assert it.state["build_state"]["s"] == "two"
+    assert it.state["build_state"]["t"] == "tail"
