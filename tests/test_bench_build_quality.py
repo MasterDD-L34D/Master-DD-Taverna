@@ -107,3 +107,22 @@ def test_rifiutate_ricomparsi_nel_report():
     assert rifiutata["level"] == 5
     txt = report([buona, rifiutata])
     assert "rifiutato=1" in txt  # conteggiata nel gruppo livelli 2-5, non sparita
+
+
+def test_bonus_razziale_ts_non_verificabile():
+    # P2 Codex g2: Svirfneblin ha "Fortunate: +2 racial bonus on all saving
+    # throws" che l'engine non applica — la tolleranza +-1 attribuirebbe alla
+    # build un errore dell'engine: tutto il gruppo TS e' non_verificabile
+    r = confronta({"pc_draft": _draft_pc(race="Svirfneblin")})
+    for ita in SAVES_MAP:
+        assert r["dettaglio"][f"TS {ita}"]["esito"] == "non_verificabile", ita
+
+
+def test_bozza_malformata_non_rompe_il_corpus():
+    # P2 Codex g2: skills:null fa AttributeError dentro build_character — la
+    # bozza deve risultare rifiutata, non interrompere l'intero corpus
+    bozza = _draft_pc()
+    bozza["skills"] = None
+    r = confronta({"pc_draft": bozza})
+    assert r["esito"] == "rifiutato"
+    assert r["level"] == 5

@@ -14,6 +14,7 @@ Uso:
 import argparse
 import json
 import random
+import re
 import sys
 from pathlib import Path
 
@@ -82,7 +83,10 @@ def confronta(payload):
         draft = CharacterDraft.from_dict(draft_raw)
     except Exception as exc:  # bozza incompatibile = engine rifiuta
         return {"esito": "rifiutato", "motivo": f"draft rifiutato: {exc}", "level": level}
-    sheet = build_character(draft)
+    try:
+        sheet = build_character(draft)
+    except Exception as exc:  # bozza malformata che l'engine non gestisce
+        return {"esito": "rifiutato", "motivo": f"engine: {type(exc).__name__}: {exc}", "level": level}
     if sheet["errors"]:
         return {"esito": "rifiutato", "motivo": "; ".join(sheet["errors"]), "level": level}
 
@@ -100,6 +104,15 @@ def confronta(payload):
     # oggetti fuori catalogo: apply_equipment li ignora con warning — la CA
     # risultante non e' confrontabile (piano: oggetti magici = non_verificabile)
     equip_non_modellato = [w for w in sheet["warnings"] if w.endswith("non in catalogo (valutato a mano)")]
+
+    # bonus razziali ai TS non applicati dall'engine (piano): se un trait
+    # della razza concede un bonus diretto ai saving throws, i TS non sono
+    # confrontabili — la tolleranza +-1 attribuirebbe alla build un errore
+    # dell'engine. "gain...bonus...saving throws" esclude i trait sui DC.
+    ts_non_verificabili = any(
+        re.search(r"gain[^.]*?bonus[^.]*?saving throws", t.get("text", ""), re.IGNORECASE)
+        for t in catalogs.get_race(draft.race)["mechanics"].get("traits", [])
+    )
 
     dich = payload.get("benchmark", {}).get("statistics", {})
     dettaglio = {}
@@ -129,9 +142,14 @@ def confronta(payload):
     for ita, eng in SAVES_MAP.items():
         val = dich.get("saves", {}).get(ita)
         calc = ricalc_saves.get(eng)
-        # bonus razziali ai TS non applicati dall'engine => tolleranza +-1 (P2)
+        # bonus razziali ai TS non applicati dall'engine => tolleranza +-1 (P2),
+        # ma se la razza concede un bonus ai TS dichiarato nel trait, la
+        # tolleranza non basta: tutto il gruppo TS e' non_verificabile
         dettaglio[f"TS {ita}"] = (
-            {"esito": "non_verificabile", "dichiarato": val, "ricalcolato": calc}
+            {"esito": "non_verificabile", "dichiarato": val, "ricalcolato": calc,
+             "motivo": "bonus razziale ai TS non modellato dall'engine"}
+            if ts_non_verificabili
+            else {"esito": "non_verificabile", "dichiarato": val, "ricalcolato": calc}
             if val is None or calc is None
             else {
                 "esito": "concorda" if abs(calc - val) <= 1 else "diverge",
