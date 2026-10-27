@@ -467,7 +467,7 @@ commands:
       - load_session:
           key: 'enc_{{name}}'
           as: loaded
-      - if: '{{loaded is not None}}'
+      - if: '{{loaded is not none}}'
         then:
           - set: encounter_state
             value: '{{loaded}}'

@@ -24,9 +24,14 @@ from jinja2.visitor import NodeVisitor
 
 from .loader import DENIED_BUILTINS, Kernel, _safe_import
 from .state import get_path, set_path
+from .store import JsonFilePort
 
 MAX_DEPTH = 8
 _MISSING = object()
+
+# ADR 009: chiavi archivio sessione con prefisso dominio (build_/enc_...) —
+# il rifiuto e' un evento, mai una sanificazione silenziosa.
+SESSION_KEY_RE = re.compile(r"^[a-z]+_[A-Za-z0-9_-]{1,64}$")
 
 _PARSE_ENV = jinja2.Environment()  # solo parse per la scansione dei nomi
 # token di una spec comando: sequenze di frammenti non-spaziature, template
@@ -234,20 +239,22 @@ ESEGUIBILI = frozenset(
         "guard_all",
         "error",
         "abort",
+        # ES2-a1 (ADR 009): archivio sessione — i verbi toccano solo la porta
+        "save_session",
+        "load_session",
+        "list_session_keys",
+        "emit_event",
+        "replace_placeholder",
     }
 )
 
-# ES1: no-op dichiarati (ES2 = sessione/flow; dominio = ES3; RAG = banco)
+# ES1: no-op dichiarati (ES2-fetta-b = state machine; dominio = ES3; RAG =
+# banco). ES2-a1 ha reso eseguibili save/load/list/emit/replace_placeholder.
 NO_OP = frozenset(
     {
         "input",
         "export",
-        "emit_event",
         "goto_state",
-        "save_session",
-        "load_session",
-        "list_session_keys",
-        "replace_placeholder",
         "roll",
         "match",
         "match_any",
@@ -336,8 +343,12 @@ def _builtins() -> dict[str, Any]:
 
 
 class Interpreter:
-    def __init__(self, kernel: Kernel):
+    def __init__(self, kernel: Kernel, port: JsonFilePort | None = None):
         self.kernel = kernel
+        # ADR 009: l'archivio sessione vive nell'interprete (mai in
+        # load_kernel). Default lazy-safe: senza file esistente la porta e'
+        # vuota e i moduli ES1 non la toccano.
+        self.port = port if port is not None else JsonFilePort()
         self.state: dict[str, Any] = {
             root: {}
             for root in (
@@ -892,6 +903,61 @@ class Interpreter:
 
     def _v_abort(self, a, params, depth):
         raise DslAbort(self._rs(a.get("abort") or "abort", params))
+
+    # -- ES2-a1: archivio sessione (ADR 009) ------------------------------
+
+    def _v_save_session(self, a, params, depth):
+        s = a["save_session"]
+        key = self._rn(s.get("key"), params)
+        if not isinstance(key, str) or not SESSION_KEY_RE.match(key):
+            # confine fiducia: rifiuto con evento, mai sanificazione
+            self.events.append(
+                {"chiave_sessione_non_valida": str(key)[:80], "verb": "save_session"}
+            )
+            return
+        if self._skip_node(s.get("value"), f"save_session:{key}", params):
+            return
+        value = self._rn(s.get("value"), params)
+        try:
+            self.port.save(key, value)
+        except (TypeError, ValueError) as exc:
+            # mai str() silenzioso: un valore non serializzabile e' un
+            # evento e nessuna scrittura
+            self.events.append(
+                {"valore_non_serializzabile": key, "dettaglio": str(exc)[:120]}
+            )
+
+    def _v_load_session(self, a, params, depth):
+        s = a["load_session"]
+        key = self._rn(s.get("key"), params)
+        self.scratch[s["as"]] = self.port.load(key) if isinstance(key, str) else None
+
+    def _v_list_session_keys(self, a, params, depth):
+        s = a["list_session_keys"]
+        prefix = self._rn(s.get("prefix"), params)
+        self.scratch[s["as"]] = (
+            self.port.list(prefix) if isinstance(prefix, str) else []
+        )
+
+    def _v_emit_event(self, a, params, depth):
+        e = a["emit_event"]
+        topic = self._rn(e.get("topic"), params)
+        payload = self._rn(e.get("payload"), params)
+        self.port.emit(str(topic), payload)
+
+    def _v_replace_placeholder(self, a, params, depth):
+        # forma reale (minmax_builder): il placeholder letterale nella
+        # variabile di loop e' risolto prima della search — lo sostituiamo
+        # in TUTTE le stringhe dello scratch (1 occorrenza nei moduli).
+        # forma del verbo: replace_placeholder: <segnaposto>  + with: (sibling)
+        r = a["replace_placeholder"]
+        placeholder = str(
+            r if not isinstance(r, dict) else r.get("replace_placeholder")
+        )
+        value = self._rn(a.get("with"), params)
+        for k, v in self.scratch.items():
+            if isinstance(v, str) and placeholder in v:
+                self.scratch[k] = v.replace(placeholder, str(value))
 
     # -- report di copertura (G2) ----------------------------------------
 
