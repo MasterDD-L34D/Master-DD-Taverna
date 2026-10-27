@@ -512,3 +512,83 @@ def test_value_assente_su_set_vietato(tmp_path):
         "commands:\n  /go:\n    action: [{set: build_state.x}]\n",
     )
     assert k.static_check()["null_errori"], "value assente non rilevato"
+
+
+# ---- ES2: review Codex PR #553 (4 findings P2) ----
+
+
+def test_nome_da_chiave_stato_flatten_non_saltato(tmp_path):
+    # Codex P2-1: '{{ name }}' che risolve a una chiave flatten di stato
+    # (ctx.update(root) in _ctx) NON e' non legato: la scrittura avviene
+    k = _mini(
+        tmp_path,
+        "commands:\n  /go:\n    action:\n"
+        "      - set: build_state.name\n        value: Grog\n"
+        "      - set: build_state.copia\n        value: '{{ name }}'\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go")
+    assert it.state["build_state"]["copia"] == "Grog"
+    assert not [e for e in it.events if "update_parziale" in e]
+
+
+def test_guardia_is_not_none_mantiene_semantica_pre_es2(tmp_path):
+    # Codex P2-2: le CONDIZIONI vedono il param dichiarato-non passato come
+    # None (semantica pre-ES1, ADR 008: guardie mai scansionate). Senza il
+    # fix, Undefined is not none -> True ed il ramo then scrive lo stesso
+    k = _mini(
+        tmp_path,
+        "commands:\n  /go:\n    params: [n]\n    action:\n"
+        "      - if: '{{ n is not none }}'\n"
+        "        then: [{set: build_state.x, value: pieno}]\n"
+        "      - set: build_state.fuori\n        value: sempre\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go")
+    assert "x" not in it.state["build_state"]  # ramo then NON entrato
+    assert it.state["build_state"]["fuori"] == "sempre"
+    it2 = Interpreter(k)
+    it2.run_command("/go", n=5)
+    assert it2.state["build_state"]["x"] == "pieno"
+
+
+def test_posizionale_dropped_non_shifta_i_successivi(tmp_path):
+    # Codex P2-3: '/inner {{ a }} {{ b }}' con solo b legato: il token di a
+    # e' scartato ma il suo slot posizionale resta — b arriva a 'second'
+    k = _mini(
+        tmp_path,
+        "commands:\n  /inner:\n    params: [first, second]\n"
+        "    action:\n"
+        "      - set: build_state.f\n        value: '{{ first }}'\n"
+        "      - set: build_state.s\n        value: '{{ second }}'\n"
+        "  /go:\n    params: [b]\n"
+        "    action: [{command: '/inner {{ a }} {{ b }}'}]\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go", b="B")
+    assert it.state["build_state"]["s"] == "B"
+    assert "f" not in it.state["build_state"]
+
+
+def test_quoted_arg_con_template_dropped_intero(tmp_path):
+    # Codex P2-4: 'text="{{ n }} suffix"' con n non legato: l'argomento
+    # quoted e' UN token — drop intero, mai ValueError di shlex per quote
+    # spezzate ne' scrittura parziale
+    k = _mini(
+        tmp_path,
+        "commands:\n  /inner:\n    params: [text]\n"
+        "    action: [{set: build_state.t, value: '{{ text }}'}]\n"
+        "  /go:\n    params: [n]\n"
+        "    action: [{command: '/inner text=\"{{ n }} suffix\"'}]\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go")
+    assert "t" not in it.state["build_state"]
+    saltati = [
+        s for e in it.events for s in e.get("update_parziale", {}).get("saltati", [])
+    ]
+    assert any(s.startswith("arg:") for s in saltati)
+    # con n legato il quoted arg rende intero e viene scritto
+    it2 = Interpreter(k)
+    it2.run_command("/go", n="N")
+    assert it2.state["build_state"]["t"] == "N suffix"

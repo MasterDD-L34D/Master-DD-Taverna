@@ -27,6 +27,10 @@ from .state import get_path, set_path
 
 MAX_DEPTH = 8
 _MISSING = object()
+# marca i nomi non legati nel render delle spec comando: i token che la
+# contengono sono droppati INTERI dopo shlex (mai quote spezzate, mai
+# posizionali shiftati). Non e' whitespace ne' punctuation per shlex.
+_SENTINEL = "\x00"
 
 _PARSE_ENV = jinja2.Environment()  # solo parse per la scansione dei nomi
 # token di una spec comando: sequenze di frammenti non-spaziature o template
@@ -358,6 +362,8 @@ class Interpreter:
             | set(self.state)
         )
         self._saltati: list[str] = []  # target/arg saltati nel frame corrente
+        self._unbound: set[str] = set()  # params dichiarati-non passati (frame)
+        self._guards: dict[str, None] = {}  # None-fill SOLO per le condizioni
         # ALTA-1 (review Claude): senza __builtins__ esplicito, Python
         # inietta i builtin veri e la whitelist import e' teatro (eval/open
         # esisterebbero lo stesso). MODELLO DI MINACCIA: protezione contro
@@ -456,12 +462,37 @@ class Interpreter:
 
     # -- esecuzione comandi ----------------------------------------------
 
+    def _state_keys(self) -> set:
+        """Chiavi flatten dello stato attualmente valorizzate (ctx.update di
+        _ctx espone ogni root come nomi liberi). Codex P2-1: un ref a una
+        chiave valorizzata risolve davvero — non e' un wipe. Solo valori non
+        None: una chiave None rende None = wipe, va saltato."""
+        out: set = set()
+        for root in self.state.values():
+            if isinstance(root, dict):
+                out |= {k for k, v in root.items() if v is not None}
+        return out
+
     def _unresolvable(self, node: Any, params: dict) -> set:
         """ADR 008: nomi referenziati dal nodo che il contesto corrente NON
-        puo' risolvere (nei params, nello scratch di loop, nei noti). Un
-        verbo mutante su questi nomi e' no-op: scriverebbe un valore falso
-        (None reso) sovrascrivendo lo stato esistente."""
-        return _referenced_vars(node) - self._known - set(self.scratch) - set(params)
+        puo' risolvere. Due famiglie: (1) param DICHIARATO-non passato —
+        fonte primaria mancante, salta anche se esiste un'omonima chiave di
+        stato (il param ha precedenza concettuale, l'evento deve dire il
+        vero); (2) nome libero non dichiarato e non in known/scratch/stato/
+        params (contaminazione scratch, refusi). Un verbo mutante su questi
+        nomi e' no-op: scriverebbe un valore falso (None reso)."""
+        refs = _referenced_vars(node)
+        liberi = refs - self._unbound
+        return (refs & self._unbound) | (
+            liberi - self._known - self._state_keys() - set(self.scratch) - set(params)
+        )
+
+    def _guard_ctx(self, params: dict) -> dict:
+        """ADR 008: le CONDIZIONI mantengono la semantica pre-ES1 — un param
+        dichiarato-non passato e' None per if/when/switch (guardia intatta).
+        I verbi mutanti invece vedono params senza None-fill: li' "assente"
+        non scrive affatto."""
+        return {**self._guards, **params} if self._guards else params
 
     def _skip_node(self, node: Any, target: str, params: dict) -> bool:
         """True se l'action va saltata (target registrato tra i saltati)."""
@@ -479,8 +510,14 @@ class Interpreter:
         # passati sono legati; gli altri sono "param non legato".
         bound = {p: params[p] for p in declared if p in params}
         unbound = sorted(p for p in declared if p not in params)
-        prev_saltati = self._saltati
+        prev_saltati, prev_unbound, prev_guards = (
+            self._saltati,
+            self._unbound,
+            self._guards,
+        )
         self._saltati = []
+        self._unbound = set(unbound)
+        self._guards = {p: None for p in unbound}
         snap = dict(self.scratch)
         saltati: list[str] = []
         try:
@@ -489,7 +526,11 @@ class Interpreter:
         finally:  # MEDIA-8: lo scratch di un comando non tracima al chiamante
             self.scratch.clear()
             self.scratch.update(snap)
-            self._saltati = prev_saltati
+            self._saltati, self._unbound, self._guards = (
+                prev_saltati,
+                prev_unbound,
+                prev_guards,
+            )
         self._sync()
         if saltati:  # evento aggregato: il merge parziale e' mai silenzioso
             self.events.append(
@@ -587,11 +628,15 @@ class Interpreter:
         cur.setdefault(key, []).extend(values if isinstance(values, list) else [values])
 
     def _v_if(self, a, params, depth):
-        branch = a.get("then") if self._cond(a["if"], params) else a.get("else")
+        branch = (
+            a.get("then")
+            if self._cond(a["if"], self._guard_ctx(params))
+            else a.get("else")
+        )
         self._run_actions(branch or [], params, depth)
 
     def _v_when(self, a, params, depth):
-        if self._cond(a["when"], params):
+        if self._cond(a["when"], self._guard_ctx(params)):
             self._run_actions(a.get("do") or [], params, depth)
 
     def _v_foreach(self, a, params, depth):
@@ -647,10 +692,11 @@ class Interpreter:
         set_path(self.state, "runtime.mode", self._rn(a["set_mode"], params))
 
     def _v_switch(self, a, params, depth):
-        value = self._rn(a["switch"], params)
+        guards = self._guard_ctx(params)
+        value = self._rn(a["switch"], guards)
         for case in a.get("cases") or []:
             if isinstance(case, dict) and str(
-                self._rn(case.get("when"), params)
+                self._rn(case.get("when"), guards)
             ) == str(value):
                 self._run_actions(case.get("do") or [], params, depth)
                 return
@@ -730,15 +776,17 @@ class Interpreter:
         if not isinstance(spec, str):
             raise DslAbort(f"command non stringa: {spec!r}")
         # ADR 008: i token che referenziano nomi non legati vengono scartati
-        # PRIMA del render (sennò '/inner count=None' e il wipe e' silenzioso)
-        kept: list[str] = []
-        for i, tok in enumerate(_SPEC_TOKEN_RE.findall(spec)):
-            if i > 0 and self._unresolvable(tok, params):
-                self._saltati.append(f"arg:{tok}")
-                continue
-            kept.append(tok)
+        # PRIMA del binding (sennò '/inner count=None' e il wipe e' silenzioso).
+        # Codex P2-3/P2-4 (review PR #553): si renderizza TUTTO con una
+        # SENTINELLA al posto dei nomi non legati e si tokenizza DOPO con
+        # shlex — così gli argomenti quoted restano interi (mai ValueError
+        # per quote spezzate) e gli slot posizionali dei token scartati
+        # restano occupati (i successivi non slittano di parametro).
+        missing: set = set()
+        for tok in _SPEC_TOKEN_RE.findall(spec)[1:]:
+            missing |= self._unresolvable(tok, params)
         rendered = self._rn(
-            " ".join(kept), params
+            spec, {**params, **{m: _SENTINEL for m in missing}}
         )  # Codex P2: render prima di tokenizzare
         tokens = shlex.split(rendered)
         if not tokens:
@@ -757,6 +805,11 @@ class Interpreter:
         kv: dict[str, Any] = {}
         pos = 0
         for tok in tokens[1:]:
+            if _SENTINEL in tok:  # arg con nome non legato: drop intero
+                self._saltati.append("arg:" + tok.replace(_SENTINEL, "<non-legato>"))
+                if "=" not in tok and pos < len(declared):
+                    pos += 1  # P2-3: lo slot posizionale resta occupato
+                continue
             if "=" in tok:
                 k, v = tok.split("=", 1)
                 kv[k] = v
