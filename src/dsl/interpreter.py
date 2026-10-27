@@ -27,74 +27,69 @@ from .state import get_path, set_path
 
 MAX_DEPTH = 8
 _MISSING = object()
-# marca i nomi non legati nel render delle spec comando: i token che la
-# contengono sono droppati INTERI dopo shlex (mai quote spezzate, mai
-# posizionali shiftati). Non e' whitespace ne' punctuation per shlex.
-_SENTINEL = "\x00"
 
 _PARSE_ENV = jinja2.Environment()  # solo parse per la scansione dei nomi
-# token di una spec comando: sequenze di frammenti non-spaziature o template
-# (un template puo' contenere spazi: "count={{ n }}" e' UN token)
-_SPEC_TOKEN_RE = re.compile(r"(?:\{\{.*?\}\}|\{%.*?%\}|\S)+")
+# token di una spec comando: sequenze di frammenti non-spaziature, template
+# (un template puo' contenere spazi: "count={{ n }}" e' UN token) o argomenti
+# quoted interi (anche con spazi: 'text="{{ n }} suffix"' e' UN token).
+_SPEC_TOKEN_RE = re.compile(r"(?:\"[^\"]*\"|'[^']*'|\{\{.*?\}\}|\{%.*?%\}|\S)+")
 
 
-@lru_cache(maxsize=None)
-def _tmpl_names(tmpl: str) -> frozenset:
-    """Nomi liberi di un template (jinja2.meta, AST). Non parseggiabile ->
-    insieme vuoto: la scansione non salta mai per un refuso di sintassi
-    (lo segnalano i gate G3/static_check, non un salto silenzioso)."""
-    try:
-        parsed = _PARSE_ENV.parse(tmpl)
-    except jinja2.TemplateSyntaxError:
-        return frozenset()
-    return frozenset(find_undeclared_variables(parsed))
-
-
-class _GuardedNames(NodeVisitor):
-    """Nomi con fallback esplicito (`n or X`, `n|default(X)`): su questi un
-    nome non legato NON e' un wipe — il template si protegge da solo con la
-    degradazione a None (idioma Codex P2: `/inner count={{ n or 3 }}`)."""
+class _ProtectedOccurrences(NodeVisitor):
+    """id() dei nodi Name in posizione protetta da fallback esplicito
+    (lato sinistro di un `or`, argomento di `default`/`d`): per-OCCORRENZA,
+    non per nome — in '{{ n|default("f") }} {{ n }}' solo la prima e'
+    protetta, la seconda rende il template misto (Codex P2, review #553
+    giro 2). find_all scende solo ai figli: il nodo stesso va aggiunto a mano."""
 
     def __init__(self) -> None:
-        self.guarded: set = set()
+        self.protected: set = set()
+
+    def _mark(self, node: Any) -> None:
+        if isinstance(node, jinja2.nodes.Name):
+            self.protected.add(id(node))
+        for nm in node.find_all(jinja2.nodes.Name):
+            self.protected.add(id(nm))
 
     def visit_Or(self, node: Any) -> None:
-        # lato sinistro di un 'or': se rende falsy (None) si prende il dx;
-        # find_all scende solo ai figli, il nodo stesso va incluso a mano
-        if isinstance(node.left, jinja2.nodes.Name):
-            self.guarded.add(node.left.name)
-        for name_node in node.left.find_all(jinja2.nodes.Name):
-            self.guarded.add(name_node.name)
+        # lato sinistro di un 'or': se rende falsy (None) si prende il dx
+        self._mark(node.left)
         self.generic_visit(node)
 
     def visit_Filter(self, node: Any) -> None:
         if node.name in ("default", "d"):
-            if isinstance(node.node, jinja2.nodes.Name):
-                self.guarded.add(node.node.name)
-            for name_node in node.node.find_all(jinja2.nodes.Name):
-                self.guarded.add(name_node.name)
+            self._mark(node.node)
         self.generic_visit(node)
 
 
 @lru_cache(maxsize=None)
-def _tmpl_guarded(tmpl: str) -> frozenset:
+def _tmpl_exposed(tmpl: str) -> frozenset:
+    """Nomi con ALMENO un'occorrenza SENZA fallback (or/default): su questi
+    un nome non legato e' un wipe. I nomi con tutte le occorrenze protette
+    restano fuori: il render li risolve da solo (None e' falsy: 'n or X'
+    prende X) senza wipe (idioma Codex P2: '/inner count={{ n or 3 }}').
+    Non parseggiabile -> insieme vuoto: la scansione non salta mai per un
+    refuso di sintassi (lo segnalano i gate G3/static_check)."""
     try:
         parsed = _PARSE_ENV.parse(tmpl)
     except jinja2.TemplateSyntaxError:
         return frozenset()
-    visitor = _GuardedNames()
-    visitor.visit(parsed)
-    return frozenset(visitor.guarded)
+    prot = _ProtectedOccurrences()
+    prot.visit(parsed)
+    return frozenset(
+        nm.name
+        for nm in parsed.find_all(jinja2.nodes.Name)
+        if id(nm) not in prot.protected
+    )
 
 
 def _referenced_vars(node: Any) -> set:
-    """Nomi liberi SENZA fallback referenziati da un nodo YAML, ricorsivo
-    su dict/liste. I nomi guardati (`or`/`default`) restano fuori: il
-    render li risolve da solo senza wipe."""
+    """Nomi liberi senza fallback referenziati da un nodo YAML, ricorsivo
+    su dict/liste."""
     out: set = set()
     if isinstance(node, str):
         if "{{" in node or "{%" in node:
-            out |= _tmpl_names(node) - _tmpl_guarded(node)
+            out |= _tmpl_exposed(node)
     elif isinstance(node, dict):
         for v in node.values():
             out |= _referenced_vars(v)
@@ -721,8 +716,14 @@ class Interpreter:
     def _v_call(self, a, params, depth):
         name = a["call"]
         if self._skip_node(a.get("with"), f"call:{name}", params):
-            return  # ADR 008: senza scratch[return_as] il resto del comando
-            # vede il nome non legato: la contaminazione e' naturale
+            # ADR 008 + Codex P2 (review #553 giro 2): un risultato gia' in
+            # scratch e' STALE — mascherarlo renderebbe i set dipendenti
+            # scrivibili col valore vecchio. Va tolto: senza scratch[as]
+            # il resto del comando vede il nome non legato (contaminazione
+            # naturale)
+            if a.get("return_as"):
+                self.scratch.pop(a["return_as"], None)
+            return
         fn = self._g.get(name) or self._g.get(
             re.sub(r"\W", "_", name)
         )  # helper dotted: il def compilato usa nome python safe (Codex P3)
@@ -776,17 +777,32 @@ class Interpreter:
         if not isinstance(spec, str):
             raise DslAbort(f"command non stringa: {spec!r}")
         # ADR 008: i token che referenziano nomi non legati vengono scartati
-        # PRIMA del binding (sennò '/inner count=None' e il wipe e' silenzioso).
-        # Codex P2-3/P2-4 (review PR #553): si renderizza TUTTO con una
-        # SENTINELLA al posto dei nomi non legati e si tokenizza DOPO con
-        # shlex — così gli argomenti quoted restano interi (mai ValueError
-        # per quote spezzate) e gli slot posizionali dei token scartati
-        # restano occupati (i successivi non slittano di parametro).
-        missing: set = set()
-        for tok in _SPEC_TOKEN_RE.findall(spec)[1:]:
-            missing |= self._unresolvable(tok, params)
+        # PRIMA del render (sennò '/inner count=None' e il wipe e' silenzioso).
+        # Codex P2 (review PR #553): il tokenizer e' quote-aware — gli argomenti
+        # quoted sono UN token anche con spazi (mai quote spezzate) — e il drop
+        # avviene prima del render (mai coercizioni di una sentinella da
+        # filtri/aritmetica, mai TypeError). Gli slot posizionali dei token
+        # scartati restano occupati: i sopravvissuti non slittano di parametro.
+        kept: list[str] = []
+        slots: list[int] = []  # slot posizionale di ogni kept posizionale
+        pos = 0
+        toks = _SPEC_TOKEN_RE.findall(spec)
+        head = (
+            toks[0] if toks else ""
+        )  # nome comando: mai droppato, mai renderizzato da solo
+        for tok in toks[1:]:
+            slot = -1
+            if "=" not in tok:
+                slot = pos
+                pos += 1
+            if self._unresolvable(tok, params):
+                self._saltati.append(f"arg:{tok[:80]}")
+                continue
+            kept.append(tok)
+            if slot >= 0:
+                slots.append(slot)
         rendered = self._rn(
-            spec, {**params, **{m: _SENTINEL for m in missing}}
+            " ".join([head, *kept]), params
         )  # Codex P2: render prima di tokenizzare
         tokens = shlex.split(rendered)
         if not tokens:
@@ -803,19 +819,18 @@ class Interpreter:
         cmd = self.kernel.commands.get(name) or {}
         declared = _declared(cmd, name)
         kv: dict[str, Any] = {}
-        pos = 0
+        si = 0
         for tok in tokens[1:]:
-            if _SENTINEL in tok:  # arg con nome non legato: drop intero
-                self._saltati.append("arg:" + tok.replace(_SENTINEL, "<non-legato>"))
-                if "=" not in tok and pos < len(declared):
-                    pos += 1  # P2-3: lo slot posizionale resta occupato
-                continue
             if "=" in tok:
                 k, v = tok.split("=", 1)
                 kv[k] = v
-            elif pos < len(declared):  # MEDIA-5: posizionali sui params dichiarati
-                kv[declared[pos]] = tok
-                pos += 1
+            elif si < len(slots):  # MEDIA-5: posizionale -> slot originale
+                slot = slots[si]
+                si += 1
+                if slot < len(declared):
+                    kv[declared[slot]] = tok
+                else:
+                    self.events.append({"argomento_posizionale_scolto": tok[:60]})
             else:
                 self.events.append({"argomento_posizionale_scolto": tok[:60]})
         self.run_command(name, _depth=depth + 1, **kv)  # ALTA-2: depth si propaga
@@ -823,12 +838,14 @@ class Interpreter:
     def _v_parse_json(self, a, params, depth):
         o = a["parse_json"]
         if self._skip_node(o.get("input"), f"parse_json:{o.get('as')}", params):
+            self.scratch.pop(o.get("as"), None)  # Codex P2 giro 2: stale
             return
         self.scratch[o["as"]] = json.loads(self._rs(o["input"], params))
 
     def _v_find_in(self, a, params, depth):
         f = a["find_in"]
         if self._skip_node(f, f"find_in:{f.get('as')}", params):
+            self.scratch.pop(f.get("as"), None)  # Codex P2 giro 2: stale
             return
         lst = self._resolve(f.get("from"), params) or []
         where = f.get("where") or {}

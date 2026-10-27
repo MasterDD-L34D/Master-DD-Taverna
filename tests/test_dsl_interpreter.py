@@ -592,3 +592,68 @@ def test_quoted_arg_con_template_dropped_intero(tmp_path):
     it2 = Interpreter(k)
     it2.run_command("/go", n="N")
     assert it2.state["build_state"]["t"] == "N suffix"
+
+
+# ---- ES2: review Codex PR #553 giro 2 (3 findings P2) ----
+
+
+def test_filtro_o_aritmetica_su_non_legato_dropped_prima_del_render(tmp_path):
+    # Codex P2 (giro 2): '/inner count={{ n|int }}' con n omesso — la
+    # sentinella-stringa verrebbe coercita dal filtro (count=0, wipe muto)
+    # e '{{ n + 1 }}' abortirebbe col TypeError. Il token va droppato PRIMA
+    # del render: nessuna scrittura, nessun abort, arg: registrato
+    k = _mini(
+        tmp_path,
+        "commands:\n  /inner:\n    params: [count]\n"
+        "    action: [{set: build_state.c, value: '{{ count }}'}]\n"
+        "  /go:\n    params: [n]\n"
+        "    action:\n"
+        "      - command: '/inner count={{ n|int }}'\n"
+        "      - command: '/inner count={{ n + 1 }}'\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go")  # non deve alzare TypeError
+    assert "c" not in it.state["build_state"]
+    saltati = [
+        s for e in it.events for s in e.get("update_parziale", {}).get("saltati", [])
+    ]
+    assert len([s for s in saltati if s.startswith("arg:")]) == 2
+
+
+def test_fallback_per_occorrenza_non_per_nome(tmp_path):
+    # Codex P2 (giro 2): '{{ n|default("fallback") }} {{ n }}' con n omesso
+    # — l'occorrenza NON protetta rende il template misto: salta tutto
+    k = _mini(
+        tmp_path,
+        "commands:\n  /go:\n    params: [n]\n"
+        "    action:\n"
+        "      - set: build_state.x\n"
+        "        value: '{{ n|default(\"fallback\") }} {{ n }}'\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go")
+    assert "x" not in it.state["build_state"]
+    it2 = Interpreter(k)
+    it2.run_command("/go", n="N")
+    assert it2.state["build_state"]["x"] == "N N"  # n legato: default non scatta
+
+
+def test_call_saltato_invalida_scratch_stale(tmp_path):
+    # Codex P2 (giro 2): call con return_as saltata dopo che tmp e' stato
+    # valorizzato — il valore stale non deve sopravvivere: il set dipendente
+    # salta (tmp e' di nuovo non risolvibile)
+    k = _mini(
+        tmp_path,
+        "helpers:\n  doppia:\n    params: [v]\n    logic: |\n      return (v or 0) * 2\n"
+        "commands:\n  /go:\n    params: [n]\n    action:\n"
+        "      - call: doppia\n        with: {v: 1}\n        return_as: tmp\n"
+        "      - call: doppia\n        with: {v: '{{ n }}'}\n        return_as: tmp\n"
+        "      - set: build_state.risultato\n        value: '{{ tmp }}'\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go")
+    assert "risultato" not in it.state["build_state"]
+    saltati = [
+        s for e in it.events for s in e.get("update_parziale", {}).get("saltati", [])
+    ]
+    assert "call:doppia" in saltati and "build_state.risultato" in saltati
