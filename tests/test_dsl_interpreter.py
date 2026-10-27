@@ -1517,3 +1517,103 @@ commands:
     assert get_path(it.state, "runtime.current_state") == "IDLE"
     it.run_input("ancora")  # fuori wizard: evento, nessun prompt turno
     assert [e.get("input_fuori_wizard") for e in it.events] == ["ancora"]
+
+
+def test_run_input_action_only_avanza(tmp_path):
+    # Codex P1 #559 giro 2: nodo senza prompt (solo actions+next) esegue
+    # le actions all'arrivo e avanza subito — il flusso non si parchereggia
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {}
+    T:
+      start:
+        prompt: "Parti?"
+        parse:
+          any: {set: risposta, value: "{{input}}"}
+        next: setup
+      setup:
+        actions:
+          - set: "@GameMode.shared.ready"
+            value: true
+        next: nome
+      nome:
+        prompt: "Come ti chiami?"
+        parse:
+          any: {set: nome, value: "{{input}}"}
+        end: true
+commands:
+  /s: {action: [{goto_state: GameMode.T.start}]}
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/s")
+    it.run_input("vai")
+    assert get_path(it.state, "game_mode.shared.ready") is True
+    assert get_path(it.state, "runtime.current_state") == "GameMode.T.nome"
+    assert it.output_log[-1] == "Come ti chiami?"
+
+
+def test_run_input_foreach_legge_params_parse(tmp_path):
+    # Codex P2 #559 giro 2: any_list lega in params; foreach con nome nudo
+    # risolve il binding del parse, non solo scratch/stato/kernel
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {}
+    T:
+      items:
+        prompt: "Cosa prendi?"
+        parse:
+          any_list: {as: items, sep: ","}
+        actions:
+          - foreach: items
+            loop_as: it
+            actions:
+              - set: "@GameMode.shared.last"
+                value: "{{it}}"
+        end: true
+commands:
+  /s: {action: [{goto_state: GameMode.T.items}]}
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/s")
+    it.run_input("spada, scudo")
+    assert get_path(it.state, "game_mode.shared.last") == "scudo"
+    assert not [e for e in it.events if "foreach_non_risolto" in e]
+
+
+def test_run_input_command_params_dichiarati_vincolati(tmp_path):
+    # Codex P2 #559 giro 2 (end-to-end): i params dichiarati su `command:`
+    # erano ignorati — il comando girava con i declared unbound
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {}
+    T:
+      items:
+        prompt: "Cosa prendi?"
+        parse:
+          any_list: {as: items, sep: ","}
+        actions:
+          - foreach: items
+            loop_as: it
+            actions:
+              - command: /add_item
+                params:
+                  oggetto: "{{it | trim}}"
+        end: true
+commands:
+  /s: {action: [{goto_state: GameMode.T.items}]}
+  /add_item:
+    params: [oggetto]
+    action:
+      - set: inventario
+        value: "{{ (inventario or []) + [oggetto] }}"
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/s")
+    it.run_input("spada, scudo")
+    assert it.state.get("inventario") == ["spada", "scudo"]

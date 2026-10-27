@@ -632,6 +632,19 @@ class Interpreter:
         if node.get("end") or nxt in (None, ""):
             set_path(self.state, "runtime.current_state", "IDLE")
             return
+        self._advance(sm, cur, node, params, _depth + 1)
+
+    def _advance(self, sm: dict, cur: str, node: dict, params: dict, depth: int) -> None:
+        """Transizione di arrivo sul next del nodo. Prompt -> si ferma;
+        end -> actions all'arrivo poi IDLE; action-only (Codex P1 #559
+        giro 2) -> actions subito e avanzamento ricorsivo col suo next."""
+        if depth > 20:  # ponytail: guard profondita' contro cicli action-only
+            self.events.append({"avanzamento_profondita_max": cur})
+            return
+        nxt = node.get("next")
+        if nxt in (None, ""):
+            set_path(self.state, "runtime.current_state", "IDLE")
+            return
         target = str(nxt)
         if target.startswith("@"):
             target = target[1:]
@@ -644,15 +657,20 @@ class Interpreter:
         if nnode.get("when") is not None and not self._cond(nnode.get("when"), params):
             self.events.append({"wizard_guard_falso": target})
             return  # si resta sul nodo corrente
-        if nnode.get("end"):
-            # nodo terminale: le actions girano all'arrivo, poi IDLE
-            set_path(self.state, "runtime.current_state", target)
-            self._run_actions(nnode.get("actions") or [], params, _depth)
-            set_path(self.state, "runtime.current_state", "IDLE")
-            return
         set_path(self.state, "runtime.current_state", target)
         if nnode.get("prompt"):
             self.output_log.append(self._rs(str(nnode["prompt"]), params))
+            return
+        if nnode.get("end"):
+            # nodo terminale: le actions girano all'arrivo, poi IDLE
+            self._run_actions(nnode.get("actions") or [], params, depth)
+            set_path(self.state, "runtime.current_state", "IDLE")
+            return
+        # nodo action-only: le actions girano all'arrivo, poi il suo next
+        self._run_actions(nnode.get("actions") or [], params, depth)
+        if get_path(self.state, "runtime.current_state") != target:
+            return  # action end/goto/command ha gia' spostato lo stato
+        self._advance(sm, target, nnode, params, depth + 1)
 
     def _match_parse(self, parse: dict, text: str, params: dict) -> Any:
         """Gerarchia ADR 014: map esatta > regex (ordine) > any/any_list.
@@ -862,7 +880,9 @@ class Interpreter:
 
     def _v_foreach(self, a, params, depth):
         ref = a["foreach"]
-        items = self._resolve(ref, params)
+        # Codex P2 #559 giro 2: i binding del parse (any_list ecc.) vivono
+        # in params — un nome nudo li trova prima di scratch/stato/kernel
+        items = params.get(ref) if str(ref) in params else self._resolve(ref, params)
         if self._unresolved_foreach(ref, items):
             return
         self._loop(
@@ -879,7 +899,7 @@ class Interpreter:
         var, _, expr = spec.partition(" in ")
         var = var.strip()
         ref = expr.strip()
-        items = self._resolve(ref, params)
+        items = params.get(ref) if ref in params else self._resolve(ref, params)
         if self._unresolved_foreach(ref, items):
             return
         self._loop(items or [], var, a.get("do") or [], params, depth)
@@ -1058,9 +1078,19 @@ class Interpreter:
         set_path(self.state, a["compute"], self._g["__compute"]())
 
     def _v_command(self, a, params, depth):
-        self._dispatch_command(
-            a.get("command") or a.get("route") or a.get("call_command"), depth, params
-        )
+        extra: dict = {}
+        ap = a.get("params")
+        if isinstance(ap, dict) and ap:
+            # Codex P2 #559 giro 2 (end-to-end): i params dichiarati
+            # sull'action erano ignorati — il comando girava senza kwargs
+            # ("Oggetto aggiunto: ."). Resi nel contesto del chiamante
+            # (scratch di loop incluso), vincolati da run_command ai
+            # params dichiarati del comando.
+            extra = self._rn(ap, params)
+        spec = a.get("command") or a.get("route") or a.get("call_command")
+        if extra:
+            params = {**params, **extra}
+        self._dispatch_command(spec, depth, params, extra or None)
 
     def _v_call_command(self, a, params, depth):
         self._dispatch_command(a.get("call_command") or a.get("command"), depth, params)
@@ -1068,7 +1098,9 @@ class Interpreter:
     def _v_route(self, a, params, depth):
         self._dispatch_command(a.get("route"), depth, params)
 
-    def _dispatch_command(self, spec: Any, depth: int, params: dict) -> None:
+    def _dispatch_command(
+        self, spec: Any, depth: int, params: dict, extra: dict | None = None
+    ) -> None:
         if depth >= MAX_DEPTH:
             raise DslAbort(f"ricorsione command: oltre profondita {MAX_DEPTH}")
         if not isinstance(spec, str):
@@ -1135,7 +1167,9 @@ class Interpreter:
                     next_slot += 1
                 else:
                     self.events.append({"argomento_posizionale_scolto": tok[:60]})
-        self.run_command(name, _depth=depth + 1, **kv)  # ALTA-2: depth si propaga
+        self.run_command(
+            name, _depth=depth + 1, **{**kv, **(extra or {})}
+        )  # ALTA-2: depth si propaga; params action dichiarati > token stringa
 
     def _v_parse_json(self, a, params, depth):
         o = a["parse_json"]
