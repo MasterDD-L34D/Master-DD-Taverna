@@ -109,9 +109,25 @@ def confronta(payload):
     # della razza concede un bonus diretto ai saving throws, i TS non sono
     # confrontabili — la tolleranza +-1 attribuirebbe alla build un errore
     # dell'engine. "gain...bonus...saving throws" esclude i trait sui DC.
+    frasi_traits = [
+        f
+        for t in catalogs.get_race(draft.race)["mechanics"].get("traits", [])
+        for f in re.split(r"\.", t.get("text", ""))
+    ]
     ts_non_verificabili = any(
         re.search(r"gain[^.]*?bonus[^.]*?saving throws", t.get("text", ""), re.IGNORECASE)
         for t in catalogs.get_race(draft.race)["mechanics"].get("traits", [])
+    )
+    # stesso limite per la CA: bonus di armatura naturale o dodge non
+    # modellati dall'engine; escluse le frasi condizionali (against, While,
+    # forma bestiale) e le penalita' — quelle non fanno parte della CA base
+    ca_non_verificabile = any(
+        re.search(r"bonus", f, re.IGNORECASE)
+        and re.search(r"natural armor|(\bAC\b|Armor Class)", f, re.IGNORECASE)
+        and not re.search(
+            r"against|resist|penalty|while|each time|can choose|assumes", f, re.IGNORECASE
+        )
+        for f in frasi_traits
     )
 
     dich = payload.get("benchmark", {}).get("statistics", {})
@@ -127,11 +143,17 @@ def confronta(payload):
                 "dichiarato": val,
                 "ricalcolato": calc,
             }
-        else:  # CA +-1, ma NON confrontabile se l'engine ha ignorato oggetti
+        else:  # CA +-1, ma NON confrontabile se l'engine ha ignorato bonus
+            motivo_ca = (
+                f"equip non modellato: {'; '.join(equip_non_modellato)}"
+                if equip_non_modellato
+                else "bonus razziale alla CA non modellato dall'engine"
+            )
+            non_verificabile_ca = bool(equip_non_modellato) or ca_non_verificabile
             dettaglio[label] = (
                 {"esito": "non_verificabile", "dichiarato": val, "ricalcolato": calc,
-                 "motivo": f"equip non modellato: {'; '.join(equip_non_modellato)}"}
-                if equip_non_modellato
+                 "motivo": motivo_ca}
+                if non_verificabile_ca
                 else {
                     "esito": "concorda" if abs(calc - val) <= 1 else "diverge",
                     "dichiarato": val,

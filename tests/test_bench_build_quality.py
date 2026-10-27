@@ -126,3 +126,24 @@ def test_bozza_malformata_non_rompe_il_corpus():
     r = confronta({"pc_draft": bozza})
     assert r["esito"] == "rifiutato"
     assert r["level"] == 5
+
+
+def test_bonus_razziale_ca_non_verificabile():
+    # P2 Codex g3: Sahuagin ha +3 natural armor non modellato dall'engine —
+    # CA corretta dichiarata verrebbe classificata diverge: non_verificabile.
+    # Dwarf/Gnome hanno dodge SOLO condizionale (against giants): verificabili
+    r = confronta({
+        "pc_draft": _draft_pc(race="Sahuagin"),
+        "benchmark": {"statistics": {"PF": 49, "CA": 14, "DPR": 9,
+                                     "saves": {"Tempra": 6, "Riflessi": 2, "Volonta": 1}}},
+    })
+    assert r["dettaglio"]["CA"]["esito"] == "non_verificabile"
+    assert "razziale" in r["dettaglio"]["CA"]["motivo"]
+    for razza_condizionale in ("Dwarf", "Gnome"):
+        payload = {
+            "pc_draft": _draft_pc(race=razza_condizionale),
+            "benchmark": {"statistics": {"PF": 49, "CA": 11, "DPR": 9,
+                                         "saves": {"Tempra": 6, "Riflessi": 2, "Volonta": 1}}},
+        }
+        # CA 11 = 10 + dex 1: senza bonus condizionali il confronto resta valido
+        assert confronta(payload)["dettaglio"]["CA"]["esito"] in ("concorda", "diverge")
