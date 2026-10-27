@@ -1890,3 +1890,54 @@ commands:
     it.run_input("vai")
     assert [e for e in it.events if "wizard_guard_falso" in e]
     assert get_path(it.state, "game_mode.shared.fatto") is None
+
+
+def test_goto_action_only_rispetta_guard_tema(tmp_path):
+    # Codex P2 #559 giro 9: goto_state su nodo action-only di un tema con
+    # when falso — guard valutato PRIMA delle arrival actions
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {}
+    K:
+      when: "{{ false }}"
+      entry:
+        actions:
+          - set: "@GameMode.shared.fatto"
+            value: true
+        next: p
+      p:
+        prompt: "?"
+        parse:
+          any: {set: risposta, value: "{{input}}"}
+        end: true
+commands:
+  /go: {action: [{goto_state: GameMode.K.entry}]}
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/go")
+    assert [e for e in it.events if "wizard_guard_falso" in e]
+    assert get_path(it.state, "game_mode.shared.fatto") is None
+
+
+def test_goto_self_action_only_bounded(tmp_path):
+    # Codex P2 #559 giro 9: self-goto su nodo action-only — depth cresce,
+    # evento diagnostico, mai RecursionError
+    mini = """\
+state_machine:
+  states: [IDLE]
+  GameMode:
+    shared: {}
+    T:
+      loop:
+        actions:
+          - set: "@GameMode.shared.n"
+            value: "{{ (game_mode.shared.n or 0) + 1 }}"
+          - goto_state: GameMode.T.loop
+commands:
+  /go: {action: [{goto_state: GameMode.T.loop}]}
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.run_command("/go")
+    assert [e for e in it.events if "avanzamento_profondita_max" in e]
