@@ -1364,7 +1364,7 @@ commands:
       - set: local.qty
         value: '{{ int(qty or 1) }}'
       - find_and_consume_item:
-          from: loot_state.inventory
+          from_list: loot_state.inventory
           filter: { by: 'name_or_id', value: '{{item_name_or_id}}' }
           qty: '{{local.qty}}'
           as: sold
@@ -1461,7 +1461,7 @@ commands:
     params: [item_name_or_id]
     action:
       - find_and_consume_item:
-          from: loot_state.inventory
+          from_list: loot_state.inventory
           filter: { by: 'name_or_id', value: '{{item_name_or_id}}' }
           qty: 9999
           as: rem

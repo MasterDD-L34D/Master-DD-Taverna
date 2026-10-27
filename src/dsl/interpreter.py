@@ -23,7 +23,7 @@ from jinja2.nativetypes import NativeEnvironment
 from jinja2.visitor import NodeVisitor
 
 from .loader import DENIED_BUILTINS, Kernel, _safe_import
-from .state import get_path, set_path
+from .state import _MISSING, get_path, set_path
 from .store import EXPORT_EXTENSIONS, ExportDirPort, JsonFilePort
 
 MAX_DEPTH = 8
@@ -865,10 +865,25 @@ class Interpreter:
         if not callable(fn):
             self.noop_log.append({"verb": verb, "motivo": "helper non compilato"})
             return
-        kwargs = {k: self._rn(v, params) for k, v in spec.items() if k != "as"}
+        kwargs = {
+            k: self._resolve_ref(self._rn(v, params))
+            for k, v in spec.items()
+            if k != "as"
+        }
         result = fn(**kwargs)
         if as_name:
             self.scratch[as_name] = result
+
+    def _resolve_ref(self, value: Any) -> Any:
+        """Codex P2 (#558): stringa bare che e' un path di stato risolta
+        all'oggetto vivo — helper come find_and_update_item mutano la lista
+        (in_list: loot_state.inventory); passare la stringa e' un TypeError
+        /AttributeError al call-time. Stringhe non path restano stringhe."""
+        if isinstance(value, str) and "{{" not in value and "." in value:
+            obj = get_path(self.state, value, _MISSING)
+            if obj is not _MISSING:
+                return obj
+        return value
 
     def _v_compute(self, a, params, depth):
         body = (a.get("logic") or "").rstrip()

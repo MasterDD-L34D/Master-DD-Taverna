@@ -1318,3 +1318,34 @@ def test_domain_verb_moduli_reali(tmp_path):
     snap = it.state["encounter_state"]["balance_snapshot"]
     assert snap["xp_budget_est"] == 2000
     assert snap["labels"] == ["unrated"]
+
+
+def test_domain_verb_risolve_bare_ref_a_oggetto_stato(tmp_path):
+    # Codex P2 (#558): in_list: loot_state.inventory e' una ref nuda —
+    # l'helper deve ricevere la LISTA viva (e mutarla), non la stringa
+    mini = """\
+helpers:
+  find_and_update_item:
+    params: [in_list, filter, set]
+    logic: |
+      items = in_list or []
+      key, val = (filter or {}).get("by"), str((filter or {}).get("value"))
+      for it in items:
+        if str(it.get(key)) == val:
+          for k, v in (set or {}).items():
+            it[k] = v
+          return True
+      return False
+commands:
+  /tagga:
+    params: [nome]
+    action:
+      - find_and_update_item:
+          {in_list: loot_state.inventory, filter: {by: name, value: "{{nome}}"}, set: {tagged: true}, as: ok}
+      - output: "ok={{ok}}"
+"""
+    it = Interpreter(_mini(tmp_path, mini))
+    it.state["loot_state"]["inventory"] = [{"name": "spada", "tagged": False}]
+    it.run_command("/tagga", nome="spada")
+    assert it.state["loot_state"]["inventory"][0]["tagged"] is True
+    assert it.output_log == ["ok=True"]
