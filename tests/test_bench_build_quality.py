@@ -65,3 +65,45 @@ def test_report_separa_livello_1():
 
 def test_exit_sempre_zero_su_smoke():
     assert main(["--n", "5"]) == 0  # D6: soglia exit 1 solo dopo baseline fixture
+
+
+def _draft_pc(equipment=None, race="Human", class_="Fighter"):
+    return {
+        "name": "t", "method": "point-buy", "campaign_type": "Standard Fantasy",
+        "abilities": {"str": 13, "dex": 13, "con": 13, "int": 12, "wis": 10, "cha": 10},
+        "race": race, "class": class_, "favored_class_bonus": "hp", "level": 5,
+        "hp_method": "average", "skills": {}, "feats": [], "traits": [],
+        "equipment": equipment or [], "spells": [], "race_bonus_ability": "con",
+    }
+
+
+def test_razza_incompleta_non_verificabile():
+    # P2 Codex: razze come Android (senza ability_mods/size/speed) devono
+    # risultare non_verificabili, non concordare/divergere con default falsati
+    r = confronta({"pc_draft": _draft_pc(race="Android")})
+    assert r["esito"] == "non_verificabile"
+    assert "Android" in r["motivo"]
+
+
+def test_equip_non_modellato_rende_ca_non_verificabile():
+    # P2 Codex: oggetti fuori catalogo ignorati dall'engine — la CA non e'
+    # confrontabile anche se la tolleranza +-1 coprirebbe la differenza
+    payload = {
+        "pc_draft": _draft_pc(equipment=["Ring of Protection +3"]),
+        "benchmark": {"statistics": {"PF": 49, "CA": 14, "DPR": 9,
+                                     "saves": {"Tempra": 6, "Riflessi": 2, "Volonta": 1}}},
+    }
+    r = confronta(payload)
+    assert r["dettaglio"]["CA"]["esito"] == "non_verificabile"
+    assert "Ring of Protection +3" in r["dettaglio"]["CA"]["motivo"]
+
+
+def test_rifiutate_ricomparsi_nel_report():
+    # P2 Codex: le build rifiutate dall'engine sparivano dal report (nessun
+    # level nei ritorni anticipati) — ora sono rendicontate col loro livello
+    buona = confronta({"pc_draft": _draft_pc()})
+    rifiutata = confronta({"pc_draft": _draft_pc(class_="FakeClass")})
+    assert rifiutata["esito"] == "rifiutato"
+    assert rifiutata["level"] == 5
+    txt = report([buona, rifiutata])
+    assert "rifiutato=1" in txt  # conteggiata nel gruppo livelli 2-5, non sparita

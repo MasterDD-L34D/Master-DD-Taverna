@@ -75,19 +75,31 @@ def confronta(payload):
     Esiti: rifiutato | non_verificabile | concorda | diverge (D6).
     """
     draft_raw = payload.get("pc_draft")
+    level = (draft_raw or {}).get("level") or payload.get("request", {}).get("level")
     if not draft_raw:
-        return {"esito": "non_verificabile", "motivo": "pc_draft assente"}
+        return {"esito": "non_verificabile", "motivo": "pc_draft assente", "level": level}
     try:
         draft = CharacterDraft.from_dict(draft_raw)
     except Exception as exc:  # bozza incompatibile = engine rifiuta
-        return {"esito": "rifiutato", "motivo": f"draft rifiutato: {exc}"}
+        return {"esito": "rifiutato", "motivo": f"draft rifiutato: {exc}", "level": level}
     sheet = build_character(draft)
     if sheet["errors"]:
-        return {"esito": "rifiutato", "motivo": "; ".join(sheet["errors"])}
+        return {"esito": "rifiutato", "motivo": "; ".join(sheet["errors"]), "level": level}
 
-    race = catalogs.get_race(draft.race)
-    if race is None:
-        return {"esito": "non_verificabile", "motivo": f"razza fuori catalogo: {draft.race}"}
+    # razza deve essere COMPLETA (ability_mods+size+speed), non solo presente:
+    # l'engine accetta le entry incomplete con default e falserebbe il confronto
+    if draft.race not in razze_complete():
+        return {
+            "esito": "non_verificabile",
+            "motivo": f"razza senza mechanics complete: {draft.race}",
+            "level": level,
+            "class": draft.class_,
+            "race": draft.race,
+        }
+
+    # oggetti fuori catalogo: apply_equipment li ignora con warning — la CA
+    # risultante non e' confrontabile (piano: oggetti magici = non_verificabile)
+    equip_non_modellato = [w for w in sheet["warnings"] if w.endswith("non in catalogo (valutato a mano)")]
 
     dich = payload.get("benchmark", {}).get("statistics", {})
     dettaglio = {}
@@ -102,12 +114,17 @@ def confronta(payload):
                 "dichiarato": val,
                 "ricalcolato": calc,
             }
-        else:  # CA +-1 (oggetti magici possono sfalsare)
-            dettaglio[label] = {
-                "esito": "concorda" if abs(calc - val) <= 1 else "diverge",
-                "dichiarato": val,
-                "ricalcolato": calc,
-            }
+        else:  # CA +-1, ma NON confrontabile se l'engine ha ignorato oggetti
+            dettaglio[label] = (
+                {"esito": "non_verificabile", "dichiarato": val, "ricalcolato": calc,
+                 "motivo": f"equip non modellato: {'; '.join(equip_non_modellato)}"}
+                if equip_non_modellato
+                else {
+                    "esito": "concorda" if abs(calc - val) <= 1 else "diverge",
+                    "dichiarato": val,
+                    "ricalcolato": calc,
+                }
+            )
     ricalc_saves = sheet.get("saves", {})
     for ita, eng in SAVES_MAP.items():
         val = dich.get("saves", {}).get(ita)
@@ -149,9 +166,24 @@ def report(risultati):
         return "livello 1" if lv == 1 else "livelli 2-5"
 
     righe = []
-    for grp in ("livello 1", "livelli 2-5"):
-        gruppo = [r for r in risultati if r.get("level") and bucket(r["level"]) == grp]
+    gruppi = ["senza livello", "livello 1", "livelli 2-5"]
+    for grp in gruppi:
+        if grp == "senza livello":
+            gruppo = [r for r in risultati if not r.get("level")]
+        else:
+            gruppo = [r for r in risultati if r.get("level") and bucket(r["level"]) == grp]
         if not gruppo:
+            continue
+        if grp == "senza livello":  # bozze rifiutate/assenti: solo conteggi esito
+            esiti_build = {e: sum(1 for r in gruppo if r["esito"] == e) for e in esiti}
+            righe.append(f"== senza livello ({len(gruppo)} build: rifiutate o bozza assente) ==")
+            righe.append(
+                "ESITO BUILD    "
+                + " ".join(f"{e}={esiti_build[e]}" for e in ("concorda", "diverge", "non_verificabile", "rifiutato"))
+            )
+            for r in gruppo:
+                righe.append(f"  - {r.get('esito')}: {r.get('motivo', '')[:120]}")
+            righe.append("")
             continue
         righe.append(f"== {grp} ({len(gruppo)} build) ==")
         for s in stats:
