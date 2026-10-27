@@ -151,6 +151,9 @@ G3_PIN = {
 def test_g3_statico(kernel: Kernel):
     esiti = kernel.static_check()
     assert esiti["logic_errori"] == [], esiti["logic_errori"][:5]
+    # ADR 008 (Codex P2 giro 4): il divieto value:null e' un gate vero,
+    # non solo un campo restituito — sui moduli del repo deve essere vuoto
+    assert esiti["null_errori"] == [], esiti["null_errori"][:5]
     # BASSA-13: pin normalizzato — gli indici degli array non contano
     # (fix modulo che sposta una action non deve far saltare il gate);
     # vige il vincolo "nessun referto nuovo e conteggio non cresce"
@@ -692,3 +695,43 @@ def test_uguale_in_template_non_rende_named_l_argomento(tmp_path):
     it = Interpreter(k)
     it.run_command("/go", n=1)
     assert it.state["build_state"]["f"] is True  # bool nativo dal render
+
+
+# ---- ES2: review Codex PR #553 giro 4 (2 findings P2 + gate collegato) ----
+
+
+def test_fallback_protetto_maschera_param_omesso_su_omonimo_stato(tmp_path):
+    # Codex P2 (giro 4): '{{ n or 3 }}' con n dichiarato omesso deve
+    # risolvere il fallback (3, semantica pre-ES1), non l'omonima chiave di
+    # stato (build_state.n = 7)
+    k = _mini(
+        tmp_path,
+        "commands:\n  /go:\n    params: [n]\n"
+        "    action:\n"
+        "      - set: build_state.altro\n        value: '{{ n or 3 }}'\n",
+    )
+    it = Interpreter(k)
+    it.state["build_state"]["n"] = 7
+    it.run_command("/go")
+    assert it.state["build_state"]["altro"] == 3
+
+
+def test_template_che_espande_in_piu_argomenti_mantiene_slot(tmp_path):
+    # Codex P2 (giro 4): '{{ words }}' non quotato con words='one two' rende
+    # DUE argomenti shlex — i successivi argomenti prendono gli slot in
+    # sequenza ('tail' non va scartato)
+    k = _mini(
+        tmp_path,
+        "commands:\n  /inner:\n    params: [first, second, third]\n"
+        "    action:\n"
+        "      - set: build_state.f\n        value: '{{ first }}'\n"
+        "      - set: build_state.s\n        value: '{{ second }}'\n"
+        "      - set: build_state.t\n        value: '{{ third }}'\n"
+        "  /go:\n    params: [words]\n"
+        "    action: [{command: '/inner {{ words }} tail'}]\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/go", words="one two")
+    assert it.state["build_state"]["f"] == "one"
+    assert it.state["build_state"]["s"] == "two"
+    assert it.state["build_state"]["t"] == "tail"

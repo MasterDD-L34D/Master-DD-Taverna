@@ -416,6 +416,13 @@ class Interpreter:
                 ctx.update(clean(root))
         ctx.update(self.state)
         ctx.update(clean(self.scratch))
+        # Codex P2 (giro 4, review #553): nei render NATIVI i params
+        # dichiarati-omessi mascherano le omonime chiavi di stato (None):
+        # '{{ n or 3 }}' con n omesso prende il fallback, non build_state.n.
+        # Negli output restano assenti (nessuna stampa fantasma di "None").
+        # Gli skip restano statici e precedenti al render: qui non salvano.
+        if not output:
+            ctx.update(self._guards)
         ctx.update(clean(params))
         ctx.update(self.kernel.helper_funcs(self._g))
         return ctx
@@ -829,20 +836,25 @@ class Interpreter:
         cmd = self.kernel.commands.get(name) or {}
         declared = _declared(cmd, name)
         kv: dict[str, Any] = {}
-        si = 0
+        # Codex P2 (giro 4): slot posizionali sequenziali a partire dallo
+        # slot del primo kept — un template non quotato puo' espandersi in
+        # piu' argomenti shlex e occupa gli slot in sequenza
+        slots_iter = iter(slots)
+        next_slot: int | None = None
         for tok in tokens[1:]:
             if "=" in tok:
                 k, v = tok.split("=", 1)
                 kv[k] = v
-            elif si < len(slots):  # MEDIA-5: posizionale -> slot originale
-                slot = slots[si]
-                si += 1
-                if slot < len(declared):
-                    kv[declared[slot]] = tok
+            else:
+                if next_slot is None:
+                    next_slot = next(slots_iter, None)
+                if next_slot is None:
+                    self.events.append({"argomento_posizionale_scolto": tok[:60]})
+                elif next_slot < len(declared):  # MEDIA-5: posizionale dichiarato
+                    kv[declared[next_slot]] = tok
+                    next_slot += 1
                 else:
                     self.events.append({"argomento_posizionale_scolto": tok[:60]})
-            else:
-                self.events.append({"argomento_posizionale_scolto": tok[:60]})
         self.run_command(name, _depth=depth + 1, **kv)  # ALTA-2: depth si propaga
 
     def _v_parse_json(self, a, params, depth):
