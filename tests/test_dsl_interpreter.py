@@ -1008,3 +1008,113 @@ def test_moduli_template_senza_is_not_None_maiuscolo():
         for i, line in enumerate(f.read_text(encoding="utf-8").splitlines(), 1):
             if "{{" in line and "is not None" in line:
                 pytest.fail(f"{f.name}:{i}: 'is not None' in template jinja")
+
+
+# ---- ES2-a3: verbo export (ADR 010) ----
+
+
+class FakeExportPort:
+    """Porta export in-memory (ADR 010): i verbi non toccano disco."""
+
+    def __init__(self):
+        self.files: dict = {}
+
+    def write(self, name: str, content: str) -> str:
+        self.files[name] = content
+        return name
+
+
+def test_export_persiste_ultimo_output(tmp_path):
+    # forma reale (adventurer_ledger /export_pg_sheet_json): output_template
+    # inline + export: json — il file contiene il render del template;
+    # exported_path e' leggibile dagli action successivi dello stesso
+    # comando (lo scratch non tracima fuori dal comando, MEDIA-8)
+    k = _mini(
+        tmp_path,
+        "commands:\n  /go:\n    action:\n"
+        "      - output_template: |\n"
+        '          {"wbl": {{ loot_state.wbl | tojson }}}\n'
+        "      - export: json\n"
+        "      - output: 'file: {{ exported_path }}'\n",
+    )
+    port = FakeExportPort()
+    it = Interpreter(k, export_port=port)
+    # lo stato popolato vince sui dati del kernel nel ctx (MEDIA-6):
+    # la forma reale ha loot_state valorizzato dai comandi precedenti
+    it.state["loot_state"]["wbl"] = {"current_gp": 100}
+    it.run_command("/go")
+    assert port.files == {"export_1.json": '{"wbl": {"current_gp": 100}}'}
+    assert it.output_log[-1] == "file: export_1.json"
+    assert it.state["runtime"]["export_counter"] == 1
+
+
+def test_export_formato_con_fallback_quando_param_assente(tmp_path):
+    # forma reale (adventurer_ledger /export_loot): il fallback protetto
+    # rende il formato, non e' un nome non legato
+    k = _mini(
+        tmp_path,
+        "commands:\n  /go:\n    params: [format]\n    action:\n"
+        "      - output: loot doc\n"
+        "      - export: '{{ format or \"markdown\" }}'\n",
+    )
+    port = FakeExportPort()
+    Interpreter(k, export_port=port).run_command("/go")
+    assert list(port.files) == ["export_1.markdown"]
+
+
+def test_export_formato_non_in_whitelist_rifiutato(tmp_path):
+    # confine fiducia (ADR 010): mai un nome file arbitrario da input utente
+    k = _mini(
+        tmp_path,
+        "commands:\n  /go:\n    params: [format]\n    action:\n"
+        "      - output: doc\n"
+        "      - export: '{{ format }}'\n",
+    )
+    port = FakeExportPort()
+    it = Interpreter(k, export_port=port)
+    it.run_command("/go", format="../../evil")
+    assert not port.files
+    assert any("formato" in str(e) for e in it.events)
+
+
+def test_export_senza_output_evento_e_no_op(tmp_path):
+    k = _mini(
+        tmp_path,
+        "commands:\n  /go:\n    action: [{export: json}]\n",
+    )
+    port = FakeExportPort()
+    it = Interpreter(k, export_port=port)
+    it.run_command("/go")
+    assert not port.files
+    assert any("senza_output" in str(e) for e in it.events)
+
+
+def test_export_contatore_deterministico_tra_comandi(tmp_path):
+    k = _mini(
+        tmp_path,
+        "commands:\n  /a:\n    action:\n"
+        "      - output: doc a\n      - export: json\n"
+        "  /b:\n    action:\n"
+        "      - output: doc b\n      - export: md\n",
+    )
+    port = FakeExportPort()
+    it = Interpreter(k, export_port=port)
+    it.run_command("/a")
+    it.run_command("/b")
+    assert sorted(port.files) == ["export_1.json", "export_2.md"]
+    assert it.state["runtime"]["export_counter"] == 2
+
+
+def test_export_dir_port_scrive_su_disco(tmp_path, monkeypatch):
+    # ADR 010: ExportDirPort reale — scrittura atomica, env override,
+    # rilettura dal disco
+    from src.dsl.store import ExportDirPort
+
+    target = tmp_path / "out"
+    monkeypatch.setenv("MASTERS_DD_EXPORTS_PATH", str(target))
+    p = ExportDirPort()
+    name = p.write("export_1.json", '{"a": 1}')
+    assert name == "export_1.json"
+    assert (target / "export_1.json").read_text(encoding="utf-8") == '{"a": 1}'
+    assert ExportDirPort().write("export_2.md", "x") == "export_2.md"
+    assert (target / "export_2.md").exists()
