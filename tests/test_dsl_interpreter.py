@@ -2144,3 +2144,23 @@ def test_route_input_disambiguazione_vede_candidati_correnti(tmp_path):
     it.output_log.clear()
     assert it.route_input("storia") == "Archivist"
     assert not [o for o in it.output_log if o.startswith("Candidati:")]
+
+
+def test_route_input_fallback_indipendente_da_ordine_segmenti(tmp_path):
+    # Codex P2 #560 g2: il fallback e' default dell'input intero — un
+    # segmento non riconosciuto accanto a uno riconosciuto non lo attiva
+    # in nessun ordine
+    it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    assert it.route_input("xyzzy; poi storia di golarion") == "Archivist"
+    it2 = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    assert it2.route_input("storia di golarion; poi xyzzy") == "Archivist"
+
+
+def test_route_input_clarification_resetta_route_to(tmp_path):
+    # Codex P2 #560 g2: turno non risolto (clarification) -> route_to
+    # azzerato, non resta quello del turno precedente
+    it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    assert it.route_input("talento Pounce") == "Ruling Expert"
+    assert get_path(it.state, "runtime.route_to") == "Ruling Expert"
+    assert it.route_input("talento npc") is None
+    assert get_path(it.state, "runtime.route_to") is None

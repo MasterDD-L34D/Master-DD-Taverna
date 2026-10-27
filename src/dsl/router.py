@@ -30,6 +30,7 @@ class Router:
             self.it.events.append({"router_mancante": True})
             return None
         idt = self.spec.get("intent_detection") or {}
+        set_path(self.it.state, "runtime.route_to", None)  # reset di turno
         self._decorators("pre_routing", {})
         candidates: list[str] = []
         set_path(self.it.state, "runtime.intent_candidates", [])  # reset di turno
@@ -37,6 +38,14 @@ class Router:
             self._route_segment(
                 self._normalize(seg, idt.get("normalize") or {}), candidates
             )
+        if not candidates:
+            # fallback = default dell'INPUT intero (ADR 015): una rule con
+            # `fallback:` vale solo a candidato zero, mai per segmento —
+            # sennò il merge dipenderebbe dall'ordine dei segmenti
+            for rule in self.spec.get("rules") or []:
+                if isinstance(rule, dict) and rule.get("fallback"):
+                    candidates.append(str(rule["fallback"]))
+                    break
         policy = self.spec.get("fallback_policy") or {}
         set_path(self.it.state, "runtime.intent_candidates", candidates)
         if len(candidates) > 1:
@@ -78,16 +87,13 @@ class Router:
 
     def _route_segment(self, text_n: str, candidates: list) -> list[str]:
         for rule in self.spec.get("rules") or []:
-            if not isinstance(rule, dict) or not self._matches(rule, text_n):
+            if not isinstance(rule, dict):
                 continue
-            # Codex P2 #560: fallback = destinazione di default, vale solo
-            # a candidato zero — non si aggiunge accanto a un match vero
-            # (sennò un match unico diventa chiarimento spurio)
+            if rule.get("fallback"):
+                continue  # gestito a livello di route(): default a input
+            if not self._matches(rule, text_n):
+                continue
             dest = rule.get("route_to")
-            if not dest and rule.get("fallback"):
-                if candidates:
-                    continue
-                dest = rule["fallback"]
             self._apply_set(rule.get("set"), {"route_to": None})
             for flag in ("embedding", "rerank", "eps_threshold"):
                 if flag in rule:
