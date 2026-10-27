@@ -1998,6 +1998,7 @@ router:
       rerank: true
       route_to: "Taverna NPC"
     - condition: "runtime.intent_candidates && runtime.intent_candidates.length > 1"
+      after_segments: true
       reply: "Quale modulo?"
       stop: true
     - fallback: "Ruling Expert"
@@ -2046,7 +2047,8 @@ def test_route_input_multi_match_chiede_chiarimento(tmp_path):
     # 'talento' + 'npc': due moduli diversi -> clarification, niente route
     it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
     assert it.route_input("talento npc") is None
-    assert "Dimmi il tuo intento." in it.output_log
+    assert "Quale modulo?" in it.output_log
+    assert "Dimmi il tuo intento." not in it.output_log  # una sola reply (g4)
     cands = get_path(it.state, "runtime.intent_candidates")
     assert set(cands) == {"Ruling Expert", "Taverna NPC"}
 
@@ -2181,3 +2183,13 @@ def test_route_input_strip_punct_pattern_classe_carattere(tmp_path):
     # faceva flat[- ]footed in base_profile.txt
     it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
     assert it.route_input("spiega il TWO-WEAPON FIGHTING") == "Ruling Expert"
+
+
+def test_route_input_disambiguazione_dopo_tutti_i_segmenti(tmp_path):
+    # Codex P2 #560 g4: la reply disambiguazione va emessa UNA volta sui
+    # candidati finali — non una parziale per ogni segmento (input
+    # multi-segmento emetteva prompt ripetuti e crescenti)
+    it = Interpreter(_mini(tmp_path, _ROUTER_MINI))
+    assert it.route_input("storia; poi talento; poi npc") is None
+    assert [o for o in it.output_log if o == "Quale modulo?"].count("Quale modulo?") == 1
+    assert len(get_path(it.state, "runtime.intent_candidates")) == 3

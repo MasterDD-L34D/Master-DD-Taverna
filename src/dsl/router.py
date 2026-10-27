@@ -49,6 +49,20 @@ class Router:
         policy = self.spec.get("fallback_policy") or {}
         set_path(self.it.state, "runtime.intent_candidates", candidates)
         if len(candidates) > 1:
+            # disambiguazione authored a input intero (Codex P2 #560 g4):
+            # le rule after_segments si valutano UNA volta sui candidati
+            # finali — mai parziale dentro ogni segmento
+            text_n = self._normalize(text, idt.get("normalize") or {})
+            for rule in self.spec.get("rules") or []:
+                if not isinstance(rule, dict) or not rule.get("after_segments"):
+                    continue
+                if not self._matches(rule, text_n):
+                    continue
+                self._apply_set(rule.get("set"), {"route_to": None})
+                if rule.get("reply"):
+                    self.it.output_log.append(self.it._rs(str(rule["reply"]), {}))
+                return None
+        if len(candidates) > 1:
             if policy.get("multi_match") == "ask_clarification":
                 if policy.get("clarification_prompt"):
                     self.it.output_log.append(str(policy["clarification_prompt"]))
@@ -104,6 +118,8 @@ class Router:
                 continue
             if rule.get("fallback"):
                 continue  # gestito a livello di route(): default a input
+            if rule.get("after_segments"):
+                continue  # valutata una sola volta a input intero in route()
             if not self._matches(rule, text_n):
                 continue
             dest = rule.get("route_to")
