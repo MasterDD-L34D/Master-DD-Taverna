@@ -222,7 +222,10 @@ def confronta(payload):
             )
     ricalc_saves = sheet.get("saves", {})
     for ita, eng in SAVES_MAP.items():
-        val = dich.get("saves", {}).get(ita)
+        # `or {}` anche qui: `saves: null` e' ammesso da statistics.additionalProperties
+        # (builder.py lo gestisce con stats.get("saves") or {}), e .get con default
+        # copre solo la chiave ASSENTE, non quella esplicitamente nulla.
+        val = (dich.get("saves") or {}).get(ita)
         calc = ricalc_saves.get(eng)
         # bonus razziali ai TS non applicati dall'engine => tolleranza +-1 (P2),
         # ma se la razza concede un bonus ai TS dichiarato nel trait, la

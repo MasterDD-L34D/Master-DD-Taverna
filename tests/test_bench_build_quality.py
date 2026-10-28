@@ -230,3 +230,14 @@ def test_statistiche_null_non_rompe_il_corpus():
     r = confronta({"pc_draft": _draft_pc(), "benchmark": {"statistics": None}})
     assert r["esito"] == "non_verificabile"
     assert r["dettaglio"]["PF"]["esito"] == "non_verificabile"
+
+
+def test_saves_null_non_rompe_il_corpus():
+    # P2 Codex g6: statistics.saves: null e' ammesso dallo schema (builder.py
+    # lo gestisce con stats.get("saves") or {}) — i TS diventano
+    # non_verificabili invece di sollevare AttributeError sul corpus
+    r = confronta(
+        {"pc_draft": _draft_pc(), "benchmark": {"statistics": {"saves": None}}}
+    )
+    assert r["esito"] == "non_verificabile"
+    assert r["dettaglio"]["TS Tempra"]["esito"] == "non_verificabile"
