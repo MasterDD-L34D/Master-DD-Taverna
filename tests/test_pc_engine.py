@@ -1243,3 +1243,44 @@ def test_markdown_render_spells():
     md = render_markdown(sheet)
     assert "**Incantesimi**" in md and "Magic Missile" in md
     assert "**Slot/giorno**" in md
+
+
+def _griselle_draft(**kw):
+    base = {
+        "name": "Griselle test",
+        "method": "point-buy",
+        "campaign_type": "Epic Fantasy",
+        "abilities": {"str": 7, "dex": 14, "con": 14, "int": 18, "wis": 12, "cha": 10},
+        "race": "Orc",
+        "class": "Witch",
+        "level": 9,
+        "favored_class_bonus": "hp",
+        "ability_increases": [
+            {"level": 4, "ability": "int"},
+            {"level": 8, "ability": "int"},
+        ],
+        "skills": {
+            "Spellcraft": 9,
+            "Heal": 9,
+            "Intimidate": 9,
+            "Diplomacy": 9,
+            "Use Magic Device": 2,
+            "Knowledge (Arcana)": 9,
+        },
+    }
+    base.update(kw)
+    return CharacterDraft.from_dict(base)
+
+
+def test_int_increases_are_not_retroactive_for_skill_budget():
+    sheet = build_character(_griselle_draft())
+    assert sheet["abilities"]["int"] == 18
+    assert sheet["skill_rank_budget"] == 47
+    assert not any("skill ranks" in e for e in sheet["errors"])
+
+
+def test_invalid_ability_increase_is_rejected():
+    sheet = build_character(
+        _griselle_draft(ability_increases=[{"level": 3, "ability": "int"}])
+    )
+    assert any("ability_increases" in e for e in sheet["errors"])

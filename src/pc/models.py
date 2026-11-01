@@ -20,6 +20,8 @@ class CharacterDraft:
     traits: list = field(default_factory=list)
     equipment: list = field(default_factory=list)
     spells: list = field(default_factory=list)
+    ability_increases: list = field(default_factory=list)
+    patron: str | None = None
 
     @classmethod
     def from_dict(cls, data):

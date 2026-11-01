@@ -443,7 +443,30 @@ def apply_abilities(draft):
     for ab, bonus in mods.items():
         if ab != "any":
             final[ab] = final.get(ab, 10) + bonus
-    return {"abilities": final, "errors": errors, "warnings": warnings}
+    skill_base_int = final["int"]
+    seen_levels = set()
+    for increase in draft.ability_increases:
+        if not isinstance(increase, dict):
+            errors.append("ability_increases: voce non valida")
+            continue
+        level = increase.get("level")
+        ability = increase.get("ability")
+        if (
+            level not in (4, 8, 12, 16, 20)
+            or level in seen_levels
+            or ability not in ABILS
+            or (isinstance(draft.level, int) and level > draft.level)
+        ):
+            errors.append(f"ability_increases: voce non valida {increase!r}")
+            continue
+        seen_levels.add(level)
+        final[ability] += 1
+    return {
+        "abilities": final,
+        "skill_base_int": skill_base_int,
+        "errors": errors,
+        "warnings": warnings,
+    }
 
 
 def build_character(draft):
@@ -506,11 +529,20 @@ def build_character(draft):
     if lvl.get("extra_progression"):
         sheet["extra_progression"] = dict(lvl["extra_progression"])
     sheet["initiative"] = mods["dex"]
-    # skill: il minimo RAW da classe+Int e' 1 per livello; i bonus Human/favored
-    # si sommano dopo (sempre per livello); ranks max per skill = livello
-    budget = max(mech["skill_points_per_level"] + mods["int"], 1) * draft.level
-    budget += draft.level if draft.race == "Human" else 0
-    budget += draft.level if draft.favored_class_bonus == "skill" else 0
+    # Gli aumenti di Int non sono retroattivi; gli enhancement da oggetti non
+    # concedono gradi ordinari. Il modificatore finale resta nei totali skill.
+    budget = 0
+    skill_int = abilities["skill_base_int"]
+    for level in range(1, draft.level + 1):
+        skill_int += sum(
+            1
+            for increase in draft.ability_increases
+            if increase["level"] == level and increase["ability"] == "int"
+        )
+        budget += max(mech["skill_points_per_level"] + ability_mod(skill_int), 1)
+        budget += int(draft.race == "Human")
+        budget += int(draft.favored_class_bonus == "skill")
+    sheet["skill_rank_budget"] = budget
     spent = sum(draft.skills.values())
     if spent > budget:
         errors.append(f"skill ranks: {spent} spesi oltre il budget {budget}")
