@@ -855,7 +855,7 @@ def class_prereqs_from_text(text: str, book: str) -> list:
         if not line.startswith("CLASS:"):
             continue
         fields = [f.strip() for f in line.split("\t")]
-        name = fields[0][len("CLASS:"):].strip()
+        name = fields[0][len("CLASS:") :].strip()
         if not name or name.endswith((".MOD", ".COPY", ".FORGET")):
             continue
         if name not in tags_by_class:
@@ -871,11 +871,13 @@ def class_prereqs_from_text(text: str, book: str) -> list:
         types = [t for v in _tag_values(tags, "TYPE") for t in v.split(".")]
         if "Prestige" not in types:
             continue
-        entries.append({
-            "name": name,
-            "source_book": book,
-            "prerequisites": prereq_tree(tags),
-        })
+        entries.append(
+            {
+                "name": name,
+                "source_book": book,
+                "prerequisites": prereq_tree(tags),
+            }
+        )
     return entries
 
 
@@ -1031,7 +1033,9 @@ def main(argv=None) -> int:
         )
         return 1
 
-    payloads = {kind: build_catalog(pcgen_root, kind) for kind in [*PARSERS, *TEXT_PARSERS]}
+    payloads = {
+        kind: build_catalog(pcgen_root, kind) for kind in [*PARSERS, *TEXT_PARSERS]
+    }
     classes_report = {
         book: class_names_in_file(pcgen_root / DATA_SUBDIR / cfg["dir"] / f)
         for book, cfg in BOOKS.items()

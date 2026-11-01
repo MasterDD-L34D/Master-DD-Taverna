@@ -643,7 +643,7 @@ CLASSES_LST = (
     "CLASS:Fighter\tHD:10\tTYPE:Base.PC\tMAXLEVEL:20\n"
     "CLASS:Fighter\tSTARTSKILLPTS:2\n"
     "CLASS:Arcane Archer\tHD:10\t\tTYPE:PC.Prestige\tMAXLEVEL:10\t"
-    "BONUS:COMBAT|BASEAB|classlevel(\"APPLIEDAS=NONEPIC\")|TYPE=Base.REPLACE|PREVAREQ:UseAlternateBABProgression,0\n"
+    'BONUS:COMBAT|BASEAB|classlevel("APPLIEDAS=NONEPIC")|TYPE=Base.REPLACE|PREVAREQ:UseAlternateBABProgression,0\n'
     "CLASS:Arcane Archer\tPREABILITY:2,CATEGORY=FEAT,Point-Blank Shot,Precise Shot\t"
     "PRESPELLTYPE:1,Arcane=1\tPRETOTALAB:6\n"
     "CLASS:Arcane Archer\tSTARTSKILLPTS:4\tCSKILL:Perception|Ride\n"
@@ -657,7 +657,9 @@ def test_class_prereqs_solo_prestige_con_pre_riuniti():
     aa = entries[0]
     assert aa["source_book"] == "CR"
     assert [n["tag"] for n in aa["prerequisites"]] == [
-        "PREABILITY", "PRESPELLTYPE", "PRETOTALAB",
+        "PREABILITY",
+        "PRESPELLTYPE",
+        "PRETOTALAB",
     ]
     assert aa["prerequisites"][2]["args"] == ["6"]
 
