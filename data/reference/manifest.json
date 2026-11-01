@@ -23,9 +23,9 @@
       "is_ogc": true,
       "is_pi": false,
       "cup_allowed": false,
-      "entries": 2820,
+      "entries": 3046,
       "notes": "Nomi e meccaniche generiche; rimossi nomi propri e riferimenti a Golarion. 1032/1035 voci arricchite con description.",
-      "last_verified": "2026-07-25"
+      "last_verified": "2026-11-02"
     },
     {
       "file": "ogl/items.json",
@@ -184,7 +184,7 @@
       "is_pi": false,
       "cup_allowed": false,
       "local_only": true,
-      "entries": 23,
+      "entries": 25,
       "notes": "Spell con Product Identity nel nome (possessivi di divinita' e simili), separate dal catalogo OGL con la policy 2026-07-25 (reports/expand_spells_gist.md). NON redistribuire. Generato da tools/expand_spells_gist.py; indicizza con index_rag.py --include-local.",
       "last_verified": "2026-07-25"
     },
@@ -256,7 +256,7 @@
   "files": {
     "spells": {
       "path": "ogl/spells.json",
-      "entries": 2820
+      "entries": 3046
     },
     "feats": {
       "path": "ogl/feats.json",
