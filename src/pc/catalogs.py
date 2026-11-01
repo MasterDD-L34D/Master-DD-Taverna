@@ -73,7 +73,8 @@ def find_equipment(name):
 
 
 def find_spell(name):
-    return _by_name("spells").get(name)
+    normalized = str(name).strip().casefold()
+    return next((e for e in load("spells") if e["name"].casefold() == normalized), None)
 
 
 # Alias di lista incantesimi (default DICHIARATO, contratto WORKFLOW §4): RAW

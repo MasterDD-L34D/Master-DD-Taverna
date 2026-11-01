@@ -37,3 +37,27 @@ def test_getters():
     assert find_equipment("Longsword")["mechanics"]["cost"] == "15 gp"
     assert find_trait("Reactionary")["mechanics"]["category"] == "Basic (Combat)"
     print("OK: catalogs loaders")
+
+
+def test_spell_lookup_is_case_insensitive():
+    from src.pc.catalogs import find_spell
+
+    spell = find_spell("Ray of Enfeeblement")
+    assert spell is not None
+    assert spell["name"] == "Ray Of Enfeeblement"
+
+
+def test_non_mythic_feat_descriptions_do_not_contain_mythic_benefits():
+    improved = find_feat("Improved Initiative")
+    assert improved["description"] == (
+        "Your quick reflexes allow you to react rapidly to danger.\n\n"
+        "You get a +4 bonus on initiative checks."
+    )
+
+    spell_focus = find_feat("Spell Focus")
+    assert spell_focus["description"] == (
+        "Choose a school of magic. Any spells you cast of that school are more difficult to resist.\n\n"
+        "Add +1 to the Difficulty Class for all saving throws against spells from the school of magic you select.\n\n"
+        "You can gain this feat multiple times. Its effects do not stack. "
+        "Each time you take the feat, it applies to a new school of magic."
+    )

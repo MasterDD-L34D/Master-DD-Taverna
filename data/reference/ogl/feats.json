@@ -1818,7 +1818,7 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Improved%20Initiative",
         "https://www.d20pfsrd.com/feats/combat-feats/improved-initiative-combat/"
       ],
-      "description": "You leap into the fray with speed and confidence.\n\nThe bonus on initiative checks granted by Improved Initiative increases by an amount equal to your tier. This bonus stacks with the bonus from Improved Initiative. In addition, instead of rolling initiative, you can expend one use of mythic power to treat your roll as a natural 20.",
+      "description": "Your quick reflexes allow you to react rapidly to danger.\n\nYou get a +4 bonus on initiative checks.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -2930,7 +2930,7 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Spell%20Focus",
         "https://www.d20pfsrd.com/feats/general-feats/spell-focus/"
       ],
-      "description": "Your magical specialties are particularly effective.\n\nChoose a school of magic you already have Spell Focus in. The bonus to save DCs provided by Spell Focus and Greater Spell Focus for that school increases by 1. You can expend one use of mythic power as part of casting a spell from your chosen school to force any of the spell's targets to roll their saving throws twice, taking the lower result.",
+      "description": "Choose a school of magic. Any spells you cast of that school are more difficult to resist.\n\nAdd +1 to the Difficulty Class for all saving throws against spells from the school of magic you select.\n\nYou can gain this feat multiple times. Its effects do not stack. Each time you take the feat, it applies to a new school of magic.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {

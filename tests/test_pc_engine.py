@@ -1243,3 +1243,116 @@ def test_markdown_render_spells():
     md = render_markdown(sheet)
     assert "**Incantesimi**" in md and "Magic Missile" in md
     assert "**Slot/giorno**" in md
+
+
+def _griselle_draft(**kw):
+    base = {
+        "name": "Griselle test",
+        "method": "point-buy",
+        "campaign_type": "Epic Fantasy",
+        "abilities": {"str": 7, "dex": 14, "con": 14, "int": 18, "wis": 12, "cha": 10},
+        "race": "Orc",
+        "class": "Witch",
+        "level": 9,
+        "favored_class_bonus": "hp",
+        "ability_increases": [
+            {"level": 4, "ability": "int"},
+            {"level": 8, "ability": "int"},
+        ],
+        "skills": {
+            "Spellcraft": 9,
+            "Heal": 9,
+            "Intimidate": 9,
+            "Diplomacy": 9,
+            "Use Magic Device": 2,
+            "Knowledge (Arcana)": 9,
+        },
+    }
+    base.update(kw)
+    return CharacterDraft.from_dict(base)
+
+
+def test_int_increases_are_not_retroactive_for_skill_budget():
+    sheet = build_character(_griselle_draft())
+    assert sheet["abilities"]["int"] == 18
+    assert sheet["skill_rank_budget"] == 47
+    assert not any("skill ranks" in e for e in sheet["errors"])
+
+
+def test_invalid_ability_increase_is_rejected():
+    sheet = build_character(
+        _griselle_draft(ability_increases=[{"level": 3, "ability": "int"}])
+    )
+    assert any("ability_increases" in e for e in sheet["errors"])
+
+
+def test_ancestors_patron_spells_are_valid_for_witch():
+    sheet = build_character(
+        _griselle_draft(
+            patron="Ancestors",
+            spells=["Bless", "Aid", "Prayer", "Blessing of Fervor"],
+        )
+    )
+    assert sheet["errors"] == []
+    assert [(s["name"], s["level"]) for s in sheet["spells"]] == [
+        ("Bless", 1),
+        ("Aid", 2),
+        ("Prayer", 3),
+        ("Blessing of Fervor", 4),
+    ]
+
+
+def test_patron_spell_requires_matching_patron_and_castable_circle():
+    wrong_patron = build_character(_griselle_draft(patron="Shadow", spells=["Aid"]))
+    assert any("Aid" in e for e in wrong_patron["errors"])
+    low_level = build_character(
+        _griselle_draft(
+            level=2,
+            ability_increases=[],
+            skills={},
+            patron="Ancestors",
+            spells=["Prayer"],
+        )
+    )
+    assert any(
+        "Prayer" in e and "cerchio 3 non castabile" in e for e in low_level["errors"]
+    )
+
+
+def test_magic_item_effects_feed_derived_stats_not_rank_budget():
+    equipment = [
+        "Headband of Vast Intelligence +2 (Perception)",
+        "Belt of Mighty Constitution +2",
+        "Cloak of Resistance +2",
+        "Bracers of Armor +4",
+        "Ring of Protection +1",
+        "Dusty Rose Prism Ioun Stone",
+    ]
+    plain = build_character(_griselle_draft())
+    equipped = build_character(_griselle_draft(equipment=equipment))
+    assert equipped["abilities"]["int"] == plain["abilities"]["int"] + 2
+    assert equipped["skill_rank_budget"] == plain["skill_rank_budget"] == 47
+    assert equipped["hp"] == plain["hp"] + 9
+    assert equipped["saves"]["fort"] == plain["saves"]["fort"] + 3
+    assert equipped["saves"]["ref"] == plain["saves"]["ref"] + 2
+    assert equipped["saves"]["will"] == plain["saves"]["will"] + 2
+    assert equipped["ac"] == plain["ac"] + 6
+    assert equipped["skills"]["Perception"]["ranks"] == 0
+    assert equipped["skills"]["Perception"]["granted_ranks"] == 9
+    assert equipped["skills"]["Perception"]["total"] == 9
+
+
+def test_intelligence_headband_plus_four_grants_both_declared_skills():
+    equipped = build_character(
+        _griselle_draft(
+            equipment=[
+                "Headband of Vast Intelligence +4 (Perception; Knowledge (Planes))",
+            ]
+        )
+    )
+    assert equipped["abilities"]["int"] == 22
+    assert equipped["skill_rank_budget"] == 47
+    assert equipped["skills"]["Perception"]["granted_ranks"] == 9
+    assert equipped["skills"]["Knowledge (Planes)"]["granted_ranks"] == 9
+    assert equipped["skills"]["Knowledge (Planes)"]["ranks"] == 0
+    assert equipped["skills"]["Knowledge (Planes)"]["total"] == 15

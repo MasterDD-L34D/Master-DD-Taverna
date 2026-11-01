@@ -4,6 +4,7 @@ import re
 
 from src.pc import catalogs
 from src.pc.feat_effects import apply_feat_effects
+from src.pc.magic_items import parse_magic_item
 
 ABILS = ("str", "dex", "con", "int", "wis", "cha")
 
@@ -171,6 +172,17 @@ def validate_traits(draft, sheet):
 # Cerchi di spells_per_day: "0" (cantrips), poi "1st".."9th".
 _CIRCLE_RE = re.compile(r"^(0|[1-9](?:st|nd|rd|th))$")
 
+_WITCH_PATRON_SPELLS = {
+    "ancestors": {
+        "bless": 1,
+        "aid": 2,
+        "prayer": 3,
+        "blessing of fervor": 4,
+        "commune": 5,
+        "greater heroism": 6,
+    },
+}
+
 
 def _castable_circles(spells_per_day):
     """Cerchi con almeno uno slot base (>0) da una riga spells_per_day.
@@ -233,6 +245,11 @@ def validate_spells(draft, sheet):
             sheet["errors"].append(f"incantesimo sconosciuto: {name}")
             continue
         level = catalogs.spell_level_for_class(spell, draft.class_)
+        if level is None and draft.class_ == "Witch":
+            patron = str(draft.patron or "").strip().casefold()
+            level = _WITCH_PATRON_SPELLS.get(patron, {}).get(
+                str(name).strip().casefold()
+            )
         if level is None:
             sheet["errors"].append(f"{name}: non e' un incantesimo da {draft.class_}")
             continue
@@ -314,8 +331,19 @@ def apply_equipment(draft, sheet):
     items = []
     for name in draft.equipment:
         item = catalogs.find_equipment(name)
+        magic = parse_magic_item(name)
         if item is None:
-            if strict:
+            if magic is not None:
+                items.append(
+                    {
+                        "name": name,
+                        "cost": 0,
+                        "mechanics": {},
+                        "tags": [],
+                        "magic": magic,
+                    }
+                )
+            elif strict:
                 sheet["errors"].append(f"equipaggiamento sconosciuto: {name}")
             else:
                 sheet["warnings"].append(f"{name}: non in catalogo (valutato a mano)")
@@ -356,6 +384,9 @@ def apply_equipment(draft, sheet):
                 caps.append(_parse_bonus(md))
         elif bonus:
             armors.append((bonus, _parse_bonus(md) if md else None))
+        magic_armor = it.get("magic", {}).get("armor")
+        if magic_armor:
+            armors.append((magic_armor, None))
     armor = 0
     if len(armors) > 1:
         if strict:
@@ -373,7 +404,11 @@ def apply_equipment(draft, sheet):
     dex = min(mods["dex"], max_dex) if max_dex is not None else mods["dex"]
     race = catalogs.get_race(draft.race)
     size_bonus = 1 if race and race["mechanics"].get("size") == "Small" else 0
-    sheet["ac"] = 10 + armor + shield + dex + size_bonus
+    deflection = max(
+        (it.get("magic", {}).get("deflection", 0) for it in items), default=0
+    )
+    insight = max((it.get("magic", {}).get("insight_ac", 0) for it in items), default=0)
+    sheet["ac"] = 10 + armor + shield + dex + size_bonus + deflection + insight
     attacks = []
     for it in items:
         if "weapon" not in it["tags"]:
@@ -443,7 +478,39 @@ def apply_abilities(draft):
     for ab, bonus in mods.items():
         if ab != "any":
             final[ab] = final.get(ab, 10) + bonus
-    return {"abilities": final, "errors": errors, "warnings": warnings}
+    skill_base_int = final["int"]
+    seen_levels = set()
+    for increase in draft.ability_increases:
+        if not isinstance(increase, dict):
+            errors.append("ability_increases: voce non valida")
+            continue
+        level = increase.get("level")
+        ability = increase.get("ability")
+        if (
+            level not in (4, 8, 12, 16, 20)
+            or level in seen_levels
+            or ability not in ABILS
+            or (isinstance(draft.level, int) and level > draft.level)
+        ):
+            errors.append(f"ability_increases: voce non valida {increase!r}")
+            continue
+        seen_levels.add(level)
+        final[ability] += 1
+    enhancements = {}
+    for name in draft.equipment:
+        effect = parse_magic_item(name) or {}
+        if "ability" in effect:
+            enhancements[effect["ability"]] = max(
+                enhancements.get(effect["ability"], 0), effect["enhancement"]
+            )
+    for ability, bonus in enhancements.items():
+        final[ability] += bonus
+    return {
+        "abilities": final,
+        "skill_base_int": skill_base_int,
+        "errors": errors,
+        "warnings": warnings,
+    }
 
 
 def build_character(draft):
@@ -494,10 +561,18 @@ def build_character(draft):
     sheet["hp"] = (
         hd + (draft.level - 1) * per_level + mods["con"] * draft.level + favored_hp
     )
+    resistance = max(
+        (
+            effect["resistance"]
+            for name in draft.equipment
+            if (effect := parse_magic_item(name)) and "resistance" in effect
+        ),
+        default=0,
+    )
     sheet["saves"] = {
-        "fort": lvl["fort"] + mods["con"],
-        "ref": lvl["ref"] + mods["dex"],
-        "will": lvl["will"] + mods["wis"],
+        "fort": lvl["fort"] + mods["con"] + resistance,
+        "ref": lvl["ref"] + mods["dex"] + resistance,
+        "will": lvl["will"] + mods["wis"] + resistance,
     }
     sheet["bab"] = lvl["bab"]
     sheet["special"] = list(lvl.get("special", []))
@@ -506,11 +581,20 @@ def build_character(draft):
     if lvl.get("extra_progression"):
         sheet["extra_progression"] = dict(lvl["extra_progression"])
     sheet["initiative"] = mods["dex"]
-    # skill: il minimo RAW da classe+Int e' 1 per livello; i bonus Human/favored
-    # si sommano dopo (sempre per livello); ranks max per skill = livello
-    budget = max(mech["skill_points_per_level"] + mods["int"], 1) * draft.level
-    budget += draft.level if draft.race == "Human" else 0
-    budget += draft.level if draft.favored_class_bonus == "skill" else 0
+    # Gli aumenti di Int non sono retroattivi; gli enhancement da oggetti non
+    # concedono gradi ordinari. Il modificatore finale resta nei totali skill.
+    budget = 0
+    skill_int = abilities["skill_base_int"]
+    for level in range(1, draft.level + 1):
+        skill_int += sum(
+            1
+            for increase in draft.ability_increases
+            if increase["level"] == level and increase["ability"] == "int"
+        )
+        budget += max(mech["skill_points_per_level"] + ability_mod(skill_int), 1)
+        budget += int(draft.race == "Human")
+        budget += int(draft.favored_class_bonus == "skill")
+    sheet["skill_rank_budget"] = budget
     spent = sum(draft.skills.values())
     if spent > budget:
         errors.append(f"skill ranks: {spent} spesi oltre il budget {budget}")
@@ -538,6 +622,38 @@ def build_character(draft):
             "total": ranks + mods[key] + class_bonus,
             "class_skill": is_class_skill,
         }
+    granted = {}
+    for item_name in draft.equipment:
+        effect = parse_magic_item(item_name) or {}
+        for raw_skill in effect.get("granted_skills", []):
+            sk = next(
+                (
+                    s
+                    for s in catalogs.load("skills")
+                    if s["name"].casefold() == raw_skill.casefold()
+                ),
+                None,
+            )
+            if sk is None:
+                warnings.append(f"{item_name}: skill gratuita sconosciuta {raw_skill}")
+                continue
+            granted[sk["name"]] = draft.level
+    for name, granted_ranks in granted.items():
+        sk = catalogs.get_skill(name)
+        key = sk["mechanics"]["key_ability"]
+        entry = out.setdefault(
+            name,
+            {
+                "ranks": 0,
+                "ability": key,
+                "total": mods[key],
+                "class_skill": any(
+                    catalogs.class_skill_matches(name, cs) for cs in class_skills
+                ),
+            },
+        )
+        entry["granted_ranks"] = granted_ranks
+        entry["total"] += max(0, granted_ranks - entry["ranks"])
     sheet["skills"] = out
     validate_feats(draft, sheet)
     validate_spells(draft, sheet)
