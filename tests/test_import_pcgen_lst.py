@@ -263,11 +263,14 @@ def _fake_pcgen_root(tmp_path: Path) -> Path:
     _write(base, "roleplaying_game/core_rulebook/cr_feats.lst", FEATS_LST)
     _write(base, "roleplaying_game/core_rulebook/cr_equip_arms_armor.lst", EQUIP_LST)
     _write(base, "roleplaying_game/core_rulebook/cr_spells.lst", SPELLS_LST)
+    _write(base, "roleplaying_game/core_rulebook/cr_classes.lst", CLASSES_LST)
     # gli altri libri configurati esistono ma con un record minimo: il build
     # completo (main) e' strict sui file mancanti
     for book, cfg in pc.BOOKS.items():
         if book == "CR":
             continue
+        for rel in cfg.get("classes", []):
+            _write(base, f"{cfg['dir']}/{rel}", "CLASS:Stub\tTYPE:Base.PC\n")
         for rel in cfg["feats"] + cfg["equipment"] + cfg["spells"]:
             _write(
                 base,
@@ -309,6 +312,17 @@ def test_main_scrive_i_tre_json(tmp_path):
         data = json.loads((out / name).read_text(encoding="utf-8"))
         assert data["_provenance"]["books"]
         assert isinstance(data["entries"], list)
+
+
+def test_main_scrive_i_requisiti_delle_prestige(tmp_path):
+    # AR-5: quarto JSON, stessa provenienza degli altri tre.
+    root = _fake_pcgen_root(tmp_path)
+    out = tmp_path / "out"
+    assert pc.main(["--pcgen-repo", str(root), "--out-dir", str(out)]) == 0
+    data = json.loads((out / "pcgen-class-prereqs.json").read_text(encoding="utf-8"))
+    assert data["_provenance"]["source"].startswith("PCGen")
+    assert [e["name"] for e in data["entries"]] == ["Arcane Archer"]
+    assert data["counts"]["CR"] == 1
 
 
 # ---------------------------------------------------------------------------
@@ -615,3 +629,50 @@ def test_dati_reali_new_books_spot_check():
     assert equip["counts"]["AG"] > 0
     assert equip["counts"]["HA"] == 0
     assert equip["counts"]["PU"] == 0
+
+
+# ---------------------------------------------------------------------------
+# AR-5 -- requisiti d'ingresso delle classi di prestigio (classes.lst).
+# Forma reale cr_classes.lst: la riga di definizione porta TYPE:PC.Prestige,
+# i PRE* stanno su una seconda riga `CLASS:Nome`, altre righe aggiungono
+# abilita' di classe. I PRE dentro un BONUS (`|PREVAREQ:...`) non sono tag.
+# ---------------------------------------------------------------------------
+
+CLASSES_LST = (
+    "SOURCELONG:Core Rulebook\tSOURCESHORT:CR\n"
+    "CLASS:Fighter\tHD:10\tTYPE:Base.PC\tMAXLEVEL:20\n"
+    "CLASS:Fighter\tSTARTSKILLPTS:2\n"
+    "CLASS:Arcane Archer\tHD:10\t\tTYPE:PC.Prestige\tMAXLEVEL:10\t"
+    'BONUS:COMBAT|BASEAB|classlevel("APPLIEDAS=NONEPIC")|TYPE=Base.REPLACE|PREVAREQ:UseAlternateBABProgression,0\n'
+    "CLASS:Arcane Archer\tPREABILITY:2,CATEGORY=FEAT,Point-Blank Shot,Precise Shot\t"
+    "PRESPELLTYPE:1,Arcane=1\tPRETOTALAB:6\n"
+    "CLASS:Arcane Archer\tSTARTSKILLPTS:4\tCSKILL:Perception|Ride\n"
+    "CLASS:Fighter.MOD\tPRETOTALAB:99\n"
+)
+
+
+def test_class_prereqs_solo_prestige_con_pre_riuniti():
+    entries = pc.class_prereqs_from_text(CLASSES_LST, "CR")
+    assert [e["name"] for e in entries] == ["Arcane Archer"]
+    aa = entries[0]
+    assert aa["source_book"] == "CR"
+    assert [n["tag"] for n in aa["prerequisites"]] == [
+        "PREABILITY",
+        "PRESPELLTYPE",
+        "PRETOTALAB",
+    ]
+    assert aa["prerequisites"][2]["args"] == ["6"]
+
+
+@pytest.mark.skipif(
+    not (REAL_ROOT / "data/pathfinder/paizo").is_dir(), reason="clone PCGen assente"
+)
+def test_dati_reali_prestige_spot_check():
+    # Contate nel clone 2026-11-01: CR 10, APG 8, AG 24.
+    payload = pc.build_catalog(REAL_ROOT, "class_prereqs")
+    assert payload["counts"] == {"CR": 10, "APG": 8, "AG": 24}
+    by_name = {e["name"]: e for e in payload["entries"]}
+    # RAW CRB pg. 374: BAB +6 (Pathbuilder non lo controlla, spike S-UI).
+    tags = {n["tag"]: n for n in by_name["Arcane Archer"]["prerequisites"]}
+    assert tags["PRETOTALAB"]["args"] == ["6"]
+    assert "PRESKILL" in {n["tag"] for n in by_name["Mystic Theurge"]["prerequisites"]}
