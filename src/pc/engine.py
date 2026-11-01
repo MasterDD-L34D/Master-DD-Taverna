@@ -247,7 +247,9 @@ def validate_spells(draft, sheet):
         level = catalogs.spell_level_for_class(spell, draft.class_)
         if level is None and draft.class_ == "Witch":
             patron = str(draft.patron or "").strip().casefold()
-            level = _WITCH_PATRON_SPELLS.get(patron, {}).get(str(name).strip().casefold())
+            level = _WITCH_PATRON_SPELLS.get(patron, {}).get(
+                str(name).strip().casefold()
+            )
         if level is None:
             sheet["errors"].append(f"{name}: non e' un incantesimo da {draft.class_}")
             continue
@@ -333,7 +335,13 @@ def apply_equipment(draft, sheet):
         if item is None:
             if magic is not None:
                 items.append(
-                    {"name": name, "cost": 0, "mechanics": {}, "tags": [], "magic": magic}
+                    {
+                        "name": name,
+                        "cost": 0,
+                        "mechanics": {},
+                        "tags": [],
+                        "magic": magic,
+                    }
                 )
             elif strict:
                 sheet["errors"].append(f"equipaggiamento sconosciuto: {name}")
@@ -619,7 +627,11 @@ def build_character(draft):
         effect = parse_magic_item(item_name) or {}
         for raw_skill in effect.get("granted_skills", []):
             sk = next(
-                (s for s in catalogs.load("skills") if s["name"].casefold() == raw_skill.casefold()),
+                (
+                    s
+                    for s in catalogs.load("skills")
+                    if s["name"].casefold() == raw_skill.casefold()
+                ),
                 None,
             )
             if sk is None:

@@ -1306,9 +1306,17 @@ def test_patron_spell_requires_matching_patron_and_castable_circle():
     wrong_patron = build_character(_griselle_draft(patron="Shadow", spells=["Aid"]))
     assert any("Aid" in e for e in wrong_patron["errors"])
     low_level = build_character(
-        _griselle_draft(level=2, ability_increases=[], skills={}, patron="Ancestors", spells=["Prayer"])
+        _griselle_draft(
+            level=2,
+            ability_increases=[],
+            skills={},
+            patron="Ancestors",
+            spells=["Prayer"],
+        )
     )
-    assert any("Prayer" in e and "cerchio 3 non castabile" in e for e in low_level["errors"])
+    assert any(
+        "Prayer" in e and "cerchio 3 non castabile" in e for e in low_level["errors"]
+    )
 
 
 def test_magic_item_effects_feed_derived_stats_not_rank_budget():
@@ -1335,9 +1343,13 @@ def test_magic_item_effects_feed_derived_stats_not_rank_budget():
 
 
 def test_intelligence_headband_plus_four_grants_both_declared_skills():
-    equipped = build_character(_griselle_draft(equipment=[
-        "Headband of Vast Intelligence +4 (Perception; Knowledge (Planes))",
-    ]))
+    equipped = build_character(
+        _griselle_draft(
+            equipment=[
+                "Headband of Vast Intelligence +4 (Perception; Knowledge (Planes))",
+            ]
+        )
+    )
     assert equipped["abilities"]["int"] == 22
     assert equipped["skill_rank_budget"] == 47
     assert equipped["skills"]["Perception"]["granted_ranks"] == 9

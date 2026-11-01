@@ -2,7 +2,6 @@
 
 import re
 
-
 _ABILITY_ITEMS = (
     (re.compile(r"belt of giant strength \+([246])", re.I), "str"),
     (re.compile(r"belt of incredible dexterity \+([246])", re.I), "dex"),
@@ -22,7 +21,9 @@ def parse_magic_item(name):
         return {
             "ability": "int",
             "enhancement": int(match.group(1)),
-            "granted_skills": [s.strip() for s in (match.group(2) or "").split(";") if s.strip()],
+            "granted_skills": [
+                s.strip() for s in (match.group(2) or "").split(";") if s.strip()
+            ],
         }
     for pattern, ability in _ABILITY_ITEMS:
         match = pattern.fullmatch(text)
