@@ -1,9 +1,9 @@
 # Import archetipi da indici AoN (2026-07-25)
 
-- Classi: 24
-- Archetipi totali: 961
-- OGL (archetypes.json): 949
-- PI -> archetypes_local.json: 12
+- Classi: 40
+- Archetipi totali: 1252
+- OGL (archetypes.json): 1236
+- PI -> archetypes_local.json: 16
 
 ## Conteggi per classe
 
@@ -31,6 +31,22 @@
 - **Kineticist**: 19 archetipi (1 razziali, 0 senza replaces)
 - **Medium**: 15 archetipi (0 razziali, 0 senza replaces)
 - **Witch**: 42 archetipi (3 razziali, 0 senza replaces)
+- **Oracle**: 26 archetipi (5 razziali, 0 senza replaces)
+- **Summoner**: 22 archetipi (3 razziali, 0 senza replaces)
+- **Shaman**: 17 archetipi (0 razziali, 0 senza replaces)
+- **Skald**: 26 archetipi (1 razziali, 0 senza replaces)
+- **Swashbuckler**: 20 archetipi (0 razziali, 0 senza replaces)
+- **Warpriest**: 18 archetipi (1 razziali, 0 senza replaces)
+- **Shifter**: 14 archetipi (1 razziali, 0 senza replaces)
+- **Mesmerist**: 21 archetipi (1 razziali, 0 senza replaces)
+- **Occultist**: 20 archetipi (0 razziali, 0 senza replaces)
+- **Psychic**: 8 archetipi (0 razziali, 0 senza replaces)
+- **Spiritualist**: 24 archetipi (0 razziali, 0 senza replaces)
+- **Slayer**: 26 archetipi (0 razziali, 0 senza replaces)
+- **Ninja**: 5 archetipi (1 razziali, 0 senza replaces)
+- **Samurai**: 7 archetipi (0 razziali, 0 senza replaces)
+- **Antipaladin**: 9 archetipi (0 razziali, 0 senza replaces)
+- **Vigilante**: 28 archetipi (0 razziali, 0 senza replaces)
 
 ## Nomi PI spostati in locale
 
@@ -46,3 +62,7 @@
 - Wizard / Qadira: Mage of the Veil
 - Wizard / Thassilonian Specialist
 - Cavalier / Qadiran Horselord
+- Summoner / God Caller
+- Skald / Belkzen War Drummer
+- Skald / Sunsinger
+- Vigilante / Dragonscale Loyalist

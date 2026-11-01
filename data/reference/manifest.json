@@ -71,9 +71,9 @@
       "is_ogc": true,
       "is_pi": false,
       "cup_allowed": false,
-      "entries": 949,
+      "entries": 1236,
       "notes": "Archetipi da indici AoN per classe (tabella Name/Replaces/Summary): mechanics {class, replaces, race_req}. Rigenerare con tools/import_archetypes.py.",
-      "last_verified": "2026-07-25"
+      "last_verified": "2026-11-02"
     },
     {
       "file": "ogl/abilities.json",
@@ -189,19 +189,6 @@
       "last_verified": "2026-07-25"
     },
     {
-      "file": "pi_local_only/archetypes_local.json",
-      "kind": "archetypes_local",
-      "source": "Archives of Nethys (aonprd.com)",
-      "license": "OGL-1.0a",
-      "is_ogc": false,
-      "is_pi": false,
-      "cup_allowed": false,
-      "local_only": true,
-      "entries": 12,
-      "notes": "Archetipi con Product Identity nel nome, separati dal catalogo OGL (policy 2026-07-25). NON redistribuire.",
-      "last_verified": "2026-07-25"
-    },
-    {
       "file": "pi_local_only/subraces_local.json",
       "kind": "subraces_local",
       "source": "Archives of Nethys (aonprd.com)",
@@ -251,6 +238,19 @@
       "entries": 5,
       "notes": "Talenti con Product Identity nel nome, separati dal catalogo OGL (policy 2026-07-26). NON redistribuire.",
       "last_verified": "2026-07-26"
+    },
+    {
+      "file": "pi_local_only/archetypes_local.json",
+      "kind": "archetypes_local",
+      "source": "Archives of Nethys (aonprd.com)",
+      "license": "OGL-1.0a",
+      "is_ogc": false,
+      "is_pi": false,
+      "cup_allowed": false,
+      "local_only": true,
+      "entries": 16,
+      "notes": "Archetipi con Product Identity nel nome, separati dal catalogo OGL (policy 2026-07-25). NON redistribuire.",
+      "last_verified": "2026-11-02"
     }
   ],
   "files": {
@@ -276,7 +276,7 @@
     },
     "archetypes": {
       "path": "ogl/archetypes.json",
-      "entries": 949
+      "entries": 1236
     },
     "abilities": {
       "path": "ogl/abilities.json",

@@ -93,11 +93,16 @@ def test_build_file_shape_and_counts():
 
 
 def test_real_catalog_matches_declared_count(tmp_path):
-    """Sul catalogo reale committato: 79 entry con race_req (ricognizione D6).
+    """Sul catalogo reale committato: 92 entry con race_req.
+
+    Era 79 (ricognizione D6). 2026-11-01: import degli archetipi delle 16
+    classi che mancavano; le 13 entry razziali in piu' sono esattamente
+    quelle delle classi nuove (Oracle 5, Summoner 3, Skald, Warpriest,
+    Shifter, Mesmerist, Ninja 1 ciascuna), le 79 precedenti invariate.
 
     Se il catalogo Taverna cambia, questo test fallisce e il conteggio va
     ri-verificato — mai un update silenzioso del numero."""
     catalog = Path(__file__).resolve().parents[1] / "data/reference/ogl/archetypes.json"
     data = json.loads(catalog.read_text(encoding="utf-8"))
     out = ex.extract_race_reqs(data)
-    assert len(out) == 79
+    assert len(out) == 92
