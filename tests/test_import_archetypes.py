@@ -7,6 +7,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tools.import_archetypes import (
     archetype_entry,
+    is_pi_entry,
+    merge_archetypes,
     parse_archetype_features,
     parse_archetypes,
 )
@@ -104,3 +106,51 @@ def test_parse_archetype_features_no_level():
     html = ARCHER_HTML.replace("At 2nd level, an archer", "An archer")
     feats = parse_archetype_features(html)
     assert feats[0]["level"] is None
+
+
+def test_merge_archetypes_tiene_le_esistenti_e_aggiunge_le_nuove():
+    # 2026-11-01: classes.json e' passato da 24 a 40 classi senza rilanciare
+    # l'import; un --write a riscrittura totale perderebbe mechanics.features
+    # (arricchimento --details) su tutte le 949 voci esistenti.
+    vecchia = {
+        "source_id": "archetype:fighter_x",
+        "name": "X",
+        "mechanics": {"class": "Fighter", "features": [{"name": "f"}]},
+    }
+    rifatta = {
+        "source_id": "archetype:fighter_x",
+        "name": "X",
+        "mechanics": {"class": "Fighter"},
+    }
+    nuova = {
+        "source_id": "archetype:oracle_y",
+        "name": "Y",
+        "mechanics": {"class": "Oracle"},
+    }
+    sparita = {
+        "source_id": "archetype:bard_z",
+        "name": "Z",
+        "mechanics": {"class": "Bard"},
+    }
+    out = merge_archetypes([vecchia, sparita], [rifatta, nuova])
+    assert [e["source_id"] for e in out] == [
+        "archetype:fighter_x",
+        "archetype:bard_z",
+        "archetype:oracle_y",
+    ]
+    assert out[0]["mechanics"]["features"] == [{"name": "f"}]
+
+
+def test_is_pi_entry_guarda_anche_la_descrizione():
+    # 2026-11-01: tre archetipi delle classi nuove hanno nome neutro ma
+    # descrizione con luoghi di Golarion che il sanitizer non toglie
+    # (Dragonscale Loyalist -> Brevoy): vanno nel catalogo local-only.
+    pulita = {"name": "Feral Gnasher", "description": "Goblins bite."}
+    sporca = {
+        "name": "Dragonscale Loyalist",
+        "description": "Dragonscale loyalists serve the throne of Brevoy.",
+    }
+    nome_pi = {"name": "Aldori Defender", "description": "Fights well."}
+    assert is_pi_entry(pulita) is False
+    assert is_pi_entry(sporca) is True
+    assert is_pi_entry(nome_pi) is True

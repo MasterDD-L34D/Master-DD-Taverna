@@ -201,6 +201,28 @@ def archetype_entry(row: dict, class_name: str) -> dict:
     }
 
 
+def is_pi_entry(entry: dict) -> bool:
+    """Voce da tenere local-only: nome con identita' PI, oppure PI residua
+    nella descrizione dopo la sanitize (stesso scanner del gate legal_filter).
+    Fail-closed come import_spells: meglio locale che pubblico."""
+    from tools.legal_filter import _find_pi
+
+    return bool(is_pi_name(entry["name"]) or _find_pi(entry.get("description") or ""))
+
+
+def merge_archetypes(existing: list[dict], fresh: list[dict]) -> list[dict]:
+    """Fonde il catalogo esistente con un import nuovo, per source_id.
+
+    Le voci esistenti restano INTATTE (anche mechanics.features aggiunte da
+    --details) e non si cancellano se l'indice non le mostra piu'; si
+    aggiungono in coda solo le voci nuove. Nasce 2026-11-01: classes.json era
+    passato da 24 a 40 classi e una riscrittura totale avrebbe perso le
+    features di 949 voci.
+    """
+    known = {e["source_id"] for e in existing}
+    return existing + [e for e in fresh if e["source_id"] not in known]
+
+
 def catalog_classes() -> list[str]:
     data = json.loads(CLASSES_PATH.read_text(encoding="utf-8"))
     return [e["name"] for e in data["entries"]]
@@ -295,7 +317,7 @@ def main(argv=None) -> int:
         )
         for row in rows:
             entry = archetype_entry(row, cls)
-            (local_entries if is_pi_name(entry["name"]) else all_entries).append(entry)
+            (local_entries if is_pi_entry(entry) else all_entries).append(entry)
 
     total = len(all_entries) + len(local_entries)
     print(
@@ -310,10 +332,15 @@ def main(argv=None) -> int:
         return 0
 
     catalog = json.loads(ARCHETYPES_PATH.read_text(encoding="utf-8"))
+    # Fusione, non riscrittura: le voci esistenti tengono le loro features.
+    all_entries = merge_archetypes(catalog["entries"], all_entries)
     catalog["entries"] = all_entries
     ARCHETYPES_PATH.write_text(
         json.dumps(catalog, ensure_ascii=False, indent=2), encoding="utf-8"
     )
+    if LOCAL_PATH.is_file():
+        old_local = json.loads(LOCAL_PATH.read_text(encoding="utf-8"))["entries"]
+        local_entries = merge_archetypes(old_local, local_entries)
     local_catalog = {
         "_license": "OGL-1.0a",
         "_source": "Archives of Nethys (local only, not redistributed)",

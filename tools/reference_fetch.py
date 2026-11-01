@@ -9,11 +9,13 @@ Le funzioni sono importabili dai tool di import (fetch/cache_path).
 import argparse
 import hashlib
 import time
-import urllib.request
 from pathlib import Path
 
+# Decisione owner 2026-11-01: lo scraping passa sempre da scrapling (prima
+# urllib). Cache, pausa di cortesia e interfaccia restano identiche.
+from scrapling.fetchers import Fetcher
+
 CACHE_DIR = Path(__file__).resolve().parents[1] / "data/reference/aon_cache"
-UA = {"User-Agent": "MasterDD-Taverna/1.0 (cataloghi OGL locali; uso personale)"}
 TIMEOUT = 30
 
 
@@ -32,9 +34,10 @@ def fetch(url, delay=2.0, cache=True):
         return path.read_text(encoding="utf-8", errors="replace")
     if delay > 0:
         time.sleep(delay)
-    req = urllib.request.Request(url, headers=UA)
-    with urllib.request.urlopen(req, timeout=TIMEOUT) as resp:
-        text = resp.read().decode("utf-8", errors="replace")
+    resp = Fetcher.get(url, timeout=TIMEOUT)
+    if resp.status != 200:
+        raise OSError(f"HTTP {resp.status}: {url}")
+    text = resp.body.decode(resp.encoding or "utf-8", errors="replace")
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text, encoding="utf-8")
     return text
