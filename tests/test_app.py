@@ -476,9 +476,8 @@ def test_narrative_flow_exposes_truncation_headers(
     client, auth_headers, disable_module_dump
 ):
     target = MODULES_DIR / "narrative_flow.txt"
-    original = target.read_text(encoding="utf-8")
-    padded = original + ("\n" + ("B" * 4100))
-    target.write_text(padded, encoding="utf-8")
+    original = target.read_bytes()
+    target.write_bytes(original + b"\n" + (b"B" * 4100))
     expected_length = target.stat().st_size
 
     try:
@@ -493,9 +492,9 @@ def test_narrative_flow_exposes_truncation_headers(
         served = int(response.headers["X-Content-Served-Bytes"])
         assert 0 < served <= 4200
         assert "[contenuto troncato" in response.text
-        assert original.splitlines()[0] in response.text
+        assert original.decode("utf-8").splitlines()[0] in response.text
     finally:
-        target.write_text(original, encoding="utf-8")
+        target.write_bytes(original)
 
 
 def test_ruling_expert_truncated_when_dump_enabled_without_whitelist(

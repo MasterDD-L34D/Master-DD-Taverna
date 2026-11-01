@@ -418,7 +418,7 @@ uvicorn src.app:app --reload --port 8000
 
 L'endpoint di base sarà ad esempio: `http://localhost:8000`
 
-Prima di lanciare `--discover-modules`, assicurati che l'API sia effettivamente raggiungibile: avvia `uvicorn src.app:app --reload --port 8000` oppure imposta `--api-url` verso un host già in esecuzione. Se l'API reale non è disponibile, puoi utilizzare lo stub locale `tools/mock_builder_server.py` per simulare le risposte necessarie.
+Prima di lanciare `--discover-modules`, assicurati che l'API sia effettivamente raggiungibile: avvia `uvicorn src.app:app --reload --port 8000` oppure imposta `--api-url` verso un host già in esecuzione. Se l'API reale non è disponibile, puoi utilizzare lo stub locale `tools/mock_builder_server.py` per simulare le risposte builder. Il suo endpoint `/ruling` non esegue validazioni e risponde `501`: per le run locali senza un Ruling Expert reale usa `--skip-ruling-expert`.
 
 Variabili chiave (anche per run schedulati):
 
@@ -523,8 +523,8 @@ python tools/generate_build_db.py --api-url http://localhost:8000 --mode extende
 # Se l'endpoint non espone /health ma sai che è raggiungibile, aggiungi --skip-health-check
 # Se il probe richiede un path/timeout personalizzati puoi usare --health-path e --health-timeout
 # Nota: quando non usi `--skip-ruling-expert` devi passare esplicitamente l'endpoint del ruling expert con
-# `--ruling-expert-url <endpoint>/modules/ruling-expert`, altrimenti la fase di ruling non parte. Esempio completo:
-python tools/generate_build_db.py --api-url http://localhost:8000 --mode extended --ruling-expert-url http://localhost:8000/modules/ruling-expert
+# `--ruling-expert-url <endpoint>/ruling-expert`, altrimenti la fase di ruling non parte. Esempio completo:
+python tools/generate_build_db.py --api-url http://localhost:8000 --mode extended --ruling-expert-url http://localhost:8000/ruling-expert
 # Solo per debug/local stub puoi saltare il ruling expert con
 python tools/generate_build_db.py --api-url http://localhost:8000 --mode extended --skip-ruling-expert
 
@@ -593,7 +593,7 @@ Il file `reports/build_races.json` include ora un campo `unused_preferred_races`
 
 ```bash
 PREFERRED_UNUSED_RACES=$(jq -r '.unused_preferred_races[]' reports/build_races.json | xargs)
-python tools/generate_build_db.py --ruling-expert-url http://localhost:8000/modules/ruling-expert --prefer-unused-race --race-pool $PREFERRED_UNUSED_RACES
+python tools/generate_build_db.py --ruling-expert-url http://localhost:8000/ruling-expert --prefer-unused-race --race-pool $PREFERRED_UNUSED_RACES
 ```
 
 
