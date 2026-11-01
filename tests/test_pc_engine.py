@@ -1284,3 +1284,28 @@ def test_invalid_ability_increase_is_rejected():
         _griselle_draft(ability_increases=[{"level": 3, "ability": "int"}])
     )
     assert any("ability_increases" in e for e in sheet["errors"])
+
+
+def test_ancestors_patron_spells_are_valid_for_witch():
+    sheet = build_character(
+        _griselle_draft(
+            patron="Ancestors",
+            spells=["Bless", "Aid", "Prayer", "Blessing of Fervor"],
+        )
+    )
+    assert sheet["errors"] == []
+    assert [(s["name"], s["level"]) for s in sheet["spells"]] == [
+        ("Bless", 1),
+        ("Aid", 2),
+        ("Prayer", 3),
+        ("Blessing of Fervor", 4),
+    ]
+
+
+def test_patron_spell_requires_matching_patron_and_castable_circle():
+    wrong_patron = build_character(_griselle_draft(patron="Shadow", spells=["Aid"]))
+    assert any("Aid" in e for e in wrong_patron["errors"])
+    low_level = build_character(
+        _griselle_draft(level=2, ability_increases=[], skills={}, patron="Ancestors", spells=["Prayer"])
+    )
+    assert any("Prayer" in e and "cerchio 3 non castabile" in e for e in low_level["errors"])

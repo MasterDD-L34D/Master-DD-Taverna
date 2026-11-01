@@ -37,3 +37,11 @@ def test_getters():
     assert find_equipment("Longsword")["mechanics"]["cost"] == "15 gp"
     assert find_trait("Reactionary")["mechanics"]["category"] == "Basic (Combat)"
     print("OK: catalogs loaders")
+
+
+def test_spell_lookup_is_case_insensitive():
+    from src.pc.catalogs import find_spell
+
+    spell = find_spell("Ray of Enfeeblement")
+    assert spell is not None
+    assert spell["name"] == "Ray Of Enfeeblement"

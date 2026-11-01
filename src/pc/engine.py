@@ -171,6 +171,17 @@ def validate_traits(draft, sheet):
 # Cerchi di spells_per_day: "0" (cantrips), poi "1st".."9th".
 _CIRCLE_RE = re.compile(r"^(0|[1-9](?:st|nd|rd|th))$")
 
+_WITCH_PATRON_SPELLS = {
+    "ancestors": {
+        "bless": 1,
+        "aid": 2,
+        "prayer": 3,
+        "blessing of fervor": 4,
+        "commune": 5,
+        "greater heroism": 6,
+    },
+}
+
 
 def _castable_circles(spells_per_day):
     """Cerchi con almeno uno slot base (>0) da una riga spells_per_day.
@@ -233,6 +244,9 @@ def validate_spells(draft, sheet):
             sheet["errors"].append(f"incantesimo sconosciuto: {name}")
             continue
         level = catalogs.spell_level_for_class(spell, draft.class_)
+        if level is None and draft.class_ == "Witch":
+            patron = str(draft.patron or "").strip().casefold()
+            level = _WITCH_PATRON_SPELLS.get(patron, {}).get(str(name).strip().casefold())
         if level is None:
             sheet["errors"].append(f"{name}: non e' un incantesimo da {draft.class_}")
             continue
