@@ -102,7 +102,7 @@ def test_equip_non_modellato_rende_ca_non_verificabile():
     # P2 Codex: oggetti fuori catalogo ignorati dall'engine — la CA non e'
     # confrontabile anche se la tolleranza +-1 coprirebbe la differenza
     payload = {
-        "pc_draft": _draft_pc(equipment=["Ring of Protection +3"]),
+        "pc_draft": _draft_pc(equipment=["Ring of Protected Life"]),
         "benchmark": {
             "statistics": {
                 "PF": 49,
@@ -114,7 +114,7 @@ def test_equip_non_modellato_rende_ca_non_verificabile():
     }
     r = confronta(payload)
     assert r["dettaglio"]["CA"]["esito"] == "non_verificabile"
-    assert "Ring of Protection +3" in r["dettaglio"]["CA"]["motivo"]
+    assert "Ring of Protected Life" in r["dettaglio"]["CA"]["motivo"]
 
 
 def test_rifiutate_ricomparsi_nel_report():

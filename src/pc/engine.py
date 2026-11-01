@@ -4,6 +4,7 @@ import re
 
 from src.pc import catalogs
 from src.pc.feat_effects import apply_feat_effects
+from src.pc.magic_items import parse_magic_item
 
 ABILS = ("str", "dex", "con", "int", "wis", "cha")
 
@@ -328,8 +329,13 @@ def apply_equipment(draft, sheet):
     items = []
     for name in draft.equipment:
         item = catalogs.find_equipment(name)
+        magic = parse_magic_item(name)
         if item is None:
-            if strict:
+            if magic is not None:
+                items.append(
+                    {"name": name, "cost": 0, "mechanics": {}, "tags": [], "magic": magic}
+                )
+            elif strict:
                 sheet["errors"].append(f"equipaggiamento sconosciuto: {name}")
             else:
                 sheet["warnings"].append(f"{name}: non in catalogo (valutato a mano)")
@@ -370,6 +376,9 @@ def apply_equipment(draft, sheet):
                 caps.append(_parse_bonus(md))
         elif bonus:
             armors.append((bonus, _parse_bonus(md) if md else None))
+        magic_armor = it.get("magic", {}).get("armor")
+        if magic_armor:
+            armors.append((magic_armor, None))
     armor = 0
     if len(armors) > 1:
         if strict:
@@ -387,7 +396,11 @@ def apply_equipment(draft, sheet):
     dex = min(mods["dex"], max_dex) if max_dex is not None else mods["dex"]
     race = catalogs.get_race(draft.race)
     size_bonus = 1 if race and race["mechanics"].get("size") == "Small" else 0
-    sheet["ac"] = 10 + armor + shield + dex + size_bonus
+    deflection = max(
+        (it.get("magic", {}).get("deflection", 0) for it in items), default=0
+    )
+    insight = max((it.get("magic", {}).get("insight_ac", 0) for it in items), default=0)
+    sheet["ac"] = 10 + armor + shield + dex + size_bonus + deflection + insight
     attacks = []
     for it in items:
         if "weapon" not in it["tags"]:
@@ -475,6 +488,15 @@ def apply_abilities(draft):
             continue
         seen_levels.add(level)
         final[ability] += 1
+    enhancements = {}
+    for name in draft.equipment:
+        effect = parse_magic_item(name) or {}
+        if "ability" in effect:
+            enhancements[effect["ability"]] = max(
+                enhancements.get(effect["ability"], 0), effect["enhancement"]
+            )
+    for ability, bonus in enhancements.items():
+        final[ability] += bonus
     return {
         "abilities": final,
         "skill_base_int": skill_base_int,
@@ -531,10 +553,18 @@ def build_character(draft):
     sheet["hp"] = (
         hd + (draft.level - 1) * per_level + mods["con"] * draft.level + favored_hp
     )
+    resistance = max(
+        (
+            effect["resistance"]
+            for name in draft.equipment
+            if (effect := parse_magic_item(name)) and "resistance" in effect
+        ),
+        default=0,
+    )
     sheet["saves"] = {
-        "fort": lvl["fort"] + mods["con"],
-        "ref": lvl["ref"] + mods["dex"],
-        "will": lvl["will"] + mods["wis"],
+        "fort": lvl["fort"] + mods["con"] + resistance,
+        "ref": lvl["ref"] + mods["dex"] + resistance,
+        "will": lvl["will"] + mods["wis"] + resistance,
     }
     sheet["bab"] = lvl["bab"]
     sheet["special"] = list(lvl.get("special", []))
@@ -584,6 +614,36 @@ def build_character(draft):
             "total": ranks + mods[key] + class_bonus,
             "class_skill": is_class_skill,
         }
+    granted = {}
+    for item_name in draft.equipment:
+        effect = parse_magic_item(item_name) or {}
+        raw_skill = effect.get("granted_skill")
+        if not raw_skill or effect.get("enhancement") != 2:
+            continue
+        sk = next(
+            (s for s in catalogs.load("skills") if s["name"].casefold() == raw_skill.casefold()),
+            None,
+        )
+        if sk is None:
+            warnings.append(f"{item_name}: skill gratuita sconosciuta {raw_skill}")
+            continue
+        granted[sk["name"]] = draft.level
+    for name, granted_ranks in granted.items():
+        sk = catalogs.get_skill(name)
+        key = sk["mechanics"]["key_ability"]
+        entry = out.setdefault(
+            name,
+            {
+                "ranks": 0,
+                "ability": key,
+                "total": mods[key],
+                "class_skill": any(
+                    catalogs.class_skill_matches(name, cs) for cs in class_skills
+                ),
+            },
+        )
+        entry["granted_ranks"] = granted_ranks
+        entry["total"] += max(0, granted_ranks - entry["ranks"])
     sheet["skills"] = out
     validate_feats(draft, sheet)
     validate_spells(draft, sheet)

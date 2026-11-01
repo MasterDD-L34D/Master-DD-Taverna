@@ -1309,3 +1309,26 @@ def test_patron_spell_requires_matching_patron_and_castable_circle():
         _griselle_draft(level=2, ability_increases=[], skills={}, patron="Ancestors", spells=["Prayer"])
     )
     assert any("Prayer" in e and "cerchio 3 non castabile" in e for e in low_level["errors"])
+
+
+def test_magic_item_effects_feed_derived_stats_not_rank_budget():
+    equipment = [
+        "Headband of Vast Intelligence +2 (Perception)",
+        "Belt of Mighty Constitution +2",
+        "Cloak of Resistance +2",
+        "Bracers of Armor +4",
+        "Ring of Protection +1",
+        "Dusty Rose Prism Ioun Stone",
+    ]
+    plain = build_character(_griselle_draft())
+    equipped = build_character(_griselle_draft(equipment=equipment))
+    assert equipped["abilities"]["int"] == plain["abilities"]["int"] + 2
+    assert equipped["skill_rank_budget"] == plain["skill_rank_budget"] == 47
+    assert equipped["hp"] == plain["hp"] + 9
+    assert equipped["saves"]["fort"] == plain["saves"]["fort"] + 3
+    assert equipped["saves"]["ref"] == plain["saves"]["ref"] + 2
+    assert equipped["saves"]["will"] == plain["saves"]["will"] + 2
+    assert equipped["ac"] == plain["ac"] + 6
+    assert equipped["skills"]["Perception"]["ranks"] == 0
+    assert equipped["skills"]["Perception"]["granted_ranks"] == 9
+    assert equipped["skills"]["Perception"]["total"] == 9
