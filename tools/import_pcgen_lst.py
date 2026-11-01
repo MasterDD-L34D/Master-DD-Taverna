@@ -89,6 +89,7 @@ BOOKS = {
         "feats": ["cr_feats.lst"],
         "equipment": ["cr_equip_arms_armor.lst"],
         "spells": ["cr_spells.lst"],
+        "classes": ["cr_classes.lst"],
     },
     "APG": {
         "dir": "roleplaying_game/advanced_players_guide",
@@ -96,6 +97,7 @@ BOOKS = {
         "feats": ["apg_feats.lst"],
         "equipment": ["apg_equip_arms_armor.lst"],
         "spells": ["apg_spells.lst"],
+        "classes": ["apg_classes.lst"],
     },
     "ACG": {
         "dir": "roleplaying_game/advanced_class_guide",
@@ -180,6 +182,10 @@ BOOKS = {
         "feats": ["ag_feats.lst"],
         "equipment": ["ag_equip_arms_armor.lst"],
         "spells": ["ag_spells.lst"],
+        # AR-5 (2026-11-01): solo i classes.lst con classi di prestigio. Gli
+        # altri libri configurati ne hanno 0 (ACG, UM, UC, OA, UI, UW, HA:
+        # contate nel clone) o non hanno il file (ARG, UE, PU).
+        "classes": ["ag_classes.lst"],
     },
 }
 
@@ -187,6 +193,7 @@ OUTPUT_FILES = {
     "feats": "pcgen-feats.json",
     "equipment": "pcgen-equipment.json",
     "spells": "pcgen-spells.json",
+    "class_prereqs": "pcgen-class-prereqs.json",
 }
 
 ABILITY_KEYS = ("STR", "DEX", "CON", "INT", "WIS", "CHA")
@@ -833,6 +840,45 @@ def class_names_in_file(path: Path) -> list:
     return names
 
 
+def class_prereqs_from_text(text: str, book: str) -> list:
+    """AR-5: requisiti d'ingresso delle classi di prestigio di un classes.lst.
+
+    Una classe e' scritta su piu' righe `CLASS:Nome<TAB>...`: la definizione
+    (TYPE:...Prestige...) e righe aggiuntive, fra cui quella dei PRE*. Si
+    riuniscono i tag di tutte le righe della classe; .MOD/.COPY/.FORGET sono
+    modifiche ad altre classi e si saltano. Solo i campi che INIZIANO con
+    PRE/!PRE sono requisiti: un PRE dentro un BONUS resta nel BONUS.
+    """
+    order = []
+    tags_by_class = {}
+    for line in text.splitlines():
+        if not line.startswith("CLASS:"):
+            continue
+        fields = [f.strip() for f in line.split("\t")]
+        name = fields[0][len("CLASS:"):].strip()
+        if not name or name.endswith((".MOD", ".COPY", ".FORGET")):
+            continue
+        if name not in tags_by_class:
+            order.append(name)
+            tags_by_class[name] = []
+        for field in fields[1:]:
+            if field:
+                key, sep, value = field.partition(":")
+                tags_by_class[name].append((key.strip(), value.strip() if sep else ""))
+    entries = []
+    for name in order:
+        tags = tags_by_class[name]
+        types = [t for v in _tag_values(tags, "TYPE") for t in v.split(".")]
+        if "Prestige" not in types:
+            continue
+        entries.append({
+            "name": name,
+            "source_book": book,
+            "prerequisites": prereq_tree(tags),
+        })
+    return entries
+
+
 # ---------------------------------------------------------------------------
 # Build dei cataloghi
 # ---------------------------------------------------------------------------
@@ -841,6 +887,12 @@ PARSERS = {
     "feats": (lambda b: BOOKS[b]["feats"], feats_from_records),
     "equipment": (lambda b: BOOKS[b]["equipment"], equipment_from_records),
     "spells": (lambda b: BOOKS[b]["spells"], spells_from_records),
+}
+
+# AR-5: i classes.lst non passano da iter_lst_records (il nome del record e'
+# `CLASS:Nome`, con i due punti): il parser legge il testo intero del file.
+TEXT_PARSERS = {
+    "class_prereqs": (lambda b: BOOKS[b].get("classes", []), class_prereqs_from_text),
 }
 
 
@@ -863,12 +915,13 @@ def build_catalog(pcgen_root, kind: str, books=None) -> dict:
     """Catalogo completo di un tipo sui BOOKS configurati (o sul sottoinsieme
     `books`, usato dai test su radici finte: un libro configurato ma assente
     sul disco e' un errore, non una resa silenziosa)."""
-    if kind not in PARSERS:
+    if kind not in PARSERS and kind not in TEXT_PARSERS:
         raise ValueError(
-            f"kind sconosciuto: {kind!r} (atteso uno di {sorted(PARSERS)})"
+            f"kind sconosciuto: {kind!r} (atteso uno di {sorted([*PARSERS, *TEXT_PARSERS])})"
         )
     pcgen_root = Path(pcgen_root)
-    files_for, parser = PARSERS[kind]
+    by_text = kind in TEXT_PARSERS
+    files_for, parser = TEXT_PARSERS[kind] if by_text else PARSERS[kind]
     entries = []
     counts = {}
     stats = {}
@@ -876,17 +929,23 @@ def build_catalog(pcgen_root, kind: str, books=None) -> dict:
         if books is not None and book not in books:
             continue
         book_records = []
+        book_entries = []
         for rel in files_for(book):
             path = pcgen_root / DATA_SUBDIR / cfg["dir"] / rel
             if not path.is_file():
                 raise FileNotFoundError(f"file LST mancante: {path}")
-            book_records.extend(
-                iter_lst_records(path.read_text(encoding="utf-8", errors="replace"))
-            )
-        book_entries, book_stats = parser(book_records, book)
+            text = path.read_text(encoding="utf-8", errors="replace")
+            if by_text:
+                book_entries.extend(parser(text, book))
+            else:
+                book_records.extend(iter_lst_records(text))
+        if not by_text:
+            book_entries, book_stats = parser(book_records, book)
+            stats[book] = book_stats
+        elif not files_for(book):
+            continue  # libro senza classes.lst: nessun conteggio finto a 0
         entries.extend(book_entries)
         counts[book] = len(book_entries)
-        stats[book] = book_stats
     return {
         "_provenance": {
             "source": (
@@ -972,7 +1031,7 @@ def main(argv=None) -> int:
         )
         return 1
 
-    payloads = {kind: build_catalog(pcgen_root, kind) for kind in PARSERS}
+    payloads = {kind: build_catalog(pcgen_root, kind) for kind in [*PARSERS, *TEXT_PARSERS]}
     classes_report = {
         book: class_names_in_file(pcgen_root / DATA_SUBDIR / cfg["dir"] / f)
         for book, cfg in BOOKS.items()
