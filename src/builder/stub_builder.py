@@ -174,7 +174,7 @@ def build_stub_payload(
 
     benchmark = {
         "meta_tier": "T3",
-        "ruling_badge": "validated",
+        "ruling_badge": "unverified",
         "dpr_snapshot": {
             "livello_1": {"media": 6, "picco": 9},
             "livello_5": {"media": 18, "picco": 26},

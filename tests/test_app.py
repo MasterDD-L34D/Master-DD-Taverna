@@ -252,6 +252,13 @@ def test_build_stub_endpoint_returns_json(client, auth_headers):
     payload = response.json()
     assert payload["build_state"]["mode"] in {"core", "extended"}
     assert payload["sheet"]["classi"][0]["nome"] == "Unknown"
+    assert payload["benchmark"]["ruling_badge"] == "unverified"
+
+
+def test_ruling_expert_stub_refuses_validation(client, auth_headers):
+    response = client.post("/ruling-expert", headers=auth_headers)
+    assert response.status_code == 501
+    assert "non esegue validazioni" in response.json()["detail"]
 
 
 def test_build_stub_endpoint_with_params(client, auth_headers):
