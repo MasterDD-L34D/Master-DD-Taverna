@@ -130,11 +130,17 @@ def feat_entry(page: dict, url: str) -> dict:
     }
 
 
-def build_new_entries(names, load_page):
+def build_new_entries(names, load_page, taken=()):
     """Per ogni nome mancante: pagina analizzata -> voce. `load_page(nome)`
     scarica e analizza (iniettata: i test non vanno in rete). Ritorna
-    (ogl, local_pi, falliti); una pagina che fallisce si registra e basta."""
+    (ogl, local_pi, falliti); una pagina che fallisce si registra e basta.
+
+    source_id unico (gate test_source_id_unique_globally): `taken` sono gli
+    id gia' nel catalogo. Stesso slug da un manuale diverso -> id col manuale
+    (due "Inner Light"); stesso slug e stesso manuale -> doppione scartato."""
     ogl, local, failures = [], [], []
+    seen = set(taken)
+    seen_sources = set()  # (slug base, manuale) gia' importati in questo giro
     for name in names:
         try:
             page = load_page(name)
@@ -143,6 +149,15 @@ def build_new_entries(names, load_page):
             continue
         url = FEAT_URL + name.replace(" ", "%20")
         entry = feat_entry(page, url)
+        base = entry["source_id"]
+        if (base, entry["source"]) in seen_sources:
+            continue  # doppione dell'indice (stesso talento, stesso manuale)
+        seen_sources.add((base, entry["source"]))
+        if base in seen:
+            entry["source_id"] = source_id(
+                "feats", f"{entry['name']} {entry['source']}"
+            )
+        seen.add(entry["source_id"])
         # PI nel nome O nella descrizione -> local-only (come gli archetipi).
         (local if is_pi_entry(entry) else ogl).append(entry)
     return ogl, local, failures
@@ -178,7 +193,8 @@ def main(argv=None) -> int:
     def load_page(name):
         return parse_feat_page(fetch(FEAT_URL + quote(name), delay=2.0))
 
-    ogl, local_new, failures = build_new_entries(missing, load_page)
+    taken = {e["source_id"] for e in catalog["entries"] + local if e.get("source_id")}
+    ogl, local_new, failures = build_new_entries(missing, load_page, taken)
     print(
         f"nuovi OGL: {len(ogl)}; PI->local: {len(local_new)}; falliti: {len(failures)}"
     )

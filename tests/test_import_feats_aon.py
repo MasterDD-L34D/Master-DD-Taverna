@@ -104,7 +104,26 @@ def test_build_new_entries_divide_pi_e_registra_i_fallimenti():
     assert len(falliti) == 1 and "Assente" in falliti[0]
 
 
-def test_build_new_entries_pi_nella_descrizione_va_in_locale():
+def test_build_new_entries_source_id_unico():
+    # 2026-11-02: AoN ha due talenti "Inner Light" (Blood of Angels e
+    # Ultimate Wilderness) e un "Unusual Heritage" listato due volte con
+    # grafie diverse: stesso slug. Manuale diverso -> id col manuale;
+    # stesso manuale -> doppione scartato.
+    pagine = {
+        "Inner Light": {"name": "Inner Light", "source": "Blood of Angels"},
+        "Inner Light (UW)": {"name": "Inner Light", "source": "Ultimate Wilderness"},
+        "Unusual Heritage": {"name": "Unusual Heritage", "source": "BoG"},
+        "Unusual  Heritage": {"name": "Unusual Heritage", "source": "BoG"},
+    }
+    ogl, _, _ = build_new_entries(
+        list(pagine), lambda n: {**pagine[n], "benefit": "B."}
+    )
+    ids = [e["source_id"] for e in ogl]
+    assert ids == [
+        "feats:inner_light",
+        "feats:inner_light_ultimate_wilderness",
+        "feats:unusual_heritage",
+    ]
     # Stessa regola degli archetipi (is_pi_entry): nome neutro, descrizione
     # con un luogo di Golarion che la sanitize non toglie -> local-only.
     pagina = {

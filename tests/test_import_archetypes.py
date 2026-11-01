@@ -141,6 +141,27 @@ def test_merge_archetypes_tiene_le_esistenti_e_aggiunge_le_nuove():
     assert out[0]["mechanics"]["features"] == [{"name": "f"}]
 
 
+def test_is_pi_entry_guarda_gli_stessi_campi_del_gate():
+    # 2026-11-02: import dei talenti -> 69 violazioni del gate, PI nei
+    # prerequisiti ("worshiper of Rovagug") e nei tag. is_pi_entry deve
+    # vedere cio' che vede legal_filter (SCANNED_FIELDS), source escluso.
+    prereq = {
+        "name": "Channel Endurance",
+        "description": "Pulita.",
+        "prerequisites": ["worshiper of Rovagug"],
+        "tags": [],
+    }
+    solo_source = {
+        "name": "Some Feat",
+        "description": "Pulita.",
+        "prerequisites": [],
+        "tags": [],
+        "source": "Taldor, Echoes of Glory",
+    }
+    assert is_pi_entry(prereq) is True
+    assert is_pi_entry(solo_source) is False
+
+
 def test_is_pi_entry_guarda_anche_la_descrizione():
     # 2026-11-01: tre archetipi delle classi nuove hanno nome neutro ma
     # descrizione con luoghi di Golarion che il sanitizer non toglie
