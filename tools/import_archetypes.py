@@ -202,12 +202,16 @@ def archetype_entry(row: dict, class_name: str) -> dict:
 
 
 def is_pi_entry(entry: dict) -> bool:
-    """Voce da tenere local-only: nome con identita' PI, oppure PI residua
-    nella descrizione dopo la sanitize (stesso scanner del gate legal_filter).
-    Fail-closed come import_spells: meglio locale che pubblico."""
-    from tools.legal_filter import _find_pi
+    """Voce da tenere local-only: nome con identita' PI, oppure PI residua in
+    uno dei campi che il gate legal_filter scansiona (SCANNED_FIELDS: nome,
+    descrizione, prerequisiti, tag, ...; `source` escluso per policy).
+    Stessi campi e stesso scanner del gate: l'importer non puo' accettare
+    cio' che il gate rifiuterebbe. Fail-closed: meglio locale che pubblico."""
+    from tools.legal_filter import _find_pi, _iter_strings
 
-    return bool(is_pi_name(entry["name"]) or _find_pi(entry.get("description") or ""))
+    return bool(
+        is_pi_name(entry["name"]) or any(_find_pi(t) for t in _iter_strings(entry))
+    )
 
 
 def merge_archetypes(existing: list[dict], fresh: list[dict]) -> list[dict]:
