@@ -32,6 +32,13 @@ PCGEN_DIR = (
     REPO.parent / "pathmaster-dd" / "packages" / "rules-engine-v2" / "src" / "data"
 )
 
+# Il tool legge i JSON PCGen dal repo SIBLING pathmaster-dd: in CI (e in un
+# worktree) non c'e'. Skip dichiarato, non un errore a ogni run: in locale,
+# dove il sibling esiste, i test girano come sempre.
+pytestmark = pytest.mark.skipif(
+    not PCGEN_DIR.is_dir(), reason=f"repo sibling pathmaster-dd assente: {PCGEN_DIR}"
+)
+
 
 @pytest.fixture(scope="module")
 def generated(tmp_path_factory):

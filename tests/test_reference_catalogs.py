@@ -5,6 +5,8 @@ import re
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tools.import_reference import _class_skill_matches
@@ -105,6 +107,18 @@ def test_manifest_counts():
     catalogs_kinds = {c["kind"] for c in manifest["catalogs"]}
     for _, (kind, _) in NEW_KINDS.items():
         assert kind in catalogs_kinds, f"manifest.catalogs manca {kind}"
+    print("OK: manifest allineato ai cataloghi OGL")
+
+
+@pytest.mark.skipif(
+    not (OGL.parent / "pi_local_only" / "monsters_local.json").is_file(),
+    reason="pi_local_only assente (solo locale, mai in git): parita' local-only non verificabile",
+)
+def test_manifest_counts_local_only():
+    # Parte local-only di test_manifest_counts, separata (2026-11-01): in CI
+    # pi_local_only non esiste, e farla fallire li' rendeva rosso ogni run.
+    with open(MANIFEST, encoding="utf-8") as f:
+        manifest = json.load(f)
     monsters = [c for c in manifest["catalogs"] if c["kind"] == "monsters"][0]
     # Conteggio reale dal file local-only (199 -> 3127 con l'espansione
     # 2026-07-25): niente numeri hardcoded, il riferimento e' il file.
