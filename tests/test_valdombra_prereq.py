@@ -8,12 +8,22 @@ in modo VISIBILE, non ritrovarsi al tavolo senza statblock.
 import json
 from pathlib import Path
 
+import pytest
+
 BUILDS = (
     Path(__file__).resolve().parents[1]
     / "data"
     / "reference"
     / "pi_local_only"
     / "monsters_local.json"
+)
+
+# pi_local_only e' solo locale per policy (mai in git): in CI il file non
+# c'e' e il prereq non e' verificabile -> skip dichiarato. Con il file
+# presente, una creatura mancante resta un FALLIMENTO visibile.
+pytestmark = pytest.mark.skipif(
+    not BUILDS.is_file(),
+    reason="pi_local_only/monsters_local.json assente (solo locale)",
 )
 
 

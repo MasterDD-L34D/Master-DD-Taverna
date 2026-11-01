@@ -6,6 +6,8 @@ import json
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from tools.import_talents import (
@@ -254,6 +256,12 @@ def test_parse_added_skills_variants():
     assert _parse_added_skills("Nessuna frase skill.") == []
 
 
+@pytest.mark.skipif(
+    not (
+        Path(__file__).resolve().parents[1] / "data" / "reference" / "aon_cache"
+    ).is_dir(),
+    reason="cache AoN locale assente (data/reference/aon_cache, mai in git): offline non ha pagine",
+)
 def test_collect_entries_offline_pools():
     """Pipeline completa su cache: tutti i pool attesi, dedup (pool, name) —
     per revelation (pool, category, name) perche' la stessa entry e'

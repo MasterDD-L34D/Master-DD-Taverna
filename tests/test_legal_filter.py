@@ -21,6 +21,8 @@ import json
 import sys
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import tools.legal_filter as gate
@@ -189,6 +191,12 @@ class TestCataloghiLocali:
             assert cat["local_only"] is True and cat["is_ogc"] is False
             assert cat["kind"] == kind and cat["entries"] == 4
 
+    @pytest.mark.skipif(
+        not (
+            REPO_ROOT / "data" / "reference" / "pi_local_only" / "traits_local.json"
+        ).is_file(),
+        reason="pi_local_only/traits_local.json assente (solo locale, mai in git)",
+    )
     def test_local_contenuto_verbatim(self):
         traits = json.loads(
             (self.LOCAL / "traits_local.json").read_text(encoding="utf-8")
