@@ -617,17 +617,15 @@ def build_character(draft):
     granted = {}
     for item_name in draft.equipment:
         effect = parse_magic_item(item_name) or {}
-        raw_skill = effect.get("granted_skill")
-        if not raw_skill or effect.get("enhancement") != 2:
-            continue
-        sk = next(
-            (s for s in catalogs.load("skills") if s["name"].casefold() == raw_skill.casefold()),
-            None,
-        )
-        if sk is None:
-            warnings.append(f"{item_name}: skill gratuita sconosciuta {raw_skill}")
-            continue
-        granted[sk["name"]] = draft.level
+        for raw_skill in effect.get("granted_skills", []):
+            sk = next(
+                (s for s in catalogs.load("skills") if s["name"].casefold() == raw_skill.casefold()),
+                None,
+            )
+            if sk is None:
+                warnings.append(f"{item_name}: skill gratuita sconosciuta {raw_skill}")
+                continue
+            granted[sk["name"]] = draft.level
     for name, granted_ranks in granted.items():
         sk = catalogs.get_skill(name)
         key = sk["mechanics"]["key_ability"]

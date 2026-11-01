@@ -16,13 +16,13 @@ def parse_magic_item(name):
     """Restituisce un effetto strutturato, oppure None se il nome e' ignoto."""
     text = str(name).strip()
     match = re.fullmatch(
-        r"headband of vast intelligence \+([246])(?:\s*\(([^)]+)\))?", text, re.I
+        r"headband of vast intelligence \+([246])(?:\s*\((.*)\))?", text, re.I
     )
     if match:
         return {
             "ability": "int",
             "enhancement": int(match.group(1)),
-            "granted_skill": match.group(2),
+            "granted_skills": [s.strip() for s in (match.group(2) or "").split(";") if s.strip()],
         }
     for pattern, ability in _ABILITY_ITEMS:
         match = pattern.fullmatch(text)

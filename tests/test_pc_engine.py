@@ -1332,3 +1332,15 @@ def test_magic_item_effects_feed_derived_stats_not_rank_budget():
     assert equipped["skills"]["Perception"]["ranks"] == 0
     assert equipped["skills"]["Perception"]["granted_ranks"] == 9
     assert equipped["skills"]["Perception"]["total"] == 9
+
+
+def test_intelligence_headband_plus_four_grants_both_declared_skills():
+    equipped = build_character(_griselle_draft(equipment=[
+        "Headband of Vast Intelligence +4 (Perception; Knowledge (Planes))",
+    ]))
+    assert equipped["abilities"]["int"] == 22
+    assert equipped["skill_rank_budget"] == 47
+    assert equipped["skills"]["Perception"]["granted_ranks"] == 9
+    assert equipped["skills"]["Knowledge (Planes)"]["granted_ranks"] == 9
+    assert equipped["skills"]["Knowledge (Planes)"]["ranks"] == 0
+    assert equipped["skills"]["Knowledge (Planes)"]["total"] == 15
