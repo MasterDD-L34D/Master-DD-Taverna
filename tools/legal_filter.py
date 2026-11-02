@@ -255,9 +255,134 @@ GATE_CANDIDATE_TERMS = {
     "Mierani",
 }
 
-# Product Identity scansionata dal gate: unione delle tre liste sopra.
+# Scan con modello locale 2026-11-02 (gemma4:e4b, prompt v2, prova ripetuta
+# 3x su 40 voci a risposta nota: 17-18/21 PI, 0 falsi positivi): il modello
+# ha SEGNALATO candidati su 7742 voci feats/archetypes/spells, la lista qui
+# e' la revisione a mano (report sessione-2026-07-16/rapporti/
+# 2026-11-02-scan-pi-modelli-locali.md nell'hub). Scartati: creature e razze
+# dei bestiari OGL, cosmologia (Abyss, Axis, First World...), e i termini gia'
+# esclusi per decisione documentata (Sargava, Shackles, Linnorm da solo).
+GATE_LLM_SCAN_TERMS = {
+    # Organizzazioni / ordini / scuole
+    "Darklands",
+    "Red Mantis",
+    "Gray Maidens",
+    "Gray Maiden",
+    "Technic League",
+    "Whispering Way",
+    "Green Faith",
+    "Aspis Consortium",
+    "Silver Ravens",
+    "Lantern Bearers",
+    "Sczarni",
+    "Kitharodian",
+    "Arcanamirium",
+    "Acadamae",
+    "Magaambya",
+    "Magaambyan",
+    "Palatine Eye",
+    "Cyphermages",
+    "Golden Legion",
+    "Steel Falcons",
+    "Eagle Knights",
+    "Twilight Talons",
+    "Gray Corsairs",
+    "Kalistrade",
+    "Rivethun",
+    "Umbral Court",
+    "Lumber Consortium",
+    "Harrow",
+    # Divinita', signori dei demoni ed elementali, personaggi nominati
+    "Achaekek",
+    "Arazni",
+    "Gyronna",
+    "Dahak",
+    "Ghlaunder",
+    "Kurgess",
+    "Milani",
+    "Brigh",
+    "Apsu",
+    "Ragathiel",
+    "Sivanah",
+    "Szuriel",
+    "Treerazer",
+    "Kalavakus",
+    "Lysianassa",
+    "Kelizandri",
+    "Ranalc",
+    "Whispering Tyrant",
+    "Kevoth-Kul",
+    "Ileosa",
+    "Thrune",
+    "Hakotep",
+    "Forgotten Pharaoh",
+    "Ruby Prince",
+    "Aram Zey",
+    "Hao Jin",
+    "Jadwiga",
+    "Jatembe",
+    # Luoghi, nazioni, etnie e loro aggettivi
+    "Minkai",
+    "Kelesh",
+    "Keleshite",
+    "Ulfen",
+    "Garundi",
+    "Bekyar",
+    "Nexian",
+    "Numerian",
+    "Razmiran",
+    "Lepidstadt",
+    "Kintargo",
+    "Pitax",
+    "Rostland",
+    "Restov",
+    "Ilsur",
+    "Okeno",
+    "Linnorm Kings",
+    "Lung Wa",
+    "Dragon Empires",
+    "Talmandor",
+    "Uskwood",
+    "Gallowspire",
+    "Cinderlands",
+    "Abendego",
+    "Startoss",
+    "Vudrani",
+    "Nidalese",
+    "Taldane",
+    "Galtan",
+    "Nirmathi",
+    "Molthuni",
+    "Mendevian",
+    "Gebite",
+    "Jistka",
+    "Jistkan",
+    "Shory",
+    "Stavian",
+    "Triaxian",
+    "Castrovelian",
+    "Sarzari",
+    "Dongun Hold",
+    "Irriseni",
+    # Trovato rileggendo il campione delle sanitize (sfuggito al modello)
+    "Tanglebriar",
+    "Lirgeni",
+    "Harrowed Society",
+    "Twilight Academy",
+    # Aggettivi di culto (il word boundary non li prende dalla divinita')
+    "Desnan",
+    "Iroran",
+    "Caydenite",
+    "Caydenites",
+    "Kuthite",
+    "Kuthites",
+}
+
+# Product Identity scansionata dal gate: unione delle liste sopra.
 # I termini sono controllati con word boundary per ridurre i falsi positivi.
-PI_WORDS = set(PI_TERMS) | GATE_LEGACY_TERMS | GATE_CANDIDATE_TERMS
+PI_WORDS = (
+    set(PI_TERMS) | GATE_LEGACY_TERMS | GATE_CANDIDATE_TERMS | GATE_LLM_SCAN_TERMS
+)
 
 # Frasi PI che vanno controllate come sottostringhe esatte (case-insensitive).
 # "Pathfinder Society" non e' qui: e' in PI_TERMS (word-boundary la copre;
@@ -297,6 +422,22 @@ _SANCTIONED_MASK = [
         key=len,
         reverse=True,
     )
+]
+
+
+# Titoli di manuali che contengono un termine dello scan 2026-11-02: la
+# policy sui titoli libro e' separata (precedente "Sargava", sopra), quindi
+# il titolo citato non e' una violazione; il termine nudo nella prosa si'.
+BOOK_TITLES = [
+    "Dragon Empires Primer",
+    "Heroes of the Darklands",
+    "The Harrow Handbook",
+    "Harrow Handbook",
+    "HarrowHandbook",
+]
+_BOOK_TITLE_MASK = [
+    re.compile(re.escape(t), re.IGNORECASE)
+    for t in sorted(BOOK_TITLES, key=len, reverse=True)
 ]
 
 
@@ -356,7 +497,7 @@ def _find_pi(text: str) -> list[dict]:
     mascherati prima della scansione: contengono un termine PI letterale ma
     sono testo legittimo prodotto dalla sanitize stessa.
     """
-    for mask_re in _SANCTIONED_MASK:
+    for mask_re in _SANCTIONED_MASK + _BOOK_TITLE_MASK:
         text = mask_re.sub("", text)
     found = []
     lowered = text.lower()

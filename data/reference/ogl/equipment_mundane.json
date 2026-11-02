@@ -9834,35 +9834,6 @@
       }
     },
     {
-      "name": "Gray maiden plate",
-      "source": "Adventurer's Guide",
-      "source_id": "adventurer_s_guide:gray_maiden_plate",
-      "prerequisites": [],
-      "tags": [
-        "equipment",
-        "armor",
-        "heavy"
-      ],
-      "references": [
-        "AoN: Equipment (armor heavy)"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/EquipmentArmorDisplay.aspx?ItemName=Gray%20maiden%20plate",
-        "https://aonprd.com/Equipment.aspx"
-      ],
-      "description": "Gray maiden plate (armor, heavy), costo 1,500 gp, peso 50 lbs.\n\nThe Gray Maidens’ distinctive armor is one of their most iconic identifiers. Gray Maiden plate is mechanically identical to full plate, and any effect that functions with full plate functions with Gray Maiden plate. Certain options for Gray Maidens function only when they wear Gray Maiden plate.",
-      "mechanics": {
-        "cost": "1,500 gp",
-        "armor_bonus": "+9",
-        "max_dex_bonus": "+1",
-        "armor_check_penalty": "-6",
-        "arcane_spell_failure_chance": "35%",
-        "speed_30_ft": "20 ft.",
-        "speed_20_ft": "15 ft.",
-        "weight": "50 lbs."
-      }
-    },
-    {
       "name": "Stoneplate",
       "source": "Ultimate Equipment",
       "source_id": "ultimate_equipment:stoneplate",
@@ -18519,7 +18490,7 @@
         "https://aonprd.com/EquipmentMiscDisplay.aspx?ItemName=Spirit%20offerings",
         "https://aonprd.com/Equipment.aspx"
       ],
-      "description": "Spirit offerings (gear, adventuring), costo 20 gp, peso 1/2 lb.\n\nThese offerings take many forms, such as food, incense, pinwheels, rare teas, perfectly smooth white pebbles, or stone tablets, but they are always kept in pouches tied with ribbon. Travelers in the Dragon Empires leave these offerings at the small shrines or holy sites that can be found scattered along roads. For 1 hour after a traveler leaves a spirit offering, any kami ( Bestiary 3 159) the traveler encounters has its initial attitude improved by one step. This attitude adjustment reverts to normal after 10 minutes unless the creature’s attitude is adjusted further during that time, such as via the Diplomacy skill, in which case the kami’s attitude does not revert after the offering’s effect expires. Once a spirit offering has been used to improved a kami’s attitude, it cannot be reused.",
+      "description": "Spirit offerings (gear, adventuring), costo 20 gp, peso 1/2 lb.\n\nThese offerings take many forms, such as food, incense, pinwheels, rare teas, perfectly smooth white pebbles, or stone tablets, but they are always kept in pouches tied with ribbon. Travelers in the eastern lands leave these offerings at the small shrines or holy sites that can be found scattered along roads. For 1 hour after a traveler leaves a spirit offering, any kami ( Bestiary 3 159) the traveler encounters has its initial attitude improved by one step. This attitude adjustment reverts to normal after 10 minutes unless the creature’s attitude is adjusted further during that time, such as via the Diplomacy skill, in which case the kami’s attitude does not revert after the offering’s effect expires. Once a spirit offering has been used to improved a kami’s attitude, it cannot be reused.",
       "mechanics": {
         "cost": "20 gp",
         "weight": "1/2 lb."
@@ -19485,7 +19456,7 @@
         "https://aonprd.com/EquipmentMiscDisplay.aspx?ItemName=Vault%20altimeter",
         "https://aonprd.com/Equipment.aspx"
       ],
-      "description": "Vault altimeter (gear, adventuring), costo 10 gp, peso 1/2 lb.\n\nThis altimeter has been specially calibrated for the Darklands and can be used to measure how deep you are beneath the surface. It grants a +2 circumstance bonus on Survival checks to navigate underground.",
+      "description": "Vault altimeter (gear, adventuring), costo 10 gp, peso 1/2 lb.\n\nThis altimeter has been specially calibrated for the underground realms and can be used to measure how deep you are beneath the surface. It grants a +2 circumstance bonus on Survival checks to navigate underground.",
       "mechanics": {
         "cost": "10 gp",
         "weight": "1/2 lb."
@@ -19830,7 +19801,7 @@
         "https://aonprd.com/EquipmentMiscDisplay.aspx?ItemName=Whale%20oil",
         "https://aonprd.com/Equipment.aspx"
       ],
-      "description": "Whale oil (gear, adventuring), costo 2 sp, peso 1 lb.\n\nA common source of illumination in the Lands of the Linnorm Kings, 1 pint of whale oil burns for 10 hours in a lantern or lamp. It otherwise functions as normal oil.",
+      "description": "Whale oil (gear, adventuring), costo 2 sp, peso 1 lb.\n\nA common source of illumination in the Lands of the northern kings, 1 pint of whale oil burns for 10 hours in a lantern or lamp. It otherwise functions as normal oil.",
       "mechanics": {
         "cost": "2 sp",
         "weight": "1 lb."

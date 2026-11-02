@@ -1439,7 +1439,7 @@
       "reference_urls": [
         "https://aonprd.com/TraitDisplay.aspx?ItemName=Permanent%20Scars"
       ],
-      "description": "You carry the physical and emotional scars of your Gray Maiden initiation as mental armor. You receive a +2 trait bonus on saving throws against emotion UM and pain UM spells and effects.",
+      "description": "You carry the physical and emotional scars of your armored guard initiation as mental armor. You receive a +2 trait bonus on saving throws against emotion UM and pain UM spells and effects.",
       "mechanics": {
         "category": "Basic (Combat)"
       }
@@ -2191,28 +2191,6 @@
       }
     },
     {
-      "name": "Witty Repartee",
-      "source": "Faction Guide",
-      "source_id": "faction_guide:witty_repartee",
-      "prerequisites": [
-        "Kitharodian Academy"
-      ],
-      "tags": [
-        "trait",
-        "basic_combat"
-      ],
-      "references": [
-        "AoN: Traits (Basic (Combat))"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/TraitDisplay.aspx?ItemName=Witty%20Repartee"
-      ],
-      "description": "You are quick with your tongue and have always possessed the talent to quickly admonish your enemies. You gain a +1 trait bonus on Bluff checks and Bluff is a class skill for you.",
-      "mechanics": {
-        "category": "Basic (Combat)"
-      }
-    },
-    {
       "name": "Youthful Infiltrator",
       "source": "Spymaster's Handbook",
       "source_id": "spymaster_s_handbook:youthful_infiltrator",
@@ -2627,7 +2605,7 @@
       "reference_urls": [
         "https://aonprd.com/TraitDisplay.aspx?ItemName=Deep%20Faith"
       ],
-      "description": "Your deity was born of the depths, and you’re a child of such realms. Whenever you cast a spell granted by the earth domain (or associated subdomains) while in the Darklands, that spell functions at 1 caster level higher than your actual caster level.",
+      "description": "Your deity was born of the depths, and you’re a child of such realms. Whenever you cast a spell granted by the earth domain (or associated subdomains) while in the underground realms, that spell functions at 1 caster level higher than your actual caster level.",
       "mechanics": {
         "category": "Basic (Faith)"
       }
@@ -3075,7 +3053,7 @@
       "reference_urls": [
         "https://aonprd.com/TraitDisplay.aspx?ItemName=Imperfect%20Recall"
       ],
-      "description": "Your belief in reincarnation, as taught by the Sangpotshi philosophy and in lands that were once Imperial Lung Wa, has been reinforced by personal experience. In moments of great stress, you sometimes experience flashes of déjà vu in which you recall information you don’t remember ever having known. Once per day while you are in danger or distracted, you gain a +3 bonus on a single Knowledge skill check.",
+      "description": "Your belief in reincarnation, as taught by the Sangpotshi philosophy and in lands that were once Imperial a fallen empire, has been reinforced by personal experience. In moments of great stress, you sometimes experience flashes of déjà vu in which you recall information you don’t remember ever having known. Once per day while you are in danger or distracted, you gain a +3 bonus on a single Knowledge skill check.",
       "mechanics": {
         "category": "Basic (Faith)"
       }
@@ -3175,7 +3153,7 @@
       "reference_urls": [
         "https://aonprd.com/TraitDisplay.aspx?ItemName=Kalistocratic%20Prophecy"
       ],
-      "description": "You were raised under the Prophecies of Kalistrade, and were inspired to seize upon an untapped business opportunity. Up to once per week, when you work to advance this opportunity with at least 1 day of effort, you can attempt an appropriate Profession check to earn money or gain capital using the downtime rules ( Ultimate Campaign 76 ) with a +2 trait bonus. In the event of a failed check, your opportunity is discovered by rivals and you cannot employ this trait for 1 month while you look for a new opportunity.",
+      "description": "You were raised under the Prophecies of a philosophy of purity and wealth, and were inspired to seize upon an untapped business opportunity. Up to once per week, when you work to advance this opportunity with at least 1 day of effort, you can attempt an appropriate Profession check to earn money or gain capital using the downtime rules ( Ultimate Campaign 76 ) with a +2 trait bonus. In the event of a failed check, your opportunity is discovered by rivals and you cannot employ this trait for 1 month while you look for a new opportunity.",
       "mechanics": {
         "category": "Basic (Faith)"
       }
@@ -3195,7 +3173,7 @@
       "reference_urls": [
         "https://aonprd.com/TraitDisplay.aspx?ItemName=Light%20in%20the%20Darkness"
       ],
-      "description": "You’re destined to bring light to the darkness and expunge the faithless from the deep. Whenever you cast a spell granted by the sun domain (or associated subdomains) while in the Darklands, the spell functions at 1 caster level higher than your actual caster level.",
+      "description": "You’re destined to bring light to the darkness and expunge the faithless from the deep. Whenever you cast a spell granted by the sun domain (or associated subdomains) while in the underground realms, the spell functions at 1 caster level higher than your actual caster level.",
       "mechanics": {
         "category": "Basic (Faith)"
       }
@@ -3735,7 +3713,7 @@
       "reference_urls": [
         "https://aonprd.com/TraitDisplay.aspx?ItemName=Scourge%20of%20the%20Darkness"
       ],
-      "description": "Stories of the depredations present in the Darklands drive you to explore its shadowy depths and purge the corruption from within. You gain a +1 trait bonus on saving throws against fear while in the Darklands and a +1 trait bonus on Intimidate checks against creatures native to the Darklands.",
+      "description": "Stories of the depredations present in the underground realms drive you to explore its shadowy depths and purge the corruption from within. You gain a +1 trait bonus on saving throws against fear while in the underground realms and a +1 trait bonus on Intimidate checks against creatures native to the underground realms.",
       "mechanics": {
         "category": "Basic (Faith)"
       }
@@ -3795,29 +3773,7 @@
       "reference_urls": [
         "https://aonprd.com/TraitDisplay.aspx?ItemName=Self-Sustaining"
       ],
-      "description": "As a follower of Razmir, the Prophecies of Kalistrade, or some other tradition that preaches self-reliance, you make a point of not seeking divine aid for minor matters. When you gain this trait, choose one of the following 0-level spells: create water , mending , purify food and drink , or stabilize . You can cast this spell once per day as a spell-like ability, using your character level as your caster level. Once chosen, this selection can’t change.",
-      "mechanics": {
-        "category": "Basic (Faith)"
-      }
-    },
-    {
-      "name": "Soul-Searcher's Strength",
-      "source": "Healer's Handbook",
-      "source_id": "healer_s_handbook:soul_searcher_s_strength",
-      "prerequisites": [
-        "Must follow the traditions of the rivethun"
-      ],
-      "tags": [
-        "trait",
-        "basic_faith"
-      ],
-      "references": [
-        "AoN: Traits (Basic (Faith))"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/TraitDisplay.aspx?ItemName=Soul-Searcher's%20Strength"
-      ],
-      "description": "Your introspections have taught you to understand your own flaws and proclivities and how to work with them. Choose one saving throw. You gain a +1 trait bonus on saving throws of the chosen kind.",
+      "description": "As a follower of Razmir, the Prophecies of a philosophy of purity and wealth, or some other tradition that preaches self-reliance, you make a point of not seeking divine aid for minor matters. When you gain this trait, choose one of the following 0-level spells: create water , mending , purify food and drink , or stabilize . You can cast this spell once per day as a spell-like ability, using your character level as your caster level. Once chosen, this selection can’t change.",
       "mechanics": {
         "category": "Basic (Faith)"
       }
@@ -4401,7 +4357,7 @@
       "reference_urls": [
         "https://aonprd.com/TraitDisplay.aspx?ItemName=Black%20Blood%20Heritage"
       ],
-      "description": "One of your ancestors came in contact with the mystical black blood ( Pathfinder Campaign Setting: Into the Darklands 51 ), granting you an affinity for the substance. You are immune to the negative effects of black blood. Once per day as a swift action, you can channel the essence of black blood, increasing your effective caster level by 1 for any 1st-or 2nd-level necromancy spell you cast. Your blood is pitch black as a result of this trait.",
+      "description": "One of your ancestors came in contact with the mystical black blood ( Pathfinder Campaign Setting: Into the underground realms 51 ), granting you an affinity for the substance. You are immune to the negative effects of black blood. Once per day as a swift action, you can channel the essence of black blood, increasing your effective caster level by 1 for any 1st-or 2nd-level necromancy spell you cast. Your blood is pitch black as a result of this trait.",
       "mechanics": {
         "category": "Basic (Magic)"
       }
@@ -5487,7 +5443,7 @@
       "reference_urls": [
         "https://aonprd.com/TraitDisplay.aspx?ItemName=Mechanical%20Aptitude"
       ],
-      "description": "You have learned much from tinkering with ancient technology from the Jistka Imperium. Choose one of the following skills: Disable Device, Knowledge (engineering), or Use Magic Device. Once per day, you can reroll a check with that skill before the outcome of the check is revealed. You must take the second result, even if it is worse.",
+      "description": "You have learned much from tinkering with ancient technology from the an ancient empire Imperium. Choose one of the following skills: Disable Device, Knowledge (engineering), or Use Magic Device. Once per day, you can reroll a check with that skill before the outcome of the check is revealed. You must take the second result, even if it is worse.",
       "mechanics": {
         "category": "Basic (Magic)"
       }
@@ -5815,26 +5771,6 @@
       }
     },
     {
-      "name": "Rivethun Adherent",
-      "source": "Haunted Heroes Handbook",
-      "source_id": "haunted_heroes_handbook:rivethun_adherent",
-      "prerequisites": [],
-      "tags": [
-        "trait",
-        "basic_magic"
-      ],
-      "references": [
-        "AoN: Traits (Basic (Magic))"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/TraitDisplay.aspx?ItemName=Rivethun%20Adherent"
-      ],
-      "description": "Rivethun is an ancient tradition of dwarven shamans who learned to listen to and affect the world around them by reflecting on the friction between body and spirit. As someone who feels a similar friction between your inner spirit and physical body, you have picked up some old rivethun meditation techniques, even if you aren’t a dwarf. While you suffer a physical ailment, such as disease, poison, or ability damage to Strength, Dexterity, or Constitution (but not including hit point damage), you gain a +2 trait bonus on Will saving throws. While you suffer a mental ailment, including insanity, any charm or compulsion effect, or ability damage to Intelligence, Wisdom, or Charisma, you gain a +2 trait bonus on Fortitude saving throws.",
-      "mechanics": {
-        "category": "Basic (Magic)"
-      }
-    },
-    {
       "name": "Scholar of the Analects",
       "source": "Arcane Anthology",
       "source_id": "arcane_anthology:scholar_of_the_analects",
@@ -5911,7 +5847,7 @@
       "reference_urls": [
         "https://aonprd.com/TraitDisplay.aspx?ItemName=Secret%20Scrolls"
       ],
-      "description": "You were inducted into a secret magical tradition such as the Esoteric Order of the Palatine Eye. You can cast read magic once per day as a spell-like ability, and gain a +1 trait bonus on Use Magic Device checks to activate scrolls you cannot normally use.",
+      "description": "You were inducted into a secret magical tradition such as a society of occultists. You can cast read magic once per day as a spell-like ability, and gain a +1 trait bonus on Use Magic Device checks to activate scrolls you cannot normally use.",
       "mechanics": {
         "category": "Basic (Magic)"
       }
@@ -7049,46 +6985,6 @@
       }
     },
     {
-      "name": "Darklands Scholar",
-      "source": "Heroes of the Darklands",
-      "source_id": "heroes_of_the_darklands:darklands_scholar",
-      "prerequisites": [],
-      "tags": [
-        "trait",
-        "basic_social"
-      ],
-      "references": [
-        "AoN: Traits (Basic (Social))"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/TraitDisplay.aspx?ItemName=Darklands%20Scholar"
-      ],
-      "description": "Unsatisfied with mere stories, you have spent years researching journals and firsthand accounts of those who explored the Darklands before you. You gain a +2 trait bonus on Knowledge checks to identify the weaknesses of Darklands creatures.",
-      "mechanics": {
-        "category": "Basic (Social)"
-      }
-    },
-    {
-      "name": "Darklands Trader",
-      "source": "Heroes of the Darklands",
-      "source_id": "heroes_of_the_darklands:darklands_trader",
-      "prerequisites": [],
-      "tags": [
-        "trait",
-        "basic_social"
-      ],
-      "references": [
-        "AoN: Traits (Basic (Social))"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/TraitDisplay.aspx?ItemName=Darklands%20Trader"
-      ],
-      "description": "You’re familiar with Nar- Voth’s trade routes and negotiation involving the denizens of the Darklands. You gain a +1 trait bonus on Diplomacy checks relating to subterranean trade and on Knowledge (dungeoneering) checks relating to subterranean creatures. Select one of these skills to be a class skill for you.",
-      "mechanics": {
-        "category": "Basic (Social)"
-      }
-    },
-    {
       "name": "Deep Cover",
       "source": "Spymaster's Handbook",
       "source_id": "spymaster_s_handbook:deep_cover",
@@ -7349,7 +7245,7 @@
       "reference_urls": [
         "https://aonprd.com/TraitDisplay.aspx?ItemName=Excellent%20Penmanship"
       ],
-      "description": "You are a master of calligraphy, an art once highly valued in Lung Wa and still held in high esteem in Lingshen. The DC to detect forgeries you create increases by 2. If you attempt to persuade someone via a written message, you gain a +2 bonus on any Bluff, Diplomacy, or Intimidate check attempted for that communication. Linguistics is always a class skill for you.",
+      "description": "You are a master of calligraphy, an art once highly valued in a fallen empire and still held in high esteem in Lingshen. The DC to detect forgeries you create increases by 2. If you attempt to persuade someone via a written message, you gain a +2 bonus on any Bluff, Diplomacy, or Intimidate check attempted for that communication. Linguistics is always a class skill for you.",
       "mechanics": {
         "category": "Basic (Social)"
       }
@@ -7752,26 +7648,6 @@
         "https://aonprd.com/TraitDisplay.aspx?ItemName=Influence"
       ],
       "description": "Your position in society grants you special insight into others, and special consideration or outright awe from others. Choose one of the following skills: Diplomacy, Intimidate, or Sense Motive. You gain a +1 trait bonus on that skill, and it is always a class skill for you.",
-      "mechanics": {
-        "category": "Basic (Social)"
-      }
-    },
-    {
-      "name": "Jistkan Scholar",
-      "source": "Blood of the Ancients",
-      "source_id": "blood_of_the_ancients:jistkan_scholar",
-      "prerequisites": [],
-      "tags": [
-        "trait",
-        "basic_social"
-      ],
-      "references": [
-        "AoN: Traits (Basic (Social))"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/TraitDisplay.aspx?ItemName=Jistkan%20Scholar"
-      ],
-      "description": "You have specialized in studying Jistkan history and culture. You gain Jistka as a bonus language and a +1 trait bonus on all Knowledge checks related to the Jistka Imperium.",
       "mechanics": {
         "category": "Basic (Social)"
       }
@@ -8399,28 +8275,6 @@
       }
     },
     {
-      "name": "Savant",
-      "source": "Faction Guide",
-      "source_id": "faction_guide:savant",
-      "prerequisites": [
-        "Kitharodian Academy"
-      ],
-      "tags": [
-        "trait",
-        "basic_social"
-      ],
-      "references": [
-        "AoN: Traits (Basic (Social))"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/TraitDisplay.aspx?ItemName=Savant"
-      ],
-      "description": "From a very young age, the ability to master performance types has come quite naturally to you. Choose a performance type. You gain a +2 trait bonus on all Perform checks made using that performance type. Perform is always a class skill for you.",
-      "mechanics": {
-        "category": "Basic (Social)"
-      }
-    },
-    {
       "name": "Secret-Keeper",
       "source": "Quests and Campaigns",
       "source_id": "quests_and_campaigns:secret_keeper",
@@ -8555,7 +8409,7 @@
       "reference_urls": [
         "https://aonprd.com/TraitDisplay.aspx?ItemName=Student%20of%20Philosophy"
       ],
-      "description": "You were trained in a nowdefunct philosophical tradition—such as that of the nowdestroyed Galtan universities or Lirgeni astrologers—and learned to use logic and reason to persuade others. You can use your Intelligence modifier in place of your Charisma modifier on Diplomacy checks to persuade others and on Bluff checks to convince others that a lie is true. (This trait does not affect Diplomacy checks to gather information or Bluff checks to feint in combat.)",
+      "description": "You were trained in a nowdefunct philosophical tradition—such as that of the nowdestroyed revolutionary universities or drowned-kingdom astrologers—and learned to use logic and reason to persuade others. You can use your Intelligence modifier in place of your Charisma modifier on Diplomacy checks to persuade others and on Bluff checks to convince others that a lie is true. (This trait does not affect Diplomacy checks to gather information or Bluff checks to feint in combat.)",
       "mechanics": {
         "category": "Basic (Social)"
       }
