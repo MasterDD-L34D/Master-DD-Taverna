@@ -184,6 +184,35 @@ DIVERGENCE_VERDICTS: dict[tuple[str, str], dict] = {
         "difforme (vedi sorcerer).",
         "source": "https://aonprd.com/SpellDisplay.aspx?ItemName=Soul%20Transfer",
     },
+    ("alpha instinct", "mesmerist"): {
+        "raw": "mesmerist 2 (bard 3; druid/hunter/medium/ranger/shaman/skald 2)",
+        "assessment": "Taverna concorde col RAW; PCGen e PB (3) sono difformi.",
+        "source": "https://aonprd.com/SpellDisplay.aspx?ItemName=Alpha%20Instinct",
+    },
+    **{
+        ("minor reversion (mass)", cls): {
+            "raw": "arcanist/cleric/oracle/sorcerer/warpriest/wizard 6; psychic 5",
+            "assessment": "Taverna concorde col RAW; PB riporta i livelli di Greater Reversion.",
+            "source": "https://aonprd.com/SpellDisplay.aspx?ItemName=Minor%20Reversion,%20Mass",
+        }
+        for cls in (
+            "arcanist",
+            "cleric",
+            "oracle",
+            "psychic",
+            "sorcerer",
+            "warpriest",
+            "wizard",
+        )
+    },
+    **{
+        ("violent misfire (greater)", cls): {
+            "raw": "arcanist/sorcerer/wizard 6",
+            "assessment": "Taverna concorde col RAW; PB riporta i livelli di Violent Misfire.",
+            "source": "https://aonprd.com/SpellDisplay.aspx?ItemName=Violent%20Misfire,%20Greater",
+        }
+        for cls in ("arcanist", "sorcerer", "wizard")
+    },
 }
 
 
