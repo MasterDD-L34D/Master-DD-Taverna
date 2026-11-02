@@ -131,7 +131,8 @@ def _declared(cmd: dict, name: str) -> list[str]:
     ``<...>`` del nome (comandi con firma nel nome, es. /quiz_bestworst)."""
     p = cmd.get("params")
     if p:
-        return p
+        # "nome?" = opzionale (convenzione dei moduli): il nome vero e' senza "?"
+        return [str(x).rstrip("?") for x in p]
     return [t.strip("<>") for t in str(name).split()[1:] if t.startswith("<")]
 
 

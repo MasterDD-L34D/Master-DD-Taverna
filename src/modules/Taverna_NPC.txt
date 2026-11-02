@@ -1,6 +1,6 @@
 module_name: Taverna NPC
-version: 3.7
-last_updated: 2026-10-27
+version: 3.8
+last_updated: 2026-11-02
 type: module
 
 description: >
@@ -492,7 +492,11 @@ state_machine:
         prompt: "Vuoi (a) scegliere manualmente STR/INT/AGI/CHA ≤18 o (b) random?"
         parse:
           "a": { set: "@GameMode.shared.profile.traits_mode", value: "manual" }
-          "b": { set: "@GameMode.shared.profile.traits_mode", value: "random" }
+          # "b" salta al nodo random: next: traits e' guardato 'manual' e
+          # lascerebbe il wizard fermo su entry (wizard_guard_falso).
+          "b":
+            - { set: "@GameMode.shared.profile.traits_mode", value: "random" }
+            - { goto_state: "GameMode.BackgroundTraits.traits_random" }
         next: traits
       traits:
         when: "{{@GameMode.shared.profile.traits_mode=='manual'}}"
@@ -522,7 +526,7 @@ state_machine:
       traits_random:
         when: "{{@GameMode.shared.profile.traits_mode=='random'}}"
         actions:
-          - call: GameMode.helpers.allocate_points_random
+          - call: GameMode.allocate_points_random
             with: { total: "{{@GameMode.shared.profile.points_cap}}", slots: 4, order: [STR,INT,AGI,CHA] }
             return_as: RAND
           - set: "@GameMode.shared.profile.traits"
@@ -574,7 +578,7 @@ state_machine:
         parse:
           any: { set: action_text, value: "{{input}}" }
         actions:
-          - call: GameMode.helpers.resolve_downtime
+          - call: GameMode.resolve_downtime
             with: { action_text: "{{action_text}}" }
             return_as: DT
           - if: "{{DT.update_build}}"
@@ -610,7 +614,7 @@ state_machine:
         parse:
           any: { set: world_choice, value: "{{input}}" }
         actions:
-          - call: GameMode.helpers.roll_world_hook
+          - call: GameMode.roll_world_hook
             with: { choice: "{{world_choice}}" }
             return_as: WH
           - output: "{{WH.narrative}}"
@@ -628,7 +632,7 @@ state_machine:
         parse:
           any: { set: kact, value: "{{input}}" }
         actions:
-          - call: GameMode.helpers.resolve_kingdom
+          - call: GameMode.resolve_kingdom
             with: { action_text: "{{kact}}" }
             return_as: K
           - append: "@GameMode.shared.diary"
@@ -645,7 +649,7 @@ state_machine:
         parse:
           any: { set: mact, value: "{{input}}" }
         actions:
-          - call: GameMode.helpers.resolve_mass_combat
+          - call: GameMode.resolve_mass_combat
             with: { action_text: "{{mact}}" }
             return_as: MC
           - append: "@GameMode.shared.diary"
@@ -655,7 +659,7 @@ state_machine:
     TavernEvents:
       entry:
         actions:
-          - call: GameMode.helpers.tavern_event
+          - call: GameMode.tavern_event
             with: {}
             return_as: TE
           - output: "{{TE.text}}"
@@ -666,7 +670,7 @@ state_machine:
     NPCBoons:
       entry:
         actions:
-          - call: GameMode.helpers.npc_boon
+          - call: GameMode.npc_boon
             with: {}
             return_as: BN
           - output: "**Boon proposto:** {{BN.kind}} → {{BN.effect}}"
@@ -678,7 +682,7 @@ state_machine:
       entry:
         actions:
           - output: "🚨 Inseguimento! Imposto traccia a carte e ostacoli variabili."
-          - call: GameMode.helpers.chase_setup
+          - call: GameMode.chase_setup
             with: {}
             return_as: CH
           - output: "{{CH.setup_msg}}"
@@ -688,7 +692,7 @@ state_machine:
         parse:
           any: { set: choice, value: "{{input}}" }
         actions:
-          - call: GameMode.helpers.chase_step
+          - call: GameMode.chase_step
             with: { choice: "{{choice}}" }
             return_as: CHS
           - output: "{{CHS.msg}}"
@@ -701,7 +705,7 @@ state_machine:
     Hazard:
       entry:
         actions:
-          - call: GameMode.helpers.hazard_resolve
+          - call: GameMode.hazard_resolve
             with: { kind: "{{hazard.kind}}" }
             return_as: HZ
           - output: "⚠️ Hazard: {{HZ.title}} — {{HZ.summary}}"
@@ -719,7 +723,7 @@ state_machine:
         parse:
           any: { set: bet, value: "{{input}}" }
         actions:
-          - call: GameMode.helpers.gamble
+          - call: GameMode.gamble
             with: { bet: "{{bet}}" }
             return_as: GB
           - output: "{{GB.msg}}"
@@ -738,7 +742,7 @@ state_machine:
     Explain:
       entry:
         actions:
-          - call: GameMode.helpers.build_explain
+          - call: GameMode.build_explain
             with: { topic: "{{explain.request_topic}}" }
             return_as: EX
           - set: "@GameMode.shared.explain_block"
@@ -751,7 +755,7 @@ state_machine:
       parse:
         any: { set: act, value: "{{input}}" }
       actions:
-        - call: GameMode.helpers.compute_ctt
+        - call: GameMode.compute_ctt
           with:
             action_text: "{{act}}"
             ctt_map: "{{@GameMode.shared.profile.ctt_map}}"
@@ -764,7 +768,7 @@ state_machine:
         - output: "_*Azione:*_ {{act}} → 🎲 d20={{D20}} vs CTT={{CTT}} ⇒ **{{outcome}}**"
         - append: "@GameMode.shared.diary"
           value: "turn: action='{{act}}' d20={{D20}} ctt={{CTT}} outcome={{outcome}}"
-        - call: GameMode.helpers.apply_mechanics_from_action
+        - call: GameMode.apply_mechanics_from_action
           with:
             outcome: "{{outcome}}"
             action_text: "{{act}}"
