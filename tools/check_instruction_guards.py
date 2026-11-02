@@ -68,6 +68,16 @@ CHECKS = [
         [],
     ),
     (
+        # C9-S3: nomi di talenti/incantesimi/oggetti solo dal catalogo
+        "builder_solo_catalogo",
+        "src/agents/builder.py",
+        [
+            "Usa SOLO talenti, incantesimi e oggetti dal catalogo reference",
+            "non inventare",
+        ],
+        [],
+    ),
+    (
         "decisions_adr_009_015",
         "planning/decisions.md",
         ADR_RICHIESTI,

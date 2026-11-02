@@ -44,9 +44,16 @@ GOOD_DECISIONS = "\n".join(
 )
 
 
+GOOD_BUILDER = (
+    "Usa SOLO talenti, incantesimi e oggetti dal catalogo reference fornito. "
+    "Se non conosci un valore, usa 0 o null, ma non inventare source_id."
+)
+
+
 def good_docs():
     return {
         "AGENTS.md": GOOD_AGENTS,
+        "src/agents/builder.py": GOOD_BUILDER,
         "src/dsl/interpreter.py": GOOD_INTERPRETER,
         "src/dsl/router.py": GOOD_ROUTER,
         "planning/decisions.md": GOOD_DECISIONS,
@@ -74,6 +81,13 @@ def test_coauthored_tornato_fallisce():
     docs = good_docs()
     docs["AGENTS.md"] = GOOD_AGENTS + "\nCo-Authored-By: Claude\n"
     assert evaluate(docs)["agents_no_coauthored"] is False
+
+
+def test_builder_senza_regola_catalogo_fallisce():
+    # C9-S3: il generatore non traduce nomi in meccaniche inventate
+    docs = good_docs()
+    docs["src/agents/builder.py"] = "Usa i talenti che preferisci."
+    assert evaluate(docs).get("builder_solo_catalogo") is False
 
 
 def test_file_mancante_fallisce():
