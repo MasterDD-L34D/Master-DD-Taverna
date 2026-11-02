@@ -35,9 +35,9 @@
       "is_ogc": true,
       "is_pi": false,
       "cup_allowed": false,
-      "entries": 257,
+      "entries": 4118,
       "notes": "Oggetti generici; 3/257 voci arricchite con description (work in progress).",
-      "last_verified": "2026-07-16"
+      "last_verified": "2026-11-02"
     },
     {
       "file": "ogl/classes.json",
@@ -274,7 +274,7 @@
     },
     "items": {
       "path": "ogl/items.json",
-      "entries": 257
+      "entries": 4118
     },
     "classes": {
       "path": "ogl/classes.json",
