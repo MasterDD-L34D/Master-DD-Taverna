@@ -176,8 +176,9 @@ class TestTerminiDescriptionOnly:
 
     def test_nex(self):
         assert (
+            # "Arclords" e' PI dallo scan 2026-11-02 (GATE_LLM_SCAN_TERMS).
             sanitize_text("the Arclords of Nex", description=True)
-            == "the Arclords of a mage-ruled realm"
+            == "the wizard-lords of a mage-ruled realm"
         )
 
     def test_worldwound_con_articolo(self):

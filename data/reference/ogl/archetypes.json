@@ -3792,87 +3792,6 @@
       }
     },
     {
-      "name": "Dawnflower Dervish",
-      "source": "Archives of Nethys (aonprd.com)",
-      "source_id": "archetype:bard_dawnflower_dervish",
-      "prerequisites": [],
-      "tags": [
-        "archetype",
-        "bard",
-        "dawnflower-dervish"
-      ],
-      "references": [
-        "AoN: Bard Archetypes"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/Archetypes.aspx?Class=Bard",
-        "https://aonprd.com/ArchetypeDisplay.aspx?FixedName=Bard%20Dawnflower%20Dervish"
-      ],
-      "description": "Many bards of a sun goddess's faith hone their skills with dance and scimitar to become dervish dancers.",
-      "mechanics": {
-        "class": "Bard",
-        "replaces": [
-          "Bardic Performance, Bardic Knowledge, Lore Master, Dirge of Doom"
-        ],
-        "race_req": null,
-        "features": [
-          {
-            "name": "Weapon and Armor Proficiency",
-            "level": null,
-            "replaces": [
-              "their proficiency with the rapier",
-              "whip"
-            ],
-            "alters": [],
-            "text": "Dawnflower dervishes gain weapon proficiency with the scimitar. This ability replaces their proficiency with the rapier and whip."
-          },
-          {
-            "name": "Deity",
-            "level": null,
-            "replaces": [],
-            "alters": [],
-            "text": "A Dawnflower dervish must be a worshiper of . A dervish who abandons or betrays this faith reverts to a standard bard."
-          },
-          {
-            "name": "Battle Dance",
-            "level": 10,
-            "replaces": [],
-            "alters": [
-              "standard bardic performance"
-            ],
-            "text": "A Dawnflower dervish is trained in the use of the Perform skill, especially dance, to create magical effects on himself. This works like bardic performance, except that the Dawnflower dervish’s performances grant double their normal bonuses, but these bonuses only affect him. He does not need to be able to see or hear his own performance. Battle dancing is treated as bardic performance for the purposes of feats, abilities, and effects that affect bardic performance, except that battle dancing does not benefit from the Lingering Performance feat or any other ability that allows a bardic performance to grant bonuses after it has ended. The benefits of battle dancing apply only when the bard is wearing light or no armor. Like bardic performance, battle dancing cannot be maintained at the same time as other performance abilities. Starting a battle dance is a move action, but it can be maintained each round as a free action. Changing a battle dance from one effect to another requires the Dawnflower dervish to stop the previous performance and start the new one as a move action. Like a bard, a Dawnflower dervish’s performance ends immediately if he is killed, paralyzed, stunned, knocked unconscious, or otherwise prevented from taking a free action each round. A Dawnflower dervish cannot perform more than one battle dance at a time. At 10th level, a Dawnflower dervish can start a battle dance as a swift action instead of a move action. When the Dawnflower dervish uses the inspire courage, inspire greatness, or inspire heroics bardic performance types as battle dances, these performance types only provide benefit to the Dawnflower dervish himself. All other types of bardic performance work normally (affecting the bard and his allies, or the bard’s enemies, as appropriate). This ability alters the standard bardic performance ability."
-          },
-          {
-            "name": "Dervish Dance",
-            "level": null,
-            "replaces": [
-              "bardic knowledge"
-            ],
-            "alters": [],
-            "text": "A Dawnflower dervish gains the feat as a bonus feat. This ability replaces bardic knowledge."
-          },
-          {
-            "name": "Spinning Spellcaster",
-            "level": 5,
-            "replaces": [
-              "lore master"
-            ],
-            "alters": [],
-            "text": "At 5th level, a Dawnflower dervish gains a +4 bonus on concentration checks to cast spells defensively. This ability replaces lore master."
-          },
-          {
-            "name": "Meditative Whirl",
-            "level": 8,
-            "replaces": [
-              "dirge of doom bardic performance"
-            ],
-            "alters": [],
-            "text": "At 8th level, when using battle dance, the Dawnflower dervish can enter a trancelike state where his spinning motion represents the movement of the planets around the sun, and his spirit is attuned to the healing aspects of a sun goddess. By spending a move action focusing on his whirling, the dervish can apply the feat to any cure spell he is about to cast (effectively spending a move action and swift action to cast the spell). This does not alter the level of the spell or the casting time. The dervish can use this ability once per day at 8th level and one additional time per day for every two dervish levels he has beyond 8th. This ability replaces the dirge of doom bardic performance."
-          }
-        ]
-      }
-    },
-    {
       "name": "Demagogue",
       "source": "Archives of Nethys (aonprd.com)",
       "source_id": "archetype:bard_demagogue",
@@ -19756,88 +19675,6 @@
             ],
             "alters": [],
             "text": "At 20th level, an unbreakable becomes nearly impossible to sway with honeyed words or magic. He gains immunity to mind-affecting effects. This ability replaces weapon mastery."
-          }
-        ]
-      }
-    },
-    {
-      "name": "Ustalavic Duelist",
-      "source": "Archives of Nethys (aonprd.com)",
-      "source_id": "archetype:fighter_ustalavic_duelist",
-      "prerequisites": [],
-      "tags": [
-        "archetype",
-        "fighter",
-        "ustalavic-duelist"
-      ],
-      "references": [
-        "AoN: Fighter Archetypes"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/Archetypes.aspx?Class=Fighter",
-        "https://aonprd.com/ArchetypeDisplay.aspx?FixedName=Fighter%20Ustalavic%20Duelist"
-      ],
-      "description": "The University of a university city has developed a reputation for churning out fearsome duelists. At the end of each academic year, the students all gather together and duel one another with light blades. Each student duels one opponent after another until he is marked on the cheek by an adversary’s blade. These “a university city scars” are recognized throughout the inner sea region and beyond as marks of their prowess. The a university city Style is one of fluid motion and precise thrusts.",
-      "mechanics": {
-        "class": "Fighter",
-        "replaces": [
-          "Weapon/Armor Proficiency",
-          "1st-level Bonus Feat",
-          "Weapon Training 1-4"
-        ],
-        "race_req": null,
-        "features": [
-          {
-            "name": "Weapon and Armor Proficiency",
-            "level": null,
-            "replaces": [],
-            "alters": [],
-            "text": "An Ustalavic duelist is proficient with all simple and martial weapons and with all light and medium armor and shields (except tower shields). This replaces the fighter’s normal weapon and armor proficiencies."
-          },
-          {
-            "name": "Duelist Stance",
-            "level": 1,
-            "replaces": [
-              "fighter’s 1st-level bonus feat"
-            ],
-            "alters": [],
-            "text": "At 1st level, an Ustalavic duelist gains a +1 dodge bonus to AC as long as he is wearing no armor or light armor, wields a melee weapon in one hand, and his other hand is empty. This bonus increases by 1 for every 5 levels the duelist possesses to a maximum of +5 at 20th level. This ability replaces the fighter’s 1st-level bonus feat."
-          },
-          {
-            "name": "Duelist Training",
-            "level": 5,
-            "replaces": [
-              "weapon training 1"
-            ],
-            "alters": [],
-            "text": "At 5th level, an Ustalavic duelist must select the light blades group for the weapon training class feature. The Ustalavic duelist’s weapon training bonus with light blades increases by 1 on attack and damage rolls for every 4 levels he possesses beyond 5th (to a maximum of +4 on attack and damage rolls at 17th level). If he is using his duelist stance, this damage bonus increases by 2. The Ustalavic duelist does not gain weapon training in any other groups as he increases in level. This ability replaces weapon training 1."
-          },
-          {
-            "name": "Lepidstadt Thrust",
-            "level": 9,
-            "replaces": [
-              "weapon training 2"
-            ],
-            "alters": [],
-            "text": "At 9th level, when using Vital Strike, Improved Vital Strike, or Greater Vital Strike, an Ustalavic duelist adds his Intelligence modifier to damage rolls (this bonus to damage is not multiplied on a critical hit). If the duelist confirms a critical hit while using one of these feats, he automatically deals maximum damage. This ability replaces weapon training 2."
-          },
-          {
-            "name": "Science of the Blade",
-            "level": 13,
-            "replaces": [
-              "weapon training 3"
-            ],
-            "alters": [],
-            "text": "At 13th level, an Ustalavic duelist is able to apply his specialized knowledge of anatomy and physiology to his bladework. The duelist can make dirty trick ( 320), disarm, and trip combat maneuvers using any one-handed piercing or slashing weapon. This ability replaces weapon training 3."
-          },
-          {
-            "name": "Surgical Strike",
-            "level": 17,
-            "replaces": [
-              "weapon training 4"
-            ],
-            "alters": [],
-            "text": "At 17th level, when an Ustalavic duelist confirms a critical hit with a light or one-handed piercing or slashing weapon, he deals ability damage in addition to the normal bonus damage from the critical hit. The duelist chooses which ability is damaged, and deals an amount of damage equal to the critical multiplier of the wielded weapon. This ability replaces weapon training 4."
           }
         ]
       }
@@ -71843,7 +71680,7 @@
         "https://aonprd.com/Archetypes.aspx?Class=Swashbuckler",
         "https://aonprd.com/ArchetypeDisplay.aspx?FixedName=Swashbuckler%20Whirling%20Dervish"
       ],
-      "description": "In a desert kingdom and throughout the Padishah Empire, a sun goddess’s worshipers praise the Dawnflower through dance. Her more warlike followers adapted these dances into graceful martial forms, and their swashbuckling style is feared throughout the inner sea region and beyond for its ability to devastate foes with a scimitar through motion and agility regardless of strength of arms.",
+      "description": "In a desert kingdom and throughout the Padishah Empire, a sun goddess’s worshipers praise a sun goddess through dance. Her more warlike followers adapted these dances into graceful martial forms, and their swashbuckling style is feared throughout the inner sea region and beyond for its ability to devastate foes with a scimitar through motion and agility regardless of strength of arms.",
       "mechanics": {
         "class": "Swashbuckler",
         "replaces": [

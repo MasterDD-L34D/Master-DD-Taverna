@@ -34037,48 +34037,6 @@
       "notes": "Aggiunta da cache gist PathfinderSpellsJSON (expansion 2026-07-25): assente dal catalogo storico."
     },
     {
-      "name": "Shield Of The Dawnflower",
-      "source": "Inner Sea World Guide",
-      "source_id": "pathfinder_srd:shield_of_the_dawnflower",
-      "prerequisites": [],
-      "tags": [
-        "spell",
-        "shield-of-the-dawnflower",
-        "school:evocation",
-        "slot:4",
-        "class:bard",
-        "class:cleric",
-        "class:oracle",
-        "class:magus",
-        "class:paladin",
-        "class:ranger"
-      ],
-      "references": [
-        "PathfinderSpellsJSON gist: Shield Of The Dawnflower"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/SpellDisplay.aspx?ItemName=Shield%20Of%20The%20Dawnflower"
-      ],
-      "description": "You create a disk of sunlight on one arm. Any creature that strikes you with a melee attack deals normal damage, but also takes 1d6 points of fire damage + 1 point per caster level (maximum +15). Creatures with reach weapons are not subject to this damage if they attack you. The shield provides illumination as if it were a continual flame spell. You can only have one instance of this spell in effect at a time. It does not stack with similar damaging aura spells such as fire shield.",
-      "mechanics": {
-        "school": "evocation",
-        "casting_time": "1 standard action",
-        "components": "V, S, DF",
-        "range": "personal",
-        "duration": "1 round/level",
-        "saving_throw": "see text",
-        "targets": "you",
-        "spell_level": {
-          "bard": 4,
-          "cleric/oracle": 4,
-          "magus": 4,
-          "paladin": 4,
-          "ranger": 4
-        }
-      },
-      "notes": "Aggiunta da cache gist PathfinderSpellsJSON (expansion 2026-07-25): assente dal catalogo storico."
-    },
-    {
       "name": "Teleport Trap",
       "source": "Inner Sea World Guide",
       "source_id": "pathfinder_srd:teleport_trap",
@@ -50865,7 +50823,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Covetous%20Aura"
       ],
-      "description": "Anytime a harmless (so noted by a spell's saving throw description) spell of 3rd level or lower is cast within a covetous aura's area of effect, you may choose to immediately gain the benefit of that spell as if it had also targeted you. The intended target still gains the effect of the spell. You gain the benefits of this duplicated spell only if the caster is in range of the covetous aura. You are considered the caster of the additional spell effect. If the effect allows for multiple targets other than yourself, you cannot use the stolen spell effect to target other creatures-a covetous aura only aids you. Once you choose to gain the benefit of another spell, the covetous aura immediately ends. Rumors hold that this unusual spell was invented thousands of years ago by Runelord Belimarius, who was constantly jealous of other spellcasters' abilities.",
+      "description": "Anytime a harmless (so noted by a spell's saving throw description) spell of 3rd level or lower is cast within a covetous aura's area of effect, you may choose to immediately gain the benefit of that spell as if it had also targeted you. The intended target still gains the effect of the spell. You gain the benefits of this duplicated spell only if the caster is in range of the covetous aura. You are considered the caster of the additional spell effect. If the effect allows for multiple targets other than yourself, you cannot use the stolen spell effect to target other creatures-a covetous aura only aids you. Once you choose to gain the benefit of another spell, the covetous aura immediately ends. Rumors hold that this unusual spell was invented thousands of years ago by ancient wizard-king an ancient wizard-queen, who was constantly jealous of other spellcasters' abilities.",
       "mechanics": {
         "school": "abjuration",
         "casting_time": "1 standard action",
@@ -51408,7 +51366,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Curse%20Item"
       ],
-      "description": "The object becomes flawed and prone to failure. The effects of this spell depend on the nature of the object.  Magic Item: The item functions intermittently, gaining either an unreliable curse or a random dependent curse (Pathfinder RPG Core Rulebook 536).  Nonmagical Armor or Shield: The item gains the fragile armor quality (Pathfinder RPG Ultimate Equipment 8).  Nonmagical Weapon: The item gains the fragile weapon quality (Ultimate Equipment 22).  Tool: The item gains the broken condition if a creature rolls a natural 1 while making a skill check with the tool.  Other Item: Each day it is used, the item has a 5% chance of gaining the broken condition.  This spell does not affect artifacts. The item can be sold or discarded as normal (the bearer is not compelled to keep it). If a cleric of Groetus is using an item that is affected by this spell, he or she may make a DC 20 Will saving throw to override the item's curse for 1 day (using it as if the item were not cursed).",
+      "description": "The object becomes flawed and prone to failure. The effects of this spell depend on the nature of the object.  Magic Item: The item functions intermittently, gaining either an unreliable curse or a random dependent curse (Pathfinder RPG Core Rulebook 536).  Nonmagical Armor or Shield: The item gains the fragile armor quality (Pathfinder RPG Ultimate Equipment 8).  Nonmagical Weapon: The item gains the fragile weapon quality (Ultimate Equipment 22).  Tool: The item gains the broken condition if a creature rolls a natural 1 while making a skill check with the tool.  Other Item: Each day it is used, the item has a 5% chance of gaining the broken condition.  This spell does not affect artifacts. The item can be sold or discarded as normal (the bearer is not compelled to keep it). If a cleric of a god of the end times is using an item that is affected by this spell, he or she may make a DC 20 Will saving throw to override the item's curse for 1 day (using it as if the item were not cursed).",
       "mechanics": {
         "school": "necromancy",
         "casting_time": "1 minute",
@@ -58910,43 +58868,6 @@
           "cleric/oracle": 2,
           "summoner": 3,
           "witch": 2
-        }
-      },
-      "notes": "Aggiunta da cache gist PathfinderSpellsJSON (expansion 2026-07-25): assente dal catalogo storico."
-    },
-    {
-      "name": "Shield Of The Dawnflower, Greater",
-      "source": "Inner Sea Gods",
-      "source_id": "pathfinder_srd:shield_of_the_dawnflower_greater",
-      "prerequisites": [],
-      "tags": [
-        "spell",
-        "shield-of-the-dawnflower-greater",
-        "school:evocation",
-        "slot:6",
-        "class:bard",
-        "class:cleric",
-        "class:oracle",
-        "class:magus"
-      ],
-      "references": [
-        "PathfinderSpellsJSON gist: Shield Of The Dawnflower, Greater"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/SpellDisplay.aspx?ItemName=Shield%20Of%20The%20Dawnflower,%20Greater"
-      ],
-      "description": "You create a disk of sunlight on one arm. Any creature that strikes you with a melee attack deals normal damage, but also takes 1d6 points of damage + 1 point per caster level. Half of this damage is fire damage and half is holy damage (as the spell flame strike). An undead creature or a creature particularly vulnerable to light that hits you instead takes 2d6 points of damage +1 point per caster level. Creatures with reach weapons are not subject to this damage if they attack you. The shield provides illumination equivalent to a daylight spell. You can have only one instance of this spell in effect at a time. It does not stack with similar damaging aura spells such as fire shield or shield of the Dawnflower (the inner sea region World Guide 296).",
-      "mechanics": {
-        "school": "evocation",
-        "casting_time": "1 standard action",
-        "components": "V, S, DF",
-        "range": "personal",
-        "duration": "1 round/level",
-        "targets": "you",
-        "spell_level": {
-          "bard": 6,
-          "cleric/oracle": 6,
-          "magus": 6
         }
       },
       "notes": "Aggiunta da cache gist PathfinderSpellsJSON (expansion 2026-07-25): assente dal catalogo storico."
@@ -81198,7 +81119,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Emblem%20Of%20Greed"
       ],
-      "description": "You transform one melee weapon into a burning glaive similar to the ones wielded by the runelords of old. The target of your spell must be a masterwork or magical melee weapon appropriate to your size. The weapon becomes a glaive appropriate to your size and has a +1 enhancement bonus and the flaming weapon special ability. When wielding the glaive, you are considered proficient with it and use your caster level as your base attack bonus (which may give you multiple attacks). When you reach caster level 14th, the glaive gains the spell-storing weapon special ability. When you reach caster level 17th, it loses the flaming weapon special ability, and gains the flaming burst weapon special ability. The glaive's enhancement bonus increases to +2 at caster level 15th, and +3 at caster level 19th.  If this spell is cast on a magic weapon, the powers of the spell supersede any that the weapon normally has, rendering the normal enhancement bonus and powers of the weapon inoperative for the duration of the spell. This spell is not cumulative with greater magic weapon or any other spell that might modify the weapon in any way. This spell does not work on artifacts. A masterwork weapon's bonus on attack rolls does not stack with an enhancement bonus to attack.",
+      "description": "You transform one melee weapon into a burning glaive similar to the ones wielded by the ancient wizard-kings of old. The target of your spell must be a masterwork or magical melee weapon appropriate to your size. The weapon becomes a glaive appropriate to your size and has a +1 enhancement bonus and the flaming weapon special ability. When wielding the glaive, you are considered proficient with it and use your caster level as your base attack bonus (which may give you multiple attacks). When you reach caster level 14th, the glaive gains the spell-storing weapon special ability. When you reach caster level 17th, it loses the flaming weapon special ability, and gains the flaming burst weapon special ability. The glaive's enhancement bonus increases to +2 at caster level 15th, and +3 at caster level 19th.  If this spell is cast on a magic weapon, the powers of the spell supersede any that the weapon normally has, rendering the normal enhancement bonus and powers of the weapon inoperative for the duration of the spell. This spell is not cumulative with greater magic weapon or any other spell that might modify the weapon in any way. This spell does not work on artifacts. A masterwork weapon's bonus on attack rolls does not stack with an enhancement bonus to attack.",
       "mechanics": {
         "school": "transmutation",
         "casting_time": "1 standard action",
@@ -81497,7 +81418,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Tears%20To%20Wine"
       ],
-      "description": "Legend claims runelords used this spell to literally benefit from drinking the tears of their captured foes. This spell turns nonmagic liquids-including spoiled, rotten, diseased, poisonous, or otherwise contaminated drinks, tears, seawater, and similar fluids-into mead or wine of average quality. This spell does not prevent subsequent natural decay or spoilage. Unholy water and similar liquids of significance are spoiled by tears to wine, but the spell has no effect on creatures of any type or on magic potions.  Creatures that drink the mead or wine created by this spell become sharp-witted and clear-minded, gaining a +2 enhancement bonus on all Intelligence- and Wisdom-based skill checks. This increases to a +5 bonus at caster level 9th, and to +10 (the maximum) at caster level 15th.",
+      "description": "Legend claims ancient wizard-kings used this spell to literally benefit from drinking the tears of their captured foes. This spell turns nonmagic liquids-including spoiled, rotten, diseased, poisonous, or otherwise contaminated drinks, tears, seawater, and similar fluids-into mead or wine of average quality. This spell does not prevent subsequent natural decay or spoilage. Unholy water and similar liquids of significance are spoiled by tears to wine, but the spell has no effect on creatures of any type or on magic potions.  Creatures that drink the mead or wine created by this spell become sharp-witted and clear-minded, gaining a +2 enhancement bonus on all Intelligence- and Wisdom-based skill checks. This increases to a +5 bonus at caster level 9th, and to +10 (the maximum) at caster level 15th.",
       "mechanics": {
         "school": "transmutation",
         "casting_time": "1 standard action",
@@ -88077,57 +87998,6 @@
         "spell_level": {
           "magus": 1,
           "sorcerer/wizard": 1
-        }
-      },
-      "notes": "Aggiunta da cache gist PathfinderSpellsJSON (expansion 2026-07-25): assente dal catalogo storico."
-    },
-    {
-      "name": "Alaznist's Jinx",
-      "source": "Magic Tactics Toolbox",
-      "source_id": "pathfinder_srd:alaznist_s_jinx",
-      "prerequisites": [],
-      "tags": [
-        "spell",
-        "alaznist-s-jinx",
-        "school:evocation",
-        "slot:4",
-        "class:antipaladin",
-        "class:bard",
-        "class:cleric",
-        "class:oracle",
-        "class:inquisitor",
-        "class:occultist",
-        "class:psychic",
-        "class:shaman",
-        "class:sorcerer",
-        "class:wizard",
-        "class:witch"
-      ],
-      "references": [
-        "PathfinderSpellsJSON gist: Alaznist's Jinx"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/SpellDisplay.aspx?ItemName=Alaznist%27s%20Jinx"
-      ],
-      "description": "You inflict a curse similar to the spell burn spellblight (Pathfinder RPG Ultimate Magic 97) on a creature. Each time a spellcaster who is afflicted with this curse casts a spell or uses a spell-like ability, her skin seems to burn as though she were on fire. With a successful concentration check (DC = 15 + double the spell level of the spell cast or spell-like ability used), the spellcaster can ignore the pain of the effect, but if she fails, she loses the spell or spell slot and is staggered for a round.  Unlike with the spell burn spellblight, the burning sensation is a tangible effect, visible during the act of spellcasting as an incorporeal, violet flame surrounding the caster.",
-      "mechanics": {
-        "school": "evocation",
-        "casting_time": "1 standard action",
-        "components": "V, S",
-        "range": "touch",
-        "duration": "permanent",
-        "saving_throw": "Will negates",
-        "targets": "creature touched",
-        "spell_level": {
-          "antipaladin": 4,
-          "bard": 4,
-          "cleric/oracle": 6,
-          "inquisitor": 5,
-          "occultist": 5,
-          "psychic": 6,
-          "shaman": 5,
-          "sorcerer/wizard": 6,
-          "witch": 5
         }
       },
       "notes": "Aggiunta da cache gist PathfinderSpellsJSON (expansion 2026-07-25): assente dal catalogo storico."
@@ -97622,7 +97492,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Protection%20From%20Spores"
       ],
-      "description": "With a touch, you bolster a creature's body to protect it from the harmful effects of spores and similar afflictions. While under the effect of this spell, a creature is immune to the effects of brown mold, green slime, russet mold, yellow mold, and any similar hazard, provided the hazard is CR 6 or lower. Similarly, the creature is immune to poison, disease, and infestation attacks from all fungal creatures of CR 6 or lower, including  effects such as basidirond spores, violet fungus rot, and the like. The target is immune to fungus-based toxins, such as striped toadstool. Against similar hazards or monsters of CR 7 or higher, the target gains a bonus on all saving throws against the effect equal to half your caster level. Protection from spores offers no protection against fungal infestations created by the seeded, by the spell what grows within, or by Xhamen-Dor.",
+      "description": "With a touch, you bolster a creature's body to protect it from the harmful effects of spores and similar afflictions. While under the effect of this spell, a creature is immune to the effects of brown mold, green slime, russet mold, yellow mold, and any similar hazard, provided the hazard is CR 6 or lower. Similarly, the creature is immune to poison, disease, and infestation attacks from all fungal creatures of CR 6 or lower, including  effects such as basidirond spores, violet fungus rot, and the like. The target is immune to fungus-based toxins, such as striped toadstool. Against similar hazards or monsters of CR 7 or higher, the target gains a bonus on all saving throws against the effect equal to half your caster level. Protection from spores offers no protection against fungal infestations created by the seeded, by the spell what grows within, or by an alien fungal entity.",
       "mechanics": {
         "school": "abjuration",
         "casting_time": "1 standard action",
@@ -97668,7 +97538,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=What%20Grows%20Within"
       ],
-      "description": "By speaking the name \"Xhamen-Dor,\" you infuse yourself with the essence of the Inmost Blot and gain a +3 profane bonus on Will saving throws for the spell's duration. When you prepare what grows within for the first time, or the first time you use it via a spell-completion or spell-trigger item, you can thereafter be targeted by Xhamen-Dor's infected dreams ability (see page 86). As long as you are under the effects of what grows within, your mind-affecting spells carry this supernatural taint within them and can infect those who succumb to those effects. Whenever you successfully affect a creature with one of your mind-affecting spells (this requires the target to fail its saving throw against the spell if the spell allows a save, but automatically affects a target if the spell does not allow a saving throw), that target must also succeed at a Fortitude saving throw against what grows within or it immediately becomes afflicted by a lesser version of Xhamen-Dor's seeded infestation. This infestation does not expose the victim to Xhamen-Dor's infectious dreams, but it can ultimately  result in that creature's transformation into one of the seeded. Each time you affect a creature with what grows within in this manner, the remaining duration of what grows within is reduced by 1 round. If you affect multiple creatures in a round, you choose the order in which they must save against the effects of what grows within, and reduce the spell's remaining duration by 1 round each time one of them is affected by the infestation.  Lesser Seeded Infestation-save Fortitude DC = spell's save DC; onset immediate; frequency 1/day; effect 1d4 Constitution drain; cure none. This infestation can be cured by magic alone. A creature whose Constitution is reduced to 0 by this infestation dies and rises from death in 1d4 rounds as a seeded creature (see page 90). This is an infestation effect.",
+      "description": "By speaking the name \"an alien fungal entity,\" you infuse yourself with the essence of the Inmost Blot and gain a +3 profane bonus on Will saving throws for the spell's duration. When you prepare what grows within for the first time, or the first time you use it via a spell-completion or spell-trigger item, you can thereafter be targeted by an alien fungal entity's infected dreams ability (see page 86). As long as you are under the effects of what grows within, your mind-affecting spells carry this supernatural taint within them and can infect those who succumb to those effects. Whenever you successfully affect a creature with one of your mind-affecting spells (this requires the target to fail its saving throw against the spell if the spell allows a save, but automatically affects a target if the spell does not allow a saving throw), that target must also succeed at a Fortitude saving throw against what grows within or it immediately becomes afflicted by a lesser version of an alien fungal entity's seeded infestation. This infestation does not expose the victim to an alien fungal entity's infectious dreams, but it can ultimately  result in that creature's transformation into one of the seeded. Each time you affect a creature with what grows within in this manner, the remaining duration of what grows within is reduced by 1 round. If you affect multiple creatures in a round, you choose the order in which they must save against the effects of what grows within, and reduce the spell's remaining duration by 1 round each time one of them is affected by the infestation.  Lesser Seeded Infestation-save Fortitude DC = spell's save DC; onset immediate; frequency 1/day; effect 1d4 Constitution drain; cure none. This infestation can be cured by magic alone. A creature whose Constitution is reduced to 0 by this infestation dies and rises from death in 1d4 rounds as a seeded creature (see page 90). This is an infestation effect.",
       "mechanics": {
         "school": "necromancy",
         "casting_time": "1 swift action",
@@ -102207,7 +102077,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Rune%20Of%20Rule"
       ],
-      "description": "Investigations into the ancient and mysterious traditions of the seven virtues of rule of the lost human empire of a lost empire, which were later corrupted by the runelords into the more familiar seven deadly sins, inspired the rune scholars to develop the runes of rule. This spell allows you to place a rune upon another creature that can then be used to aid it at a later time. You determine the spell's effect at the time of casting by using your finger to paint a specific rune on the recipient's body with a dose of specially prepared paint worth 25 gp. The inscribed rune lasts for 24 hours or until the spell is activated. Unless otherwise noted, the creature upon which the rune of rule has been inscribed can activate it at any time as a swift action. If the spell effect isn't used, all markings associated with the rune disappear and the effect fades. You can never place the spell upon yourself-it must be bestowed on someone else. The seven runes of rule, along with their specific effects when the user activates them, are listed below. A creature can bear only one rune of rule at a time. Charity: A creature bearing this mark gains a +5 insight bonus on a single attack roll or skill check attempted at the request of another creature, provided the creature bearing this mark does not gain any immediate benefit or reward for making the roll or attempting the check. Generosity: A creature bearing the rune of generosity can activate it as an immediate action, but it must do so as another creature within 30 feet activates a consumable magic item such as a potion or scroll that was given to it at some point within the last 24 hours by the creature bearing the rune. When the rune is activated, the effects of the consumable magic item resolve at a caster level that is 2 higher than the item's actual caster level. Humility: When a creature activates the rune of humility, it does not provoke attacks of opportunity for 1 round. Kindness: A creature must be using the aid another action or casting a healing spell in order to activate a rune of kindness. If the creature activates the rune while using the aid another action, the bonus imparted on a success increases to +5. If the creature instead activates the rune while casting a healing spell, the effective caster level of the spell increases by 2. Love: When a creature activates the rune of love as he casts a spell with the charm descriptor, the save DC of that spell increases by 1. Alternatively, a creature can activate the rune of love after he rolls damage for a weapon or spell attack, causing the damage dealt to become nonlethal damage. Temperance: A creature bearing the rune of temperance can activate it as an immediate action immediately upon failing a saving throw against a poison, disease, drug, or similar effect. The creature can immediately attempt a second saving throw against the effect and can use the result of that second saving throw as the actual result. Zeal: A creature that activates the rune of zeal gains a +3 bonus on Will saves, and the save DCs of all language-dependent effects created by the creature increase by 1; these effects last for 1 round.",
+      "description": "Investigations into the ancient and mysterious traditions of the seven virtues of rule of the lost human empire of a lost empire, which were later corrupted by the ancient wizard-kings into the more familiar seven deadly sins, inspired the rune scholars to develop the runes of rule. This spell allows you to place a rune upon another creature that can then be used to aid it at a later time. You determine the spell's effect at the time of casting by using your finger to paint a specific rune on the recipient's body with a dose of specially prepared paint worth 25 gp. The inscribed rune lasts for 24 hours or until the spell is activated. Unless otherwise noted, the creature upon which the rune of rule has been inscribed can activate it at any time as a swift action. If the spell effect isn't used, all markings associated with the rune disappear and the effect fades. You can never place the spell upon yourself-it must be bestowed on someone else. The seven runes of rule, along with their specific effects when the user activates them, are listed below. A creature can bear only one rune of rule at a time. Charity: A creature bearing this mark gains a +5 insight bonus on a single attack roll or skill check attempted at the request of another creature, provided the creature bearing this mark does not gain any immediate benefit or reward for making the roll or attempting the check. Generosity: A creature bearing the rune of generosity can activate it as an immediate action, but it must do so as another creature within 30 feet activates a consumable magic item such as a potion or scroll that was given to it at some point within the last 24 hours by the creature bearing the rune. When the rune is activated, the effects of the consumable magic item resolve at a caster level that is 2 higher than the item's actual caster level. Humility: When a creature activates the rune of humility, it does not provoke attacks of opportunity for 1 round. Kindness: A creature must be using the aid another action or casting a healing spell in order to activate a rune of kindness. If the creature activates the rune while using the aid another action, the bonus imparted on a success increases to +5. If the creature instead activates the rune while casting a healing spell, the effective caster level of the spell increases by 2. Love: When a creature activates the rune of love as he casts a spell with the charm descriptor, the save DC of that spell increases by 1. Alternatively, a creature can activate the rune of love after he rolls damage for a weapon or spell attack, causing the damage dealt to become nonlethal damage. Temperance: A creature bearing the rune of temperance can activate it as an immediate action immediately upon failing a saving throw against a poison, disease, drug, or similar effect. The creature can immediately attempt a second saving throw against the effect and can use the result of that second saving throw as the actual result. Zeal: A creature that activates the rune of zeal gains a +3 bonus on Will saves, and the save DCs of all language-dependent effects created by the creature increase by 1; these effects last for 1 round.",
       "mechanics": {
         "school": "transmutation",
         "casting_time": "1 minute",
@@ -110063,47 +109933,6 @@
         "duration": "10 minutes/level",
         "saving_throw": "Will negates (harmless)",
         "spell_resistance": "yes (harmless)"
-      }
-    },
-    {
-      "name": "Sign of the Dawnflower",
-      "source": "Taldor, Echoes of Glory",
-      "source_id": "spells:sign_of_the_dawnflower",
-      "prerequisites": [],
-      "tags": [
-        "school:transmutation",
-        "slot:0",
-        "class:cleric",
-        "class:druid",
-        "class:hunter",
-        "class:oracle",
-        "class:paladin",
-        "class:ranger"
-      ],
-      "references": [
-        "AoN: Sign of the Dawnflower (Spells)"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/SpellDisplay.aspx?ItemName=Sign%20of%20the%20Dawnflower"
-      ],
-      "description": "As message, except the only information you can transmit is that you are a worshiper of a sun goddess. Once notified, the target can reply that he understands your sign. The spell transmits meaning, not sound, and transcends language barriers.",
-      "mechanics": {
-        "school": "transmutation",
-        "descriptors": [],
-        "spell_level": {
-          "cleric": 0,
-          "druid": 0,
-          "hunter": 0,
-          "oracle": 0,
-          "paladin": 1,
-          "ranger": 1
-        },
-        "casting_time": "1 standard action",
-        "components": "S, F (your holy symbol, or a depiction of either Sarenrae's holy symbol or the goddess herself)",
-        "range": "medium (100 ft. + 10 ft./level)",
-        "duration": "1 hour/level",
-        "saving_throw": "none",
-        "spell_resistance": "no"
       }
     },
     {

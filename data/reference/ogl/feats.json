@@ -20289,7 +20289,7 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Eye%20of%20the%20Arclord"
       ],
       "source_id": "inner_sea_world_guide:eye_of_the_arclord",
-      "description": "Your understanding of the esoteric teachings of the Arclords of a mage-ruled realm allows you to open an eldritch eye that grants you superior perception of the magical world.\n\nOnce per day as a standard action, you can open an incandescent third eye upon your forehead. The eye can remain open for 1 minute, during which time you cast all divination spells at +1 caster level (as long as you begin casting the spell before the eye closes), gain darkvision 60 feet, and can use detect magic (as the spell of the same name). You gain a +8 bonus on Perception checks to notice invisible creatures while the eye is open as well.",
+      "description": "Your understanding of the esoteric teachings of the wizard-lords of a mage-ruled realm allows you to open an eldritch eye that grants you superior perception of the magical world.\n\nOnce per day as a standard action, you can open an incandescent third eye upon your forehead. The eye can remain open for 1 minute, during which time you cast all divination spells at +1 caster level (as long as you begin casting the spell before the eye closes), gain darkvision 60 feet, and can use detect magic (as the spell of the same name). You gain a +8 bonus on Perception checks to notice invisible creatures while the eye is open as well.",
       "updated_at": "2026-07-19T00:00:00Z"
     },
     {
@@ -46927,27 +46927,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Pure Legion Assault",
-      "source": "Spymaster's Handbook",
-      "prerequisites": [
-        "Bluff 1 rank",
-        "Knowledge (religion) 1 rank",
-        "Pure Legion Recruit trait (Pathfinder Player Companion: People of the Sands 21)"
-      ],
-      "tags": [
-        "Spymaster's Handbook"
-      ],
-      "references": [
-        "Pathfinder PRD: Pure Legion Assault"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Pure%20Legion%20Assault"
-      ],
-      "source_id": "spymaster_s_handbook:pure_legion_assault",
-      "description": "The Pure Legion trained you to apply your knowledge of religions to predicting and defeating divine servitors.\n\nYou gain a +2 bonus on saving throws against divine spells and effects and abilities from outsiders. If you must attempt a saving throw against a divine spell, you gain a +1 bonus on attack rolls against the creature that cast the spell.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Draconic Manifestation",
       "source": "Legacy Of Dragons",
       "prerequisites": [
@@ -61780,26 +61759,6 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Jungle%20Survivalist"
       ],
       "description": "Normally pestilential rain forests are a safe haven and home to you. Benefit: You gain a +2 bonus on saving throws against diseases, poisons, and the distraction ability of creatures with the swarm subtype. You also gain a +2 bonus on Acrobatics and Climb checks when climbing trees and a +2 bonus on Perception checks against creatures that gain a racial bonus on Stealth checks in vegetation.",
-      "mechanics": {}
-    },
-    {
-      "name": "Kraggodan's Stance",
-      "source": "Elemental Master's Handbook",
-      "source_id": "feats:kraggodan_s_stance",
-      "prerequisites": [
-        "Con 13",
-        "proficiency with heavy armor and shields"
-      ],
-      "tags": [
-        "combat"
-      ],
-      "references": [
-        "AoN: Kraggodan's Stance"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Kraggodan's%20Stance"
-      ],
-      "description": "You have learned one of the secrets of Kraggodan’s defenders and can lock your armor and shield into an impenetrable barrier. Benefit: As a move action when wearing heavy armor and using a heavy shield or tower shield, you increase the bonus to AC granted by your armor and your shield by 1 each until you move or are moved from your current square. You must be in contact with solid ground to gain this benefit. You can never increase an armor or shield bonus to AC by more than 1 each in this way.",
       "mechanics": {}
     },
     {
