@@ -33082,7 +33082,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Arcane%20Reinforcement"
       ],
-      "description": "You cast this spell as you begin crafting an item using a Craft skill, and add your Spellcraft ranks to Craft checks made to create that item. As part of concentrating on the spell, you must continue chanting the verbal components, pausing at most for a few seconds at a time to speak, chew, and so on. If the crafting takes more than 1 day to complete, you must cast the spell each day to gain its benefit.  This spell originated among wizards of the Arcanamirium, though the an explorers' guild also uses it.",
+      "description": "You cast this spell as you begin crafting an item using a Craft skill, and add your Spellcraft ranks to Craft checks made to create that item. As part of concentrating on the spell, you must continue chanting the verbal components, pausing at most for a few seconds at a time to speak, chew, and so on. If the crafting takes more than 1 day to complete, you must cast the spell each day to gain its benefit.  This spell originated among wizards of a school of magic, though the an explorers' guild also uses it.",
       "mechanics": {
         "school": "transmutation",
         "casting_time": "1 round",
@@ -33117,7 +33117,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Canopic%20Conversion"
       ],
-      "description": "This spell eviscerates the target, drawing forth its life essence as well as its internal organs. The target takes 1d6 hit points of damage per caster level (maximum 20d6). If this damage kills the target, the spell pulls the creature's organs into a set of 4 canopic jars and seals them; 1d4 rounds later, the corpse revives as a mummy (if 8 HD or fewer) or an advanced mummy (if 9 HD or more).  The mummy is not under your control, but the canopic jars give the bearer certain powers over it. Anyone holding one of the jars can communicate with the mummy as if the two shared a common language. The bearer gains the benefits of protection from evil and sanctuary, but only against that mummy. Unsealing or breaking a jar is a standard action, which dissipates its power (and protection) but lets the bearer issue a short command to the mummy, similar to a suggestion spell (Will DC 23 negates). You (and only you) may unseal all 4 jars in a 10-minute ritual to control the mummy with an similar to geas (Will DC 23 negates); most casters typically include a restriction that the mummy will not harm them, as unsealing the jars leaves them vulnerable.  The pharaohs of ancient an ancient desert kingdom sometimes used this spell to punish their enemies. The Risen Guard does not use the spell (though they have access to it), preferring trustworthy living guardians for the Ruby Prince. The Whispering Way may have copies of the spell.",
+      "description": "This spell eviscerates the target, drawing forth its life essence as well as its internal organs. The target takes 1d6 hit points of damage per caster level (maximum 20d6). If this damage kills the target, the spell pulls the creature's organs into a set of 4 canopic jars and seals them; 1d4 rounds later, the corpse revives as a mummy (if 8 HD or fewer) or an advanced mummy (if 9 HD or more).  The mummy is not under your control, but the canopic jars give the bearer certain powers over it. Anyone holding one of the jars can communicate with the mummy as if the two shared a common language. The bearer gains the benefits of protection from evil and sanctuary, but only against that mummy. Unsealing or breaking a jar is a standard action, which dissipates its power (and protection) but lets the bearer issue a short command to the mummy, similar to a suggestion spell (Will DC 23 negates). You (and only you) may unseal all 4 jars in a 10-minute ritual to control the mummy with an similar to geas (Will DC 23 negates); most casters typically include a restriction that the mummy will not harm them, as unsealing the jars leaves them vulnerable.  The pharaohs of ancient an ancient desert kingdom sometimes used this spell to punish their enemies. The Risen Guard does not use the spell (though they have access to it), preferring trustworthy living guardians for a desert prince. a necromantic cult may have copies of the spell.",
       "mechanics": {
         "school": "necromancy",
         "casting_time": "1 round",
@@ -33153,7 +33153,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Chastise"
       ],
-      "description": "You gain a +5 bonus on Bluff, Diplomacy, and Intimidate checks to convince a listener that they will get in trouble with their superiors or with the law if they don't do what you ask.  This spell is primarily used by the Eagle Knights, though they did not create it; Hellknights also use it extensively to gather information and foster cooperation.",
+      "description": "You gain a +5 bonus on Bluff, Diplomacy, and Intimidate checks to convince a listener that they will get in trouble with their superiors or with the law if they don't do what you ask.  This spell is primarily used by an order of knights, though they did not create it; Hellknights also use it extensively to gather information and foster cooperation.",
       "mechanics": {
         "school": "transmutation",
         "casting_time": "1 standard action",
@@ -33186,7 +33186,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Summon%20Elemental%20Steed"
       ],
-      "description": "You summon a greater elemental (air, earth, fire, or water) bound in the form of a mighty chariot that moves at your command and can carry up to nine Medium creatures.  Passengers inside are not harmed by the elemental, and can see, breathe, and act normally, suffering no environmental damage even when the elemental chariot is flying, underwater, burrowing, or using earth glide. Passengers are not otherwise protected, though the elemental chariot does provide cover like a normal chariot.  The elemental keeps all of its statistics and abilities, except it loses its slam attacks and gains a trample attack (Pathfinder RPG Bestiary 305).  When you use a summoning spell to summon an air, earth, fire, or water creature, it is a spell of that type.  This spell is almost exclusively used by the Green Faith.",
+      "description": "You summon a greater elemental (air, earth, fire, or water) bound in the form of a mighty chariot that moves at your command and can carry up to nine Medium creatures.  Passengers inside are not harmed by the elemental, and can see, breathe, and act normally, suffering no environmental damage even when the elemental chariot is flying, underwater, burrowing, or using earth glide. Passengers are not otherwise protected, though the elemental chariot does provide cover like a normal chariot.  The elemental keeps all of its statistics and abilities, except it loses its slam attacks and gains a trample attack (Pathfinder RPG Bestiary 305).  When you use a summoning spell to summon an air, earth, fire, or water creature, it is a spell of that type.  This spell is almost exclusively used by a nature faith.",
       "mechanics": {
         "school": "conjuration",
         "casting_time": "10 minutes",
@@ -33218,7 +33218,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Hibernate"
       ],
-      "description": "You place a willing subject into a cataleptic state. It remains aware of its surroundings but is paralyzed, appearing dead unless observers make a DC 20 Heal check. Hibernate delays the effects of poison, disease, and bleed effects for the spell's duration, and half of any hit point damage suffered by the subject is converted to nonlethal damage.  This spell originated with the Green Faith, but has spread to all other druidic religions.",
+      "description": "You place a willing subject into a cataleptic state. It remains aware of its surroundings but is paralyzed, appearing dead unless observers make a DC 20 Heal check. Hibernate delays the effects of poison, disease, and bleed effects for the spell's duration, and half of any hit point damage suffered by the subject is converted to nonlethal damage.  This spell originated with a nature faith, but has spread to all other druidic religions.",
       "mechanics": {
         "school": "necromancy",
         "casting_time": "1 standard action",
@@ -33255,7 +33255,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Sotto%20Voce"
       ],
-      "description": "Your dry, rasping whisper fills a living creature of 4 or fewer Hit Dice with unnatural dread. The affected creature must make a Will save or be shaken for 1 round.  This spell originated among the followers of the Whispering Way, but necromancers and other intimidating folk outside that group are known to use it.",
+      "description": "Your dry, rasping whisper fills a living creature of 4 or fewer Hit Dice with unnatural dread. The affected creature must make a Will save or be shaken for 1 round.  This spell originated among the followers of a necromantic cult, but necromancers and other intimidating folk outside that group are known to use it.",
       "mechanics": {
         "school": "necromancy",
         "casting_time": "1 standard action",
@@ -33293,7 +33293,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Tomb%20Legion"
       ],
-      "description": "This spell functions like shambler, except that it calls into existence 1d4+2 advanced mummies rather than shambling mounds.  Though the spell has fallen out of favor among the Risen Guard because the Ruby Prince frowns on the use of undead, this spell is popular among followers of the Whispering Way.",
+      "description": "This spell functions like shambler, except that it calls into existence 1d4+2 advanced mummies rather than shambling mounds.  Though the spell has fallen out of favor among the Risen Guard because a desert prince frowns on the use of undead, this spell is popular among followers of a necromantic cult.",
       "mechanics": {
         "school": "necromancy",
         "casting_time": "1 standard action",
@@ -33329,7 +33329,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Tripvine"
       ],
-      "description": "You animate a rope, vine, or similar object so that it attempts to trip any creature that comes near. The rope attacks anything in a 10-foot-square area you designate. The rope does not provoke an attack of opportunity. Its CMB is equal to your caster level +2. A tripped target that was running, jumping, or charging takes 1d6 points of nonlethal damage. Creatures aware of the tripvine gain a +4 bonus to their CMD against it.  The Green Faith created this spell, but it is now common.",
+      "description": "You animate a rope, vine, or similar object so that it attempts to trip any creature that comes near. The rope attacks anything in a 10-foot-square area you designate. The rope does not provoke an attack of opportunity. Its CMB is equal to your caster level +2. A tripped target that was running, jumping, or charging takes 1d6 points of nonlethal damage. Creatures aware of the tripvine gain a +4 bonus to their CMD against it.  a nature faith created this spell, but it is now common.",
       "mechanics": {
         "school": "transmutation",
         "casting_time": "1 standard action",
@@ -33893,7 +33893,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Harrowing"
       ],
-      "description": "You use a Harrow deck to tell a fortune for yourself or someone else. If you cast harrowing on another creature, you must remain adjacent to the target for the duration of the casting time. A harrowing must describe one set of events or course of action (for example, \"hunting down the pirate king,\" or \"traveling to Viperwall to search for a magic sword\") that the target of the spell intends to undertake at some point during the spell's duration. If you have access to a Harrow deck, draw nine cards when this spell is cast. If you do not have a Harrow deck, you can simulate the draws by rolling a d6 and a d10 for each of the nine cards, as detailed on page 293 of this book. Record the ability score and alignment associated with each card. Each of these cards grants a luck bonus or a penalty on a specific type of d20 check; the magnitude of the penalty or bonus depends upon how closely that particular card's alignment matches the target creature's alignment. If the card and target's alignments are identical, that card provides a +2 luck bonus on the associated suit's check. If the card and target's alignments are of the opposite alignment (see below), the card inflicts a -1 penalty on that associated check. If the card has any other alignment, it provides a +1 luck bonus on the associated suit's check. While penalties persist on all associated checks for as long as the harrowing persists, the bonuses are one-use bonuses that the harrowed character can \"spend\" at any time to modify that card's associated check. You can spend a bonus to modify an appropriate roll after the die is rolled, but cannot spend the bonus once you know the result of the roll. Since all of the bonuses granted by a harrowing are luck bonuses, they do not stack with each other. Penalties, on the other hand, do stack. Once you spend all of the bonuses granted by a harrowing, or once the spell's duration ends, the spell ends and the penalties are removed. A single creature can only be under the effects of one harrowing at a time. If it is subjected to a second harrowing while a previous harrowing is still in effect, the new harrowing automatically fails. Associated Suit Checks Suit Associated Check Hammer (Str) Attack rolls (ranged and melee) Key (Dex) Reflex saving throws Shield (Con) Fortitude saving throws Book (Int) Skill checks Star (Wis) Will saving throws Crown (Cha) Any d20 roll Opposition Alignments Alignment Opposition LG CE NG NE CG LE LN CN N LG, LE, CG, or CE (pick one when spell is cast) CN LN LE CG NE NG CE LG",
+      "description": "You use a fortune-telling deck to tell a fortune for yourself or someone else. If you cast harrowing on another creature, you must remain adjacent to the target for the duration of the casting time. A harrowing must describe one set of events or course of action (for example, \"hunting down the pirate king,\" or \"traveling to Viperwall to search for a magic sword\") that the target of the spell intends to undertake at some point during the spell's duration. If you have access to a fortune-telling deck, draw nine cards when this spell is cast. If you do not have a fortune-telling deck, you can simulate the draws by rolling a d6 and a d10 for each of the nine cards, as detailed on page 293 of this book. Record the ability score and alignment associated with each card. Each of these cards grants a luck bonus or a penalty on a specific type of d20 check; the magnitude of the penalty or bonus depends upon how closely that particular card's alignment matches the target creature's alignment. If the card and target's alignments are identical, that card provides a +2 luck bonus on the associated suit's check. If the card and target's alignments are of the opposite alignment (see below), the card inflicts a -1 penalty on that associated check. If the card has any other alignment, it provides a +1 luck bonus on the associated suit's check. While penalties persist on all associated checks for as long as the harrowing persists, the bonuses are one-use bonuses that the harrowed character can \"spend\" at any time to modify that card's associated check. You can spend a bonus to modify an appropriate roll after the die is rolled, but cannot spend the bonus once you know the result of the roll. Since all of the bonuses granted by a harrowing are luck bonuses, they do not stack with each other. Penalties, on the other hand, do stack. Once you spend all of the bonuses granted by a harrowing, or once the spell's duration ends, the spell ends and the penalties are removed. A single creature can only be under the effects of one harrowing at a time. If it is subjected to a second harrowing while a previous harrowing is still in effect, the new harrowing automatically fails. Associated Suit Checks Suit Associated Check Hammer (Str) Attack rolls (ranged and melee) Key (Dex) Reflex saving throws Shield (Con) Fortitude saving throws Book (Int) Skill checks Star (Wis) Will saving throws Crown (Cha) Any d20 roll Opposition Alignments Alignment Opposition LG CE NG NE CG LE LN CN N LG, LE, CG, or CE (pick one when spell is cast) CN LN LE CG NE NG CE LG",
       "mechanics": {
         "school": "divination",
         "casting_time": "10 minutes",
@@ -34097,7 +34097,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Teleport%20Trap"
       ],
-      "description": "Teleport trap wards an area, redirecting all teleportation into or out of the area to a specific point within the area determined by you at the time of casting. The destination must be an open space on a solid surface. The spell's area overlaps walls and other solid and liquid objects (preventing intruders from bypassing the ward by teleporting into a wall or through similar means). A teleporting creature that is affected by a teleport trap can resist the effect with a Will save-if the save is successful, the creature simply doesn't teleport at all (but the use of the teleport effect is still consumed)-either to the intended location or the teleport trap's actual destination. A DC 27 Knowledge (arcana) allows such a creature to recognize the teleport trap's presence, but does not reveal the trap's linked destination.  At your discretion, the teleport trap can exclude a category of creatures, such as an alignment, a type of creature, or creatures that carry a specific item or know a password (though this only works if the creature is teleporting out of the area, not into it). You select this option and the conditions at the time you cast the spell. Overly complicated conditions may cause the spell to fail entirely. Multiple castings of teleport trap can be linked to cover a larger area, allowing teleported creatures to be directed to a single point within the combined area of the spells.  Teleport trap can be made permanent at the cost of 7,000 gp. A single permanency spell can be used on all teleport traps that share a linked destination, but the gold piece cost must be paid for each individual spell.  The Pathfinders of the Grand Lodge make use of permanent teleport traps in several key locations, trapping would-be intruders in a small wing of jail cells. At least one crypt of the Whispering Tyrant makes use of the spell as well, trapping grave robbers in coffin-sized stone cysts, there to die a slow and agonizing death from thirst and starvation.",
+      "description": "Teleport trap wards an area, redirecting all teleportation into or out of the area to a specific point within the area determined by you at the time of casting. The destination must be an open space on a solid surface. The spell's area overlaps walls and other solid and liquid objects (preventing intruders from bypassing the ward by teleporting into a wall or through similar means). A teleporting creature that is affected by a teleport trap can resist the effect with a Will save-if the save is successful, the creature simply doesn't teleport at all (but the use of the teleport effect is still consumed)-either to the intended location or the teleport trap's actual destination. A DC 27 Knowledge (arcana) allows such a creature to recognize the teleport trap's presence, but does not reveal the trap's linked destination.  At your discretion, the teleport trap can exclude a category of creatures, such as an alignment, a type of creature, or creatures that carry a specific item or know a password (though this only works if the creature is teleporting out of the area, not into it). You select this option and the conditions at the time you cast the spell. Overly complicated conditions may cause the spell to fail entirely. Multiple castings of teleport trap can be linked to cover a larger area, allowing teleported creatures to be directed to a single point within the combined area of the spells.  Teleport trap can be made permanent at the cost of 7,000 gp. A single permanency spell can be used on all teleport traps that share a linked destination, but the gold piece cost must be paid for each individual spell.  The Pathfinders of the Grand Lodge make use of permanent teleport traps in several key locations, trapping would-be intruders in a small wing of jail cells. At least one crypt of a lich tyrant makes use of the spell as well, trapping grave robbers in coffin-sized stone cysts, there to die a slow and agonizing death from thirst and starvation.",
       "mechanics": {
         "school": "abjuration",
         "casting_time": "10 minutes",
@@ -43691,7 +43691,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Ablative%20Sphere"
       ],
-      "description": "The Garundi tenaciously protect their homes, and through the years they have perfected magic to aid them in their defense.  An immobile, crystalline, weblike globe surrounds you.  When the ablative sphere winks into existence, it provides you with improved cover (Pathfinder RPG Core Rulebook 196). The barrier does not impede a spell's line of sight or effect.  The sphere is 1 inch thick per caster level, has hardness 5, and 3 hit points per inch of thickness. When an ablative sphere loses hit points, the level of cover it provides is reduced. When the ablative sphere has lost one-third of its hit points, it provides cover instead of improved cover. Once it has lost two-thirds of its hit points, it provides only partial cover. Finally, when the ablative sphere's hit points reach 0, the globe is destroyed. When an attack reduces an ablative sphere's hit points to 0, you take any remaining damage.",
+      "description": "The southern tenaciously protect their homes, and through the years they have perfected magic to aid them in their defense.  An immobile, crystalline, weblike globe surrounds you.  When the ablative sphere winks into existence, it provides you with improved cover (Pathfinder RPG Core Rulebook 196). The barrier does not impede a spell's line of sight or effect.  The sphere is 1 inch thick per caster level, has hardness 5, and 3 hit points per inch of thickness. When an ablative sphere loses hit points, the level of cover it provides is reduced. When the ablative sphere has lost one-third of its hit points, it provides cover instead of improved cover. Once it has lost two-thirds of its hit points, it provides only partial cover. Finally, when the ablative sphere's hit points reach 0, the globe is destroyed. When an attack reduces an ablative sphere's hit points to 0, you take any remaining damage.",
       "mechanics": {
         "school": "abjuration",
         "casting_time": "1 standard action",
@@ -43761,7 +43761,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Snow%20Shape"
       ],
-      "description": "In frozen northern lands, where the earth may be hidden beneath heavy drifts of snow, Ulfen druids developed a variation of stone shape that other spellcasters have since learned.  You can form a mass of snow into any shape that suits your purpose, as per the spell stone shape. While it's possible to make crude objects with snow shape, most fine details aren't possible.  However, a successful Craft (weapons) check allows you to create a bladed weapon from the snow. The DC of this check is equal to the DC listed with the Craft (weapons) skill (Core Rulebook 93).  You must be the one to make the Craft check and must do so at the time of casting this spell. A failed check means that the spell is cast normally but the weapon created is malformed and useless. This spell can only be used to craft weapons and not more precise tools or elaborate armors.  Once you create the item with this spell, it solidifies into super-hard ice, gaining a hardness of 5 and 10 hit points per inch of thickness. This weapon takes double damage from fire.  Anyone using an ice weapon takes a -2 penalty on attacks due to the slippery, unwieldy nature of the weapon, but the weapon deals 1 point of cold damage in addition to its normal damage. A weapon created by this spell lasts for 24 hours before melting into uselessness.",
+      "description": "In frozen northern lands, where the earth may be hidden beneath heavy drifts of snow, northern druids developed a variation of stone shape that other spellcasters have since learned.  You can form a mass of snow into any shape that suits your purpose, as per the spell stone shape. While it's possible to make crude objects with snow shape, most fine details aren't possible.  However, a successful Craft (weapons) check allows you to create a bladed weapon from the snow. The DC of this check is equal to the DC listed with the Craft (weapons) skill (Core Rulebook 93).  You must be the one to make the Craft check and must do so at the time of casting this spell. A failed check means that the spell is cast normally but the weapon created is malformed and useless. This spell can only be used to craft weapons and not more precise tools or elaborate armors.  Once you create the item with this spell, it solidifies into super-hard ice, gaining a hardness of 5 and 10 hit points per inch of thickness. This weapon takes double damage from fire.  Anyone using an ice weapon takes a -2 penalty on attacks due to the slippery, unwieldy nature of the weapon, but the weapon deals 1 point of cold damage in addition to its normal damage. A weapon created by this spell lasts for 24 hours before melting into uselessness.",
       "mechanics": {
         "school": "transmutation",
         "casting_time": "1 standard action",
@@ -43935,76 +43935,6 @@
       "notes": "Aggiunta da cache gist PathfinderSpellsJSON (expansion 2026-07-25): assente dal catalogo storico."
     },
     {
-      "name": "Aram Zey's Focus",
-      "source": "Pathfinder Society Field Guide",
-      "source_id": "pathfinder_srd:aram_zey_s_focus",
-      "prerequisites": [],
-      "tags": [
-        "spell",
-        "aram-zey-s-focus",
-        "school:divination",
-        "slot:2",
-        "class:alchemist",
-        "class:bard",
-        "class:sorcerer",
-        "class:wizard"
-      ],
-      "references": [
-        "PathfinderSpellsJSON gist: Aram Zey's Focus"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/SpellDisplay.aspx?ItemName=Aram%20Zey%27s%20Focus"
-      ],
-      "description": "Aram Zey created this spell for use by his students, both to increase their confidence in their skills and to ensure more of them survived encounters with deadly traps. If you don't have the trapfinding class ability, this spell grants you the trapfinding ability of a rogue of half your character level.  If you have the trapfinding ability granted by class levels, however, this spell grants you a +5 competence bonus on all Disable Device checks made to disarm mechanical (but not magical) traps. While under the effects of Aram Zey's focus, whenever you trigger a trap by rolling poorly on a Disable Device check, you may roll a second Disable Device check. This new roll uses the same modifiers as the first roll. If your second roll is high enough to avoid accidentally springing the trap, you avoid setting it off, but still fail to disarm it. Each time you take advantage of this feature, the remaining duration of the spell is reduced by 1 minute-if less than a minute's worth of duration remains, the spell ends as soon as you reroll your Disable Device check.",
-      "mechanics": {
-        "school": "divination",
-        "casting_time": "1 standard action",
-        "components": "V, S, F (masterwork thieves' tools worth 100 gp)",
-        "range": "personal",
-        "duration": "1 minute/level (D)",
-        "targets": "you",
-        "spell_level": {
-          "alchemist": 2,
-          "bard": 2,
-          "sorcerer/wizard": 2
-        }
-      },
-      "notes": "Aggiunta da cache gist PathfinderSpellsJSON (expansion 2026-07-25): assente dal catalogo storico."
-    },
-    {
-      "name": "Aram Zey's Trap Ward",
-      "source": "Pathfinder Society Field Guide",
-      "source_id": "pathfinder_srd:aram_zey_s_trap_ward",
-      "prerequisites": [],
-      "tags": [
-        "spell",
-        "aram-zey-s-trap-ward",
-        "school:abjuration",
-        "slot:4",
-        "class:sorcerer",
-        "class:wizard"
-      ],
-      "references": [
-        "PathfinderSpellsJSON gist: Aram Zey's Trap Ward"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/SpellDisplay.aspx?ItemName=Aram%20Zey%27s%20Trap%20Ward"
-      ],
-      "description": "While he was researching the underlying causes of the resonance created by overlapping abjurations, Aram Zey discovered a way to manipulate that resonance to the caster's advantage when encountering magical traps.  The protection provided by Aram Zey's trap ward comes into play whenever the caster is subjected to the effects of a magical trap. The spell immediately discharges and interferes with the trap's function in an attempt to counter the trap's magic. When this occurs, make a caster level check as an immediate action. The DC of this check is equal to the trap's Disable Device DC. If you're successful, the trap ward dispels the magical effect of the trap before the effect actually manifests, effectively preventing the trap from triggering for the next 1d4 rounds and ending Aram Zey's trap ward immediately.",
-      "mechanics": {
-        "school": "abjuration",
-        "casting_time": "1 standard action",
-        "components": "V, S, M (masterwork thieves' tools worth 100 gp)",
-        "range": "personal",
-        "duration": "10 minutes/level or until discharged",
-        "targets": "you",
-        "spell_level": {
-          "sorcerer/wizard": 4
-        }
-      },
-      "notes": "Aggiunta da cache gist PathfinderSpellsJSON (expansion 2026-07-25): assente dal catalogo storico."
-    },
-    {
       "name": "Bite the Hand",
       "source": "Pathfinder Society Field Guide",
       "source_id": "pathfinder_srd:bite_the_hand",
@@ -44144,7 +44074,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Gilded%20Whispers"
       ],
-      "description": "Developed by priests of a god of cities to catch thieves and skimmers, gilded whispers later spread to other faiths and was adapted to the arcane arts through the combined efforts of Aram Zey and Kreighton Shaine. Pathfinders most commonly use this spell to track bribes and illicit purchases back to their ultimate source, especially when they suspect the influence of Aspis Consortium agents.  Gilded whispers allows you to use a single coin as a conduit for an eavesdropping spell. When you use a divination (scrying) spell or item, such as clairvoyance/ clairaudience, scrying, or a crystal ball, you can choose to target a coin you have affected with gilded whispers instead of a creature or location (even if you would not otherwise be able to target an object), though any range limits on the scrying effect still apply. If the coin is held or carried by a creature, its owner receives any applicable saving throw against the effect. The caster of gilded whispers treats the coin as a familiar subject. The residual psychic impressions left upon the coin by other handlers help mask this dweomer from detection, protecting gilded whispers against location by detect magic, arcane sight, and similar effects unless the latter spell's caster succeeds on a caster level check (1d20 + caster level) against a DC of 11 + the caster level of the spellcaster who cast gilded whispers.  The scrying sensor created by using a divination (scrying) spell to observe or listen to the coin's surroundings can be detected as normal.",
+      "description": "Developed by priests of a god of cities to catch thieves and skimmers, gilded whispers later spread to other faiths and was adapted to the arcane arts through the combined efforts of a famous explorer and Kreighton Shaine. Pathfinders most commonly use this spell to track bribes and illicit purchases back to their ultimate source, especially when they suspect the influence of mercenary trading company agents.  Gilded whispers allows you to use a single coin as a conduit for an eavesdropping spell. When you use a divination (scrying) spell or item, such as clairvoyance/ clairaudience, scrying, or a crystal ball, you can choose to target a coin you have affected with gilded whispers instead of a creature or location (even if you would not otherwise be able to target an object), though any range limits on the scrying effect still apply. If the coin is held or carried by a creature, its owner receives any applicable saving throw against the effect. The caster of gilded whispers treats the coin as a familiar subject. The residual psychic impressions left upon the coin by other handlers help mask this dweomer from detection, protecting gilded whispers against location by detect magic, arcane sight, and similar effects unless the latter spell's caster succeeds on a caster level check (1d20 + caster level) against a DC of 11 + the caster level of the spellcaster who cast gilded whispers.  The scrying sensor created by using a divination (scrying) spell to observe or listen to the coin's surroundings can be detected as normal.",
       "mechanics": {
         "school": "divination",
         "casting_time": "1 round",
@@ -44367,7 +44297,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Stolen%20Light"
       ],
-      "description": "Kreighton Shaine researched this spell from the fragmentary notes of a Vudrani ascetic recorded in a strange tome, and rumors credit him with no fewer than a dozen permanent stolen light gems hidden in compartments and drawers in his study. Stolen light stores images within a gem. To store an image, as part of casting you must touch a gem worth not less than 500 gp. You trap within the gem an image of everything visible within a 30-foot cone measured from the gem, in a direction of your choice. Alternatively, you can capture a less detailed image of a single object within sight.  Once the casting is complete, the gem turns opaque, and the image inside cannot be seen. The stolen image remains within the gem until released or dispelled.  To release an image, you touch a gem holding stolen light as a standard action and speak a command word chosen at the time of casting. For 1 minute per caster level, the image stored within the gem becomes visible. Details can be made out as clearly as they could be perceived at the time of casting. Darkvision is of no use for making out details in a stolen image, though low-light vision or other exceptional visual talents may reveal information the caster did not see.  Light sources brighter than bright light are reduced to bright light in the stolen image. Once the image has been released, it cannot again be recovered from the gem.  Stolen light can be made permanent with the permanency spell by a caster of 10th level for a cost of 5,000 gp. This leaves the gem capable of projecting the image indefinitely, activated and deactivated by its command word, until it is destroyed or dispelled.",
+      "description": "Kreighton Shaine researched this spell from the fragmentary notes of a distant ascetic recorded in a strange tome, and rumors credit him with no fewer than a dozen permanent stolen light gems hidden in compartments and drawers in his study. Stolen light stores images within a gem. To store an image, as part of casting you must touch a gem worth not less than 500 gp. You trap within the gem an image of everything visible within a 30-foot cone measured from the gem, in a direction of your choice. Alternatively, you can capture a less detailed image of a single object within sight.  Once the casting is complete, the gem turns opaque, and the image inside cannot be seen. The stolen image remains within the gem until released or dispelled.  To release an image, you touch a gem holding stolen light as a standard action and speak a command word chosen at the time of casting. For 1 minute per caster level, the image stored within the gem becomes visible. Details can be made out as clearly as they could be perceived at the time of casting. Darkvision is of no use for making out details in a stolen image, though low-light vision or other exceptional visual talents may reveal information the caster did not see.  Light sources brighter than bright light are reduced to bright light in the stolen image. Once the image has been released, it cannot again be recovered from the gem.  Stolen light can be made permanent with the permanency spell by a caster of 10th level for a cost of 5,000 gp. This leaves the gem capable of projecting the image indefinitely, activated and deactivated by its command word, until it is destroyed or dispelled.",
       "mechanics": {
         "school": "illusion",
         "casting_time": "1 full round",
@@ -44661,7 +44591,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Call%20Weapon"
       ],
-      "description": "This spell first rose to prominence among the elves of an elven realm in the war to retake their ancestral land from the demon lord Treerazer and his minions. Elite units of elven magi entered battle with this spell prepared to shield fallen comrades or stand firm against fell foes. As the elven presence returned to the world, this spell spread throughout the inner sea region and beyond.  When you cast this spell, you cause a weapon wielded by an ally within 30 feet to telekinetically fly across the space between you and into your open hand. This extra energy persists in the weapon for the rest of the round, granting you a +2 circumstance bonus on attack rolls and weapon damage rolls made during the same round you cast this spell.  If the ally targeted for this spell is unwilling to give up her weapon, the spell fails. An unconscious or dying ally is considered a \"willing\" target so long as the weapon to be called is still in contact with the ally's body.",
+      "description": "This spell first rose to prominence among the elves of an elven realm in the war to retake their ancestral land from the demon lord a demon lord and his minions. Elite units of elven magi entered battle with this spell prepared to shield fallen comrades or stand firm against fell foes. As the elven presence returned to the world, this spell spread throughout the inner sea region and beyond.  When you cast this spell, you cause a weapon wielded by an ally within 30 feet to telekinetically fly across the space between you and into your open hand. This extra energy persists in the weapon for the rest of the round, granting you a +2 circumstance bonus on attack rolls and weapon damage rolls made during the same round you cast this spell.  If the ally targeted for this spell is unwilling to give up her weapon, the spell fails. An unconscious or dying ally is considered a \"willing\" target so long as the weapon to be called is still in contact with the ally's body.",
       "mechanics": {
         "school": "transmutation",
         "casting_time": "1 swift action",
@@ -44698,7 +44628,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Crusader%27s%20Edge"
       ],
-      "description": "This spell was created by the paladins of the Mendevian Crusades, and co-opted by inquisitors and rangers dedicated to tracking and fighting demons, devils, and other evil extraplanar creatures.  When you cast this spell on a melee weapon you imbue it with a powerful holy energy, granting the weapon the bane weapon quality against evil outsiders. Furthermore, whenever you score a successful critical hit against an outsider with the evil subtype, you not only deal normal critical damage with the weapon but also nauseate the outsider for 1d3 rounds-the outsider can reduce this nauseated condition to sickened for 1 round with a successful Fortitude save.",
+      "description": "This spell was created by the paladins of the great crusades, and co-opted by inquisitors and rangers dedicated to tracking and fighting demons, devils, and other evil extraplanar creatures.  When you cast this spell on a melee weapon you imbue it with a powerful holy energy, granting the weapon the bane weapon quality against evil outsiders. Furthermore, whenever you score a successful critical hit against an outsider with the evil subtype, you not only deal normal critical damage with the weapon but also nauseate the outsider for 1d3 rounds-the outsider can reduce this nauseated condition to sickened for 1 round with a successful Fortitude save.",
       "mechanics": {
         "school": "transmutation",
         "casting_time": "1 standard action",
@@ -44736,7 +44666,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Eaglesoul"
       ],
-      "description": "As the inner sea region's bravest men and women answered the call of what became the Second Mendevian Crusade, constructing the wardstones that eventually kept the brutal chaos of a demon-blighted land at bay, they realized that they needed help beyond traditional magics. Legends say that the first eaglesoul spell was created when an agathion avoral joined his own spirit with that of a courageous paladin who was about to be overwhelmed on the field of battle. The holy knight used the combined might of the agathion's great strength and his own to win the day for the crusaders. Now, although the spell is still in use chiefly among those that patrol the borders of a demon-blighted land, other champions of good have carried it with them to all corners of the inner sea region. When you cast this spell, you reach into the great beyond and beseech a good-aligned outsider for their aid against evil. The outsider infuses a small portion of its own power into you, making you a powerful force for good. You gain a +2 morale bonus on all Perception checks made against evil creatures, a +2 bonus on Initiative checks, and detect evil as a constant spell-like ability. In addition, once during the spell's duration you can call forth a surge of holy power when fighting an evil creature. Doing so is a swift action that shortens the spell's remaining duration so that its remaining hours of duration become rounds of duration. For the rest of this duration, the surge of power grants you the following benefits: • A +2 sacred bonus to AC • A +4 sacred bonus to Strength • Resistance 5 to acid and fire • A +5 sacred bonus on all Intimidate checks made against evil creatures • Fast healing 2 • Any critical threat roll made against an evil creature with a weapon you wield is automatically confirmed. Although this surge of power can be activated against any evil opponent, this ability activates automatically as soon as you attack any evil outsider, regardless of whether you hit or not, and regardless of whether you actually recognize that the target is in fact an evil outsider. In such cases the activation is a free action. Nongood spellcasters can cast this spell, but doing so causes them to be sickened (for spellcasters who are neither good nor evil) or staggered (for spellcasters who are evil) for the spell's duration.",
+      "description": "As the inner sea region's bravest men and women answered the call of what became the Second great crusade, constructing the wardstones that eventually kept the brutal chaos of a demon-blighted land at bay, they realized that they needed help beyond traditional magics. Legends say that the first eaglesoul spell was created when an agathion avoral joined his own spirit with that of a courageous paladin who was about to be overwhelmed on the field of battle. The holy knight used the combined might of the agathion's great strength and his own to win the day for the crusaders. Now, although the spell is still in use chiefly among those that patrol the borders of a demon-blighted land, other champions of good have carried it with them to all corners of the inner sea region. When you cast this spell, you reach into the great beyond and beseech a good-aligned outsider for their aid against evil. The outsider infuses a small portion of its own power into you, making you a powerful force for good. You gain a +2 morale bonus on all Perception checks made against evil creatures, a +2 bonus on Initiative checks, and detect evil as a constant spell-like ability. In addition, once during the spell's duration you can call forth a surge of holy power when fighting an evil creature. Doing so is a swift action that shortens the spell's remaining duration so that its remaining hours of duration become rounds of duration. For the rest of this duration, the surge of power grants you the following benefits: • A +2 sacred bonus to AC • A +4 sacred bonus to Strength • Resistance 5 to acid and fire • A +5 sacred bonus on all Intimidate checks made against evil creatures • Fast healing 2 • Any critical threat roll made against an evil creature with a weapon you wield is automatically confirmed. Although this surge of power can be activated against any evil opponent, this ability activates automatically as soon as you attack any evil outsider, regardless of whether you hit or not, and regardless of whether you actually recognize that the target is in fact an evil outsider. In such cases the activation is a free action. Nongood spellcasters can cast this spell, but doing so causes them to be sickened (for spellcasters who are neither good nor evil) or staggered (for spellcasters who are evil) for the spell's duration.",
       "mechanics": {
         "school": "conjuration",
         "casting_time": "1 standard action",
@@ -44772,7 +44702,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Eldritch%20Conduit"
       ],
-      "description": "Originally created by a disciple of the archwizard a mage-ruled realm, this spell was used to turn enemy soldiers in an undead-ruled land's undead armies into conduits capable of blasting spell energy back into the far reaches of the Gebite lines. Since then, it has become a favorite among arcane casters with an understanding of battlefield tactics.  If the target of this spell fails to resist its effects with a Will save, he becomes outlined in faint radiance, as if via faerie fire. At any time before the eldritch conduit expires, you may cast another spell with an area effect of cone, cylinder, line, or sphere and use the subject of the eldritch conduit as the point of origin for that spell. Doing so ends the spell immediately. The target must be within close range (25 feet + 5 feet/2 levels) in order for you to use the conduit-if the target moves out of range, the eldritch conduit effect persists but cannot be utilized by you until you get back within range.",
+      "description": "Originally created by a disciple of the archwizard a mage-ruled realm, this spell was used to turn enemy soldiers in an undead-ruled land's undead armies into conduits capable of blasting spell energy back into the far reaches of the undead-ruled lines. Since then, it has become a favorite among arcane casters with an understanding of battlefield tactics.  If the target of this spell fails to resist its effects with a Will save, he becomes outlined in faint radiance, as if via faerie fire. At any time before the eldritch conduit expires, you may cast another spell with an area effect of cone, cylinder, line, or sphere and use the subject of the eldritch conduit as the point of origin for that spell. Doing so ends the spell immediately. The target must be within close range (25 feet + 5 feet/2 levels) in order for you to use the conduit-if the target moves out of range, the eldritch conduit effect persists but cannot be utilized by you until you get back within range.",
       "mechanics": {
         "school": "transmutation",
         "casting_time": "1 standard action",
@@ -44920,7 +44850,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Geniekind"
       ],
-      "description": "Keleshite wizards and clerics have always sought to emulate the genies that they bind. The geniekind spell is the result of attempts to gain the power and influence of these proud outsiders without entirely forsaking the caster's own form.  Upon casting this spell, you must choose one type of genie to transform into, selecting from djinni, efreeti, marid, or shaitan. You retain your basic physical appearance but shift in some way to become more akin to the genie type you chose. While under the effects of geniekind, you gain a +2 racial bonus on all saving throws against paralysis, poison, sleep, and stunning effects, and a +4 enhancement bonus to your natural armor bonus. You also gain a +2 enhancement bonus to Constitution and a +5 bonus on all Diplomacy checks made when interacting with creatures of the same elemental subtype as your chosen genie. In addition, you gain other abilities depending upon the type of genie you choose to assume the form of, as detailed below.  Djinni: You gain the ability to fly at a speed of 60 feet with perfect maneuverability. When flying, your lower torso trails away into a vortex of wind and smoke. You gain resist electricity 10.  Efreeti: Your flesh turns a deep red and you grow large horns on your head. Your unarmed strikes and any melee weapon you wield deal +1d6 points of fire damage. You gain resist fire 10.  Marid: Your flesh turns blue and you gain webbed fingers and toes. You gain a swim speed of 60 feet and can breathe water. You gain resist cold 10.  Shaitan: Your flesh gains the coloration of stone and your hair appears to be sculpted from fine crystals. You gain a burrow speed of 60 feet and resist acid 10.",
+      "description": "desert wizards and clerics have always sought to emulate the genies that they bind. The geniekind spell is the result of attempts to gain the power and influence of these proud outsiders without entirely forsaking the caster's own form.  Upon casting this spell, you must choose one type of genie to transform into, selecting from djinni, efreeti, marid, or shaitan. You retain your basic physical appearance but shift in some way to become more akin to the genie type you chose. While under the effects of geniekind, you gain a +2 racial bonus on all saving throws against paralysis, poison, sleep, and stunning effects, and a +4 enhancement bonus to your natural armor bonus. You also gain a +2 enhancement bonus to Constitution and a +5 bonus on all Diplomacy checks made when interacting with creatures of the same elemental subtype as your chosen genie. In addition, you gain other abilities depending upon the type of genie you choose to assume the form of, as detailed below.  Djinni: You gain the ability to fly at a speed of 60 feet with perfect maneuverability. When flying, your lower torso trails away into a vortex of wind and smoke. You gain resist electricity 10.  Efreeti: Your flesh turns a deep red and you grow large horns on your head. Your unarmed strikes and any melee weapon you wield deal +1d6 points of fire damage. You gain resist fire 10.  Marid: Your flesh turns blue and you gain webbed fingers and toes. You gain a swim speed of 60 feet and can breathe water. You gain resist cold 10.  Shaitan: Your flesh gains the coloration of stone and your hair appears to be sculpted from fine crystals. You gain a burrow speed of 60 feet and resist acid 10.",
       "mechanics": {
         "school": "transmutation",
         "casting_time": "1 standard action",
@@ -45168,7 +45098,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Martyr%27s%20Bargain"
       ],
-      "description": "Among the faithful followers of the gods of purity-whether they be the servants of a goddess of dreams in a shadow-bound land, zealous followers of Milani struggling against a diabolic empire's government, paladins of a goddess of valor fighting against the horrors of a demon-blighted land, or simply those that fight evil the world over-martyr's bargain represents true faith and true sacrifice.   You cast this spell as an immediate action when you are subject to a spell or spell-like ability that deals hit point damage, after attack rolls and saving throws have been rolled but before the damage itself is determined. The damage dealt by the spell and any related effects are then delayed for you (and you only) for a number of rounds equal to your caster level.   At the end of that time (or immediately if martyr's bargain is dispelled), the delayed damage takes effect on you as it would have at the time it was cast, but is maximized as if affected by the Maximize Spell metamagic feat. Spells and spell-like abilities that were already maximized gain no additional benefit from this spell. Nothing can prevent this delayed damage from affecting you.   You can be affected by only one martyr's bargain spell at a time. If you cast this spell while you are already under the effects of a previous martyr's bargain, the previous spell effect ends and you immediately take the damage it had delayed.",
+      "description": "Among the faithful followers of the gods of purity-whether they be the servants of a goddess of dreams in a shadow-bound land, zealous followers of a goddess of rebellion struggling against a diabolic empire's government, paladins of a goddess of valor fighting against the horrors of a demon-blighted land, or simply those that fight evil the world over-martyr's bargain represents true faith and true sacrifice.   You cast this spell as an immediate action when you are subject to a spell or spell-like ability that deals hit point damage, after attack rolls and saving throws have been rolled but before the damage itself is determined. The damage dealt by the spell and any related effects are then delayed for you (and you only) for a number of rounds equal to your caster level.   At the end of that time (or immediately if martyr's bargain is dispelled), the delayed damage takes effect on you as it would have at the time it was cast, but is maximized as if affected by the Maximize Spell metamagic feat. Spells and spell-like abilities that were already maximized gain no additional benefit from this spell. Nothing can prevent this delayed damage from affecting you.   You can be affected by only one martyr's bargain spell at a time. If you cast this spell while you are already under the effects of a previous martyr's bargain, the previous spell effect ends and you immediately take the damage it had delayed.",
       "mechanics": {
         "school": "transmutation",
         "casting_time": "1 immediate action",
@@ -45204,7 +45134,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Music%20of%20the%20Spheres"
       ],
-      "description": "As any scholar of Desnan lore or astrologer can tell you, the music of the spheres is the harmonic constant that plays under and through all of reality. It is this constant song, this otherworldly music, that keeps the laws of reality constant and the connections between the planes of existence strong.  With this spell, one can amplify the underlying music of the spheres in the spell's area of effect to infuse yourself and all creatures within 20 feet of you, friend and foe alike. All creatures that begin their turn within the area of this spell's effect gain fast healing 5, resistance 10 to all energy types, and a +3 sacred bonus on all saving throws against poison and disease. Any creature that enters the area of effect does not gain the benefits of the music of the spheres until it begins its turn in that area. You must maintain concentration on the amplification of the music or the effects immediately end, but you can move around to prevent enemies from gaining the benefits of this spell.",
+      "description": "As any scholar of starlit lore or astrologer can tell you, the music of the spheres is the harmonic constant that plays under and through all of reality. It is this constant song, this otherworldly music, that keeps the laws of reality constant and the connections between the planes of existence strong.  With this spell, one can amplify the underlying music of the spheres in the spell's area of effect to infuse yourself and all creatures within 20 feet of you, friend and foe alike. All creatures that begin their turn within the area of this spell's effect gain fast healing 5, resistance 10 to all energy types, and a +3 sacred bonus on all saving throws against poison and disease. Any creature that enters the area of effect does not gain the benefits of the music of the spheres until it begins its turn in that area. You must maintain concentration on the amplification of the music or the effects immediately end, but you can move around to prevent enemies from gaining the benefits of this spell.",
       "mechanics": {
         "school": "conjuration",
         "casting_time": "1 standard action",
@@ -45521,7 +45451,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Suppress%20Primal%20Magic"
       ],
-      "description": "Nexian wizards first created this spell while researching the nature of the a magic-blasted wasteland, hoping to create small zones within the magic-starved region where their own spells could still function reliably. The best the Nexians could manage was this spell-a method to temporarily stabilize magic so that spellcasting within a small area can be accomplished without fear of triggering primal magic events. In the area of effect of this spell, primal magic events cannot be triggered.  The emanation grants a +4 circumstance bonus on all saving throws against effects generated by primal magic outside of the spell's effect that expand into the area.  Unfortunately, suppressed primal magic tends to build up around the emanation created by this spell. When suppress primal magic's duration ends (or when the spell is dispelled), a primal magic event is immediately triggered at the center of the emanation if that point is still in an area where primal magic is active. The CR of this event is equal to the caster level of the recently ended suppress primal magic spell. The original caster of the suppress primal magic spell can attempt to negate this triggered primal magic event by making a DC 20 Will save-most spellcasters instead relocate to an area not affected by primal magic if they can so that they can end the spell's effect safely.",
+      "description": "mage-ruled wizards first created this spell while researching the nature of the a magic-blasted wasteland, hoping to create small zones within the magic-starved region where their own spells could still function reliably. The best the Nexians could manage was this spell-a method to temporarily stabilize magic so that spellcasting within a small area can be accomplished without fear of triggering primal magic events. In the area of effect of this spell, primal magic events cannot be triggered.  The emanation grants a +4 circumstance bonus on all saving throws against effects generated by primal magic outside of the spell's effect that expand into the area.  Unfortunately, suppressed primal magic tends to build up around the emanation created by this spell. When suppress primal magic's duration ends (or when the spell is dispelled), a primal magic event is immediately triggered at the center of the emanation if that point is still in an area where primal magic is active. The CR of this event is equal to the caster level of the recently ended suppress primal magic spell. The original caster of the suppress primal magic spell can attempt to negate this triggered primal magic event by making a DC 20 Will save-most spellcasters instead relocate to an area not affected by primal magic if they can so that they can end the spell's effect safely.",
       "mechanics": {
         "school": "abjuration",
         "casting_time": "1 standard action",
@@ -45737,7 +45667,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Zone%20of%20Foul%20Flames"
       ],
-      "description": "The twisted druids of the Uskwood forsook fire in ages past for the glory of a dark god. Despite this aversion, these servants of a shadow-bound land know well the sting of flame, and have learned to turn it back on those that wield it. This spell creates a zone where magical fire effects twist and lash out against those who create the effects. A zone of foul flames looks unremarkable to the casual observer, but a Perception check (DC = 20 + the caster's level) reveals a faint rippling effect in the area, as if of heat distortions in the air.  Whenever a creature casts a spell with the fire descriptor or activates a magical fire effect (as from a magic item or a special attack) while that creature is located in a zone of foul flames, that creature takes full fire damage from the effect.  If the effect allows a saving throw to reduce the damage, the victim may attempt the same saving throw to reduce the damage. All creatures in a zone of foul flames gain a +4 circumstance bonus on all saving throws against fire effects, except for those made by a creature attempting to save against fire damage from his own magic. Nonmagical fire in a zone of foul flames burns half as brightly but is otherwise not affected.",
+      "description": "The twisted druids of the a haunted forest forsook fire in ages past for the glory of a dark god. Despite this aversion, these servants of a shadow-bound land know well the sting of flame, and have learned to turn it back on those that wield it. This spell creates a zone where magical fire effects twist and lash out against those who create the effects. A zone of foul flames looks unremarkable to the casual observer, but a Perception check (DC = 20 + the caster's level) reveals a faint rippling effect in the area, as if of heat distortions in the air.  Whenever a creature casts a spell with the fire descriptor or activates a magical fire effect (as from a magic item or a special attack) while that creature is located in a zone of foul flames, that creature takes full fire damage from the effect.  If the effect allows a saving throw to reduce the damage, the victim may attempt the same saving throw to reduce the damage. All creatures in a zone of foul flames gain a +4 circumstance bonus on all saving throws against fire effects, except for those made by a creature attempting to save against fire damage from his own magic. Nonmagical fire in a zone of foul flames burns half as brightly but is otherwise not affected.",
       "mechanics": {
         "school": "transmutation",
         "casting_time": "1 standard action",
@@ -51806,41 +51736,6 @@
       "notes": "Aggiunta da cache gist PathfinderSpellsJSON (expansion 2026-07-25): assente dal catalogo storico."
     },
     {
-      "name": "Irriseni Mirror Sight",
-      "source": "AP 67",
-      "source_id": "pathfinder_srd:irriseni_mirror_sight",
-      "prerequisites": [],
-      "tags": [
-        "spell",
-        "irriseni-mirror-sight",
-        "school:divination",
-        "slot:3",
-        "class:sorcerer",
-        "class:wizard",
-        "class:witch"
-      ],
-      "references": [
-        "PathfinderSpellsJSON gist: Irriseni Mirror Sight"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/SpellDisplay.aspx?ItemName=Irriseni%20Mirror%20Sight"
-      ],
-      "description": "This spell lets you look into a mirror near you and see an image that is reflected in another specific mirror (chosen by you) or an individual reflected in any other mirror. This works like a scrying spell, except you can only view creatures on the same plane as you. Each time you cast the spell, you can choose to see one of three types of reflections in your mirror.  Known Mirror: The current reflection in another mirror with which you are familiar.  Known Person: The current reflection of a person you know well, assuming that person is near a mirror.  Known Place: The current reflection of a place you know well, assuming the location is being reflected in a mirror.  You receive only visual information through this ability. You can choose to transmit information both ways so that a person reflected in the remote mirror can view whatever appears in the mirror you are using.  For example, Urion Petresky knows that Queen Elvanna keeps a mirror in a hall near her throne room. He can look through his own handheld mirror and see into this hall, even if the queen is not there. Alternatively, he can attempt to find the queen (wherever she is) by looking into his mirror; if, at that moment, the queen is near any mirror at all, he can see her. He may instead cast the spell and try to see into her throne room, hoping that someone has brought a mirror there. If any of these conditions fails, Urion sees nothing but his own reflection.  This spell works with intentionally fabricated mirrors only; it is not effective with other reflective surfaces, such as still pools or polished metal shields. Effects that block scrying block this spell.",
-      "mechanics": {
-        "school": "divination",
-        "casting_time": "10 minutes",
-        "components": "V, S, F (a mirror)",
-        "range": "see text",
-        "duration": "1 minute/level",
-        "saving_throw": "none",
-        "spell_level": {
-          "sorcerer/wizard": 3,
-          "witch": 3
-        }
-      },
-      "notes": "Aggiunta da cache gist PathfinderSpellsJSON (expansion 2026-07-25): assente dal catalogo storico."
-    },
-    {
       "name": "Bleed For Your Master",
       "source": "Animal Archive",
       "source_id": "pathfinder_srd:bleed_for_your_master",
@@ -55732,7 +55627,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Summon%20Greater%20Demon"
       ],
-      "description": "This spell functions like summon monster, except it allows you to summon a single coloxus (Pathfinder RPG Bestiary 3 72), an omox demon (Pathfinder RPG Bestiary 2 79), or 1d3 kalavakus demons (Bestiary 2 78).",
+      "description": "This spell functions like summon monster, except it allows you to summon a single coloxus (Pathfinder RPG Bestiary 3 72), an omox demon (Pathfinder RPG Bestiary 2 79), or 1d3 a demon lord demons (Bestiary 2 78).",
       "mechanics": {
         "school": "conjuration",
         "casting_time": "1 round",
@@ -71985,7 +71880,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Speak%20Local%20Language"
       ],
-      "description": "This spell functions as tongues, except the creature touched gains only the ability to speak and understand a regional human language, such as frontier or Common (Taldane in the inner sea region or Tien in a faraway continent), and the language granted must be one you know. You must select the language at the time of casting. The language can't be a dead language, such as an ancient language or Jistka. The target speaks the language with a native accent, but the spell doesn't impart knowledge about any culture associated with the language, nor does it change the target's appearance.",
+      "description": "This spell functions as tongues, except the creature touched gains only the ability to speak and understand a regional human language, such as frontier or Common (imperial in the inner sea region or Tien in a faraway continent), and the language granted must be one you know. You must select the language at the time of casting. The language can't be a dead language, such as an ancient language or an ancient empire. The target speaks the language with a native accent, but the spell doesn't impart knowledge about any culture associated with the language, nor does it change the target's appearance.",
       "mechanics": {
         "school": "divination",
         "casting_time": "1 standard action",
@@ -81146,41 +81041,6 @@
       "notes": "Aggiunta da cache gist PathfinderSpellsJSON (expansion 2026-07-25): assente dal catalogo storico."
     },
     {
-      "name": "Jatembe's Ire",
-      "source": "Arcane Anthology",
-      "source_id": "pathfinder_srd:jatembe_s_ire",
-      "prerequisites": [],
-      "tags": [
-        "spell",
-        "jatembe-s-ire",
-        "school:transmutation",
-        "slot:6",
-        "class:druid",
-        "class:sorcerer",
-        "class:wizard"
-      ],
-      "references": [
-        "PathfinderSpellsJSON gist: Jatembe's Ire"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/SpellDisplay.aspx?ItemName=Jatembe%27s%20Ire"
-      ],
-      "description": "The scholars of the Magaambya claim that Old-Mage Jatembe developed this spell to help eradicate the lost city of Ird, although such claims have never been confirmed. This spell causes tall grass, weeds, and other plants to swell into Gargantuan vines  and tendrils that erupt from the ground, reaching for any structure or any creature of evil alignment, functioning like black tentacles except as noted. When you are determining the tendrils' CMB, the tendrils use your caster level as their base attack bonus and have a +13 bonus due to their Strength. Any tendril that succeeds in grappling a foe deals 4d6+13 points of damage to the grappled creature. Additionally, the tendrils created by this spell can detect evil auras, as if they had spent 3 rounds observing all creatures and objects within the spell's area using detect evil, and attack and impede the movement of only evil creatures, though they also attack any structures in their area. Each structure suffers a single attack each round; your caster level acts as the base attack bonus for these attacks, and the tendrils deal 4d6+13 points of damage on each successful attack. Creatures that lack evil auras are not attacked or impeded by this spell.",
-      "mechanics": {
-        "school": "transmutation",
-        "casting_time": "1 standard action",
-        "components": "V, S, M (octopus or squid tentacle)",
-        "range": "medium (100 ft. + 10 ft./level)",
-        "duration": "1 round/level (D)",
-        "saving_throw": "none",
-        "spell_level": {
-          "druid": 6,
-          "sorcerer/wizard": 6
-        }
-      },
-      "notes": "Aggiunta da cache gist PathfinderSpellsJSON (expansion 2026-07-25): assente dal catalogo storico."
-    },
-    {
       "name": "Artificer's Curse",
       "source": "Arcane Anthology",
       "source_id": "pathfinder_srd:artificer_s_curse",
@@ -90009,7 +89869,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Garrulous%20Grin"
       ],
-      "description": "This Nidalese spell plants a seed of supernatural fear deep in a subject's mind, causing self-doubt, stuttering, and evasiveness. Affected creatures have difficulty meeting anyone's gaze and seem dishonest or guilty. The target takes a -4 penalty on Bluff and Diplomacy checks to  convince another of the truth of her words, and on Diplomacy or Intimidate checks to influence another creature's attitude.",
+      "description": "This shadow-bound spell plants a seed of supernatural fear deep in a subject's mind, causing self-doubt, stuttering, and evasiveness. Affected creatures have difficulty meeting anyone's gaze and seem dishonest or guilty. The target takes a -4 penalty on Bluff and Diplomacy checks to  convince another of the truth of her words, and on Diplomacy or Intimidate checks to influence another creature's attitude.",
       "mechanics": {
         "school": "necromancy",
         "casting_time": "1 round",
@@ -90105,7 +89965,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Passing%20Fancy"
       ],
-      "description": "a fading empire's infamous Lion Blades imported this spell from the ninja clans of Minkai, and both groups use it to great effect when maneuvering among the shallow upper classes. When you cast the spell, you dictate one specific topic or recent event and instill a magical obsession with that subject within the target. An affected creature becomes fascinated by the topic, and becomes  completely focused on discussing the event with anyone nearby, possibly wandering off or distracting unaffected creatures. Passing fancy has no effect on a creature with an Intelligence of 2 or less.  Because the target talks and interacts with its usual cadence, onlookers take a -10 penalty on Sense Motive checks to notice that anything is amiss with the target's behavior.",
+      "description": "a fading empire's infamous Lion Blades imported this spell from the ninja clans of an island empire, and both groups use it to great effect when maneuvering among the shallow upper classes. When you cast the spell, you dictate one specific topic or recent event and instill a magical obsession with that subject within the target. An affected creature becomes fascinated by the topic, and becomes  completely focused on discussing the event with anyone nearby, possibly wandering off or distracting unaffected creatures. Passing fancy has no effect on a creature with an Intelligence of 2 or less.  Because the target talks and interacts with its usual cadence, onlookers take a -10 penalty on Sense Motive checks to notice that anything is amiss with the target's behavior.",
       "mechanics": {
         "school": "enchantment",
         "casting_time": "1 standard action",
@@ -90205,88 +90065,6 @@
       "notes": "Aggiunta da cache gist PathfinderSpellsJSON (expansion 2026-07-25): assente dal catalogo storico."
     },
     {
-      "name": "Apsu's Shining Scales",
-      "source": "Legacy Of Dragons",
-      "source_id": "pathfinder_srd:apsu_s_shining_scales",
-      "prerequisites": [],
-      "tags": [
-        "spell",
-        "apsu-s-shining-scales",
-        "school:evocation",
-        "slot:3",
-        "class:alchemist",
-        "class:bloodrager",
-        "class:medium",
-        "class:sorcerer",
-        "class:wizard"
-      ],
-      "references": [
-        "PathfinderSpellsJSON gist: Apsu's Shining Scales"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/SpellDisplay.aspx?ItemName=Apsu%27s%20Shining%20Scales"
-      ],
-      "description": "You envelop your body with silver radiance that manifests as scales surrounding your body, granting you a +5 armor bonus to your AC and causing your natural attacks and unarmed strikes to bypass damage reduction as if they were good and silver weapons.  Whenever you attack with a breath weapon (including effects that are similar to a dragon's breath weapon, such as an elixir of dragon breath or the dragon's breathAPG spell), you can discharge the Apsu's shining scales spell as a swift action in order to infuse your breath with silver light, causing any evil creature caught within the area of the breath to take a -4 penalty on its Reflex save and to lose the benefits of the evasion ability against that breath weapon attack. Evil creatures with improved evasion are instead treated as if they had only evasion when attempting to save against this breath weapon attack.  Clerics, inquisitors, oracles, paladins, and warpriests who worship Apsu add Apsu's shining scales to their class spell lists as a 3rd-level spell.",
-      "mechanics": {
-        "school": "evocation",
-        "casting_time": "1 standard action",
-        "components": "V, S, M (a drop of mercury)",
-        "range": "personal",
-        "duration": "1 minute/level",
-        "saving_throw": "Will negates (harmless)",
-        "targets": "you",
-        "spell_level": {
-          "alchemist": 3,
-          "bloodrager": 3,
-          "medium": 3,
-          "sorcerer/wizard": 3
-        }
-      },
-      "notes": "Aggiunta da cache gist PathfinderSpellsJSON (expansion 2026-07-25): assente dal catalogo storico."
-    },
-    {
-      "name": "Dahak's Release",
-      "source": "Legacy Of Dragons",
-      "source_id": "pathfinder_srd:dahak_s_release",
-      "prerequisites": [],
-      "tags": [
-        "spell",
-        "dahak-s-release",
-        "school:enchantment",
-        "slot:5",
-        "class:mesmerist",
-        "class:occultist",
-        "class:shaman",
-        "class:sorcerer",
-        "class:wizard",
-        "class:witch"
-      ],
-      "references": [
-        "PathfinderSpellsJSON gist: Dahak's Release"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/SpellDisplay.aspx?ItemName=Dahak%27s%20Release"
-      ],
-      "description": "You unleash all the target's anger and destructive urges, causing it to fly into a violent bloodlust. The target attacks creatures as determined by the following table. If a creature is killed or the target is for some reason unable to effectively attack it, roll on the table again to select a new action for the target.  d% Behavior  1-25 Target attacks the creature nearest to it.  26-75 Target attacks its nearest ally.  76-100 Target always attacks the last creature to attack it.  Beginning on its next turn, the target attacks the subject determined by the chart with a melee weapon, natural weapon, or supernatural ability that deals damage. If necessary, it moves to or charges to the subject in order to make this attack. If it is unable to reach its subject on its next turn, the target uses its turn to get as close as possible to the subject of its bloodlust. The target gains a +2 morale bonus on attack and damage rolls, and cannot use any Charisma-, Dexterity-, or Intelligence-based skills (except Acrobatics, Fly, Intimidate, and Ride) or any abilities that require patience or concentration. This spell is otherwise treated as confusion and rage-any creature immune to confusion or rage is immune to this spell, and any ability or effect that ends confusion or rage (such as calm emotions) can end this spell.  Antipaladins, bloodragers, clerics, and inquisitors who worship Dahak add Dahak's release to their spell lists as a 4th-level spell.",
-      "mechanics": {
-        "school": "enchantment",
-        "casting_time": "1 standard action",
-        "components": "V, S, M (a dried drop of blood)",
-        "range": "touch",
-        "duration": "1 round/level",
-        "saving_throw": "Will negates",
-        "targets": "creature touched",
-        "spell_level": {
-          "mesmerist": 5,
-          "occultist": 5,
-          "shaman": 5,
-          "sorcerer/wizard": 5,
-          "witch": 5
-        }
-      },
-      "notes": "Aggiunta da cache gist PathfinderSpellsJSON (expansion 2026-07-25): assente dal catalogo storico."
-    },
-    {
       "name": "Draconic Ally",
       "source": "Legacy Of Dragons",
       "source_id": "pathfinder_srd:draconic_ally",
@@ -90312,7 +90090,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Draconic%20Ally"
       ],
-      "description": "You create a semi-living intelligent draconic servant that loyally obeys and serves you. Treat this servant as a pseudodragon with all of the abilities granted by one of the following spells: form of the alien dragon I, form of the dragon I, or form of the exotic dragon I. Your draconic ally can use its breath weapon once per day. Once conjured, the creature is not limited to the spell's range, and can go a considerable distance to carry out missions at your command. The draconic ally speaks one language of your choice that you know. You cannot have more than one draconic ally at a time. As long as a previous ally exists, you cannot successfully cast  this spell again. If you have a breath weapon, you can cast this spell as a standard action by expending one use of your breath weapon as a free action when you cast the spell.  Clerics, inquisitors, oracles, and warpriests who worship Apsu or Dahak add draconic ally to their spell lists as a 3rd-level spell.",
+      "description": "You create a semi-living intelligent draconic servant that loyally obeys and serves you. Treat this servant as a pseudodragon with all of the abilities granted by one of the following spells: form of the alien dragon I, form of the dragon I, or form of the exotic dragon I. Your draconic ally can use its breath weapon once per day. Once conjured, the creature is not limited to the spell's range, and can go a considerable distance to carry out missions at your command. The draconic ally speaks one language of your choice that you know. You cannot have more than one draconic ally at a time. As long as a previous ally exists, you cannot successfully cast  this spell again. If you have a breath weapon, you can cast this spell as a standard action by expending one use of your breath weapon as a free action when you cast the spell.  Clerics, inquisitors, oracles, and warpriests who worship a god of dragons or a god of destruction add draconic ally to their spell lists as a 3rd-level spell.",
       "mechanics": {
         "school": "conjuration",
         "casting_time": "10 minutes",
@@ -93914,7 +93692,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Frigid%20Souls"
       ],
-      "description": "You harness the Irriseni people's palpable fear of their frozen environment and cruel Jadwiga overlords into a haunt that withers defenses against the cold. Any creature that enters the affected area must succeed at a Will save or gain spell resistance equal to 11 + your caster level against any abjuration effect that provides resistance to or protection against cold damage or cold climates. This spell resistance cannot be voluntarily lowered. Once every 30 minutes as an immediate action, the haunt attempts a dispel check (1d20 + your caster level) against an active abjuration effect currently protecting a creature in the affected area against cold, even if it was active before the creature was haunted or it successfully bypassed the spell resistance imposed by the haunt. Against creatures with multiple layers of protection, these dispel checks start with the highest-level abjuration effects and work their way down the list. Each time the haunt attempts a dispel check, the spell's haunt-like manifestation occurs during that round.",
+      "description": "You harness the winter-locked people's palpable fear of their frozen environment and cruel winter witch overlords into a haunt that withers defenses against the cold. Any creature that enters the affected area must succeed at a Will save or gain spell resistance equal to 11 + your caster level against any abjuration effect that provides resistance to or protection against cold damage or cold climates. This spell resistance cannot be voluntarily lowered. Once every 30 minutes as an immediate action, the haunt attempts a dispel check (1d20 + your caster level) against an active abjuration effect currently protecting a creature in the affected area against cold, even if it was active before the creature was haunted or it successfully bypassed the spell resistance imposed by the haunt. Against creatures with multiple layers of protection, these dispel checks start with the highest-level abjuration effects and work their way down the list. Each time the haunt attempts a dispel check, the spell's haunt-like manifestation occurs during that round.",
       "mechanics": {
         "school": "necromancy",
         "casting_time": "1 standard action",
@@ -94725,7 +94503,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Scarify"
       ],
-      "description": "Your touch causes a single creature's skin to produce fibrous tissue that sutures the creature's wounds, rapidly closing them and leaving jagged scars where the wounds were. The process is painful, and converts 2d6 points of damage + 1 point per caster level (maximum +5) into nonlethal damage. If the target creature is immune to nonlethal damage, the spell fails. Damage resistance against nonlethal damage reduces the amount of damage converted. This effect counts as healing for the purpose of stopping bleed damage. Kuthites are especially fond of this spell, as it gives them permanent physical reminders of the all too brief pain they endured.",
+      "description": "Your touch causes a single creature's skin to produce fibrous tissue that sutures the creature's wounds, rapidly closing them and leaving jagged scars where the wounds were. The process is painful, and converts 2d6 points of damage + 1 point per caster level (maximum +5) into nonlethal damage. If the target creature is immune to nonlethal damage, the spell fails. Damage resistance against nonlethal damage reduces the amount of damage converted. This effect counts as healing for the purpose of stopping bleed damage. followers of a god of pain are especially fond of this spell, as it gives them permanent physical reminders of the all too brief pain they endured.",
       "mechanics": {
         "school": "necromancy",
         "casting_time": "1 standard action",
@@ -94957,7 +94735,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Spirit%20Share"
       ],
-      "description": "This spell was first created as a minor parlor trick, but adventuring Caydenites have repurposed and improved on it for use on their travels. For the duration of the spell, as a standard action you can touch a willing target to deliver 1 dose of a potable liquid (including alcoholic drinks and potions and elixirs, but not poisons or other liquids that are primarily harmful when drunk) in your possession (though not necessarily held in hand) into her.",
+      "description": "This spell was first created as a minor parlor trick, but adventuring followers of a drinking god have repurposed and improved on it for use on their travels. For the duration of the spell, as a standard action you can touch a willing target to deliver 1 dose of a potable liquid (including alcoholic drinks and potions and elixirs, but not poisons or other liquids that are primarily harmful when drunk) in your possession (though not necessarily held in hand) into her.",
       "mechanics": {
         "school": "transmutation",
         "casting_time": "1 standard action",
@@ -101017,7 +100795,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Tactical%20Adaptation"
       ],
-      "description": "This spell was developed by an dueling Academy student after several weeks of observing (and occasionally joining) Restov barroom brawls. You draw on your mind's hidden reserves, instantaneously mastering advanced combat techniques. When you cast this spell, choose a combat feat. You must meet all prerequisites for this feat, treating your magus level as your base attack bonus for this purpose. For the duration of this spell, you are treated as if you had the chosen feat. Once you cast this spell, you cannot change the chosen feat (or any decisions related to that feat) for additional castings of this spell on the same day. A creature can benefit from only one tactical adaptation spell at a time.",
+      "description": "This spell was developed by an dueling Academy student after several weeks of observing (and occasionally joining) a frontier city barroom brawls. You draw on your mind's hidden reserves, instantaneously mastering advanced combat techniques. When you cast this spell, choose a combat feat. You must meet all prerequisites for this feat, treating your magus level as your base attack bonus for this purpose. For the duration of this spell, you are treated as if you had the chosen feat. Once you cast this spell, you cannot change the chosen feat (or any decisions related to that feat) for additional castings of this spell on the same day. A creature can benefit from only one tactical adaptation spell at a time.",
       "mechanics": {
         "school": "transmutation",
         "casting_time": "1 standard action",
@@ -102345,7 +102123,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Hidden%20Knowledge"
       ],
-      "description": "This subtle but useful spell allows you to safeguard important knowledge-even from yourself. While casting this spell, you recite one piece of knowledge (up to a maximum of 50 words). Upon completion of the spell's casting, you transfer the knowledge from your mind to your skin in the form of an intricate, runic tattoo placed anywhere you choose on your body. The knowledge disappears utterly from your mind, and you might not realize you forgot something. The magic of the spell patches over gaps in your memory with recollections from the past. Until the spell's duration ends, the knowledge is lost to you. When you cast this spell, you decide how long you wish the spell's duration to be, up to a maximum duration of 1 day per level. Many Cyphermages commission nonmagical tattoos to disguise the effects of this spell. A detect magic spell or a successful Linguistics or Spellcraft check (DC 20 + your Intelligence modifier) reveals an enchanted tattoo, but not its contents. The effects of hidden knowledge can be dispelled normally, in which case the knowledge is completely lost.",
+      "description": "This subtle but useful spell allows you to safeguard important knowledge-even from yourself. While casting this spell, you recite one piece of knowledge (up to a maximum of 50 words). Upon completion of the spell's casting, you transfer the knowledge from your mind to your skin in the form of an intricate, runic tattoo placed anywhere you choose on your body. The knowledge disappears utterly from your mind, and you might not realize you forgot something. The magic of the spell patches over gaps in your memory with recollections from the past. Until the spell's duration ends, the knowledge is lost to you. When you cast this spell, you decide how long you wish the spell's duration to be, up to a maximum duration of 1 day per level. Many rune scholars commission nonmagical tattoos to disguise the effects of this spell. A detect magic spell or a successful Linguistics or Spellcraft check (DC 20 + your Intelligence modifier) reveals an enchanted tattoo, but not its contents. The effects of hidden knowledge can be dispelled normally, in which case the knowledge is completely lost.",
       "mechanics": {
         "school": "transmutation",
         "casting_time": "1 round",
@@ -102429,7 +102207,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Rune%20Of%20Rule"
       ],
-      "description": "Investigations into the ancient and mysterious traditions of the seven virtues of rule of the lost human empire of a lost empire, which were later corrupted by the runelords into the more familiar seven deadly sins, inspired the Cyphermages to develop the runes of rule. This spell allows you to place a rune upon another creature that can then be used to aid it at a later time. You determine the spell's effect at the time of casting by using your finger to paint a specific rune on the recipient's body with a dose of specially prepared paint worth 25 gp. The inscribed rune lasts for 24 hours or until the spell is activated. Unless otherwise noted, the creature upon which the rune of rule has been inscribed can activate it at any time as a swift action. If the spell effect isn't used, all markings associated with the rune disappear and the effect fades. You can never place the spell upon yourself-it must be bestowed on someone else. The seven runes of rule, along with their specific effects when the user activates them, are listed below. A creature can bear only one rune of rule at a time. Charity: A creature bearing this mark gains a +5 insight bonus on a single attack roll or skill check attempted at the request of another creature, provided the creature bearing this mark does not gain any immediate benefit or reward for making the roll or attempting the check. Generosity: A creature bearing the rune of generosity can activate it as an immediate action, but it must do so as another creature within 30 feet activates a consumable magic item such as a potion or scroll that was given to it at some point within the last 24 hours by the creature bearing the rune. When the rune is activated, the effects of the consumable magic item resolve at a caster level that is 2 higher than the item's actual caster level. Humility: When a creature activates the rune of humility, it does not provoke attacks of opportunity for 1 round. Kindness: A creature must be using the aid another action or casting a healing spell in order to activate a rune of kindness. If the creature activates the rune while using the aid another action, the bonus imparted on a success increases to +5. If the creature instead activates the rune while casting a healing spell, the effective caster level of the spell increases by 2. Love: When a creature activates the rune of love as he casts a spell with the charm descriptor, the save DC of that spell increases by 1. Alternatively, a creature can activate the rune of love after he rolls damage for a weapon or spell attack, causing the damage dealt to become nonlethal damage. Temperance: A creature bearing the rune of temperance can activate it as an immediate action immediately upon failing a saving throw against a poison, disease, drug, or similar effect. The creature can immediately attempt a second saving throw against the effect and can use the result of that second saving throw as the actual result. Zeal: A creature that activates the rune of zeal gains a +3 bonus on Will saves, and the save DCs of all language-dependent effects created by the creature increase by 1; these effects last for 1 round.",
+      "description": "Investigations into the ancient and mysterious traditions of the seven virtues of rule of the lost human empire of a lost empire, which were later corrupted by the runelords into the more familiar seven deadly sins, inspired the rune scholars to develop the runes of rule. This spell allows you to place a rune upon another creature that can then be used to aid it at a later time. You determine the spell's effect at the time of casting by using your finger to paint a specific rune on the recipient's body with a dose of specially prepared paint worth 25 gp. The inscribed rune lasts for 24 hours or until the spell is activated. Unless otherwise noted, the creature upon which the rune of rule has been inscribed can activate it at any time as a swift action. If the spell effect isn't used, all markings associated with the rune disappear and the effect fades. You can never place the spell upon yourself-it must be bestowed on someone else. The seven runes of rule, along with their specific effects when the user activates them, are listed below. A creature can bear only one rune of rule at a time. Charity: A creature bearing this mark gains a +5 insight bonus on a single attack roll or skill check attempted at the request of another creature, provided the creature bearing this mark does not gain any immediate benefit or reward for making the roll or attempting the check. Generosity: A creature bearing the rune of generosity can activate it as an immediate action, but it must do so as another creature within 30 feet activates a consumable magic item such as a potion or scroll that was given to it at some point within the last 24 hours by the creature bearing the rune. When the rune is activated, the effects of the consumable magic item resolve at a caster level that is 2 higher than the item's actual caster level. Humility: When a creature activates the rune of humility, it does not provoke attacks of opportunity for 1 round. Kindness: A creature must be using the aid another action or casting a healing spell in order to activate a rune of kindness. If the creature activates the rune while using the aid another action, the bonus imparted on a success increases to +5. If the creature instead activates the rune while casting a healing spell, the effective caster level of the spell increases by 2. Love: When a creature activates the rune of love as he casts a spell with the charm descriptor, the save DC of that spell increases by 1. Alternatively, a creature can activate the rune of love after he rolls damage for a weapon or spell attack, causing the damage dealt to become nonlethal damage. Temperance: A creature bearing the rune of temperance can activate it as an immediate action immediately upon failing a saving throw against a poison, disease, drug, or similar effect. The creature can immediately attempt a second saving throw against the effect and can use the result of that second saving throw as the actual result. Zeal: A creature that activates the rune of zeal gains a +3 bonus on Will saves, and the save DCs of all language-dependent effects created by the creature increase by 1; these effects last for 1 round.",
       "mechanics": {
         "school": "transmutation",
         "casting_time": "1 minute",
@@ -102881,7 +102659,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Brightest%20Light"
       ],
-      "description": "This trademark spell of the Lantern Bearers functions as daylight, except it lasts longer. In addition, as a swift action once during the spell's duration, you can will the light to try to end a magical darkness effect located within 60 feet of the light this spell emits. Attempt a dispel check (1d20 + your caster level), with a DC equal to 11 + the caster level of the darkness effect. If you succeed, the darkness effect ends. Regardless of whether you are successful, the light from this spell dims to the brightness of a torch for the spell's remaining duration.",
+      "description": "This trademark spell of an order of fey hunters functions as daylight, except it lasts longer. In addition, as a swift action once during the spell's duration, you can will the light to try to end a magical darkness effect located within 60 feet of the light this spell emits. Attempt a dispel check (1d20 + your caster level), with a DC equal to 11 + the caster level of the darkness effect. If you succeed, the darkness effect ends. Regardless of whether you are successful, the light from this spell dims to the brightness of a torch for the spell's remaining duration.",
       "mechanics": {
         "school": "evocation",
         "casting_time": "1 standard action",
@@ -102972,7 +102750,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Preserve%20Grace"
       ],
-      "description": "The Lantern Bearers must often make difficult decisions during their missions, such as determining what to do with captured enemies-should they be executed, imprisoned, set free, or given a chance to mend their ways? With this spell, you grant a creature the ability to foresee moral consequences, as if the creature were wearing a phylactery of faithfulness. The spell's guidance focuses on the protection of beauty and encourages peaceful resolution and mercy.",
+      "description": "an order of fey hunters must often make difficult decisions during their missions, such as determining what to do with captured enemies-should they be executed, imprisoned, set free, or given a chance to mend their ways? With this spell, you grant a creature the ability to foresee moral consequences, as if the creature were wearing a phylactery of faithfulness. The spell's guidance focuses on the protection of beauty and encourages peaceful resolution and mercy.",
       "mechanics": {
         "school": "divination",
         "casting_time": "1 minute",
@@ -103059,7 +102837,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Planar%20Inquiry"
       ],
-      "description": "Although he was hardly the first to turn to the Outer Planes for answers, Jatembe's dealings with outsiders in his pursuit of enlightenment are legendary, and the Magaambya credits the Old-Mage with the creation of this spell. This spell calls a creature from another plane to your precise location, functioning like lesser planar ally except as noted. When you call a creature using planar inquiry, the only task that you can ask of the creature is for it to answer questions or gather information regarding a specific topic (a person, a place, or a thing). After hearing your request, if the creature has an appropriate Knowledge skill, it can attempt a check to provide the information it has. If it lacks such a skill, the called creature leaves for 1d4 hours to gather this information. Upon its return, you roll 1d20 + your caster level, and use the result to determine what information the creature has gathered about the subject (as if using Diplomacy). The called creature stays for up to 10 minutes as it relays this information to you, after which it departs to its home plane. If the creature is attacked or damaged at any time during the spell's duration, the spell ends and the creature returns to the plane from which you summoned it. When you cast this spell, you can choose a specific kind of outsider to call, even calling an individual creature by name. The kind of outsider called doesn't alter the effects of the spell, but when you use planar inquiry to summon a creature with an alignment or elemental subtype, the spell gains that descriptor. You cannot call an outsider whose Hit Dice exceed your caster level (maximum 18 HD) and you cannot use this spell to contact a unique outsider (such as a deity's herald) or an outsider with mythic ranks.",
+      "description": "Although he was hardly the first to turn to the Outer Planes for answers, a legendary sage's dealings with outsiders in his pursuit of enlightenment are legendary, and an ancient academy of magic credits the Old-Mage with the creation of this spell. This spell calls a creature from another plane to your precise location, functioning like lesser planar ally except as noted. When you call a creature using planar inquiry, the only task that you can ask of the creature is for it to answer questions or gather information regarding a specific topic (a person, a place, or a thing). After hearing your request, if the creature has an appropriate Knowledge skill, it can attempt a check to provide the information it has. If it lacks such a skill, the called creature leaves for 1d4 hours to gather this information. Upon its return, you roll 1d20 + your caster level, and use the result to determine what information the creature has gathered about the subject (as if using Diplomacy). The called creature stays for up to 10 minutes as it relays this information to you, after which it departs to its home plane. If the creature is attacked or damaged at any time during the spell's duration, the spell ends and the creature returns to the plane from which you summoned it. When you cast this spell, you can choose a specific kind of outsider to call, even calling an individual creature by name. The kind of outsider called doesn't alter the effects of the spell, but when you use planar inquiry to summon a creature with an alignment or elemental subtype, the spell gains that descriptor. You cannot call an outsider whose Hit Dice exceed your caster level (maximum 18 HD) and you cannot use this spell to contact a unique outsider (such as a deity's herald) or an outsider with mythic ranks.",
       "mechanics": {
         "school": "conjuration",
         "casting_time": "10 minutes",
@@ -103180,7 +102958,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Bone%20Flense"
       ],
-      "description": "Choose a creature that you can see. When that creature is struck by a weapon wielded by a member of the Red Mantis, a sawtooth sabre, or by the claw of a giant mantis, the bone nearest to the wound instantly sprouts jagged, razor-sharp spurs that flense the muscle and flesh from the inside out unless the target succeeds at a Fortitude save. The creature takes 1d6 points of piercing damage per caster level. While the bone returns to normal immediately after dealing damage, the creature takes 1d4 points of bleed damage for 1 round per 2 caster levels. The victim is sickened by the pain for the duration of the bleeding. If the target creature has no bones, this spell has no effect.",
+      "description": "Choose a creature that you can see. When that creature is struck by a weapon wielded by a member of an assassins' guild, a sawtooth sabre, or by the claw of a giant mantis, the bone nearest to the wound instantly sprouts jagged, razor-sharp spurs that flense the muscle and flesh from the inside out unless the target succeeds at a Fortitude save. The creature takes 1d6 points of piercing damage per caster level. While the bone returns to normal immediately after dealing damage, the creature takes 1d4 points of bleed damage for 1 round per 2 caster levels. The victim is sickened by the pain for the duration of the bleeding. If the target creature has no bones, this spell has no effect.",
       "mechanics": {
         "school": "transmutation",
         "casting_time": "1 standard action",
@@ -103309,7 +103087,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Mirror%20Mantis"
       ],
-      "description": "Whenever the target of this spell looks into a mirror or other reflective surface where it can see its own visage clearly, it sees a Red Mantis assassin (in full armor, face hidden by a mantis mask) looking back at it. The reflection is harmless and mimics the target's motions perfectly; no one else can see this illusion. The first time the target sees the Red Mantis reflection, it must succeed at a Will save be or shaken and take a -2 penalty on saves against fear effects for as long as it can see the altered image and for 3 rounds thereafter. A new save must be attempted each time the creature views its reflection during the spell's duration. Once a creature successfully saves, it becomes immune to being shaken by the caster's mirror mantis spell for 24 hours, though it will still see the Red Mantis reflection until the spell ends.",
+      "description": "Whenever the target of this spell looks into a mirror or other reflective surface where it can see its own visage clearly, it sees a assassins' guild assassin (in full armor, face hidden by a mantis mask) looking back at it. The reflection is harmless and mimics the target's motions perfectly; no one else can see this illusion. The first time the target sees an assassins' guild reflection, it must succeed at a Will save be or shaken and take a -2 penalty on saves against fear effects for as long as it can see the altered image and for 3 rounds thereafter. A new save must be attempted each time the creature views its reflection during the spell's duration. Once a creature successfully saves, it becomes immune to being shaken by the caster's mirror mantis spell for 24 hours, though it will still see an assassins' guild reflection until the spell ends.",
       "mechanics": {
         "school": "illusion",
         "casting_time": "1 standard action",
@@ -103325,51 +103103,6 @@
           "occultist": 1,
           "psychic": 1,
           "sorcerer/wizard": 1
-        }
-      },
-      "notes": "Aggiunta da cache gist PathfinderSpellsJSON (expansion 2026-07-25): assente dal catalogo storico."
-    },
-    {
-      "name": "Sarzari Shadow Memory",
-      "source": "Adventurer's Guide",
-      "source_id": "pathfinder_srd:sarzari_shadow_memory",
-      "prerequisites": [],
-      "tags": [
-        "spell",
-        "sarzari-shadow-memory",
-        "school:divination",
-        "slot:6",
-        "class:bard",
-        "class:cleric",
-        "class:oracle",
-        "class:inquisitor",
-        "class:psychic",
-        "class:sorcerer",
-        "class:wizard",
-        "class:witch"
-      ],
-      "references": [
-        "PathfinderSpellsJSON gist: Sarzari Shadow Memory"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/SpellDisplay.aspx?ItemName=Sarzari%20Shadow%20Memory"
-      ],
-      "description": "While casting this spell, you slowly destroy a piece of art bearing your victim's likeness and beseech Achaekek to grant you access to the knowledge and lore contained within the innermost sanctum of the Crimson Citadel, the Sarzari Library. This endows you with information that could facilitate the target's assassination by your hands. This information must be chosen from one of the three following categories-back doors, character, or weakness. \"Back doors\" informs you of hidden passages and other means of navigation within your target's home. While inside your target's home, you gain a +10 insight bonus on Perception checks and gain the constant benefits of detect secret doors and find traps. You automatically see through any illusory walls in the target's home. \"Character\" lets you know of a compromising detail about your target's personal life, giving you a +10 bonus on Bluff, Diplomacy, and Intimidate checks when attempting to gather information about your contracted victim from other people. Your target takes a -2 penalty on all saving throws against mind-affecting effects you generate, and you gain a +4 bonus on caster level checks you attempt to overcome the target's spell resistance. \"Weakness\" grants you knowledge of physical vulnerabilities your target has, as well as information about the target's damage reduction, immunities, and other defensive abilities. If these vulnerabilities and defenses change during the spell's duration, you immediately know. You automatically confirm all critical threats against the target. Once your victim is slain or a month has passed (whichever comes first), the information you gained from the spell fades. While you can recall certain elements of these memories, you no longer gain any of the benefits associated with the spell. You can only have one target affected by Sarzari shadow memory at any one time; if you cast this spell a second time while a previous casting is still active, the effects of the new spell replace the effects of the old one.",
-      "mechanics": {
-        "school": "divination",
-        "casting_time": "1 hour",
-        "components": "V, S, M (a work of art bearing your target's likeness worth at least 1,500 gp)",
-        "range": "personal",
-        "duration": "1 month",
-        "saving_throw": "Will negates (harmless)",
-        "targets": "you",
-        "spell_level": {
-          "bard": 6,
-          "cleric/oracle": 6,
-          "inquisitor": 6,
-          "psychic": 6,
-          "sorcerer/wizard": 6,
-          "witch": 6
         }
       },
       "notes": "Aggiunta da cache gist PathfinderSpellsJSON (expansion 2026-07-25): assente dal catalogo storico."
@@ -103595,39 +103328,6 @@
         "components": "V, S, M (a rabbit’s foot)",
         "range": "personal",
         "duration": "1 round/level or until discharged"
-      }
-    },
-    {
-      "name": "Ablative Sphere (Garundi)",
-      "source": "Humans of Golarion",
-      "source_id": "spells:ablative_sphere_garundi",
-      "prerequisites": [],
-      "tags": [
-        "school:abjuration",
-        "slot:3",
-        "class:arcanist",
-        "class:sorcerer",
-        "class:wizard"
-      ],
-      "references": [
-        "AoN: Ablative Sphere (Garundi) (Spells)"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/SpellDisplay.aspx?ItemName=Ablative%20Sphere%20(Garundi)"
-      ],
-      "description": "The Garundi tenaciously protect their homes, and through the years they have perfected magic to aid them in their defense. An immobile, crystalline, weblike globe surrounds you. When the ablative sphere winks into existence, it provides you with improved cover (Pathfinder RPG Core Rulebook 196). The barrier does not impede a spell’s line of sight or effect. The sphere is 1 inch thick per caster level, has hardness 5, and 3 hit points per inch of thickness. When an ablative sphere loses hit points, the level of cover it provides is reduced. When the ablative sphere has lost one-third of its hit points, it provides cover instead of improved cover. Once it has lost two-thirds of its hit points, it provides only partial cover. Finally, when the ablative sphere’s hit points reach 0, the globe is destroyed. When an attack reduces an ablative sphere’s hit points to 0, you take any remaining damage.",
-      "mechanics": {
-        "school": "abjuration",
-        "descriptors": [],
-        "spell_level": {
-          "arcanist": 3,
-          "sorcerer": 3,
-          "wizard": 3
-        },
-        "casting_time": "1 standard action",
-        "components": "V, S, M (a crystalline sphere worth 10 gp)",
-        "range": "personal",
-        "duration": "1 minute/level (D)"
       }
     },
     {
@@ -104343,7 +104043,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Bloodstone%20Mirror"
       ],
-      "description": "Developed due to Arazni’s fear that her stolen organs might be used to control her, this spell reflects any attempts to steal your free will. Whenever you are exposed to a mind-affecting effect or a spell that would otherwise give another creature control of your actions (such as control undead), you can dispel this effect as an immediate action to redirect the spell to a creature within 30 feet. The affected creature must attempt a save against the original DC of the triggering effect. On a failure, it is subject to the effects of the triggering spell, with the exception that you are treated as the original caster (statistics determined by caster level are still calculated according to its original caster). The target creature applies any spell resistance or immunities it has normally. You can have only one instance of this spell active at a time.",
+      "description": "Developed due to an undead queen’s fear that her stolen organs might be used to control her, this spell reflects any attempts to steal your free will. Whenever you are exposed to a mind-affecting effect or a spell that would otherwise give another creature control of your actions (such as control undead), you can dispel this effect as an immediate action to redirect the spell to a creature within 30 feet. The affected creature must attempt a save against the original DC of the triggering effect. On a failure, it is subject to the effects of the triggering spell, with the exception that you are treated as the original caster (statistics determined by caster level are still calculated according to its original caster). The target creature applies any spell resistance or immunities it has normally. You can have only one instance of this spell active at a time.",
       "mechanics": {
         "school": "abjuration",
         "descriptors": [],
@@ -104505,44 +104205,6 @@
         "duration": "1 hour/level",
         "saving_throw": "none",
         "spell_resistance": "no"
-      }
-    },
-    {
-      "name": "Burning Arc (Keleshite)",
-      "source": "Humans of Golarion",
-      "source_id": "spells:burning_arc_keleshite",
-      "prerequisites": [],
-      "tags": [
-        "school:evocation",
-        "slot:2",
-        "fire",
-        "class:arcanist",
-        "class:sorcerer",
-        "class:wizard"
-      ],
-      "references": [
-        "AoN: Burning Arc (Keleshite) (Spells)"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/SpellDisplay.aspx?ItemName=Burning%20Arc%20(Keleshite)"
-      ],
-      "description": "Keleshites brag that they stole this spell from genie-kind thousands of years ago while other civilizations struggled without fire. This spell causes an arc of flame to leap from your fingers, burning a number of enemies nearby. It deals 1d6 points of fire damage per caster level (maximum 10d6). For every additional target the discharge arcs to, reduce the number of damage dice by half (rounded down). Therefore, at 9th level, your burning arc deals 9d6 points of fire damage to the primary target, then 4d6 points of fire damage to a secondary target, then 2d6 points of fire damage to an additional target. Each target can attempt a Reflex saving throw for half damage. The Reflex DC to halve the damage of the secondary bolts is 2 lower than the DC to halve the damage of the primary bolt. You may choose secondary targets as you like, but they must all be within 15 feet of the primary target, and no target can be struck more than once. You can choose to affect fewer secondary targets than the maximum.",
-      "mechanics": {
-        "school": "evocation",
-        "descriptors": [
-          "fire"
-        ],
-        "spell_level": {
-          "arcanist": 2,
-          "sorcerer": 2,
-          "wizard": 2
-        },
-        "casting_time": "1 standard action",
-        "components": "V, S",
-        "range": "close (25 ft. + 5 ft./2 levels)",
-        "duration": "instantaneous",
-        "saving_throw": "Reflex half",
-        "spell_resistance": "yes"
       }
     },
     {
@@ -105500,7 +105162,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Eroding%20Ray"
       ],
-      "description": "You channel a fraction of the tumultuous ecosystem of the Hao Jin Tapestry and redirect it through your hands as a beam of deteriorating energy. You can fire one ray, plus one additional ray for every 4 levels beyond 3rd (to a maximum of three rays at 11th level). Each ray requires a ranged touch attack to hit and can target only a construct or an object. If a ray hits, the target begins to crumble, taking 2d6 points of damage. This damage ignores hardness and damage reduction.",
+      "description": "You channel a fraction of the tumultuous ecosystem of the a legendary sorceress Tapestry and redirect it through your hands as a beam of deteriorating energy. You can fire one ray, plus one additional ray for every 4 levels beyond 3rd (to a maximum of three rays at 11th level). Each ray requires a ranged touch attack to hit and can target only a construct or an object. If a ray hits, the target begins to crumble, taking 2d6 points of damage. This damage ignores hardness and damage reduction.",
       "mechanics": {
         "school": "transmutation",
         "descriptors": [],
@@ -105727,7 +105389,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Fastidiousness"
       ],
-      "description": "While protected by fastidiousness, your person and your equipment stay clean and dry. Dust and moisture slough off immediately; even when you are completely soiled, your appearance reverts to a pristine state over the course of 1 minute. While this spell offers no protection against most attacks, staying constantly sanitary grants you a +2 circumstance bonus on Fortitude saving throws against inhaled and ingested diseases. Members of the Prophet of Kalistrade prestige class can cast this spell, even though it is not a divination or enchantment.",
+      "description": "While protected by fastidiousness, your person and your equipment stay clean and dry. Dust and moisture slough off immediately; even when you are completely soiled, your appearance reverts to a pristine state over the course of 1 minute. While this spell offers no protection against most attacks, staying constantly sanitary grants you a +2 circumstance bonus on Fortitude saving throws against inhaled and ingested diseases. Members of the Prophet of a philosophy of purity and wealth prestige class can cast this spell, even though it is not a divination or enchantment.",
       "mechanics": {
         "school": "abjuration",
         "descriptors": [],
@@ -106779,7 +106441,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Hallucinatory%20Decor"
       ],
-      "description": "You transform the decor of a courtyard, structure, or other edifice to meet your highest standards and personal tastes. Objects and architectural elements remain in the same configuration—a chair remains a chair—but can look, sound, and smell like a different physical material and artistic style. You cannot change the appearance of natural terrain, but landscaped areas such as a garden or orchard can be affected. This spell functions in all other ways as hallucinatory terrain. Members of the Prophet of Kalistrade prestige class can cast this spell, even though it is not a divination or enchantment.",
+      "description": "You transform the decor of a courtyard, structure, or other edifice to meet your highest standards and personal tastes. Objects and architectural elements remain in the same configuration—a chair remains a chair—but can look, sound, and smell like a different physical material and artistic style. You cannot change the appearance of natural terrain, but landscaped areas such as a garden or orchard can be affected. This spell functions in all other ways as hallucinatory terrain. Members of the Prophet of a philosophy of purity and wealth prestige class can cast this spell, even though it is not a divination or enchantment.",
       "mechanics": {
         "school": "illusion",
         "descriptors": [],
@@ -107913,7 +107575,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Litany%20of%20the%20Red%20Crusader"
       ],
-      "description": "Followers of Arazni have made use of this litany since her days as a crusader and herald. Each time the target creature takes piercing or slashing damage, it takes 1 point of bleed damage; this bleed damage stacks with itself. While subject to this spell, the target cannot be the target of another spell that has the word “litany” in the title.",
+      "description": "Followers of an undead queen have made use of this litany since her days as a crusader and herald. Each time the target creature takes piercing or slashing damage, it takes 1 point of bleed damage; this bleed damage stacks with itself. While subject to this spell, the target cannot be the target of another spell that has the word “litany” in the title.",
       "mechanics": {
         "school": "necromancy",
         "descriptors": [],
@@ -110677,56 +110339,6 @@
       }
     },
     {
-      "name": "Snow Shape (Ulfen)",
-      "source": "Humans of Golarion",
-      "source_id": "spells:snow_shape_ulfen",
-      "prerequisites": [],
-      "tags": [
-        "school:transmutation",
-        "slot:1",
-        "water",
-        "class:arcanist",
-        "class:cleric",
-        "class:druid",
-        "class:hunter",
-        "class:oracle",
-        "class:redmantisassassin",
-        "class:sorcerer",
-        "class:warpriest",
-        "class:wizard"
-      ],
-      "references": [
-        "AoN: Snow Shape (Ulfen) (Spells)"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/SpellDisplay.aspx?ItemName=Snow%20Shape%20(Ulfen)"
-      ],
-      "description": "In frozen northern lands, where the earth may be hidden beneath heavy drifts of snow, Ulfen druids developed a variation of stone shape that other spellcasters have since learned. You can form a mass of snow into any shape that suits your purpose, as per the spell stone shape. While it’s possible to make crude objects with snow shape, most fine details aren’t possible. However, a successful Craft (weapons) check allows you to create a bladed weapon from the snow. The DC of this check is equal to the DC listed with the Craft (weapons) skill (Core Rulebook 93). You must be the one to make the Craft check and must do so at the time of casting this spell. A failed check means that the spell is cast normally but the weapon created is malformed and useless. This spell can only be used to craft weapons and not more precise tools or elaborate armors. Once you create the item with this spell, it solidifies into super-hard ice, gaining a hardness of 5 and 10 hit points per inch of thickness. This weapon takes double damage from fire. Anyone using an ice weapon takes a –2 penalty on attacks due to the slippery, unwieldy nature of the weapon, but the weapon deals 1 point of cold damage in addition to its normal damage. A weapon created by this spell lasts for 24 hours before melting into uselessness.",
-      "mechanics": {
-        "school": "transmutation",
-        "descriptors": [
-          "water"
-        ],
-        "spell_level": {
-          "arcanist": 2,
-          "cleric": 2,
-          "druid": 1,
-          "hunter": 1,
-          "oracle": 2,
-          "redmantisassassin": 2,
-          "sorcerer": 2,
-          "warpriest": 2,
-          "wizard": 2
-        },
-        "casting_time": "1 standard action",
-        "components": "V, S, M/DF (a miniature shovel)",
-        "range": "touch",
-        "duration": "instantaneous",
-        "saving_throw": "none",
-        "spell_resistance": "no"
-      }
-    },
-    {
       "name": "Solidify Earth",
       "source": "Monster Hunter's Handbook",
       "source_id": "spells:solidify_earth",
@@ -112283,7 +111895,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Unflappable%20Mien"
       ],
-      "description": "When a creature attempts to touch you with an attack (such as a touch attack, an unarmed strike, an attack with a natural weapon, or a grapple), it feels a field of force blocking its way. It can choose to abandon the attempt, losing its action, or to push through the ward. If it pushes through, you can trigger a wave of force against that creature. This discharges the spell, deals 1d4 points of force damage per caster level (maximum 10d4), and pushes the creature back 5 feet. If the creature cannot be pushed back 5 feet (if a solid surface is directly behind it, for example), it takes 2d4 additional points of force damage. A successful Fortitude saving throw halves the total amount of force damage the creature takes. Members of the Prophet of Kalistrade prestige class can cast this spell, even though it is not a divination or enchantment.",
+      "description": "When a creature attempts to touch you with an attack (such as a touch attack, an unarmed strike, an attack with a natural weapon, or a grapple), it feels a field of force blocking its way. It can choose to abandon the attempt, losing its action, or to push through the ward. If it pushes through, you can trigger a wave of force against that creature. This discharges the spell, deals 1d4 points of force damage per caster level (maximum 10d4), and pushes the creature back 5 feet. If the creature cannot be pushed back 5 feet (if a solid surface is directly behind it, for example), it takes 2d4 additional points of force damage. A successful Fortitude saving throw halves the total amount of force damage the creature takes. Members of the Prophet of a philosophy of purity and wealth prestige class can cast this spell, even though it is not a divination or enchantment.",
       "mechanics": {
         "school": "evocation",
         "descriptors": [
@@ -112428,7 +112040,7 @@
       "reference_urls": [
         "https://aonprd.com/SpellDisplay.aspx?ItemName=Unspoken%20Name"
       ],
-      "description": "Prized among those who seek to monitor the attention paid to them, this spell is said to be used by Arazni to identify those followers who dare refer to her as “the Harlot Queen” so she might summarily dismiss them. When you cast this spell, designate a word, phrase, or name. If a creature within 1 mile of you uses that word, phrase, or name to refer to you, you immediately learn that creature’s name, appearance, and location. This discharges the spell.",
+      "description": "Prized among those who seek to monitor the attention paid to them, this spell is said to be used by an undead queen to identify those followers who dare refer to her as “the Harlot Queen” so she might summarily dismiss them. When you cast this spell, designate a word, phrase, or name. If a creature within 1 mile of you uses that word, phrase, or name to refer to you, you immediately learn that creature’s name, appearance, and location. This discharges the spell.",
       "mechanics": {
         "school": "divination",
         "descriptors": [],

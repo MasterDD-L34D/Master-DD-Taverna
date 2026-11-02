@@ -20173,7 +20173,7 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Arcane%20Vendetta"
       ],
       "source_id": "inner_sea_world_guide:arcane_vendetta",
-      "description": "The mistreatment of your people by an arcane society (such as a realm of lost technology's Technic League or the White Witches of a winter-locked realm) has made you particularly eager to inf lict harm on those who use arcane magic.\n\nYou deal +2 damage with weapon attacks made against any target you have witnessed casting an arcane spell (not using a spell-like ability) in the last 5 rounds. You must have successfully identified the spell with a Spellcraft check to know without a doubt that the spell is arcane.",
+      "description": "The mistreatment of your people by an arcane society (such as a realm of lost technology's technomancer or the White Witches of a winter-locked realm) has made you particularly eager to inf lict harm on those who use arcane magic.\n\nYou deal +2 damage with weapon attacks made against any target you have witnessed casting an arcane spell (not using a spell-like ability) in the last 5 rounds. You must have successfully identified the spell with a Spellcraft check to know without a doubt that the spell is arcane.",
       "updated_at": "2026-07-19T00:00:00Z"
     },
     {
@@ -20363,7 +20363,7 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Fortune%20Teller"
       ],
       "source_id": "inner_sea_world_guide:fortune_teller",
-      "description": "As a result of being raised in a land steeped in tradition and superstition (such as a frontier land or a haunted land), you are skilled at communicating with the spirit world.\n\nUpon taking this feat, choose a focus item for your divination magic-a crystal ball, runes, a Harrow deck, or some such item. Whenever you cast a spell from the divination school, you may use this focus item instead of the spell's material component, as long as the cost of the material component is no more than 1,000 gp. If you choose to perform the spell using your focus item and the spell's normal material component (regardless of that component's cost), you cast the spell at +1 caster level.",
+      "description": "As a result of being raised in a land steeped in tradition and superstition (such as a frontier land or a haunted land), you are skilled at communicating with the spirit world.\n\nUpon taking this feat, choose a focus item for your divination magic-a crystal ball, runes, a fortune-telling deck, or some such item. Whenever you cast a spell from the divination school, you may use this focus item instead of the spell's material component, as long as the cost of the material component is no more than 1,000 gp. If you choose to perform the spell using your focus item and the spell's normal material component (regardless of that component's cost), you cast the spell at +1 caster level.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -20403,25 +20403,6 @@
       ],
       "source_id": "inner_sea_world_guide:godless_healing",
       "description": "You have mastered a specialized and complex technique to ignore pain by focusing your belief on the self rather than relying on faith.\n\nOnce per day when you have half your total hit points or fewer, you may heal yourself of an amount of damage equal to 1d8 plus your total Hit Dice as a move action. This is a supernatural ability.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Green Faith Acolyte",
-      "source": "the inner sea region World Guide",
-      "prerequisites": [
-        "Follower of the Green Faith"
-      ],
-      "tags": [
-        "the inner sea region World Guide"
-      ],
-      "references": [
-        "Pathfinder PRD: Green Faith Acolyte"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Green%20Faith%20Acolyte"
-      ],
-      "source_id": "inner_sea_world_guide:green_faith_acolyte",
-      "description": "You have trained to channel your magical energies in ways that do not harm the natural world around you.\n\nSpells you cast that deal damage, channel negative energy, or otherwise harm life do not hurt normal or magical plants. In addition, whenever you cast a spell that utilizes, heals, or enhances normal or magical plants (such as entangle or plant growth), you cast the spell at +1 caster level.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -20477,7 +20458,7 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Harrowed"
       ],
       "source_id": "inner_sea_world_guide:harrowed",
-      "description": "Numerous Harrow readings early in your life seem to have hit the mark precisely, increasing your belief that you are destined for a specific purpose in life.\n\nYou get a +1 bonus on all Will saves made to resist enchantment effects. Once per day, you may draw a card from a Harrow deck you own. At any one time for the rest of that day, you may apply a +2 bonus on any d20 roll modified by the card's suit. For example, if you drew a card from the suit of Dexterity, you could apply this +2 bonus on an Initiative check, a Ref lex save, a Dexterity-based skill check, or a ranged attack roll. You may assign this +2 bonus after you make the roll, but you must do so before you know whether the roll was a success or not.",
+      "description": "Numerous fortune-telling readings early in your life seem to have hit the mark precisely, increasing your belief that you are destined for a specific purpose in life.\n\nYou get a +1 bonus on all Will saves made to resist enchantment effects. Once per day, you may draw a card from a fortune-telling deck you own. At any one time for the rest of that day, you may apply a +2 bonus on any d20 roll modified by the card's suit. For example, if you drew a card from the suit of Dexterity, you could apply this +2 bonus on an Initiative check, a Ref lex save, a Dexterity-based skill check, or a ranged attack roll. You may assign this +2 bonus after you make the roll, but you must do so before you know whether the roll was a success or not.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -20555,23 +20536,6 @@
       ],
       "source_id": "inner_sea_world_guide:secret_signs",
       "description": "You are particularly adept at communicating with others via innuendo, gestures, and secret hand signs.\n\nYou gain a +4 bonus on Bluff checks made to pass secret messages. In addition, you are adept at hiding the somatic components of spellcasting. If you cast a spell that has only somatic components, an observer must make a Perception check opposed by your Sleight of Hand check to notice your spellcasting. Spellcraft checks made to identify any spell you cast that has somatic components take a -2 penalty.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Shade of the Uskwood",
-      "source": "the inner sea region World Guide",
-      "prerequisites": [],
-      "tags": [
-        "the inner sea region World Guide"
-      ],
-      "references": [
-        "Pathfinder PRD: Shade of the Uskwood"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Shade%20of%20the%20Uskwood"
-      ],
-      "source_id": "inner_sea_world_guide:shade_of_the_uskwood",
-      "description": "Ordained as one of the sinister albino druids who dwell within the heart of the Uskwood, you carry with you into the wider world a powerful effigy of hair, twigs, and blood that crawls with the deepening cold of the Midnight Lord's hallowed hunting grounds.\n\nAdd the following spells to your druid spell list. 0-disrupt undead, ray of frost; 1st-ghost sound, touch of fatigue; 2nd-chill touch, spectral hand; 3rd-ghoul touch, invisibility; 4th-displacement, ray of exhaustion; 5th-animate dead, phantasmal killer; 6th-nightmare, waves of fatigue; 7th-circle of death, shadow walk; 8th-mass invisibility, waves of exhaustion; 9th-horrid wilting, weird. Remove all spells with the fire descriptor from all your spell lists (not just your druid spell list). You cannot cast any spells with the fire descriptor, nor activate them off scrolls, wands, or any other magic devices. In addition, you may not use wild shape to take the form of any creature with the fire subtype.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -20653,7 +20617,7 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Wand%20Dancer"
       ],
       "source_id": "inner_sea_world_guide:wand_dancer",
-      "description": "You are trained in a tradition of Garundi courtesans and court mages that melds dance with the use of magic wands.\n\nWhen using a spell trigger item, you can move both before and after triggering the item, as long as the total distance moved is not greater than your speed. Choose one creature potentially affected by your spell trigger item. Your movement does not provoke attacks of opportunity from that creature only. You must move at least 5 feet before and after using your spell trigger item to utilize this feat.",
+      "description": "You are trained in a tradition of southern courtesans and court mages that melds dance with the use of magic wands.\n\nWhen using a spell trigger item, you can move both before and after triggering the item, as long as the total distance moved is not greater than your speed. Choose one creature potentially affected by your spell trigger item. Your movement does not provoke attacks of opportunity from that creature only. You must move at least 5 feet before and after using your spell trigger item to utilize this feat.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -21354,26 +21318,7 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Eagle%20Knight%20Candidate"
       ],
       "source_id": "a free nation_spirit_of_liberty:eagle_knight_candidate",
-      "description": "You have proven your courage and skill to both the Eagle Knights and the leaders of a free nation.\n\nChoose one branch of the Eagle Knights you hope to join. You gain a specific benefit based on this choice. Golden Legion: Each round as a move action, you may issue commands to all allies within 30 feet who can see and hear you. Each affected ally that obeys your orders gains a +1 bonus on attack rolls, Armor Class, and saving throws during that round. Steel Falcons: You deal +1 damage with weapon attacks directed at any creature against which you have concealment. If you have total concealment against the creature, this bonus increases to +2. Twilight Talons: During the surprise round, the threat range of your weapons doubles for any attack made against unaware targets. This does not stack with any other effect that expands the threat range of a weapon.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Talmandor's Lifting",
-      "source": "A Spirit of Liberty",
-      "prerequisites": [
-        "Take at least 10d6 falling damage on three different occasions and survive"
-      ],
-      "tags": [
-        "A Spirit of Liberty"
-      ],
-      "references": [
-        "Pathfinder PRD: Talmandor's Lifting"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Talmandor%27s%20Lifting"
-      ],
-      "source_id": "a free nation_spirit_of_liberty:talmandor_s_lifting",
-      "description": "You felt the powerful wings of Talmandor surround you when you risked death from a fall, and somehow a tiny spark of his essence remains connected to your soul.\n\nWhen you cast a healing spell on an unharmed creature, it briefly manifests as a pair of wings made of golden light. The spell's duration becomes \"1 hour or until discharged.\" For the next hour, the spell remains on the target, triggering automatically as a swift action if the creature takes damage or experiences an effect that the spell could cure, mitigate, or remove (which causes the wings of light to appear briefly). For example, if you cast lesser restoration on an ally who had no ability damage, the spell would trigger immediately if the target became fatigued, exhausted, or took ability damage, but not if the target suffered ability drain, energy drain, or hit point damage (none of which are affected by lesser restoration).",
+      "description": "You have proven your courage and skill to both an order of knights and the leaders of a free nation.\n\nChoose one branch of an order of knights you hope to join. You gain a specific benefit based on this choice. mercenary legion: Each round as a move action, you may issue commands to all allies within 30 feet who can see and hear you. Each affected ally that obeys your orders gains a +1 bonus on attack rolls, Armor Class, and saving throws during that round. elite soldiers: You deal +1 damage with weapon attacks directed at any creature against which you have concealment. If you have total concealment against the creature, this bonus increases to +2. spies: During the surprise round, the threat range of your weapons doubles for any attack made against unaware targets. This does not stack with any other effect that expands the threat range of a weapon.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -21416,25 +21361,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Calm Disposition",
-      "source": "Faction Guide",
-      "prerequisites": [
-        "Prophets of Kalistrade 10 TPA"
-      ],
-      "tags": [
-        "Faction Guide"
-      ],
-      "references": [
-        "Pathfinder PRD: Calm Disposition"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Calm%20Disposition"
-      ],
-      "source_id": "faction_guide:calm_disposition",
-      "description": "You always appear to be in control of your situation.\n\nYou gain +2 bonus on saving throws against effects that affect your composure. This includes all mindaffecting spells, as well as any spell or ability that would cause you to behave in an out-of-control manner, such as fear effects and nausea. This does not include physical effects such as fatigue, and does not reduce any damage taken from concurrent effects.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Death's Suitor",
       "source": "Faction Guide",
       "prerequisites": [
@@ -21451,26 +21377,6 @@
       ],
       "source_id": "faction_guide:death_s_suitor",
       "description": "You have died and returned so often that even a goddess of fate now deems it part of your fate.\n\nOnce per day, you may reroll a save or skill check if failure has a chance of killing you (whether from hit point damage, ability damage, or some instant effect). You must decide to use this ability before the results are revealed. You must take the second roll, even if it is worse.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Disassemble Magic Item",
-      "source": "Faction Guide",
-      "prerequisites": [
-        "Any item creation feat",
-        "Aspis Consortium 20 TPA"
-      ],
-      "tags": [
-        "Faction Guide"
-      ],
-      "references": [
-        "Pathfinder PRD: Disassemble Magic Item"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Disassemble%20Magic%20Item"
-      ],
-      "source_id": "faction_guide:disassemble_magic_item",
-      "description": "You can take apart and reassemble magic items.\n\nYou can break a magic item down into component pieces. These pieces are nonmagical and may have little resemblance to the original item other than being of the same material (a magical sword may be three recognizable metal pieces or simply a collection of metal scraps). Disassembling a magic item takes 1 hour per 1,000 gp of the item's price and requires you to concentrate as if crafting an item. You can only use this feat on items your item creation feat would let you craft (for example, if you have Craft Wondrous Item, you can disassemble wondrous items but not magic weapons or armor). You may reassemble a dismantled item as long as all the pieces are present; this takes the same amount of time as taking it apart did. There is a 10% chance the reconstruction fails and the item is permanently destroyed.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -21508,49 +21414,6 @@
       ],
       "source_id": "faction_guide:fast_crawl",
       "description": "You are skilled at moving while prone.\n\nWhile prone, you can move at half speed. This movement provokes attacks of opportunity as normal. You can take a 5-foot step while crawling. This benefit does not stack with the rogue crawl talent.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Fearsome Barricade",
-      "source": "Faction Guide",
-      "prerequisites": [
-        "Intimidate 5 ranks",
-        "Ulfen Guard TPA 20"
-      ],
-      "tags": [
-        "Faction Guide"
-      ],
-      "references": [
-        "Pathfinder PRD: Fearsome Barricade"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Fearsome%20Barricade"
-      ],
-      "source_id": "faction_guide:fearsome_barricade",
-      "description": "Your wrath is as potent a barrier as your blades.\n\nChoose an adjacent ally as a free action on your turn. Once per round, when an opponent attacks that ally, you may make an Intimidate check to demoralize the opponent as an immediate action. This action counts as an attack of opportunity.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Grand Master Performer",
-      "source": "Faction Guide",
-      "prerequisites": [
-        "Bardic performance class feature",
-        "Extra Performance",
-        "Master Performer",
-        "bard level 8th",
-        "Kitharodian Academy 20 TPA"
-      ],
-      "tags": [
-        "Faction Guide"
-      ],
-      "references": [
-        "Pathfinder PRD: Grand Master Performer"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Grand%20Master%20Performer"
-      ],
-      "source_id": "faction_guide:grand_master_performer",
-      "description": "You grant your allies even greater bonuses when using your bardic performance abilities.\n\nWhen any of your bardic performance abilities grant your allies a bonus, that bonus increases by +1. This bonus stacks with the bonus from the Master Performer feat.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -21595,27 +21458,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Master Performer",
-      "source": "Faction Guide",
-      "prerequisites": [
-        "Bardic performance class feature",
-        "Extra Performance",
-        "Kitharodian Academy 15 TPA"
-      ],
-      "tags": [
-        "Faction Guide"
-      ],
-      "references": [
-        "Pathfinder PRD: Master Performer"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Master%20Performer"
-      ],
-      "source_id": "faction_guide:master_performer",
-      "description": "When using your bardic performance abilities, you grant your allies greater bonuses.\n\nWhen any of your bardic performance abilities grant your allies a bonus, that bonus is increased by +1.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Nameless Servitor",
       "source": "Faction Guide",
       "prerequisites": [
@@ -21655,29 +21497,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Silent Performer",
-      "source": "Faction Guide",
-      "prerequisites": [
-        "Bardic performance class feature",
-        "Extra Performance",
-        "Master Performer",
-        "bard level 12th",
-        "Kitharodian Academy 15 TPA"
-      ],
-      "tags": [
-        "Faction Guide"
-      ],
-      "references": [
-        "Pathfinder PRD: Silent Performer"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Silent%20Performer"
-      ],
-      "source_id": "faction_guide:silent_performer",
-      "description": "You can use any bardic performance ability without making a sound.\n\nYou can use your audible-component bardic performance as visual-component bardic performances. Any bardic ability used in this manner expends 4 times as many bardic performance rounds as normal.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Touched By Sacred Fire",
       "source": "Faction Guide",
       "prerequisites": [
@@ -21695,51 +21514,8 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Touched%20By%20Sacred%20Fire"
       ],
       "source_id": "faction_guide:touched_by_sacred_fire",
-      "description": "Regular contact with an elemental guardian of the Ruby Prince (such as Khemet’s invisible fire elemental cohort Janhelia) has left you able to shrug off many sources of unnatural heat, even if the effort required sometimes makes it difficult to defend yourself from attacks.\n\nYou gain fire resistance 5 and a +2 bonus on all saving throws to resist the effects of fire or heat. As a swift action, you can increase your fire resistance to 10 and your save bonus to +4 until your next turn; this causes you to lose your Dexterity bonus to Armor Class until your next turn (which leaves you vulnerable to sneak attacks).",
+      "description": "Regular contact with an elemental guardian of a desert prince (such as Khemet’s invisible fire elemental cohort Janhelia) has left you able to shrug off many sources of unnatural heat, even if the effort required sometimes makes it difficult to defend yourself from attacks.\n\nYou gain fire resistance 5 and a +2 bonus on all saving throws to resist the effects of fire or heat. As a swift action, you can increase your fire resistance to 10 and your save bonus to +4 until your next turn; this causes you to lose your Dexterity bonus to Armor Class until your next turn (which leaves you vulnerable to sneak attacks).",
       "updated_at": "2026-07-25T00:00:00Z"
-    },
-    {
-      "name": "Verbose Performer",
-      "source": "Faction Guide",
-      "prerequisites": [
-        "Bardic performance class feature",
-        "Extra Performance",
-        "Master Performer",
-        "bard level 8th",
-        "Kitharodian Academy 15 TPA"
-      ],
-      "tags": [
-        "Faction Guide"
-      ],
-      "references": [
-        "Pathfinder PRD: Verbose Performer"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Verbose%20Performer"
-      ],
-      "source_id": "faction_guide:verbose_performer",
-      "description": "The range of your bardic performances increases.\n\nDouble the range of any bardic performance ability that possesses a range in the ability description.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Whispered Knowledge",
-      "source": "Faction Guide",
-      "prerequisites": [
-        "Corporeal undead",
-        "Whispering Way 15 TPA"
-      ],
-      "tags": [
-        "Faction Guide"
-      ],
-      "references": [
-        "Pathfinder PRD: Whispered Knowledge"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Whispered%20Knowledge"
-      ],
-      "source_id": "faction_guide:whispered_knowledge",
-      "description": "You possess secret knowledge that enhances and helps perfect your undead form.\n\nChoose one of the following secrets: Secret of Blood: After successfully dealing damage to a living creature with a melee attack, you can consume that creature's blood from your weapon as a swift action, gaining 1d8 temporary hit points, a +2 enhancement bonus to Strength, and a +1 bonus to your caster level. This lasts 10 minutes per Hit Die of your target, and otherwise acts as a death knell spell. Secret of Bone: Your bones harden and calcify. You gain DR 5/bludgeoning. Secret of Brains: As secret of blood, but you gain a +2 enhancement bonus to your Intelligence instead of Strength. This ability has no effect on mindless targets. Secret of the Grave: You can designate an unholy container for your remains, such as a coffin, canopic jar, or burial urn. When in this container and not taking any actions, you gain fast healing 5.",
-      "updated_at": "2026-07-16T20:28:23Z"
     },
     {
       "name": "Blood Of Heroes",
@@ -23518,7 +23294,7 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Tapestry%20Traveler"
       ],
       "source_id": "pathfinder_society_primer:tapestry_traveler",
-      "description": "Your many visits to the Hao Jin Tapestry demiplane have made you an expert in long-distance travel.\n\nYou cast spells of the teleportation subschool as though your caster level were 2 higher, and you treat yourself as one step more familiar when teleporting to an established Pathfinder lodge with the teleport spell. If you can teleport as a supernatural ability, you treat your class level as if it were 2 higher when calculating the total distance that you can travel with this ability.",
+      "description": "Your many visits to the a legendary sorceress Tapestry demiplane have made you an expert in long-distance travel.\n\nYou cast spells of the teleportation subschool as though your caster level were 2 higher, and you treat yourself as one step more familiar when teleporting to an established Pathfinder lodge with the teleport spell. If you can teleport as a supernatural ability, you treat your class level as if it were 2 higher when calculating the total distance that you can travel with this ability.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -26329,47 +26105,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Beacon Of Hope",
-      "source": "the inner sea region Gods",
-      "prerequisites": [
-        "Channel energy 3d6",
-        "worshiper of Milani"
-      ],
-      "tags": [
-        "the inner sea region Gods"
-      ],
-      "references": [
-        "Pathfinder PRD: Beacon Of Hope"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Beacon%20Of%20Hope"
-      ],
-      "source_id": "inner_sea_gods:beacon_of_hope",
-      "description": "Your hope inspires allies in their struggles.\n\nWhen you channel positive energy to heal living creatures, those you heal gain a +2 morale bonus on saving throws, attack rolls, ability checks, and skill checks for a number of rounds equal to your Charisma bonus (minimum 1 round).",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Believable Veils",
-      "source": "the inner sea region Gods",
-      "prerequisites": [
-        "Caster level 3rd",
-        "ability to cast at least one glamer or figment",
-        "worshiper of Sivanah"
-      ],
-      "tags": [
-        "the inner sea region Gods"
-      ],
-      "references": [
-        "Pathfinder PRD: Believable Veils"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Believable%20Veils"
-      ],
-      "source_id": "inner_sea_gods:believable_veils",
-      "description": "The teachings of your deity help you keep your secrets safe.\n\nOnce per day when you create a glamer or figment effect, you can empower the effect so that the DC to disbelieve it is 2 higher than normal.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Bestow Hope",
       "source": "the inner sea region Gods",
       "prerequisites": [],
@@ -26418,28 +26153,6 @@
       ],
       "source_id": "inner_sea_gods:bloodletting",
       "description": "When you attack with a piercing or slashing weapon, the wounds you cause bleed profusely.\n\nWhenever you threaten a critical hit with a piercing or slashing weapon (regardless of whether you confirm the critical hit or not), you deal 1 point of bleed damage to the targeted creature.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Bloody Sabres",
-      "source": "the inner sea region Gods",
-      "prerequisites": [
-        "Dex 15",
-        "Exotic Weapon Proficiency (sawtooth sabre)",
-        "Two-Weapon Fighting",
-        "worshiper of Achaekek"
-      ],
-      "tags": [
-        "the inner sea region Gods"
-      ],
-      "references": [
-        "Pathfinder PRD: Bloody Sabres"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Bloody%20Sabres"
-      ],
-      "source_id": "inner_sea_gods:bloody_sabres",
-      "description": "Imitating the forms of your god, you strike deep and inf lict a bloody wound.\n\nIf you hit an opponent with both your primary weapon and your off-hand weapon as part of the same attack action, and both of those weapons are sawtooth sabres, you deal 1 point of bleed damage in addition to the normal damage dealt by these attacks.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -26532,26 +26245,6 @@
       ],
       "source_id": "inner_sea_gods:channel_discord",
       "description": "You can focus the Abyss's power to sow discord among those who take damage from your channeled energy.\n\nOnce per day when you channel negative energy to harm living creatures, in addition to dealing damage you can choose to affect those who fail their Will save against your channel with a song of discord (caster level equal to your effective cleric level).",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Channel Hate",
-      "source": "the inner sea region Gods",
-      "prerequisites": [
-        "Channel energy 6d6",
-        "worshiper of Gyronna"
-      ],
-      "tags": [
-        "the inner sea region Gods"
-      ],
-      "references": [
-        "Pathfinder PRD: Channel Hate"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Channel%20Hate"
-      ],
-      "source_id": "inner_sea_gods:channel_hate",
-      "description": "You masterfully inspire in others violence toward those you hate.\n\nAs a standard action, you can expend one use of your channel energy ability to affect a single creature within 30 feet as if you had cast vengeful outrageUM (caster level equal to your effective cleric level). Upon obtaining channel energy 9d6, you can affect a number of creatures within 30 feet equal to your Charisma bonus (minimum 2 creatures) with this feat instead. If you expend an extra use of channel energy when using this feat, the target does not gain a second saving throw against this effect if you designate the target's friend or loved one as its hated enemy.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -26766,26 +26459,6 @@
       ],
       "source_id": "inner_sea_gods:divination_guide",
       "description": "You deity grants you greater guidance and divine insight.\n\nWhenever you cast augury or divination, you receive further guidance from your deity's agents. You gain a +1 sacred bonus if your worship a good deity or a +1 profane bonus if you worship an evil deity (if you worship a neutral deity the type of bonus is either determined by the type of energy you channel with the channel energy class feature or, if you don't have that class ability, your choice upon taking this feat) on all saving throws for 1 minute per caster level of the augury or divination spell you cast.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Divine Barrier",
-      "source": "the inner sea region Gods",
-      "prerequisites": [
-        "Channel energy class feature",
-        "worshiper of Apsu"
-      ],
-      "tags": [
-        "the inner sea region Gods"
-      ],
-      "references": [
-        "Pathfinder PRD: Divine Barrier"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Divine%20Barrier"
-      ],
-      "source_id": "inner_sea_gods:divine_barrier",
-      "description": "You have trained in the art of blocking breath weapons.\n\nWhen you are within an area effect that deals acid, cold, electricity, or fire damage, you can expend one use of your channel energy ability as an immediate action to shield yourself and all allies within 30 feet. You and allies within your shield only take half damage if they fail their save against the effect, and those who make a successful save take no damage from the effect.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -27043,46 +26716,6 @@
       ],
       "source_id": "inner_sea_gods:heroic_interposition",
       "description": "You arrive just when you are most needed to vanquish evil.\n\nOnce per day, you can move up to your speed as an immediate action, but you must end this movement adjacent to an opponent who is about to make an attack against an ally. As long as you are visible to the opponent you moved next to, that opponent takes a -2 penalty on the attack roll to which you moved in response.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Hunter Of Dahak",
-      "source": "the inner sea region Gods",
-      "prerequisites": [
-        "Favored enemy (dragon)",
-        "worshiper of Dahak"
-      ],
-      "tags": [
-        "the inner sea region Gods"
-      ],
-      "references": [
-        "Pathfinder PRD: Hunter Of Dahak"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Hunter%20Of%20Dahak"
-      ],
-      "source_id": "inner_sea_gods:hunter_of_dahak",
-      "description": "You viciously hunt and sacrifice metallic dragons.\n\nYour favored enemy bonuses increase by 2 against metallic dragons.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Intrepid Rescuer",
-      "source": "the inner sea region Gods",
-      "prerequisites": [
-        "Combat Reflexes",
-        "worshiper of Kurgess"
-      ],
-      "tags": [
-        "the inner sea region Gods"
-      ],
-      "references": [
-        "Pathfinder PRD: Intrepid Rescuer"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Intrepid%20Rescuer"
-      ],
-      "source_id": "inner_sea_gods:intrepid_rescuer",
-      "description": "You instinctively react to interfere with foes that attack your allies or innocents.\n\nWhenever an opponent you threaten makes an attack against a helpless, prone, or stunned ally or any attack against a noncombatant, that opponent provokes an attack of opportunity from you. If your attack of opportunity hits your foe, she takes a -4 penalty on the attack roll that provoked this attack of opportunity.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -27432,26 +27065,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Siphon Channel",
-      "source": "the inner sea region Gods",
-      "prerequisites": [
-        "Channel energy 3d6",
-        "worshiper of Ghlaunder"
-      ],
-      "tags": [
-        "the inner sea region Gods"
-      ],
-      "references": [
-        "Pathfinder PRD: Siphon Channel"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Siphon%20Channel"
-      ],
-      "source_id": "inner_sea_gods:siphon_channel",
-      "description": "You can channel negative energy to feed off the suffering of others.\n\nOnce per day when you channel negative energy to damage living creatures, you gain a number of temporary hit points equal to half the die result of your channeled energy + 1 per creature affected by the channeled energy. For each affected creature that did not succeed at its saving throw against the channeled energy, you gain an additional temporary hit point. These temporary hit points disappear after 1 hour.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Spear Dancer",
       "source": "the inner sea region Gods",
       "prerequisites": [
@@ -27667,25 +27280,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Troth Of The Forgotten Pharaoh",
-      "source": "AP 81",
-      "prerequisites": [
-        "Must be a member of the Cult of the Forgotten Pharaoh"
-      ],
-      "tags": [
-        "AP 81"
-      ],
-      "references": [
-        "Pathfinder PRD: Troth Of The Forgotten Pharaoh"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Troth%20Of%20The%20Forgotten%20Pharaoh"
-      ],
-      "source_id": "ap_81:troth_of_the_forgotten_pharaoh",
-      "description": "You've pledged your body to the Forgotten Pharaoh, and are willing to sacrifice yourself to keep his secrets even in death.\n\nUpon taking this feat, you undergo a ritual where the cartouche of Pharaoh Hakotep I is carved into your flesh (typically on the chest or back), and then embellished with painful crimson and ochre tattoos. The ritual takes 1 hour to complete, and you take 3 points of damage from the wound (see Special, below). Upon completion of the ritual, you gain the feat's benefits.  As an immediate action, or when you die, you can cause white-hot fire to burst from the tattooed cartouche on your flesh, immolating your body in a bright flash and instantly reducing it to ash. If you are still alive, you are immediately slain. Spells such as raise dead or speak with dead cannot be used on your remains, but your equipment is unaffected.  As the fire consumes you, fiery snakes whip out of your body in a 5-foot-radius burst, dealing 1d6 points of fire damage + 1 per character level. Creatures in the area can attempt a Reflex save to negate the damage (DC 10 + 1/2 your character level + your Constitution modifier). In addition, creatures within a 10-foot burst must succeed at a Fortitude save (DC 10 + 1/2 your character level + your Constitution modifier) or be blinded for 1 round. Blind or sightless creatures are unaffected by this blinding effect.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Cleansing Burst",
       "source": "AP 81",
       "prerequisites": [
@@ -27880,7 +27474,7 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Harrowed%20Summoning"
       ],
       "source_id": "the_harrow_handbook:harrowed_summoning",
-      "description": "Your summoned creatures are empowered by the magic of the harrow.\n\nWhen you cast a conjuration (summoning) spell or use a spell-like ability to summon one or more creatures, you can draw two random cards from a complete harrow deck you own. Doing so adds both a somatic component (if the spell does not already have one) and a focus component (the harrow deck) to the spell, but does not increase the spell’s casting time. For the duration of the spell, each summoned creature gains a +4 enhancement bonus to the corresponding ability scores of the drawn card’s suits. If both cards are the same suit, each summoned creature gains a +6 bonus to that ability score instead. If either card’s alignment is a true match for the summoned creatures’ alignment, the duration of the spell is doubled, while drawing an opposite match halves the duration of the spell. If both a true match and an opposite match are drawn, the spell’s duration is unchanged. A creature summoned in this way is distinctly altered by the cards drawn. Its physical appearance reflects the visual elements of the cards (for example, a creature summoned with The Publican might have only one eye). The creature’s personality is also influenced by the cards, but not so much as to alter its alignment (for example, The Snakebite might summon a creature that likes to gossip).",
+      "description": "Your summoned creatures are empowered by the magic of fortune-telling cards.\n\nWhen you cast a conjuration (summoning) spell or use a spell-like ability to summon one or more creatures, you can draw two random cards from a complete fortune-telling deck you own. Doing so adds both a somatic component (if the spell does not already have one) and a focus component (fortune-telling cards deck) to the spell, but does not increase the spell’s casting time. For the duration of the spell, each summoned creature gains a +4 enhancement bonus to the corresponding ability scores of the drawn card’s suits. If both cards are the same suit, each summoned creature gains a +6 bonus to that ability score instead. If either card’s alignment is a true match for the summoned creatures’ alignment, the duration of the spell is doubled, while drawing an opposite match halves the duration of the spell. If both a true match and an opposite match are drawn, the spell’s duration is unchanged. A creature summoned in this way is distinctly altered by the cards drawn. Its physical appearance reflects the visual elements of the cards (for example, a creature summoned with The Publican might have only one eye). The creature’s personality is also influenced by the cards, but not so much as to alter its alignment (for example, The Snakebite might summon a creature that likes to gossip).",
       "updated_at": "2026-07-25T00:00:00Z"
     },
     {
@@ -27900,7 +27494,7 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Deadly%20Dealer"
       ],
       "source_id": "the_harrow_handbook:deadly_dealer",
-      "description": "Your skill with handling a deck and your arcane talents allow you to turn mundane cards into weapons.\n\nYou can throw a card as though it were a dart, with the same damage, range, and other features. You must use the Arcane Strike feat when throwing a card in this way, or else the card lacks the magical force and precision to deal lethal damage. A card is destroyed when thrown in this way. Harrow cards are treated as masterwork weapons when thrown using this feat, but are still destroyed after they are thrown. A harrow deck can no longer be used as a fortune-telling device after even a single card is thrown. A spellcaster with this feat can enhance a deck of cards as though it were a ranged weapon with 54 pieces of ammunition. This enhancement functions only when used in tandem with this feat, and has no affect on any other way the cards might be used. Only a character who possesses this feat can use an enhanced deck of cards; she must still use the Arcane Strike feat to activate the cards' enhancement.",
+      "description": "Your skill with handling a deck and your arcane talents allow you to turn mundane cards into weapons.\n\nYou can throw a card as though it were a dart, with the same damage, range, and other features. You must use the Arcane Strike feat when throwing a card in this way, or else the card lacks the magical force and precision to deal lethal damage. A card is destroyed when thrown in this way. fortune-telling cards are treated as masterwork weapons when thrown using this feat, but are still destroyed after they are thrown. A fortune-telling deck can no longer be used as a fortune-telling device after even a single card is thrown. A spellcaster with this feat can enhance a deck of cards as though it were a ranged weapon with 54 pieces of ammunition. This enhancement functions only when used in tandem with this feat, and has no affect on any other way the cards might be used. Only a character who possesses this feat can use an enhanced deck of cards; she must still use the Arcane Strike feat to activate the cards' enhancement.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -35568,26 +35162,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Strongarm",
-      "source": "a free nation Birthplace Of Freedom",
-      "prerequisites": [
-        "Intimidating Prowess",
-        "member of the Lumber Consortium"
-      ],
-      "tags": [
-        "a free nation Birthplace Of Freedom"
-      ],
-      "references": [
-        "Pathfinder PRD: Strongarm"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Strongarm"
-      ],
-      "source_id": "a free nation_birthplace_of_freedom:strongarm",
-      "description": "You are experienced at long-term intimidation of those you wish to exploit, and strike fear into the hearts of those you bully.\n\nWhen you use the Intimidate skill to improve a target's attitude, if your check result exceeds the DC by 5 or more, the target's attitude is improved for 5d6 hours. During this time, should it attack you, the target immediately becomes shaken for 1d6+1 rounds, as though it had been demoralized.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Primal Ancestry",
       "source": "a free nation Birthplace Of Freedom",
       "prerequisites": [
@@ -38422,28 +37996,6 @@
       "updated_at": "2026-07-25T00:00:00Z"
     },
     {
-      "name": "Alien Mindpaths",
-      "source": "the inner sea region Races",
-      "prerequisites": [
-        "Android",
-        "kasatha",
-        "lashunta",
-        "or Triaxian"
-      ],
-      "tags": [
-        "the inner sea region Races"
-      ],
-      "references": [
-        "Pathfinder PRD: Alien Mindpaths"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Alien%20Mindpaths"
-      ],
-      "source_id": "inner_sea_races:alien_mindpaths",
-      "description": "When you're in the company of other aliens, your thoughts become difficult to follow.\n\nWhenever you're adjacent to at least one other android, kasatha, lashunta, or Triaxian ally who also has this feat, you gain a +4 circumstance bonus on saves against mind-affecting effects and divination (scrying) effects, unless the effect comes from an android, kasatha, lashunta, or Triaxian.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Ambush Squad",
       "source": "the inner sea region Races",
       "prerequisites": [
@@ -38721,26 +38273,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Diplomatic Ruse",
-      "source": "the inner sea region Races",
-      "prerequisites": [
-        "Diplomacy 3 ranks",
-        "human (Keleshite)"
-      ],
-      "tags": [
-        "the inner sea region Races"
-      ],
-      "references": [
-        "Pathfinder PRD: Diplomatic Ruse"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Diplomatic%20Ruse"
-      ],
-      "source_id": "inner_sea_races:diplomatic_ruse",
-      "description": "With practiced gestures, you buy enough time to prepare yourself for an inevitable battle.\n\nWhenever you're adjacent to an ally who also has this feat, you can perform a quick, seemingly courteous gesture when you make an initiative check. As part of the gesture, you can perform a single free action, such as dropping an item or entering rage. This feat can be used only when combat breaks out after a conversation, such as from failed negotiations.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Echoes Of The First World",
       "source": "the inner sea region Races",
       "prerequisites": [
@@ -38930,28 +38462,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "High Magic Focus",
-      "source": "the inner sea region Races",
-      "prerequisites": [
-        "Any metamagic feat",
-        "Spellcraft 7 ranks",
-        "ability to cast 2nd-level spells",
-        "human (Garundi)"
-      ],
-      "tags": [
-        "the inner sea region Races"
-      ],
-      "references": [
-        "Pathfinder PRD: High Magic Focus"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=High%20Magic%20Focus"
-      ],
-      "source_id": "inner_sea_races:high_magic_focus",
-      "description": "With the help of your fellow scholars, you can cast higher forms of magic, enhancing your spells by drawing upon their magical reserves rather than your own.\n\nWith the help of allies who also have this feat, you can spontaneously apply metamagic feats to your spells without using a higher-level slot or increasing the casting time. Each ally must ready an action to cast the same spell you intend to cast. For each other ally within 30 feet who does so, you reduce the cost of the spontaneous metamagic feat by 1 level (to a minimum of 0, and you must have at least one ally assist you, even if the metamagic feat is normally a +0 adjustment). The allies don't need to have the metamagic feat you choose to apply, and the effective level of the spell (after applying the metamagic feat) can't be higher than the highest level of spells you can cast. Lastly, when you use this ability, the spell each ally readies is lost, as if they had cast that spell.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Inspiring Talent",
       "source": "the inner sea region Races",
       "prerequisites": [
@@ -39033,27 +38543,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "One Mind",
-      "source": "the inner sea region Races",
-      "prerequisites": [
-        "Alertness",
-        "Sense Motive 3 ranks",
-        "human (Vudrani)"
-      ],
-      "tags": [
-        "the inner sea region Races"
-      ],
-      "references": [
-        "Pathfinder PRD: One Mind"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=One%20Mind"
-      ],
-      "source_id": "inner_sea_races:one_mind",
-      "description": "Your nearly supernatural mental connection with your allies keeps you in a constant state of readiness.\n\nWhenever you're adjacent to an ally who also has this feat, if your ally is not flat-footed, you're also not considered flat-footed before you act in combat (you might become flat-footed in other ways, however). Additionally, if your ally can see a creature that you can't see, that creature doesn't gain a +2 bonus on attack rolls against you from being invisible, nor do you take a -2 penalty to AC for being blinded if your ally can see.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Pack Intimidation",
       "source": "the inner sea region Races",
       "prerequisites": [
@@ -39071,25 +38560,6 @@
       ],
       "source_id": "inner_sea_races:pack_intimidation",
       "description": "You draw on the strength of numbers and your shared convictions to intimidate your foes.\n\nWhenever you use the Intimidate skill to demoralize foes, you gain a +2 circumstance bonus on your check for every ally who also has this feat within 30 feet (maximum +6).",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Pursuit Of Glory",
-      "source": "the inner sea region Races",
-      "prerequisites": [
-        "Human (Ulfen)"
-      ],
-      "tags": [
-        "the inner sea region Races"
-      ],
-      "references": [
-        "Pathfinder PRD: Pursuit Of Glory"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Pursuit%20Of%20Glory"
-      ],
-      "source_id": "inner_sea_races:pursuit_of_glory",
-      "description": "You know that daring deeds and heroics live forever in song, and sagas will carry your deeds into immortality.\n\nWhenever you start or end a charge attack in a space adjacent to an ally who also has this feat, you gain a +2 morale bonus on one attack roll you make as part of the charge. Furthermore, you can charge through a space containing an ally who also has this feat.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -40287,73 +39757,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Startoss Comet",
-      "source": "Weapon Master's Handbook",
-      "prerequisites": [
-        "Dex 13",
-        "Point-Blank Shot",
-        "Startoss Style",
-        "Weapon Focus with the chosen weapon"
-      ],
-      "tags": [
-        "Weapon Master's Handbook"
-      ],
-      "references": [
-        "Pathfinder PRD: Startoss Comet"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Startoss%20Comet"
-      ],
-      "source_id": "weapon_master_s_handbook:startoss_comet",
-      "description": "You can aim a thrown weapon so it strikes two foes.\n\nAs a standard action, you can make a single ranged thrown weapon attack at your full attack bonus with the chosen weapon. If you hit, you deal damage normally and can make a second attack (at your full attack bonus) against a target within one range increment of the first. You determine cover for this attack from the first target's space instead of your space. You can make only one additional attack per round with this feat. If you have Vital Strike, Improved Vital Strike, or Greater Vital Strike, you can add the additional damage from those feats to the initial ranged attack (but not the second attack).",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Startoss Shower",
-      "source": "Weapon Master's Handbook",
-      "prerequisites": [
-        "Dex 13",
-        "Point-Blank Shot",
-        "Startoss Comet",
-        "Startoss Style",
-        "Weapon Focus with the chosen weapon",
-        "base attack bonus +4"
-      ],
-      "tags": [
-        "Weapon Master's Handbook"
-      ],
-      "references": [
-        "Pathfinder PRD: Startoss Shower"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Startoss%20Shower"
-      ],
-      "source_id": "weapon_master_s_handbook:startoss_shower",
-      "description": "You can strike multiple opponents with thrown weapons.\n\nWhen you hit an opponent while using the Startoss Comet feat, you can continue to make attacks against foes that are within one range increment of all previous opponents. You determine cover for each attack from the most recently hit foe's space instead of your space, and you cannot attack an individual foe more than once during this attack action. You can make a maximum number of attacks equal to 1 + 1 per 5 points of base attack bonus you possess. If you have Vital Strike, Improved Vital Strike, or Greater Vital Strike, you can add the additional damage from those feats to the initial ranged attack (but not any subsequent attacks).",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Startoss Style",
-      "source": "Weapon Master's Handbook",
-      "prerequisites": [
-        "Dex 13",
-        "Point-Blank Shot",
-        "Weapon Focus with the chosen weapon"
-      ],
-      "tags": [
-        "Weapon Master's Handbook"
-      ],
-      "references": [
-        "Pathfinder PRD: Startoss Style"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Startoss%20Style"
-      ],
-      "source_id": "weapon_master_s_handbook:startoss_style",
-      "description": "Your thrown weapons become more deadly.\n\nChoose one weapon from the thrown fighter weapon group. While using this style and the chosen weapon, you gain a bonus on damage rolls made with the weapon equal to 2 + 2 per style feat you possess that lists Startoss Style as a prerequisite (maximum +6 damage). You cannot use this ability if you are carrying a weapon or a shield in your off hand (except for a buckler).",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Ascetic Form",
       "source": "Weapon Master's Handbook",
       "prerequisites": [
@@ -41353,7 +40756,7 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Gruesome%20Butcher"
       ],
       "source_id": "agents_of_evil:gruesome_butcher",
-      "description": "You dedicated yourself to the cause of slaughter against a specific group or people, either for country, for vengeance, or perhaps just for sport.\n\nSelect a particular nation, organization, or humanoid subtype (such as a diabolic empire, Eagle Knights, or goblinoids). You gain a +4 bonus on Sense Motive checks to determine whether a given creature is affiliated with that group and a +4 bonus on Bluff and Diplomacy checks to conceal your animosity toward members of that group.",
+      "description": "You dedicated yourself to the cause of slaughter against a specific group or people, either for country, for vengeance, or perhaps just for sport.\n\nSelect a particular nation, organization, or humanoid subtype (such as a diabolic empire, knights, or goblinoids). You gain a +4 bonus on Sense Motive checks to determine whether a given creature is affiliated with that group and a +4 bonus on Bluff and Diplomacy checks to conceal your animosity toward members of that group.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -41432,44 +40835,6 @@
       ],
       "source_id": "agents_of_evil:associate",
       "description": "You are on good terms with a large organization, though not necessarily an official member.\n\nSelect a single organization with which you have a positive relationship. You gain a +4 circumstance bonus on Diplomacy checks to influence members of that group or when making gather information checks about the organization. In any settlement that is the size of a small town or larger, you can spend 1d4 hours to attempt to track down a representative of your organization to gain a minor resource or service for free (such as information), a place to stay, or transportation. If you succeed at a Diplomacy check (DC = 20 + the gp cost of the service requested [minimum 1 gp]), you successfully call in a favor and gain that service for free; otherwise, you must pay the normal fee. You can attempt this check once per week.",
-      "updated_at": "2026-07-25T00:00:00Z"
-    },
-    {
-      "name": "Red Mantis Collaborator",
-      "source": "Agents Of Evil",
-      "prerequisites": [
-        "Associate (Red Mantis)"
-      ],
-      "tags": [
-        "Agents Of Evil"
-      ],
-      "references": [
-        "Pathfinder PRD: Red Mantis Collaborator"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Red%20Mantis%20Collaborator"
-      ],
-      "source_id": "agents_of_evil:red_mantis_collaborator",
-      "description": "You pass along private details to the Red Mantis, and they protect you in return.\n\nThe Red Mantis can help you hide from trouble in one of their secret safe houses. Anyone attempting Diplomacy or Survival checks to locate you during this time takes a -10 penalty, and anyone attempting to scry upon you or magically divine your location must first succeed at a caster level check (DC = 15 + your character level). You can stay in a Mantis safe house for up to 1 day per character level before you are forced to vacate.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Whispering Way Disciple",
-      "source": "Agents Of Evil",
-      "prerequisites": [
-        "Associate (Whispering Way)"
-      ],
-      "tags": [
-        "Agents Of Evil"
-      ],
-      "references": [
-        "Pathfinder PRD: Whispering Way Disciple"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Whispering%20Way%20Disciple"
-      ],
-      "source_id": "agents_of_evil:whispering_way_disciple",
-      "description": "Your research has gained the attention of the Whispering Way, which rewards you with access to its libraries.\n\nYou can exploit lore acquired from the Whispering Way once per day to combine your own blood and a vial of unholy water to create a potion of cure light wounds or a potion of inflict light wounds as a full-round action. The blood loss from this transformation deals 1 point of Constitution damage to you. In addition, in any settlement that is the size of a small town or larger, you can always find scrolls of the following spells available for purchase regardless of their legality: animate dead control undead create undead detect undead disrupt undead false life greater false life UM ghoul touch lesser animate dead UM mass repair undead ACG repair undead ACG , and undead anatomy I–IV UM .",
       "updated_at": "2026-07-25T00:00:00Z"
     },
     {
@@ -44318,25 +43683,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Thrune Trusted Agent",
-      "source": "AP 105",
-      "prerequisites": [
-        "Thrune Loyal Agent trait"
-      ],
-      "tags": [
-        "AP 105"
-      ],
-      "references": [
-        "Pathfinder PRD: Thrune Trusted Agent"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Thrune%20Trusted%20Agent"
-      ],
-      "source_id": "ap_105:thrune_trusted_agent",
-      "description": "Your supernatural bond to other Thrune agents strengthens your resolve and allows you to bolster your allies.\n\nWhenever you are within 30 feet of an ally who also has this feat, you gain a +1 profane bonus on Reflex and Will saving throws. In addition, once per day as a swift action, you can forfeit the saving throw bonuses granted by this feat to increase the effectiveness of the aid another action. For a number of rounds equal to your Charisma modifier (minimum 1), when you use the aid another action to aid an ally who also has this feat, the bonus you grant to an ally's AC, attack roll, or skill check is increased to +4 instead of the usual +2. You don't benefit from the feat's saving throw bonuses for 24 hours, though you still qualify as having this feat for the purpose of other characters gaining the bonuses.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Summon Evil Monster",
       "source": "AP 105",
       "prerequisites": [
@@ -45556,7 +44902,7 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Black%20Marketeer"
       ],
       "source_id": "an ancient desert kingdom_land_of_pharaohs:black_marketeer",
-      "description": "You have many contacts and a keen eye for hidden opportunities in the marketplace.\n\nBy utilizing your black market connections, you acquire a resource pool worth 100 gp. This functions like the resource pool gained by the Profits of Kalistrade feat (see Pathfinder Chronicles Campaign Setting page 73) except it can only be used on illegal or illicit items or services (note that something may be illegal or illicit in one area but perfectly acceptable in another) and is centered on an ancient desert kingdom rather than a merchant principality. Typical illegal or illicit items are drugs, poisons, evil magic items, slaves, or dead bodies, though intangibles such as secret information may also qualify (and for these items, a secret of equal value-at the GM's discretion-must be contributed to the pool).",
+      "description": "You have many contacts and a keen eye for hidden opportunities in the marketplace.\n\nBy utilizing your black market connections, you acquire a resource pool worth 100 gp. This functions like the resource pool gained by the Profits of a philosophy of purity and wealth feat (see Pathfinder Chronicles Campaign Setting page 73) except it can only be used on illegal or illicit items or services (note that something may be illegal or illicit in one area but perfectly acceptable in another) and is centered on an ancient desert kingdom rather than a merchant principality. Typical illegal or illicit items are drugs, poisons, evil magic items, slaves, or dead bodies, though intangibles such as secret information may also qualify (and for these items, a secret of equal value-at the GM's discretion-must be contributed to the pool).",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -47538,7 +46884,7 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Supernatural%20Spy"
       ],
       "source_id": "spymaster_s_handbook:supernatural_spy",
-      "description": "Your familiarity with magic drives you to discover a great supernatural secret. You might work with an eldritch organization, which could be a school of magic such as the Arcanamirium or part of a government with strong ties to magic such as that of a winter-locked realm, or you might attempt to keep your magical inquiries hidden from your employers.\n\nTreat your Intelligence, Wisdom, or Charisma score as 2 higher for the purpose of calculating the effects and save DCs of one of the following class features: alchemist discoveries, arcane discoveries, arcanist exploits, or magus arcana. You select both the ability score and class feature to be affected when you select this feat, and the choice cannot be changed. This increases the potency of the abilities but does not grant access to additional abilities.",
+      "description": "Your familiarity with magic drives you to discover a great supernatural secret. You might work with an eldritch organization, which could be a school of magic such as a school of magic or part of a government with strong ties to magic such as that of a winter-locked realm, or you might attempt to keep your magical inquiries hidden from your employers.\n\nTreat your Intelligence, Wisdom, or Charisma score as 2 higher for the purpose of calculating the effects and save DCs of one of the following class features: alchemist discoveries, arcane discoveries, arcanist exploits, or magus arcana. You select both the ability score and class feature to be affected when you select this feat, and the choice cannot be changed. This increases the potency of the abilities but does not grant access to additional abilities.",
       "updated_at": "2026-07-25T00:00:00Z"
     },
     {
@@ -47578,25 +46924,6 @@
       ],
       "source_id": "spymaster_s_handbook:obliviating_stare",
       "description": "Your stare can cause a target to lose track of someone.\n\nYou can cause a target of your hypnotic stare to lose track of creatures other than yourself. If the target of your hypnotic stare is in an environment that would allow the target to take 10 on skill checks (if not in immediate danger or distracted), creatures can attempt Stealth checks opposed by the target's Perception check even if they lack cover or concealment. If the target of your hypnotic stare fails an opposed Perception check by 5 or more, it forgets the creature attempting the Stealth check was ever present, and acts as if it had failed a Will saving throw against a hidden presenceUI spell cast by the creature using Stealth. If your hypnotic stare ends, the target takes damage, a creature using Stealth takes an action that would end a hidden presence spell, or the target's circumstances change so it would be unable to take 10 on a skill check, all effects of Obliviating Stare end and the target is immune to your Obliviating Stare for 24 hours.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Golden League Tattoos",
-      "source": "Spymaster's Handbook",
-      "prerequisites": [
-        "Regional trait associated with one of the Dragon Empires nations (Pathfinder Player Companion: Dragon Empires Primer)"
-      ],
-      "tags": [
-        "Spymaster's Handbook"
-      ],
-      "references": [
-        "Pathfinder PRD: Golden League Tattoos"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Golden%20League%20Tattoos"
-      ],
-      "source_id": "spymaster_s_handbook:golden_league_tattoos",
-      "description": "You have quite the impressive collection of tattoos that commemorate your connection to and achievements within the Golden League.\n\nYou have an impressive collection of tattoos, which are visible unless you wear concealing clothing or succeed at a DC 10 Disguise check. You can take 10 on Intimidate checks against creatures able to see your tattoos, even when stress or distractions would normally prevent you from doing so. You add Knowledge (local) to the skills associated with the presence tactic for verbal duels (Pathfinder RPG Ultimate Intrigue), and the first time you win an exchange with that tactic you do not take a penalty on associated skill checks if you repeat the tactic in the same duel.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -53422,7 +52749,7 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Aspis%20Partner"
       ],
       "source_id": "adventurer_s_guide:aspis_partner",
-      "description": "You have earned the attention of the Aspis Consortium and can call in favors when necessary.\n\nWhenever you are in a settlement that is the size of a small town or larger, you can purchase (but not sell) items through your Aspis contacts. Treat your current settlement as though it were a metropolis to determine its base value and available magic items. You pay a 5% markup for such items, and orders take 3d6 days to be delivered through Consortium channels. You can pay an additional 1,000 gp to have your item magically delivered to you in 1d3 days instead.",
+      "description": "You have earned the attention of a mercenary trading company and can call in favors when necessary.\n\nWhenever you are in a settlement that is the size of a small town or larger, you can purchase (but not sell) items through your Aspis contacts. Treat your current settlement as though it were a metropolis to determine its base value and available magic items. You pay a 5% markup for such items, and orders take 3d6 days to be delivered through Consortium channels. You can pay an additional 1,000 gp to have your item magically delivered to you in 1d3 days instead.",
       "updated_at": "2026-07-25T00:00:00Z"
     },
     {
@@ -53908,26 +53235,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Favor Of The Empress Of Torrents",
-      "source": "Aquatic Adventures",
-      "prerequisites": [
-        "Worshiper of Lysianassa or pearl seeker paladin",
-        "character level 5th"
-      ],
-      "tags": [
-        "Aquatic Adventures"
-      ],
-      "references": [
-        "Pathfinder PRD: Favor Of The Empress Of Torrents"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Favor%20Of%20The%20Empress%20Of%20Torrents"
-      ],
-      "source_id": "aquatic_adventures:favor_of_the_empress_of_torrents",
-      "description": "You can unleash powerful watery torrents to push back your foes underwater.\n\nOnce per day while underwater, you can use hydraulic torrentAPG as a spell-like ability. At 10th level and every 5 levels thereafter, you can use this ability an additional time each day.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Master Swimmer",
       "source": "Aquatic Adventures",
       "prerequisites": [
@@ -54067,26 +53374,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Touch Of The Brackish Emperor",
-      "source": "Aquatic Adventures",
-      "prerequisites": [
-        "Character level 5th",
-        "worshiper of Kelizandri"
-      ],
-      "tags": [
-        "Aquatic Adventures"
-      ],
-      "references": [
-        "Pathfinder PRD: Touch Of The Brackish Emperor"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Touch%20Of%20The%20Brackish%20Emperor"
-      ],
-      "source_id": "aquatic_adventures:touch_of_the_brackish_emperor",
-      "description": "Your touch can suppress spells that aid in breathing water.\n\nOnce per day while underwater, you can touch a creature in order to suppress any spells that allow the creature to breathe underwater (air bubbleUC, life bubble, water breathing, and so on) for 5 minutes. Suppressing the spells requires you to roll 1d20 + your character level; the DC for each spell is 11 + the spell's caster level (if the spells affecting the creature have differing caster levels, you might dispel some but not the others). This is a spell-like ability. At 10th level and every 5 levels thereafter, you can use this touch an additional time each day.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Cypher Magic",
       "source": "Adventurer's Guide",
       "prerequisites": [
@@ -54103,7 +53390,7 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Cypher%20Magic"
       ],
       "source_id": "adventurer_s_guide:cypher_magic",
-      "description": "Your intimacy with runes and the mysteries of ancient arcana has taught you secret ways to draw greater power from magical writings. The Cyphermages of a pirate port initially devised these unusual methods, but they have since spread far and wide through the inner sea region.\n\nYou cast spells from scrolls at 1 caster level higher than the scroll's caster level. In addition, you gain a +2 bonus on caster level checks to activate a scroll with a higher caster level than your own.",
+      "description": "Your intimacy with runes and the mysteries of ancient arcana has taught you secret ways to draw greater power from magical writings. The rune scholars of a pirate port initially devised these unusual methods, but they have since spread far and wide through the inner sea region.\n\nYou cast spells from scrolls at 1 caster level higher than the scroll's caster level. In addition, you gain a +2 bonus on caster level checks to activate a scroll with a higher caster level than your own.",
       "updated_at": "2026-07-19T00:00:00Z"
     },
     {
@@ -54125,7 +53412,7 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Cypher%20Script"
       ],
       "source_id": "adventurer_s_guide:cypher_script",
-      "description": "Through researching lengthy, ancient, arcane scripts, you have discovered a more efficient method of recording spells. As with the Cypher Magic feat, Cypher Script was originally developed by the Cyphermages, but recently has been spreading far and wide.\n\nAny spell you scribe in your spellbook costs half as much as normal and takes up only half the room it normally would (round all fractions up). It takes you only 10 minutes per spell level to scribe a spell into your spellbook (5 minutes for cantrips).",
+      "description": "Through researching lengthy, ancient, arcane scripts, you have discovered a more efficient method of recording spells. As with the Cypher Magic feat, Cypher Script was originally developed by the rune scholars, but recently has been spreading far and wide.\n\nAny spell you scribe in your spellbook costs half as much as normal and takes up only half the room it normally would (round all fractions up). It takes you only 10 minutes per spell level to scribe a spell into your spellbook (5 minutes for cantrips).",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -54148,91 +53435,13 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Expert Boarder",
-      "source": "Adventurer's Guide",
-      "prerequisites": [
-        "Affiliated with the Gray Corsairs"
-      ],
-      "tags": [
-        "Adventurer's Guide"
-      ],
-      "references": [
-        "Pathfinder PRD: Expert Boarder"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Expert%20Boarder"
-      ],
-      "source_id": "adventurer_s_guide:expert_boarder",
-      "description": "You are as comfortable dangling from a ship's rigging as you are on stable land.\n\nAcrobatics and Climb are class skills for you. You gain a +2 bonus on Acrobatics and Climb checks to climb or swing on a rope or ship's rigging. You do not provoke attacks of opportunity from climbing or swinging on a rope or ship's rigging.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Falcon's Cry",
-      "source": "Adventurer's Guide",
-      "prerequisites": [
-        "Cha 13",
-        "affiliated with the Steel Falcons"
-      ],
-      "tags": [
-        "Adventurer's Guide"
-      ],
-      "references": [
-        "Pathfinder PRD: Falcon's Cry"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Falcon%27s%20Cry"
-      ],
-      "source_id": "adventurer_s_guide:falcon_s_cry",
-      "description": "You inspire others to throw off the shackles of oppression.\n\nYou inspire a zeal for freedom in your allies. As a standard action, you can grant everyone within 60 feet who is able to see and hear you the ability to roll twice when attempting an Escape Artist check, a Will save against compulsions, or a Strength check to break chains, manacles, or similar bonds. Such checks must be attempted before the beginning of your next turn. You can do this once per day, plus one additional time for every 3 character levels that you have.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Legionnaire's Inspiration",
-      "source": "Adventurer's Guide",
-      "prerequisites": [
-        "Affiliated with the Golden Legion"
-      ],
-      "tags": [
-        "Adventurer's Guide"
-      ],
-      "references": [
-        "Pathfinder PRD: Legionnaire's Inspiration"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Legionnaire%27s%20Inspiration"
-      ],
-      "source_id": "adventurer_s_guide:legionnaire_s_inspiration",
-      "description": "You inspire your comrades to stand against impossible odds.\n\nAs a standard action, you can select one creature you can see. All allies within 30 feet who are able to see and hear you gain a +1 morale bonus to their Armor Class against that creature for a number of rounds equal to your Charisma bonus (minimum 1 round). You can do this once per day, plus one additional time for every 3 character levels you have.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Twilight Tattoo",
-      "source": "Adventurer's Guide",
-      "prerequisites": [
-        "Wis 13",
-        "affiliated with the Twilight Talons"
-      ],
-      "tags": [
-        "Adventurer's Guide"
-      ],
-      "references": [
-        "Pathfinder PRD: Twilight Tattoo"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Twilight%20Tattoo"
-      ],
-      "source_id": "adventurer_s_guide:twilight_tattoo",
-      "description": "You have a special tattoo that identifies you as a Twilight Talon when you speak a designated command word.\n\nYou gain an invisible magical tattoo that identifies you as a member of the Twilight Talons. When you speak the command word, the tattoo becomes visible for 1 round before fading again. The tattoo has no magical aura when not visible and is not an illusion; it can't be observed through magical means. (The command word causes the tattoo to manifest rather than ending the magic concealing it.) Additionally, you gain a +2 bonus on Disguise checks, on Sleight of Hand checks to hide small objects on your person, and on Will saving throws against attempts to scry upon you or read your mind.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Agile Maiden",
       "source": "For the purpose of class features (such as a ranger's combat style, a barbarian's fast movement, or a magus's spellcasting), you treat Gray Maiden plate as medium armor or heavy armor, whichever is more beneficial to a given ability. This does not affect the armor's statistics, and it is still considered heavy armor for all other purposes.",
       "prerequisites": [
         "Str 13; Dex 13; Endurance or armor training class feature; proficiency with heavy armor"
       ],
       "tags": [
-        "For the purpose of class features (such as a ranger's combat style, a barbarian's fast movement, or a magus's spellcasting), you treat Gray Maiden plate as medium armor or heavy armor, whichever is more beneficial to a given ability. This does not affect the armor's statistics, and it is still considered heavy armor for all other purposes."
+        "For the purpose of class features (such as a ranger's combat style, a barbarian's fast movement, or a magus's spellcasting), you treat armored guard plate as medium armor or heavy armor, whichever is more beneficial to a given ability. This does not affect the armor's statistics, and it is still considered heavy armor for all other purposes."
       ],
       "references": [
         "Pathfinder PRD: Agile Maiden"
@@ -54241,7 +53450,7 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Agile%20Maiden"
       ],
       "source_id": "for_the_purpose_of_class_features__such_as_a_ranger_s_combat_style__a_barbarian_s_fast_movement__or_a_magus_s_spellcasting___you_treat_gray_maiden_plate_as_medium_armor_or_heavy_armor__whichever_is_more_beneficial_to_a_given_ability__this_does_not_affect_the_armor_s_statistics__and_it_is_still_considered_heavy_armor_for_all_other_purposes:agile_maiden",
-      "description": "The Gray Maidens' signature armor hinders you less than others.\n\nEndurance or armor training class feature",
+      "description": "an order of armored guards' signature armor hinders you less than others.\n\nEndurance or armor training class feature",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -54264,26 +53473,6 @@
       ],
       "source_id": "adventurer_s_guide:fanged_crown_massacre",
       "description": "Driven by your loyalty to a fallen queen, you can inspire your allies to brutal acts.\n\nWhenever an ally within 30 feet makes an attack, you can attempt a DC 10 Perform (oratory) check as an immediate action. If you are successful, the ally gains a +2 morale bonus on her attack roll. If an attack affected in this way would normally deal nonlethal damage, it deals lethal damage instead. This ability has no effect if your ally cannot hear you speak or understand your words.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
-      "name": "Gray Maiden Initiate",
-      "source": " a creature need not be affiliated with the Gray Maidens to select this feat.",
-      "prerequisites": [
-        "Female",
-        "must be taken at 1st level"
-      ],
-      "tags": [
-        " a creature need not be affiliated with the Gray Maidens to select this feat."
-      ],
-      "references": [
-        "Pathfinder PRD: Gray Maiden Initiate"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Gray%20Maiden%20Initiate"
-      ],
-      "source_id": "a_creature_need_not_be_affiliated_with_the_gray_maidens_to_select_this_feat:gray_maiden_initiate",
-      "description": "You were selected for indoctrination into the Gray Maidens and underwent some of the preliminary scarring and conditioning, but Queen Ileosa was defeated before you could fully serve her. You bear the mental and physical scars of your sisters in the Gray Maidens, and while you never had to carry out any of the queen's commands, you feel a strong kinship with those of your sisters who have.\n\nYou are affiliated with the Gray Maidens. In addition, choose two of the following benefits to represent the focus of your initial training and indoctrination. Avenging Knight: Like the Queens of the Night, you crave vengeance upon those who have wronged you. You gain a +1 bonus on damage rolls against any creature that dealt damage to you during the previous round. Deeper Indoctrination: Mental conditioning has bolstered your mind against most magical control. You gain a +1 bonus on Will saving throws, except when resisting charm or compulsion effects created by lawful evil creatures, in which case you instead take a -2 penalty on Will saving throws. Faceless Maiden: You can take advantage of the disquieting nature of the iconic armor of the Gray Maidens. While wearing Gray Maiden plate, you gain a +2 bonus on Intimidate checks. Gray Maiden Adept: You had some magical skill before being recruited and learned to cast spells despite the restrictive armor you were forced to wear. The arcane spell failure chance of Gray Maiden plate you wear is reduced by 5%.Gray Maiden Endurance: Surviving the brutal process of becoming a Gray Maiden taught you to endure more pain than others. You gain 2 hit points and can sleep while wearing Gray Maiden armor without becoming fatigued. Korvosan Acceptance: With the aid of the Scarlet Rose, you've successfully reintegrated into Korvosan society. You gain a +1 bonus on Diplomacy and Knowledge (local) checks, and one of these skills (your choice) is a class skill for you. Scarred: Your face was horribly scarred during Gray Maiden initiation, destroying your beauty. You take a -1 penalty on Diplomacy and Disguise checks, but gain a +2 bonus on Intimidate checks and on saving throws against pain effects (Pathfinder RPG Ultimate Magic 138). Tamed and Broken: You reach your full potential only when magically compelled. Whenever you are under the effects of an enemy's compulsion spell, you gain a number of temporary hit points equal to the spell's level. These temporary hit points last for the duration of the spell effect.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -54330,7 +53519,7 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Sisterhood%20Dedication"
       ],
       "source_id": "adventurer_s_guide:sisterhood_dedication",
-      "description": "The Gray Maidens' bond with each other goes beyond simple combat coordination. An elite member of the sisterhood is an inspiration to her fellow women, both invigorating their spirits and effortlessly coordinating their tactics.\n\nWhile you're using Sisterhood Style and wielding a longsword and either a light or heavy shield, the bonus on saving throws from Sisterhood Style increases to +2 and you grant half that bonus to all allies within 20 feet. In addition, you can choose up to two teamwork feats you have when entering the Sisterhood Style stance. As a swift action, you can grant one of those feats to two allies within 20 feet until the beginning of your next turn, or you can grant both feats to one ally within 20 feet until the beginning of your next turn.",
+      "description": "an order of armored guards' bond with each other goes beyond simple combat coordination. An elite member of the sisterhood is an inspiration to her fellow women, both invigorating their spirits and effortlessly coordinating their tactics.\n\nWhile you're using Sisterhood Style and wielding a longsword and either a light or heavy shield, the bonus on saving throws from Sisterhood Style increases to +2 and you grant half that bonus to all allies within 20 feet. In addition, you can choose up to two teamwork feats you have when entering the Sisterhood Style stance. As a swift action, you can grant one of those feats to two allies within 20 feet until the beginning of your next turn, or you can grant both feats to one ally within 20 feet until the beginning of your next turn.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -54354,7 +53543,7 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Sisterhood%20Rampart"
       ],
       "source_id": "adventurer_s_guide:sisterhood_rampart",
-      "description": "The shield wall was the heart of the Gray Maidens' military strategy; combined with their precise tactical coordination, Gray Maiden lines were nearly unbreakable. Maidens behind the line would then strike with polearms or longbows, picking off targets with ease.\n\nWhile using Sisterhood Style, you and adjacent allies gain an additional +1 bonus to the shield bonus granted by Shield Wall, and each of you adds your shield bonus to AC (not counting enhancement bonuses) to your CMD against bull rush combat maneuvers. In addition, you and adjacent allies do not provide soft cover against allies' attacks.",
+      "description": "The shield wall was the heart of an order of armored guards' military strategy; combined with their precise tactical coordination, armored guard lines were nearly unbreakable. Maidens behind the line would then strike with polearms or longbows, picking off targets with ease.\n\nWhile using Sisterhood Style, you and adjacent allies gain an additional +1 bonus to the shield bonus granted by Shield Wall, and each of you adds your shield bonus to AC (not counting enhancement bonuses) to your CMD against bull rush combat maneuvers. In addition, you and adjacent allies do not provide soft cover against allies' attacks.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -54376,7 +53565,7 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Sisterhood%20Style"
       ],
       "source_id": "adventurer_s_guide:sisterhood_style",
-      "description": "The Gray Maidens are more than just soldiers-they drill relentlessly to fight as a team and to protect their bodies and minds. A Gray Maiden using the Sisterhood Style can easily coordinate tactics with other women.\n\nWhile using this style and wielding a longsword and a light or heavy shield, you gain a +1 bonus on Reflex and Will saving throws. In addition, when you enter the Sisterhood Style stance, you can choose a teamwork feat you have. As a swift action, you can grant that feat to an ally within 10 feet until the beginning of your next turn.",
+      "description": "an order of armored guards are more than just soldiers-they drill relentlessly to fight as a team and to protect their bodies and minds. A armored guard using the Sisterhood Style can easily coordinate tactics with other women.\n\nWhile using this style and wielding a longsword and a light or heavy shield, you gain a +1 bonus on Reflex and Will saving throws. In addition, when you enter the Sisterhood Style stance, you can choose a teamwork feat you have. As a swift action, you can grant that feat to an ally within 10 feet until the beginning of your next turn.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -54398,7 +53587,7 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Unbreakable"
       ],
       "source_id": "adventurer_s_guide:unbreakable",
-      "description": "As a veteran Gray Maiden, you can endure a staggering amount of punishment.\n\nWhenever you gain 1 hit point as a fighter favored class benefit, you gain an additional hit point. Treat your effective Constitution score as being 4 higher for the purpose of determining when you would die from hit point damage. These benefits are retroactive.",
+      "description": "As a veteran armored guard, you can endure a staggering amount of punishment.\n\nWhenever you gain 1 hit point as a fighter favored class benefit, you gain an additional hit point. Treat your effective Constitution score as being 4 higher for the purpose of determining when you would die from hit point damage. These benefits are retroactive.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -54535,25 +53724,6 @@
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
-      "name": "Extra Spontaneous Spell Mastery",
-      "source": "Adventurer's Guide",
-      "prerequisites": [
-        "Magaambyan arcanist spontaneous spell mastery class feature"
-      ],
-      "tags": [
-        "Adventurer's Guide"
-      ],
-      "references": [
-        "Pathfinder PRD: Extra Spontaneous Spell Mastery"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Extra%20Spontaneous%20Spell%20Mastery"
-      ],
-      "source_id": "adventurer_s_guide:extra_spontaneous_spell_mastery",
-      "description": "You are able to spontaneously cast spells you have mastered more frequently than your peers.\n\nYou gain one additional use of your spontaneous spell mastery ability per day.",
-      "updated_at": "2026-07-16T20:28:23Z"
-    },
-    {
       "name": "Mask Focus",
       "source": "Adventurer's Guide",
       "prerequisites": [
@@ -54654,7 +53824,7 @@
       "source": " a creature need not be affiliated with the Magaambya to select this feat.",
       "prerequisites": [],
       "tags": [
-        " a creature need not be affiliated with the Magaambya to select this feat."
+        " a creature need not be affiliated with an ancient academy of magic to select this feat."
       ],
       "references": [
         "Pathfinder PRD: Scholar"
@@ -55161,7 +54331,7 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Blade%20Of%20The%20Purge"
       ],
       "source_id": "ap_132:blade_of_the_purge",
-      "description": "Emulating the fervor of Grand Prince Stavian I, you can identify a religion you perceive to be opposed to your own and empower your weapons to strike deadly blows against its adherents.\n\nWhen you activate your bane class feature, you can select a deity or religion other than your own. Your bane effect applies only to followers of that deity or religion.",
+      "description": "Emulating the fervor of Grand Prince royal I, you can identify a religion you perceive to be opposed to your own and empower your weapons to strike deadly blows against its adherents.\n\nWhen you activate your bane class feature, you can select a deity or religion other than your own. Your bane effect applies only to followers of that deity or religion.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -55240,7 +54410,7 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Eyes%20Of%20The%20Purge"
       ],
       "source_id": "ap_132:eyes_of_the_purge",
-      "description": "Through training and persistence inspired by the Great Purge of Stavian I, you have learned to detect the sources of divine magic in such effects' auras.\n\nWhen you use detect magic to determine the strength and location of the aura of a functioning spell, if that spell's caster used a holy symbol as a divine focus to cast the spell, you see a ghostly image of the deity's holy symbol as part of the spell's aura. Effects that block divination spells or effects also block the effects of this feat.",
+      "description": "Through training and persistence inspired by the Great Purge of royal I, you have learned to detect the sources of divine magic in such effects' auras.\n\nWhen you use detect magic to determine the strength and location of the aura of a functioning spell, if that spell's caster used a holy symbol as a divine focus to cast the spell, you see a ghostly image of the deity's holy symbol as part of the spell's aura. Effects that block divination spells or effects also block the effects of this feat.",
       "updated_at": "2026-07-16T20:28:23Z"
     },
     {
@@ -56243,23 +55413,6 @@
       "mechanics": {}
     },
     {
-      "name": "Acadamae Graduate",
-      "source": "Curse of the Crimson Throne Player's Guide",
-      "source_id": "feats:acadamae_graduate",
-      "prerequisites": [
-        "Specialist wizard 1st; cannot have conjuration as a forbidden school"
-      ],
-      "tags": [],
-      "references": [
-        "AoN: Acadamae Graduate"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Acadamae%20Graduate"
-      ],
-      "description": "You have passed the grueling Test of Summoning and graduated from the Acadamae. Benefit: Whenever you cast a prepared arcane spell from the conjuration (summoning) school that takes longer than a standard action to cast, reduce the casting time by one round (to a minimum casting time of one standard action). Casting a spell in this way is taxing and requires a Fortitude save (DC 15 + spell level) to resist becoming fatigued.",
-      "mechanics": {}
-    },
-    {
       "name": "Acupuncture Specialist",
       "source": "Blood of the Ancients",
       "source_id": "feats:acupuncture_specialist",
@@ -57080,24 +56233,6 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Benthic%20Spell"
       ],
       "description": "Explorers in the depths of the Arcadian Ocean have learned that deadly pressure can be just as lethal as any flame. Benefit: You can modify a spell that deals acid, cold, electricity, or fire damage to deal damage through high-pressure water instead. The spell gains the water descriptor, and you can either replace the spell’s normal damage with bludgeoning damage or split the spell’s damage so that half is bludgeoning and half is of its normal type. Creatures with damage reduction apply their damage reduction to bludgeoning damage from a benthic spell, but the spell counts as bludgeoning and magic for the purposes of bypassing damage reduction. A benthic spell uses up a spell slot one level higher than the spell’s actual level.",
-      "mechanics": {}
-    },
-    {
-      "name": "Berserker's Cry",
-      "source": "Pathfinder Campaign Setting",
-      "source_id": "feats:berserker_s_cry",
-      "prerequisites": [
-        "Cha 13",
-        "Linnorm Kings affinity"
-      ],
-      "tags": [],
-      "references": [
-        "AoN: Berserker's Cry"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Berserker's%20Cry"
-      ],
-      "description": "Your cry of bloodthirsty fury inspires those around you to greater acts of violence. Benefit: Once per day, as a move action, you may unleash a powerful, bloodthirsty scream of battle lust and fury. Allies within 60 feet who can hear your berserker’s cry (including yourself ) are heartened and gain a +1 morale bonus on damage rolls made with melee attacks for a number of rounds equal to half your character level + your Charisma bonus. If you have the ability to rage, you may unleash a berserker’s cry as part of the free action to enter a rage (instead of as a separate move action). A creature may be under the effect of only one berserker’s cry at a time.",
       "mechanics": {}
     },
     {
@@ -58107,24 +57242,6 @@
       "mechanics": {}
     },
     {
-      "name": "Client",
-      "source": "Qadira, Jewel of the East",
-      "source_id": "feats:client",
-      "prerequisites": [
-        "The character must own a business that can supply a single type of good worth 10 gp or more in bulk to a Keleshite merchant house",
-        "or a business that can donate a unique rare good (an antique, an object of archeological interest, an artwork, or a magical weapon) of the patron’s choice at least once per month"
-      ],
-      "tags": [],
-      "references": [
-        "AoN: Client"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Client"
-      ],
-      "description": "A client or client family is usually a supplier or local merchant who enjoys the patronage of a merchant house. Benefit: Once per month, a client can choose one of the following: 500 gp, the services of a house guard (human fighter 3; use the statistics for a traitorous brigand from page 81 of the Pathfinder RPG NPC Codex) for 24 hours, or the services of a house emissary who can automatically change the attitude of a ruler or other influential NPC from indifferent to friendly or from friendly to helpful.",
-      "mechanics": {}
-    },
-    {
       "name": "Climbing Vine",
       "source": "Ultimate Wilderness",
       "source_id": "feats:climbing_vine",
@@ -58926,24 +58043,6 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Dark%20Adept"
       ],
       "description": "You gain several additional spell-like abilities from your dark elven heritage. Benefit: You gain three new spell-like abilities, each usable once per day. These spell-like abilities are detect magic feather fall , and levitate . Your caster level for these spell-like abilities equals your total character level.",
-      "mechanics": {}
-    },
-    {
-      "name": "Dark Affinity",
-      "source": "Plane-Hopper's Handbook",
-      "source_id": "feats:dark_affinity",
-      "prerequisites": [
-        "Character level 3rd",
-        "must have visited the Hao Jin Tapestry"
-      ],
-      "tags": [],
-      "references": [
-        "AoN: Dark Affinity"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Dark%20Affinity"
-      ],
-      "description": "You have observed the dark stalkers who roam the Hao Jin Tapestry and adopted some of their tricks. Benefit: You can cast darkness once per day as a spell-like ability using your character level as your caster level. At 7th level, you can also cast deeper darkness once per day as a spell-like ability using your character level as your caster level.",
       "mechanics": {}
     },
     {
@@ -60625,7 +59724,7 @@
       "reference_urls": [
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Fiendish%20Wings"
       ],
-      "description": "You have great wings capable of bearing you aloft. The wings you gain this way vary, from the bat-like wings common among demons and devils, to the feathered wings of Szuriel’s generals, to the stretched-skin membranes of kytons. Benefit: Your wings grant you a fly speed equal to your base speed with good maneuverability.",
+      "description": "You have great wings capable of bearing you aloft. The wings you gain this way vary, from the bat-like wings common among demons and devils, to the feathered wings of a horseman of war’s generals, to the stretched-skin membranes of kytons. Benefit: Your wings grant you a fly speed equal to your base speed with good maneuverability.",
       "mechanics": {}
     },
     {
@@ -61080,23 +60179,6 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Gloomstorm"
       ],
       "description": "An inexhaustible arsenal lies in the Shadow Plane, waiting to be unleashed. Benefit: As a swift action, you can thin the barriers between yourself and the Shadow Plane, allowing you to create shadow weapons more easily. While this effect is active, you can create new shadow weapons as a free action. This does not increase the number of shadow weapons you can maintain at a single time. You can use this feat’s benefit for a number of rounds per day equal to your ranks in Knowledge (planes). These rounds need not be consecutive.",
-      "mechanics": {}
-    },
-    {
-      "name": "Golden Legion's Stayed Blade",
-      "source": "Champions of Purity",
-      "source_id": "feats:golden_legion_s_stayed_blade",
-      "prerequisites": [
-        "Base attack bonus +3"
-      ],
-      "tags": [],
-      "references": [
-        "AoN: Golden Legion's Stayed Blade"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Golden%20Legion's%20Stayed%20Blade"
-      ],
-      "description": "When you’re dealing with large and secretive organizations, a dead enemy is just a corpse, but a captured enemy can be a tool. Benefit: If you deal an amount of damage to a creature that would slay it outright, you can pull that attack, instead dealing only enough damage to reduce its hit points to –1, and leave it stable.",
       "mechanics": {}
     },
     {
@@ -62698,27 +61780,6 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Jungle%20Survivalist"
       ],
       "description": "Normally pestilential rain forests are a safe haven and home to you. Benefit: You gain a +2 bonus on saving throws against diseases, poisons, and the distraction ability of creatures with the swarm subtype. You also gain a +2 bonus on Acrobatics and Climb checks when climbing trees and a +2 bonus on Perception checks against creatures that gain a racial bonus on Stealth checks in vegetation.",
-      "mechanics": {}
-    },
-    {
-      "name": "Knight of the Twisted Word",
-      "source": "Plane-Hopper's Handbook",
-      "source_id": "feats:knight_of_the_twisted_word",
-      "prerequisites": [
-        "Fey creature type or Fey Obedience (Count Ranalc)",
-        "character level 7th",
-        "you must have betrayed or deceived in a major fashion a demon with a CR at least 2 higher than your level when you took the feat"
-      ],
-      "tags": [
-        "gathlain court title"
-      ],
-      "references": [
-        "AoN: Knight of the Twisted Word"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Knight%20of%20the%20Twisted%20Word"
-      ],
-      "description": "You’ve so impressed the Traitor that he’s given you a title in his court-in-exile—possibly to keep an eye on you. Benefit: Once per day, you can cast glibness as a spell-like ability with a caster level equal to your Hit Dice.",
       "mechanics": {}
     },
     {
@@ -64401,7 +63462,7 @@
       "reference_urls": [
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Partner"
       ],
-      "description": "The closest relationship one can achieve with an established merchant house is to be named a partner. Benefit: The character is offered adoption into the merchant family and citizenship in the empire of Kelesh, if she is not already a citizen. The character draws a stipend of 1,000 gp per month (funded by the house), can borrow up to 50,000 gp per year at no interest (the amount must be paid back within 1 year), and receives the non-monetary benefits detailed at the colleague level. Upon the character’s elevation to the status of partner, the house gifts her with a custom magic item worth no more than 12,000 gp.",
+      "description": "The closest relationship one can achieve with an established merchant house is to be named a partner. Benefit: The character is offered adoption into the merchant family and citizenship in the empire of a desert empire, if she is not already a citizen. The character draws a stipend of 1,000 gp per month (funded by the house), can borrow up to 50,000 gp per year at no interest (the amount must be paid back within 1 year), and receives the non-monetary benefits detailed at the colleague level. Upon the character’s elevation to the status of partner, the house gifts her with a custom magic item worth no more than 12,000 gp.",
       "mechanics": {}
     },
     {
@@ -66169,7 +65230,7 @@
       "reference_urls": [
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Shrewd%20Liason"
       ],
-      "description": "Your dealings with both pirates and the Red Mantis have taught you to be exceedingly careful. Benefit: Opponents do not gain a +2 bonus on attack rolls for flanking you, although they can still sneak attack you. You also gain a +2 bonus on Sense Motive checks made to resist a foe’s feinting in combat Bluff checks.",
+      "description": "Your dealings with both pirates and an assassins' guild have taught you to be exceedingly careful. Benefit: Opponents do not gain a +2 bonus on attack rolls for flanking you, although they can still sneak attack you. You also gain a +2 bonus on Sense Motive checks made to resist a foe’s feinting in combat Bluff checks.",
       "mechanics": {}
     },
     {
@@ -67014,7 +66075,7 @@
       "reference_urls": [
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Storm%20Breaker"
       ],
-      "description": "After the Eye of Abendego, no other storm, magic or mundane, can faze you. Benefit: You are treated as two sizes larger than your actual size when calculating whether you can be moved by wind or currents, including the vortex and whirlwind special abilities of monsters. If you have at least 11 Hit Dice, you cannot be moved by nonmagical wind unless you so choose.",
+      "description": "After an endless hurricane, no other storm, magic or mundane, can faze you. Benefit: You are treated as two sizes larger than your actual size when calculating whether you can be moved by wind or currents, including the vortex and whirlwind special abilities of monsters. If you have at least 11 Hit Dice, you cannot be moved by nonmagical wind unless you so choose.",
       "mechanics": {}
     },
     {
@@ -67495,24 +66556,6 @@
         "https://aonprd.com/FeatDisplay.aspx?ItemName=Surprising%20Strategy"
       ],
       "description": "Your quick swordsmanship leaves your opponents struggling to predict your moves. Benefit: In addition to the attack of opportunity you can make when you successfully parry an attack, you can attempt a dirty trick, disarm, or sunder combat maneuver with a +2 morale bonus without provoking an attack of opportunity against the creature whose attack you parry, so long as the creature is within reach.",
-      "mechanics": {}
-    },
-    {
-      "name": "Swamp Dweller",
-      "source": "Plane-Hopper's Handbook",
-      "source_id": "feats:swamp_dweller",
-      "prerequisites": [
-        "Str 13",
-        "must have visited the Hao Jin Tapestry"
-      ],
-      "tags": [],
-      "references": [
-        "AoN: Swamp Dweller"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/FeatDisplay.aspx?ItemName=Swamp%20Dweller"
-      ],
-      "description": "You have trained with the Muckmouth lizardfolk of the Hao Jin Tapestry and learned their ways. Benefit: You gain a +2 bonus on Swim checks. If you have 10 or more ranks in Swim, the bonus increases to +4. This bonus doubles while you’re in marshy terrain. In addition, you can move normally into squares with a shallow bog, and it costs you only 2 squares of movement to move into a square with a deep bog .",
       "mechanics": {}
     },
     {

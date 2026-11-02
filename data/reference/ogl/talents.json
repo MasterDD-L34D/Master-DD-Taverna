@@ -4303,31 +4303,6 @@
       }
     },
     {
-      "name": "Kelizandri’s Tide",
-      "source": "Planes of Power",
-      "source_id": "talent:rage_power_kelizandri_s_tide",
-      "prerequisites": [],
-      "tags": [
-        "talent",
-        "rage-power",
-        "barbarian",
-        "kelizandri-s-tide"
-      ],
-      "references": [
-        "AoN: Rage Powers (Barbarian)"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/BarbarianRagePowers.aspx?Type=Elemental"
-      ],
-      "description": "When the barbarian rages, enemies find it difficult to escape the vortex of her fury. As a full-round action while raging, the barbarian can attempt a single combat maneuver check against each creature within 10 feet of her. If her roll equals or exceeds a creature’s CMD, she moves that creature 5 feet closer to her. Once per day after attempting this maneuver, she can attack each adjacent creature as a free action as if using the Whirlwind Attack feat. If she has the Whirlwind Attack feat, she can also use it as a free action in this way one additional time per day.",
-      "mechanics": {
-        "class": "Barbarian",
-        "pool": "rage power",
-        "kind": "Su",
-        "category": "elemental"
-      }
-    },
-    {
       "name": "Ymeri’s Pyre",
       "source": "Planes of Power",
       "source_id": "talent:rage_power_ymeri_s_pyre",
@@ -9194,7 +9169,7 @@
       "reference_urls": [
         "https://aonprd.com/RogueTalents.aspx"
       ],
-      "description": "Traditional thieves’ tools might be suspicious, but no guard looks twice at a common deck of cards. So long has the rogue has access to a deck of cards, she can destroy one card to attempt a single Disable Device check as if she had a set of thieves tools. If she uses a harrow card for this purpose, she can treat the card as a set of masterwork thieves’ tools (granting her a +2 circumstance bonus on the Disable Device check), though the card is still destroyed after use.",
+      "description": "Traditional thieves’ tools might be suspicious, but no guard looks twice at a common deck of cards. So long has the rogue has access to a deck of cards, she can destroy one card to attempt a single Disable Device check as if she had a set of thieves tools. If she uses a fortune-telling card for this purpose, she can treat the card as a set of masterwork thieves’ tools (granting her a +2 circumstance bonus on the Disable Device check), though the card is still destroyed after use.",
       "mechanics": {
         "class": "Rogue",
         "pool": "rogue talent",
@@ -9645,31 +9620,6 @@
         "https://aonprd.com/RogueTalents.aspx"
       ],
       "description": "You are well acquainted with scrying sensors. You can roll twice and take the better result on saving throws against divination (scrying) spells and effects, on Perception checks to notice scrying sensors, and on caster level checks to overcome spell resistance when you use a scrying spell or effect. If you notice a magical sensor, you can attempt a Stealth check opposed by the caster’s caster level check to avoid being detected by the sensor.",
-      "mechanics": {
-        "class": "Rogue",
-        "pool": "rogue talent",
-        "kind": "Ex",
-        "category": "other"
-      }
-    },
-    {
-      "name": "Sczarni Smuggler",
-      "source": "Inner Sea Intrigue",
-      "source_id": "talent:rogue_talent_sczarni_smuggler",
-      "prerequisites": [],
-      "tags": [
-        "talent",
-        "rogue-talent",
-        "rogue",
-        "sczarni-smuggler"
-      ],
-      "references": [
-        "AoN: Rogue Talents (Rogue)"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/RogueTalents.aspx"
-      ],
-      "description": "The rogue has picked up Sczarni tricks for making masterful forgeries and using bribery to evade trade rules. The rogue needs to learn only the approximate appearance of a document that doesn’t require a particular person’s signature to accurately forge the document with Linguistics (gaining a +8 bonus on the check to create the forgery, as if she had seen a similar document before). The rogue needs only a small sample of a person’s handwriting to make a convincing forgery of great length in that person’s handwriting. The rogue can always take 10 on Diplomacy checks to offer bribes. In addition, the rogue automatically gains an extra advantage at the start of a pursuit ( Ultimate Intrigue 142 ) in an urban environment.",
       "mechanics": {
         "class": "Rogue",
         "pool": "rogue talent",
@@ -10294,7 +10244,7 @@
       "reference_urls": [
         "https://aonprd.com/RogueTalents.aspx"
       ],
-      "description": "Mercenaries in the employ of the Aspis Consortium often use wands of invisibility to attack protected targets, then blend into the crowd to escape or disguise the source of the next attack. A rogue with this ability is practiced at attacking from magical concealment. He can use spell-trigger and spellcompletion items as if the following spells were on a spell list to which he has access: greater invisibility, invisibility, and vanish APG. Additionally, if the rogue becomes visible as a result of a weapon or spell attack, he can sheathe his weapon as a free action and instantly adopt a neutral posture. With a successful Bluff or Disguise check (opposed by witnesses’ Sense Motive or Perception checks, whichever is higher), there is no obvious sign that the rogue is the source of the attack (though a lack of any other reasonable candidate can still lead observers to draw the correct conclusion).",
+      "description": "Mercenaries in the employ of a mercenary trading company often use wands of invisibility to attack protected targets, then blend into the crowd to escape or disguise the source of the next attack. A rogue with this ability is practiced at attacking from magical concealment. He can use spell-trigger and spellcompletion items as if the following spells were on a spell list to which he has access: greater invisibility, invisibility, and vanish APG. Additionally, if the rogue becomes visible as a result of a weapon or spell attack, he can sheathe his weapon as a free action and instantly adopt a neutral posture. With a successful Bluff or Disguise check (opposed by witnesses’ Sense Motive or Perception checks, whichever is higher), there is no obvious sign that the rogue is the source of the attack (though a lack of any other reasonable candidate can still lead observers to draw the correct conclusion).",
       "mechanics": {
         "class": "Rogue",
         "pool": "rogue talent",
@@ -10720,31 +10670,6 @@
         "https://aonprd.com/RogueTalents.aspx"
       ],
       "description": "Anytime a rogue with this talent successfully hits an opponent with a sneak attack, she may forgo her sneak attack damage to try to hamstring her opponent. If the attack succeeds, the rogue deals weapon damage as normal, but instead of the rogue dealing sneak attack damage, the target is knocked prone and is unable to take move actions during its next turn. A successful Fortitude save (DC = 10 + 1/2 the rogue’s level + the rogue’s Dexterity modifier) negates this effect.",
-      "mechanics": {
-        "class": "Rogue",
-        "pool": "advanced rogue talent",
-        "kind": "Ex",
-        "category": "sneak attack"
-      }
-    },
-    {
-      "name": "Harrow Strike",
-      "source": "The Harrow Handbook",
-      "source_id": "talent:advanced_rogue_talent_harrow_strike",
-      "prerequisites": [],
-      "tags": [
-        "talent",
-        "advanced-rogue-talent",
-        "rogue",
-        "harrow-strike"
-      ],
-      "references": [
-        "AoN: Rogue Talents (Rogue)"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/RogueTalents.aspx"
-      ],
-      "description": "Once per day while making a sneak attack against a creature, you can draw a random card from a harrow deck you own. If your attack hits, instead of dealing sneak attack damage as normal, you deal a number of points of ability damage equal to your number of sneak attack dice. The ability score damaged is the score affiliated with the suit of the harrow card drawn. You can use this ability an additional time per day at 15th level and 20th level.",
       "mechanics": {
         "class": "Rogue",
         "pool": "advanced rogue talent",
@@ -17868,7 +17793,7 @@
       "reference_urls": [
         "https://aonprd.com/WitchHexes.aspx"
       ],
-      "description": "The witch can curse a target creature by touching it with a card randomly drawn from a harrow deck she owns. The target is affected as if by the spell bestow curse using the witch’s caster level, except that the witch can decrease only the ability score that corresponds to the suit of the card drawn. Whether or not the save is successful, a creature cannot be targeted by this hex more than once in 24 hours. At 15th level, this hex acts as a major curse spell ( Pathfinder RPG Ultimate Magic 215). A witch with the cartomancer archetype can combine this hex with her spell deck’s deliver touch spell ability.",
+      "description": "The witch can curse a target creature by touching it with a card randomly drawn from a fortune-telling deck she owns. The target is affected as if by the spell bestow curse using the witch’s caster level, except that the witch can decrease only the ability score that corresponds to the suit of the card drawn. Whether or not the save is successful, a creature cannot be targeted by this hex more than once in 24 hours. At 15th level, this hex acts as a major curse spell ( Pathfinder RPG Ultimate Magic 215). A witch with the cartomancer archetype can combine this hex with her spell deck’s deliver touch spell ability.",
       "mechanics": {
         "class": "Witch",
         "pool": "major hex",
@@ -23350,7 +23275,7 @@
       "reference_urls": [
         "https://aonprd.com/VigilanteTalents.aspx"
       ],
-      "description": "A vigilante with this talent must follow the dietary and sexual prohibitions of the Prophecies of Kalistrade ( Pathfinder Campaign Setting: the inner sea region World Guide 237 ) in his social identity or he loses the talent’s benefit until he atones. He can treat settlements as one size category larger when determining their base values and purchase limits. At 9th level, the vigilante can treat settlements as two size categories larger for the above purposes. At 15th level, the vigilante can treat settlements as four size categories larger for the above purposes.",
+      "description": "A vigilante with this talent must follow the dietary and sexual prohibitions of the Prophecies of a philosophy of purity and wealth ( Pathfinder Campaign Setting: the inner sea region World Guide 237 ) in his social identity or he loses the talent’s benefit until he atones. He can treat settlements as one size category larger when determining their base values and purchase limits. At 9th level, the vigilante can treat settlements as two size categories larger for the above purposes. At 15th level, the vigilante can treat settlements as four size categories larger for the above purposes.",
       "mechanics": {
         "class": "Vigilante",
         "pool": "social talent",
@@ -24910,7 +24835,7 @@
       "reference_urls": [
         "https://aonprd.com/VigilanteTalents.aspx"
       ],
-      "description": "Perhaps trained to remove or destroy restraints from slaves and prisoners by the Twilight Talons or Bellflower Network, a vigilante with this talent can choose to make no more noise than people talking when he attempts a sunder combat maneuver check or attempts a Strength check to break an object. He ignores half an object’s hardness when attempting sunder combat maneuver checks and when attacking nonmagical objects.",
+      "description": "Perhaps trained to remove or destroy restraints from slaves and prisoners by a band of spies or Bellflower Network, a vigilante with this talent can choose to make no more noise than people talking when he attempts a sunder combat maneuver check or attempts a Strength check to break an object. He ignores half an object’s hardness when attempting sunder combat maneuver checks and when attacking nonmagical objects.",
       "mechanics": {
         "class": "Vigilante",
         "pool": "vigilante talent",
@@ -26834,7 +26759,7 @@
       "reference_urls": [
         "https://aonprd.com/MagusArcana.aspx"
       ],
-      "description": "Whenever the magus casts a spell of the polymorph subschool on himself, he can draw a card from a complete harrow deck he owns as a free action. If the card’s alignment and the magus’s alignment are a true match, the spell’s duration is doubled and the magus can select two additional monster abilities granted by the polymorph spell (such as scent or grab for beast shape II ), even if the form assumed by the magus doesn’t normally grant that ability. On a partial match, the magus can select an additional ability granted by the polymorph spell, even if the form assumed by the magus doesn’t normally grant that ability. On an opposite match, the duration of the spell is halved and the magus must forgo one of the abilities granted by his form. The magus must be at least 9th level before selecting this arcana.",
+      "description": "Whenever the magus casts a spell of the polymorph subschool on himself, he can draw a card from a complete fortune-telling deck he owns as a free action. If the card’s alignment and the magus’s alignment are a true match, the spell’s duration is doubled and the magus can select two additional monster abilities granted by the polymorph spell (such as scent or grab for beast shape II ), even if the form assumed by the magus doesn’t normally grant that ability. On a partial match, the magus can select an additional ability granted by the polymorph spell, even if the form assumed by the magus doesn’t normally grant that ability. On an opposite match, the duration of the spell is halved and the magus must forgo one of the abilities granted by his form. The magus must be at least 9th level before selecting this arcana.",
       "mechanics": {
         "class": "Magus",
         "pool": "magus arcana",
@@ -39805,101 +39730,6 @@
       }
     },
     {
-      "name": "Harrow",
-      "source": "The Harrow Handbook",
-      "source_id": "talent:bloodline_harrow",
-      "prerequisites": [],
-      "tags": [
-        "talent",
-        "bloodline",
-        "sorcerer",
-        "harrow"
-      ],
-      "references": [
-        "AoN: Bloodlines (Sorcerer)"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/BloodlineDisplay.aspx?ItemName=Harrow"
-      ],
-      "description": "Just as knowledge of the harrow has passed from generation to generation since time immemorial, so too has a deep spiritual connection to the otherworldly forces bound by the harrow passed through the ages. Your family line might trace back to a branch of the ancient Imlios clan (see History of the Harrow on pages 6–7), or one of your ancestors might have once escaped the Harrowed Realm, carrying its influence back in his blood. Perhaps you are descended from exceptionally powerful harrowers, and their skill naturally resonates within you. Regardless, your connection to the mysterious deck grants you magical power over the cards of the harrow, visions of the future, and the ability to call down ephemeral forces.",
-      "mechanics": {
-        "class": "Sorcerer",
-        "pool": "bloodline",
-        "kind": null,
-        "class_skill": "Knowledge (history)",
-        "bonus_spells": [
-          {
-            "name": "ill omen",
-            "level": 3
-          },
-          {
-            "name": "augury",
-            "level": 5
-          },
-          {
-            "name": "harrowing",
-            "level": 7
-          },
-          {
-            "name": "shadow conjuration",
-            "level": 9
-          },
-          {
-            "name": "contact other plane",
-            "level": 11
-          },
-          {
-            "name": "legend lore",
-            "level": 13
-          },
-          {
-            "name": "greater harrowing",
-            "level": 15
-          },
-          {
-            "name": "moment of prescience",
-            "level": 17
-          },
-          {
-            "name": "weird",
-            "level": 19
-          }
-        ],
-        "bonus_feats": [
-          "Alertness",
-          "Craft Wondrous Item",
-          "Extend Spell",
-          "Fortune Teller ISWG",
-          "Harrowed ISWG",
-          "Skill Focus (Knowledge [history])",
-          "Varisian Tattoo ISWG"
-        ],
-        "arcana": "Whenever you cast a divination spell that requires a percentage roll, add 5 to the result of your roll. In addition, you can roll the percentage dice twice and use the result you prefer. Your maximum percentage chance of receiving a meaningful and accurate reply for divination spells is 100%, instead of the usual 90%.",
-        "powers": [
-          {
-            "name": "Twisted Fortune",
-            "kind": "Sp"
-          },
-          {
-            "name": "See It Coming",
-            "kind": "Su"
-          },
-          {
-            "name": "Invoke the Harrow",
-            "kind": "Su"
-          },
-          {
-            "name": "Harrowed Home",
-            "kind": "Sp"
-          },
-          {
-            "name": "Kin to the Old Tales",
-            "kind": "Su"
-          }
-        ]
-      }
-    },
-    {
       "name": "Imperious",
       "source": "Advanced Race Guide",
       "source_id": "talent:bloodline_imperious",
@@ -42778,7 +42608,7 @@
       "reference_urls": [
         "https://aonprd.com/CavalierOrders.aspx?ItemName=Order%20of%20Vengeance"
       ],
-      "description": "Often affiliated with the church of a goddess of lust and revenge, those ex- Galtan cavaliers who subscribe to the order of vengeance seek not only to reclaim their rightful homeland, but to punish those who betrayed them.",
+      "description": "Often affiliated with the church of a goddess of lust and revenge, those ex- revolutionary cavaliers who subscribe to the order of vengeance seek not only to reclaim their rightful homeland, but to punish those who betrayed them.",
       "mechanics": {
         "class": "Cavalier",
         "pool": "order",
@@ -43170,7 +43000,7 @@
       "reference_urls": [
         "https://aonprd.com/CavalierOrders.aspx?ItemName=Order%20of%20the%20Green"
       ],
-      "description": "Heroes of the Wild pg. 13 Cavaliers of the order of the Green are dedicated to protecting wild places and creatures, embracing the Green Faith in all its glory and natural wonder.",
+      "description": "Heroes of the Wild pg. 13 Cavaliers of the order of the Green are dedicated to protecting wild places and creatures, embracing a nature faith in all its glory and natural wonder.",
       "mechanics": {
         "class": "Cavalier",
         "pool": "order",

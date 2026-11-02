@@ -189,7 +189,9 @@ class TestCataloghiLocali:
         ):
             cat = by_file[path]
             assert cat["local_only"] is True and cat["is_ogc"] is False
-            assert cat["kind"] == kind and cat["entries"] == 4
+            # 4 voci dalla policy 2026-07-19; lo scan PI 2026-11-02 ne
+            # aggiunge altre (tools/apply_pi_scan_policy.py), mai ne toglie.
+            assert cat["kind"] == kind and cat["entries"] >= 4
 
     @pytest.mark.skipif(
         not (
@@ -203,7 +205,8 @@ class TestCataloghiLocali:
         )
         assert traits["_license"] == "OGL-1.0a" and traits["_source"]
         by_name = {e["name"]: e for e in traits["entries"]}
-        assert set(by_name) == {
+        # Le voci della policy 2026-07-19 restano (lo scan 2026-11-02 aggiunge).
+        assert set(by_name) >= {
             "Aldori Caution",
             "Arodenite Sword Training",
             "Arodenite Historian",
@@ -216,7 +219,7 @@ class TestCataloghiLocali:
             (self.LOCAL / "equipment_local.json").read_text(encoding="utf-8")
         )
         assert equip["_license"] == "OGL-1.0a" and equip["_source"]
-        assert {e["name"] for e in equip["entries"]} == {
+        assert {e["name"] for e in equip["entries"]} >= {
             "Hellknight leather",
             "Hellknight half-plate",
             "Hellknight plate",
@@ -232,8 +235,10 @@ class TestCataloghiLocali:
                 encoding="utf-8"
             )
         )
-        assert len(traits["entries"]) == 470 - 4
-        assert len(equip["entries"]) == 790 - 4
+        # Policy 2026-07-19 (-4 ciascuno), poi scan PI 2026-11-02 (-7 tratti,
+        # -1 equipment: reports/pi_scan_apply.md).
+        assert len(traits["entries"]) == 470 - 4 - 7
+        assert len(equip["entries"]) == 790 - 4 - 1
         nomi_t = {e["name"] for e in traits["entries"]}
         assert (
             not {
