@@ -1,6 +1,6 @@
 module_name: Narrativa
-version: 2.5
-last_updated: 2026-10-27T00:00:00.000Z
+version: 2.6
+last_updated: 2026-11-02T00:00:00.000Z
 inherits_from: base_profile.txt
 type: module
 
@@ -231,8 +231,7 @@ commands:
     description: "Alias di /continue_story"
     params: [titolo]
     action:
-      - call: /continue_story
-        with: {titolo: "{{titolo}}"}
+      - command: '/continue_story titolo="{{titolo}}"'
   /save_story:
     description: "Salva storia corrente"
     params: [titolo]

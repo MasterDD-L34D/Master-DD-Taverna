@@ -13,7 +13,7 @@ import pytest
 
 from src.dsl.loader import Kernel, load_kernel
 from src.dsl.interpreter import DslAbort, Interpreter
-from src.dsl.state import get_path
+from src.dsl.state import get_path, set_path
 
 MODULES = Path(__file__).resolve().parent.parent / "src" / "modules"
 
@@ -1461,6 +1461,61 @@ def test_run_input_modulo_reale_play_game(tmp_path):
         "GameMode.OnboardingTheme.universe"
     )
     assert any("Scegli universo" in o for o in it.output_log)
+
+
+def test_wizard_tratti_random_non_resta_bloccato():
+    # Bug authoring (backlog ES3-2): "(b) random" andava a next: traits,
+    # guardato 'manual' -> wizard_guard_falso e wizard fermo su entry.
+    k = load_kernel(MODULES, only=("Taverna_NPC.txt",))
+    it = Interpreter(k)
+    set_path(it.state, "game_mode.shared.profile.points_cap", 18)
+    set_path(it.state, "runtime.current_state", "GameMode.BackgroundTraits.entry")
+    it.run_input("b")
+    assert get_path(it.state, "runtime.current_state") != (
+        "GameMode.BackgroundTraits.entry"
+    )
+
+
+def test_param_opzionale_con_punto_interrogativo_si_lega(tmp_path):
+    # Convenzione dei moduli (54 params in 27 comandi): "nome?" = opzionale.
+    # Il chiamante passa "nome", senza il marcatore: deve legarsi.
+    k = _mini(
+        tmp_path,
+        "commands:\n  /p:\n    params: ['x?']\n"
+        "    action: [{set: out, value: '{{x}}'}]\n",
+    )
+    it = Interpreter(k)
+    it.run_command("/p", x="grog")
+    assert get_path(it.state, "out") == "grog"
+
+
+def _call_names(node):
+    if isinstance(node, dict):
+        if isinstance(node.get("call"), str):
+            yield node["call"]
+        for v in node.values():
+            yield from _call_names(v)
+    elif isinstance(node, list):
+        for v in node:
+            yield from _call_names(v)
+
+
+def test_ogni_call_dei_moduli_punta_a_un_helper_compilato():
+    # Bug authoring: Taverna_NPC chiamava "GameMode.helpers.X" ma l'helper
+    # si chiama "GameMode.X" -> noop "helper non compilato" (es. il sorteggio
+    # dei tratti random non produceva mai RAND).
+    # Area LLM di design (come i NO_OP motivati di ES3): renderla eseguibile
+    # sarebbe competenza finta, quindi resta senza helper.
+    lato_llm = {"Taverna_NPC.txt: extractor.run"}
+    mancanti = []
+    for path in sorted(MODULES.glob("*.txt")):
+        k = load_kernel(MODULES, only=(path.name,))
+        data = dict(k.modules).get(path.name) or {}
+        for name in _call_names(data):
+            voce = f"{path.name}: {name}"
+            if name not in k.helpers and "{{" not in name and voce not in lato_llm:
+                mancanti.append(voce)
+    assert mancanti == []
 
 
 def test_run_input_yes_no_lega_boolean(tmp_path):
