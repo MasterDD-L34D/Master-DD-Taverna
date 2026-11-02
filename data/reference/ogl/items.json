@@ -25,7 +25,21 @@
         "https://www.d20pfsrd.com/magic-items/wondrous-items/a-b/amulet-of-natural-armor/"
       ],
       "description": "Italiano: L'Amulet of Natural Armor +1 è un oggetto meraviglioso da indossare al collo che conferisce un bonus di miglioramento di +1 alla CA naturale. Aura faint transmutation; CL 5th; Slot neck; Price 2,000 gp; Weight —. Description: This amulet, usually crafted from bone or beast scales, toughens the wearer's body and flesh, giving him an enhancement bonus to his natural armor bonus of +1, +2, +3, +4, or +5, depending on the kind of amulet. Construction Requirements: Craft Wondrous Item, barkskin; Cost 1,000 gp (+1), 4,000 gp (+2), 9,000 gp (+3), 16,000 gp (+4), 25,000 gp (+5).",
-      "updated_at": "2026-07-16T20:29:18Z"
+      "updated_at": "2026-07-16T20:29:18Z",
+      "mechanics": {
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "enhancement",
+                "target": "acNatural",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "Amuleto dell'armatura naturale +1",
@@ -161,7 +175,21 @@
         "https://www.d20pfsrd.com/magic-items/rings/ring-of-protection/"
       ],
       "description": "Italiano: Anello di protezione +1 è un oggetto meraviglioso da indossare (ring). Aura faint abjuration; CL 5th; Slot ring; Price 2000 gp. Construction Requirements: Craft Wondrous Item, shield of faith. Conferisce un bonus di deviazione +1 alla CA.",
-      "updated_at": "2026-07-16T22:28:43Z"
+      "updated_at": "2026-07-16T22:28:43Z",
+      "mechanics": {
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "deflection",
+                "target": "ac",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "anello di protezione +1",
@@ -801,7 +829,21 @@
         "https://www.d20pfsrd.com/magic-items/wondrous-items/belts/belt-of-giant-strength/"
       ],
       "description": "Aura faint transmutation; CL 8th; Slot belt; Price 4,000 gp; Weight 1 lb. Description: This belt is a thick leather affair, often decorated with bronze. It grants the wearer an enhancement bonus to Strength of +2, +4, or +6. Treat this as a temporary ability bonus for the first 24 hours the belt is worn. Construction Requirements: Craft Wondrous Item, bull's strength; Cost 2,000 gp (+2), 8,000 gp (+4), 18,000 gp (+6).",
-      "updated_at": "2026-07-16T20:29:18Z"
+      "updated_at": "2026-07-16T20:29:18Z",
+      "mechanics": {
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "enhancement",
+                "target": "str",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "Belt of Giant Strength +4",
@@ -825,7 +867,21 @@
         "https://www.d20pfsrd.com/magic-items/wondrous-items/belts/belt-of-giant-strength/"
       ],
       "description": "Italiano: Belt of Giant Strength +4 è un oggetto meraviglioso da indossare (belt) che conferisce un bonus di miglioramento +4 al punteggio di Forza. Aura faint transmutation; CL 8th; Slot belt; Price 64000 gp. Construction Requirements: Craft Wondrous Item, bull's strength.",
-      "updated_at": "2026-07-16T22:28:43Z"
+      "updated_at": "2026-07-16T22:28:43Z",
+      "mechanics": {
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "enhancement",
+                "target": "str",
+                "value": 4
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "Belt of Physical Might +2 (Str/Con)",
@@ -943,7 +999,21 @@
         "https://www.d20pfsrd.com/magic-items/wondrous-items/a-b/bracers-of-armor/"
       ],
       "description": "Italiano: Bracers of Armor +4 è un oggetto meraviglioso da indossare (wrists). Aura faint conjuration; CL 7th; Slot wrists; Price 16000 gp. Construction Requirements: Craft Wondrous Item, mage armor. Conferisce un bonus di armatura +4 alla CA.",
-      "updated_at": "2026-07-16T22:28:43Z"
+      "updated_at": "2026-07-16T22:28:43Z",
+      "mechanics": {
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "armor",
+                "target": "acArmor",
+                "value": 4
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "Bracers of Falcon's Aim",
@@ -1376,7 +1446,31 @@
         "https://www.d20pfsrd.com/magic-items/wondrous-items/a-b/cloak-of-resistance/"
       ],
       "description": "Italiano: Cloak of Resistance +1 è un oggetto meraviglioso da indossare (shoulders). Aura faint abjuration; CL 5th; Slot shoulders; Price 1000 gp. Construction Requirements: Craft Wondrous Item, resistance. Conferisce un bonus di resistenza +1 a tutti i tiri salvezza.",
-      "updated_at": "2026-07-16T22:28:43Z"
+      "updated_at": "2026-07-16T22:28:43Z",
+      "mechanics": {
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "resistance",
+                "target": "save.fort",
+                "value": 1
+              },
+              {
+                "type": "resistance",
+                "target": "save.ref",
+                "value": 1
+              },
+              {
+                "type": "resistance",
+                "target": "save.will",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "Cloak of Resistance +2",
@@ -1400,7 +1494,31 @@
         "https://www.d20pfsrd.com/magic-items/wondrous-items/a-b/cloak-of-resistance/"
       ],
       "description": "Italiano: Cloak of Resistance +2 è un oggetto meraviglioso da indossare (shoulders). Aura faint abjuration; CL 5th; Slot shoulders; Price 4000 gp. Construction Requirements: Craft Wondrous Item, resistance. Conferisce un bonus di resistenza +2 a tutti i tiri salvezza.",
-      "updated_at": "2026-07-16T22:28:43Z"
+      "updated_at": "2026-07-16T22:28:43Z",
+      "mechanics": {
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "resistance",
+                "target": "save.fort",
+                "value": 2
+              },
+              {
+                "type": "resistance",
+                "target": "save.ref",
+                "value": 2
+              },
+              {
+                "type": "resistance",
+                "target": "save.will",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "Cloak of Resistance +3",
@@ -1424,7 +1542,31 @@
         "https://www.d20pfsrd.com/magic-items/wondrous-items/cloaks/cloak-of-resistance/"
       ],
       "description": "Italiano: Cloak of Resistance +3 è un oggetto meraviglioso da indossare (shoulders). Aura faint abjuration; CL 5th; Slot shoulders; Price 9000 gp. Construction Requirements: Craft Wondrous Item, resistance. Conferisce un bonus di resistenza +3 a tutti i tiri salvezza.",
-      "updated_at": "2026-07-16T22:28:43Z"
+      "updated_at": "2026-07-16T22:28:43Z",
+      "mechanics": {
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "resistance",
+                "target": "save.fort",
+                "value": 3
+              },
+              {
+                "type": "resistance",
+                "target": "save.ref",
+                "value": 3
+              },
+              {
+                "type": "resistance",
+                "target": "save.will",
+                "value": 3
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "Componenti arcane",
@@ -2524,7 +2666,21 @@
         "https://www.d20pfsrd.com/magic-items/wondrous-items/h-l/headband-of-alluring-charisma/"
       ],
       "description": "Italiano: Headband of Alluring Charisma +2 è un oggetto meraviglioso da indossare (headband) che conferisce un bonus di miglioramento +2 al punteggio di Carisma. Aura faint transmutation; CL 8th; Slot headband; Price 16000 gp. Construction Requirements: Craft Wondrous Item, eagle's splendor.",
-      "updated_at": "2026-07-16T22:28:43Z"
+      "updated_at": "2026-07-16T22:28:43Z",
+      "mechanics": {
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "enhancement",
+                "target": "cha",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "Headband of Inspired Wisdom +2",
@@ -2548,7 +2704,21 @@
         "https://www.d20pfsrd.com/magic-items/wondrous-items/a-b/headband-of-inspired-wisdom/"
       ],
       "description": "Italiano: Headband of Inspired Wisdom +2 è un oggetto meraviglioso da indossare (headband) che conferisce un bonus di miglioramento +2 al punteggio di Saggezza. Aura faint transmutation; CL 8th; Slot headband; Price 16000 gp. Construction Requirements: Craft Wondrous Item, owl's wisdom.",
-      "updated_at": "2026-07-16T22:28:43Z"
+      "updated_at": "2026-07-16T22:28:43Z",
+      "mechanics": {
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "enhancement",
+                "target": "wis",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "Headband of Inspired Wisdom +4",
@@ -2572,7 +2742,21 @@
         "https://www.d20pfsrd.com/magic-items/wondrous-items/headbands/headband-of-inspired-wisdom/"
       ],
       "description": "Italiano: Headband of Inspired Wisdom +4 è un oggetto meraviglioso da indossare (headband) che conferisce un bonus di miglioramento +4 al punteggio di Saggezza. Aura faint transmutation; CL 8th; Slot headband; Price 64000 gp. Construction Requirements: Craft Wondrous Item, owl's wisdom.",
-      "updated_at": "2026-07-16T22:28:43Z"
+      "updated_at": "2026-07-16T22:28:43Z",
+      "mechanics": {
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "enhancement",
+                "target": "wis",
+                "value": 4
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "Headband of Mental Prowess +2 (Int/Cha)",
@@ -2621,7 +2805,21 @@
         "https://www.d20pfsrd.com/magic-items/wondrous-items/h-l/headband-of-vast-intelligence/"
       ],
       "description": "Aura faint transmutation; CL 8th; Slot headband; Price 4,000 gp; Weight 1 lb. Description: This intricate gold headband is decorated with several small blue and deep purple gemstones. The headband grants the wearer an enhancement bonus to Intelligence of +2, +4, or +6. Treat this as a temporary ability bonus for the first 24 hours the headband is worn. A headband of vast intelligence has one skill associated with it per +2 bonus it grants. After being worn for 24 hours, the headband grants a number of skill ranks in those skills equal to the wearer's total Hit Dice. These ranks do not stack with the ranks a creature already possesses. Construction Requirements: Craft Wondrous Item, fox's cunning; Cost 2,000 gp (+2), 8,000 gp (+4), 18,000 gp (+6).",
-      "updated_at": "2026-07-16T20:29:18Z"
+      "updated_at": "2026-07-16T20:29:18Z",
+      "mechanics": {
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "enhancement",
+                "target": "int",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "Impa bardento panoply (aegis + weapon) lucidato",
@@ -4555,7 +4753,21 @@
         "https://www.d20pfsrd.com/magic-items/rings/ring-of-protection/"
       ],
       "description": "Italiano: Ring of Protection +1 è un oggetto meraviglioso da indossare (ring). Aura faint abjuration; CL 5th; Slot ring; Price 2000 gp. Construction Requirements: Craft Wondrous Item, shield of faith. Conferisce un bonus di deviazione +1 alla CA.",
-      "updated_at": "2026-07-16T22:28:43Z"
+      "updated_at": "2026-07-16T22:28:43Z",
+      "mechanics": {
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "deflection",
+                "target": "ac",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "Ring of the Shooting Star",
@@ -5636,7 +5848,19 @@
         "price": "2,600 gp",
         "weight": "—",
         "cost": "1,300 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.swim",
+                "value": 4
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -5668,7 +5892,19 @@
         "price": "2,600 gp",
         "weight": "1 lb.",
         "cost": "1,300 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "enhancement",
+                "target": "acNatural",
+                "value": 1
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -5762,6 +5998,38 @@
           "+2",
           "+4",
           "+6"
+        ],
+        "effects": [
+          {
+            "variant": "+2",
+            "bonuses": [
+              {
+                "type": "enhancement",
+                "target": "con",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "variant": "+4",
+            "bonuses": [
+              {
+                "type": "enhancement",
+                "target": "con",
+                "value": 4
+              }
+            ]
+          },
+          {
+            "variant": "+6",
+            "bonuses": [
+              {
+                "type": "enhancement",
+                "target": "con",
+                "value": 6
+              }
+            ]
+          }
         ]
       }
     },
@@ -5796,6 +6064,38 @@
           "+2",
           "+4",
           "+6"
+        ],
+        "effects": [
+          {
+            "variant": "+2",
+            "bonuses": [
+              {
+                "type": "enhancement",
+                "target": "dex",
+                "value": 2
+              }
+            ]
+          },
+          {
+            "variant": "+4",
+            "bonuses": [
+              {
+                "type": "enhancement",
+                "target": "dex",
+                "value": 4
+              }
+            ]
+          },
+          {
+            "variant": "+6",
+            "bonuses": [
+              {
+                "type": "enhancement",
+                "target": "dex",
+                "value": 6
+              }
+            ]
+          }
         ]
       }
     },
@@ -6236,7 +6536,19 @@
         "price": "7,000 gp",
         "weight": "5 lbs.",
         "cost": "3,500 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.swim",
+                "value": 3
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -6364,7 +6676,19 @@
         "price": "10,000 gp",
         "weight": "1 lb.",
         "cost": "5,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "enhancement",
+                "target": "dex",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -6395,7 +6719,19 @@
         "price": "10,000 gp",
         "weight": "1 lb.",
         "cost": "5,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "enhancement",
+                "target": "str",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -6457,7 +6793,19 @@
         "price": "11,000 gp",
         "weight": "1 lb.",
         "cost": "5,500 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "enhancement",
+                "target": "str",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -6743,7 +7091,19 @@
         "price": "18,500 gp",
         "weight": "1 lb.",
         "cost": "9,250 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "enhancement",
+                "target": "str",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -6836,7 +7196,29 @@
         "price": "21,000 gp",
         "weight": "1 lb.",
         "cost": "10,500 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "insight",
+                "target": "save.fort",
+                "value": 1
+              },
+              {
+                "type": "insight",
+                "target": "save.ref",
+                "value": 1
+              },
+              {
+                "type": "insight",
+                "target": "save.will",
+                "value": 1
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -6868,7 +7250,19 @@
         "price": "23,000 gp",
         "weight": "1 lb.",
         "cost": "11,500 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "enhancement",
+                "target": "str",
+                "value": 4
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -6899,7 +7293,19 @@
         "price": "24,000 gp",
         "weight": "3 lbs.",
         "cost": "12,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "enhancement",
+                "target": "con",
+                "value": 4
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -6930,7 +7336,19 @@
         "price": "25,000 gp",
         "weight": "1 lb.",
         "cost": "12,500 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "enhancement",
+                "target": "str",
+                "value": 4
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -7055,7 +7473,19 @@
         "price": "36,000 gp",
         "weight": "2 lbs.",
         "cost": "18,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "enhancement",
+                "target": "dex",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -7453,7 +7883,19 @@
         "price": "2,750 gp",
         "weight": "3 lbs.",
         "cost": "2,500 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.swim",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -7774,7 +8216,19 @@
         "price": "5,000 gp",
         "weight": "2 lbs.",
         "cost": "2,500 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.diplomacy",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -8051,7 +8505,29 @@
         "price": "7,000 gp",
         "weight": "1 lb.",
         "cost": "3,500 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "resistance",
+                "target": "save.fort",
+                "value": 2
+              },
+              {
+                "type": "resistance",
+                "target": "save.ref",
+                "value": 2
+              },
+              {
+                "type": "resistance",
+                "target": "save.will",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -8358,7 +8834,19 @@
         "price": "12,000 gp",
         "weight": "2 lbs.",
         "cost": "6,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.stealth",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -8545,7 +9033,34 @@
         "price": "15,000 gp",
         "weight": "5 lbs.",
         "cost": "7,500 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.stealth",
+                "value": 5
+              },
+              {
+                "type": "resistance",
+                "target": "save.fort",
+                "value": 1
+              },
+              {
+                "type": "resistance",
+                "target": "save.ref",
+                "value": 1
+              },
+              {
+                "type": "resistance",
+                "target": "save.will",
+                "value": 1
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -8669,7 +9184,19 @@
         "price": "22,000 gp",
         "weight": "1 lb.",
         "cost": "11,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "armor",
+                "target": "acArmor",
+                "value": 4
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -8827,7 +9354,29 @@
         "price": "35,000 gp",
         "weight": "1 lb.",
         "cost": "17,750 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "resistance",
+                "target": "save.fort",
+                "value": 2
+              },
+              {
+                "type": "resistance",
+                "target": "save.ref",
+                "value": 2
+              },
+              {
+                "type": "resistance",
+                "target": "save.will",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -8858,7 +9407,19 @@
         "price": "36,000 gp",
         "weight": "5 lbs.",
         "cost": "18,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "armor",
+                "target": "acArmor",
+                "value": 4
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -8920,7 +9481,19 @@
         "price": "44,000 gp",
         "weight": "1 lb.",
         "cost": "22,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "enhancement",
+                "target": "int",
+                "value": 4
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -9077,7 +9650,29 @@
         "price": "67,000 gp",
         "weight": "1 lb.",
         "cost": "33,500 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "resistance",
+                "target": "save.fort",
+                "value": 4
+              },
+              {
+                "type": "resistance",
+                "target": "save.ref",
+                "value": 4
+              },
+              {
+                "type": "resistance",
+                "target": "save.will",
+                "value": 4
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -9204,7 +9799,29 @@
         "price": "75,000 gp",
         "weight": "1 lb.",
         "cost": "37,500 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "resistance",
+                "target": "save.fort",
+                "value": 4
+              },
+              {
+                "type": "resistance",
+                "target": "save.ref",
+                "value": 4
+              },
+              {
+                "type": "resistance",
+                "target": "save.will",
+                "value": 4
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -9270,7 +9887,114 @@
         "price": "95,000 gp",
         "weight": "1 lb.",
         "cost": "47,500 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "resistance",
+                "target": "save.fort",
+                "value": 1
+              },
+              {
+                "type": "resistance",
+                "target": "save.ref",
+                "value": 1
+              },
+              {
+                "type": "resistance",
+                "target": "save.will",
+                "value": 1
+              },
+              {
+                "type": "resistance",
+                "target": "save.fort",
+                "value": 2
+              },
+              {
+                "type": "resistance",
+                "target": "save.ref",
+                "value": 2
+              },
+              {
+                "type": "resistance",
+                "target": "save.will",
+                "value": 2
+              },
+              {
+                "type": "resistance",
+                "target": "save.fort",
+                "value": 3
+              },
+              {
+                "type": "resistance",
+                "target": "save.ref",
+                "value": 3
+              },
+              {
+                "type": "resistance",
+                "target": "save.will",
+                "value": 3
+              },
+              {
+                "type": "resistance",
+                "target": "save.fort",
+                "value": 4
+              },
+              {
+                "type": "resistance",
+                "target": "save.ref",
+                "value": 4
+              },
+              {
+                "type": "resistance",
+                "target": "save.will",
+                "value": 4
+              },
+              {
+                "type": "resistance",
+                "target": "save.fort",
+                "value": 5
+              },
+              {
+                "type": "resistance",
+                "target": "save.ref",
+                "value": 5
+              },
+              {
+                "type": "resistance",
+                "target": "save.will",
+                "value": 5
+              },
+              {
+                "type": "armor",
+                "target": "acArmor",
+                "value": 8
+              },
+              {
+                "type": "resistance",
+                "target": "save.fort",
+                "value": 4
+              },
+              {
+                "type": "resistance",
+                "target": "save.ref",
+                "value": 4
+              },
+              {
+                "type": "resistance",
+                "target": "save.will",
+                "value": 4
+              },
+              {
+                "type": "armor",
+                "target": "acArmor",
+                "value": 4
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -9331,7 +10055,19 @@
         "price": "120,000 gp",
         "weight": "1 lb.",
         "cost": "60,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.perception",
+                "value": 10
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -9700,7 +10436,19 @@
         "price": "4,300 gp",
         "weight": "—",
         "cost": "2,150 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.sleight-of-hand",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -9791,7 +10539,19 @@
         "price": "5,200 gp",
         "weight": "3 lbs.",
         "cost": "2,250 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "enhancement",
+                "target": "dex",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -9822,7 +10582,24 @@
         "price": "5,200 gp",
         "weight": "—",
         "cost": "2,600 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.disable-device",
+                "value": 4
+              },
+              {
+                "type": "competence",
+                "target": "skill.escape-artist",
+                "value": 6
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -9853,7 +10630,19 @@
         "price": "6,000 gp",
         "weight": "2 lbs.",
         "cost": "3,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.intimidate",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -10193,7 +10982,24 @@
         "price": "8,000 gp",
         "weight": "2 lbs.",
         "cost": "4,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "armor",
+                "target": "acArmor",
+                "value": 1
+              },
+              {
+                "type": "enhancement",
+                "target": "dex",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -10885,7 +11691,19 @@
         "price": "64,200 gp",
         "weight": "4 lbs.",
         "cost": "32,100 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "deflection",
+                "target": "ac",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -11126,7 +11944,19 @@
         "price": "2,500 gp",
         "weight": "—",
         "cost": "1,250 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.perception",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -11217,7 +12047,24 @@
         "price": "2,600 gp",
         "weight": "—",
         "cost": "1,300 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.swim",
+                "value": 2
+              },
+              {
+                "type": "competence",
+                "target": "skill.climb",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -11307,7 +12154,19 @@
         "price": "3,500 gp",
         "weight": "1 lb.",
         "cost": "1,750 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.perception",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -11523,7 +12382,19 @@
         "price": "6,000 gp",
         "weight": "—",
         "cost": "3,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.perception",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -11769,7 +12640,24 @@
         "price": "8,500 gp",
         "weight": "—",
         "cost": "4,250 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.appraise",
+                "value": 2
+              },
+              {
+                "type": "competence",
+                "target": "skill.intimidate",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -12172,7 +13060,19 @@
         "price": "12,500 gp",
         "weight": "—",
         "cost": "6,250 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.intimidate",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -12453,7 +13353,19 @@
         "price": "16,000 gp",
         "weight": "—",
         "cost": "8,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.bluff",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -12706,7 +13618,19 @@
         "price": "32,000 gp",
         "weight": "—",
         "cost": "16,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "enhancement",
+                "target": "int",
+                "value": 4
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -13255,7 +14179,29 @@
         "price": "2,000 gp",
         "weight": "1 lb.",
         "cost": "1,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.acrobatics",
+                "value": 2
+              },
+              {
+                "type": "competence",
+                "target": "skill.climb",
+                "value": 2
+              },
+              {
+                "type": "competence",
+                "target": "skill.stealth",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -13407,7 +14353,19 @@
         "price": "2,500 gp",
         "weight": "1 lb.",
         "cost": "1,250 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.acrobatics",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -13787,7 +14745,19 @@
         "price": "4,000 gp",
         "weight": "1 lb.",
         "cost": "2,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.stealth",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -14065,7 +15035,19 @@
         "price": "5,500 gp",
         "weight": "1 lb.",
         "cost": "2,750 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.acrobatics",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -14095,7 +15077,19 @@
         "price": "5,500 gp",
         "weight": "2 lbs.",
         "cost": "2,750 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.stealth",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -14521,7 +15515,19 @@
         "price": "8,250 gp",
         "weight": "—",
         "cost": "4,125 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.stealth",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -15945,7 +16951,19 @@
         "price": "1,300 gp",
         "weight": "1 lb.",
         "cost": "750 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.climb",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -16159,7 +17177,19 @@
         "price": "2,500 gp",
         "weight": "1 lb.",
         "cost": "1,250 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.sleight-of-hand",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -16189,7 +17219,19 @@
         "price": "2,500 gp",
         "weight": "—",
         "cost": "1,250 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.heal",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -16376,7 +17418,19 @@
         "price": "3,000 gp",
         "weight": "1 lb.",
         "cost": "1,500 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.climb",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -17091,7 +18145,24 @@
         "price": "6,250 gp",
         "weight": "—",
         "cost": "3,125 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.climb",
+                "value": 5
+              },
+              {
+                "type": "competence",
+                "target": "skill.swim",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -17244,7 +18315,19 @@
         "price": "7,500 gp",
         "weight": "—",
         "cost": "3,500 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.spellcraft",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -17676,7 +18759,19 @@
         "price": "9,250 gp",
         "weight": "2 lbs.",
         "cost": "4,625 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.stealth",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -19476,7 +20571,19 @@
         "price": "3,000 gp",
         "weight": "1 lb.",
         "cost": "1,500 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "resistance",
+                "target": "save.fort",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -19538,7 +20645,34 @@
         "price": "3,100 gp",
         "weight": "1 lb.",
         "cost": "1,550 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.appraise",
+                "value": 2
+              },
+              {
+                "type": "competence",
+                "target": "skill.perception",
+                "value": 2
+              },
+              {
+                "type": "competence",
+                "target": "skill.sense-motive",
+                "value": 2
+              },
+              {
+                "type": "resistance",
+                "target": "save.will",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -19696,7 +20830,19 @@
         "price": "3,500 gp",
         "weight": "3 lbs.",
         "cost": "1,750 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.intimidate",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -19758,7 +20904,19 @@
         "price": "3,500 gp",
         "weight": "3 lbs.",
         "cost": "1,750 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.perception",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -19789,7 +20947,19 @@
         "price": "3,500 gp",
         "weight": "1 lb.",
         "cost": "1,750 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.stealth",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -19822,7 +20992,24 @@
         "price": "3,600 gp",
         "weight": "1 lb.",
         "cost": "1,800 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.handle-animal",
+                "value": 2
+              },
+              {
+                "type": "competence",
+                "target": "skill.heal",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -20006,7 +21193,19 @@
         "price": "4,400 gp",
         "weight": "1 lb.",
         "cost": "",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.disguise",
+                "value": 4
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -20159,7 +21358,19 @@
         "price": "4,500 gp",
         "weight": "—",
         "cost": "2,250 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.survival",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -20252,7 +21463,19 @@
         "price": "5,000 gp",
         "weight": "3 lbs.",
         "cost": "2,500 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "deflection",
+                "target": "ac",
+                "value": 1
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -20375,7 +21598,19 @@
         "price": "6,000 gp",
         "weight": "1 lb.",
         "cost": "3,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.perception",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -21806,7 +23041,19 @@
         "price": "18,000 gp",
         "weight": "3 lbs.",
         "cost": "9,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.intimidate",
+                "value": 4
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -21838,7 +23085,24 @@
         "price": "18,000 gp",
         "weight": "2 lbs.",
         "cost": "9,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.diplomacy",
+                "value": 5
+              },
+              {
+                "type": "competence",
+                "target": "skill.knowledge-religion",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -22116,7 +23380,19 @@
         "price": "22,600 gp",
         "weight": "2 lbs.",
         "cost": "11,300 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.diplomacy",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -22270,7 +23546,19 @@
         "price": "24,600 gp",
         "weight": "3 lbs.",
         "cost": "12,300 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.intimidate",
+                "value": 4
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -22999,7 +24287,19 @@
         "price": "38,000 gp",
         "weight": "1/2 lb.",
         "cost": "19,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.diplomacy",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -23062,7 +24362,19 @@
         "price": "42,000 gp",
         "weight": "2 lbs.",
         "cost": "21,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "insight",
+                "target": "ac",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -23153,7 +24465,24 @@
         "price": "59,200 gp",
         "weight": "—",
         "cost": "29,600 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.diplomacy",
+                "value": 4
+              },
+              {
+                "type": "competence",
+                "target": "skill.intimidate",
+                "value": 4
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -23185,7 +24514,19 @@
         "price": "63,000 gp",
         "weight": "3 lbs.",
         "cost": "31,500 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "deflection",
+                "target": "ac",
+                "value": 3
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -23766,7 +25107,19 @@
         "price": "3,600 gp",
         "weight": "1 lb.",
         "cost": "1,800 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.intimidate",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -23987,7 +25340,19 @@
         "price": "5,100 gp",
         "weight": "1 lb.",
         "cost": "2,550 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "enhancement",
+                "target": "int",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -24048,7 +25413,19 @@
         "price": "5,600 gp",
         "weight": "1 lb.",
         "cost": "2,800 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "enhancement",
+                "target": "wis",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -24200,7 +25577,29 @@
         "price": "7,700 gp",
         "weight": "1 lb.",
         "cost": "3,850 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "luck",
+                "target": "save.fort",
+                "value": 1
+              },
+              {
+                "type": "luck",
+                "target": "save.ref",
+                "value": 1
+              },
+              {
+                "type": "luck",
+                "target": "save.will",
+                "value": 1
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -24326,7 +25725,19 @@
         "price": "11,000 gp",
         "weight": "1 lb.",
         "cost": "5,500 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.survival",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -24798,7 +26209,19 @@
         "price": "24,000 gp",
         "weight": "1 lb.",
         "cost": "12,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "enhancement",
+                "target": "wis",
+                "value": 4
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -24989,7 +26412,19 @@
         "price": "64,000 gp",
         "weight": "1 lb.",
         "cost": "32,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "enhancement",
+                "target": "int",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -25022,7 +26457,19 @@
         "price": "150,000 gp",
         "weight": "1 lb.",
         "cost": "75,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "enhancement",
+                "target": "int",
+                "value": 4
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -25969,7 +27416,19 @@
         "price": "2,500 gp",
         "weight": "—",
         "cost": "1,250 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.spellcraft",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -26062,7 +27521,19 @@
         "price": "2,800 gp",
         "weight": "1 lb.",
         "cost": "1,400 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "resistance",
+                "target": "save.will",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -27531,7 +29002,19 @@
         "price": "6,550 gp",
         "weight": "—",
         "cost": "3,275 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.handle-animal",
+                "value": 4
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -27808,7 +29291,19 @@
         "price": "8,000 gp",
         "weight": "1 lb.",
         "cost": "4,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.intimidate",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -29341,7 +30836,19 @@
         "price": "13,000 gp",
         "weight": "—",
         "cost": "6,500 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.knowledge-geography",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -29682,7 +31189,19 @@
         "price": "16,550 gp",
         "weight": "1/2 lb.",
         "cost": "8,275 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.appraise",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -30118,7 +31637,29 @@
         "price": "23,000 gp",
         "weight": "—",
         "cost": "11,500 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "resistance",
+                "target": "save.fort",
+                "value": 2
+              },
+              {
+                "type": "resistance",
+                "target": "save.ref",
+                "value": 2
+              },
+              {
+                "type": "resistance",
+                "target": "save.will",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -31778,7 +33319,29 @@
         "price": "2,800 gp",
         "weight": "1 lb.",
         "cost": "1,250 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "resistance",
+                "target": "save.fort",
+                "value": 1
+              },
+              {
+                "type": "resistance",
+                "target": "save.ref",
+                "value": 1
+              },
+              {
+                "type": "resistance",
+                "target": "save.will",
+                "value": 1
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -31809,7 +33372,19 @@
         "price": "2,800 gp",
         "weight": "1 lb.",
         "cost": "1,400 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.intimidate",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -31935,7 +33510,19 @@
         "price": "3,300 gp",
         "weight": "10 lbs.",
         "cost": "1,650 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.intimidate",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -31996,7 +33583,29 @@
         "price": "3,500 gp",
         "weight": "1 lb.",
         "cost": "2,250 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "resistance",
+                "target": "save.fort",
+                "value": 1
+              },
+              {
+                "type": "resistance",
+                "target": "save.ref",
+                "value": 1
+              },
+              {
+                "type": "resistance",
+                "target": "save.will",
+                "value": 1
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -32284,7 +33893,29 @@
         "price": "4,500 gp",
         "weight": "5 lbs.",
         "cost": "2,250 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "resistance",
+                "target": "save.fort",
+                "value": 1
+              },
+              {
+                "type": "resistance",
+                "target": "save.ref",
+                "value": 1
+              },
+              {
+                "type": "resistance",
+                "target": "save.will",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -32378,7 +34009,19 @@
         "price": "5,750 gp",
         "weight": "6 lbs.",
         "cost": "2,875 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.intimidate",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -32592,7 +34235,19 @@
         "price": "6,400 gp",
         "weight": "2 lbs.",
         "cost": "3,200 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.stealth",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -32872,7 +34527,29 @@
         "price": "9,000 gp",
         "weight": "2 lbs.",
         "cost": "4,500 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "resistance",
+                "target": "save.fort",
+                "value": 2
+              },
+              {
+                "type": "resistance",
+                "target": "save.ref",
+                "value": 2
+              },
+              {
+                "type": "resistance",
+                "target": "save.will",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -32903,7 +34580,19 @@
         "price": "9,000 gp",
         "weight": "2 lbs.",
         "cost": "4,500 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.intimidate",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -33856,7 +35545,19 @@
         "price": "18,000 gp",
         "weight": "1 lb.",
         "cost": "9,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.sense-motive",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -33950,7 +35651,24 @@
         "price": "20,000 gp",
         "weight": "1 lb.",
         "cost": "10,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.diplomacy",
+                "value": 5
+              },
+              {
+                "type": "competence",
+                "target": "skill.sense-motive",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -34106,7 +35824,29 @@
         "price": "22,000 gp",
         "weight": "3 lbs.",
         "cost": "11,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "resistance",
+                "target": "save.fort",
+                "value": 2
+              },
+              {
+                "type": "resistance",
+                "target": "save.ref",
+                "value": 2
+              },
+              {
+                "type": "resistance",
+                "target": "save.will",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -34268,7 +36008,19 @@
         "price": "25,000 gp",
         "weight": "1 lb.",
         "cost": "12,500 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.stealth",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -34299,7 +36051,19 @@
         "price": "26,000 gp",
         "weight": "1 lb.",
         "cost": "13,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.stealth",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -34330,7 +36094,19 @@
         "price": "26,000 gp",
         "weight": "10 lbs.",
         "cost": "13,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "armor",
+                "target": "acArmor",
+                "value": 4
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -34420,7 +36196,19 @@
         "price": "32,500 gp",
         "weight": "1 lb.",
         "cost": "16,250 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.stealth",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -34806,7 +36594,19 @@
         "price": "78,600 gp",
         "weight": "1 lb.",
         "cost": "39,300 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "resistance",
+                "target": "save.will",
+                "value": 4
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -35023,7 +36823,19 @@
         "price": "1,500 gp",
         "weight": "—",
         "cost": "750 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "deflection",
+                "target": "ac",
+                "value": 1
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -35116,7 +36928,19 @@
         "price": "2,100 gp",
         "weight": "1 lb.",
         "cost": "1,050 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "resistance",
+                "target": "save.will",
+                "value": 1
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -35422,7 +37246,19 @@
         "price": "6,000 gp",
         "weight": "3 lbs.",
         "cost": "3,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "deflection",
+                "target": "ac",
+                "value": 1
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -35574,7 +37410,19 @@
         "price": "7,900 gp",
         "weight": "1 lb.",
         "cost": "3,950 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.perform",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -35826,7 +37674,19 @@
         "price": "9,900 gp",
         "weight": "—",
         "cost": "4,950 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.sense-motive",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -35888,7 +37748,19 @@
         "price": "10,000 gp",
         "weight": "1 lb.",
         "cost": "5,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "deflection",
+                "target": "ac",
+                "value": 1
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -36047,7 +37919,29 @@
         "price": "14,500 gp",
         "weight": "—",
         "cost": "7,250 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.bluff",
+                "value": 5
+              },
+              {
+                "type": "competence",
+                "target": "skill.diplomacy",
+                "value": 5
+              },
+              {
+                "type": "competence",
+                "target": "skill.sense-motive",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -70258,7 +72152,24 @@
         "price": "1,500 gp",
         "weight": "—",
         "cost": "750 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.perception",
+                "value": 2
+              },
+              {
+                "type": "competence",
+                "target": "skill.survival",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -70888,7 +72799,29 @@
         "price": "3,500 gp",
         "weight": "—",
         "cost": "1,750 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.bluff",
+                "value": 2
+              },
+              {
+                "type": "competence",
+                "target": "skill.diplomacy",
+                "value": 2
+              },
+              {
+                "type": "competence",
+                "target": "skill.intimidate",
+                "value": 2
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -71493,7 +73426,19 @@
         "price": "6,500 gp",
         "weight": "—",
         "cost": "3,250 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.acrobatics",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -71854,7 +73799,24 @@
         "price": "8,000 gp",
         "weight": "—",
         "cost": "4,000 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "enhancement",
+                "target": "str",
+                "value": 4
+              },
+              {
+                "type": "enhancement",
+                "target": "dex",
+                "value": 4
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -72073,7 +74035,19 @@
         "price": "8,700 gp",
         "weight": "—",
         "cost": "4,350 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.knowledge-history",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -72540,7 +74514,24 @@
         "price": "11,000 gp",
         "weight": "—",
         "cost": "5,500 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.sense-motive",
+                "value": 4
+              },
+              {
+                "type": "competence",
+                "target": "skill.knowledge-local",
+                "value": 4
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -73853,7 +75844,24 @@
         "price": "28,500 gp",
         "weight": "—",
         "cost": "14,250 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.diplomacy",
+                "value": 5
+              },
+              {
+                "type": "competence",
+                "target": "skill.knowledge-religion",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -115166,7 +117174,19 @@
         "price": "52,500 gp",
         "weight": "1 lb.",
         "cost": "26,250 gp",
-        "variants": []
+        "variants": [],
+        "effects": [
+          {
+            "variant": null,
+            "bonuses": [
+              {
+                "type": "competence",
+                "target": "skill.perception",
+                "value": 5
+              }
+            ]
+          }
+        ]
       }
     },
     {
