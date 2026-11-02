@@ -510,9 +510,12 @@ async def get_knowledge_meta(name: str, _: None = Depends(require_api_key)) -> D
 
 @router.post("/ruling-expert")
 async def ruling_expert_stub(_: None = Depends(require_api_key)) -> Dict[str, object]:
-    """Stub di Ruling Expert: restituisce sempre badge validato."""
+    """Stub dichiarato: non sostituisce una validazione Ruling Expert."""
 
-    return {"ruling_badge": "validated", "sources": ["stub"], "violations": []}
+    raise HTTPException(
+        status_code=501,
+        detail="Endpoint stub: non esegue validazioni Ruling Expert",
+    )
 
 
 @router.get("/metrics")

@@ -124,11 +124,9 @@ async def fetch_module(name: str) -> Response:
 
 @app.post("/ruling")
 async def ruling_expert_stub(payload: dict[str, Any] | None = None) -> dict[str, Any]:
-    """Minimal stub for Ruling Expert validation used in local harvest runs."""
+    """Mock dichiarato: non sostituisce una validazione Ruling Expert."""
 
-    return {
-        "status": "ok",
-        "ruling_badge": "validated",
-        "violations": [],
-        "payload_echo": payload or {},
-    }
+    raise HTTPException(
+        status_code=501,
+        detail="Endpoint mock: non esegue validazioni Ruling Expert",
+    )

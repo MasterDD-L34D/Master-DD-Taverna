@@ -60,8 +60,11 @@ def main() -> int:
     args = ap.parse_args()
 
     if not Sonda_disponibile():
-        print(f"SALTATO: sonda non trovata in {SONDA} (PATHMASTER_REPO={PATHMASTER})")
-        return 0
+        print(
+            f"ERRORE: sonda non trovata in {SONDA} (PATHMASTER_REPO={PATHMASTER})",
+            file=sys.stderr,
+        )
+        return 1
 
     soglie = json.loads(GATE.read_text(encoding="utf-8"))
 

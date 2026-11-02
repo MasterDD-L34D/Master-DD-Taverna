@@ -90,7 +90,12 @@ def test_engine_unreachable_is_honest(monkeypatch):
     def boom(req, timeout=0):
         raise URLError("connection refused")
 
+    def no_autostart(*args, **kwargs):
+        raise AssertionError("il test non deve avviare il ComfyUI reale")
+
+    monkeypatch.delenv("ML_IMG_COMFY_START_CMD", raising=False)
     monkeypatch.setattr("urllib.request.urlopen", boom)
+    monkeypatch.setattr("subprocess.Popen", no_autostart)
     engine = ComfyUIEngine("http://127.0.0.1:8188", "sdxl")
     with pytest.raises(ImagineUnavailable, match="run_nvidia_gpu"):
         engine.generate("p", 64, 64, 1)

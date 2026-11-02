@@ -131,7 +131,7 @@ Risposta JSON semplificata:
   "class": "Fighter",
   "mode": "extended",
   "build_state": { "class": "Fighter", "mode": "extended", "race": "Elf", "archetype": "Lore Warden", "step": 1, "step_total": 16, "step_labels": { "1": "Profilo Base", "2": "Razza & Classe", "8": "QA & Export", "16": "Chiusura" } },
-  "benchmark": { "meta_tier": "T3", "ruling_badge": "validated", "dpr_snapshot": { "livello_1": { "media": 6, "picco": 9 } } },
+  "benchmark": { "meta_tier": "T3", "ruling_badge": "unverified", "dpr_snapshot": { "livello_1": { "media": 6, "picco": 9 } } },
   "export": { "sheet_payload": { "classi": [{ "nome": "Fighter", "livelli": 1, "archetipi": ["Lore Warden"] }], "statistiche": { "FOR": 16, "DES": 14 }, "hooks": ["serve l'Ordine"] } },
   "narrative": "Elf Lore Warden pronta/o per il campo, specializzata/o in tattiche da Fighter.",
   "ledger": { "movimenti": [{ "voce": "Equipaggiamento iniziale", "importo": -150 }] },

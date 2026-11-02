@@ -450,20 +450,19 @@ _real_ok = REAL_TAVERNA.is_file() and REAL_PCGEN.is_file() and REAL_PB.is_file()
 def test_dati_reali_conteggi_e_copertura():
     index = bss.build(REAL_TAVERNA, REAL_PCGEN, REAL_PB)
     counts = index["counts"]
-    assert counts["taverna"] == 2820
+    assert counts["taverna"] == 3046
     assert counts["pcgen"] == 2001  # 2.023 entry (Fase A: +UI/UW/HA/AG),
     # 22 nomi in 2 libri
     assert counts["pb"] == 2922
-    assert counts["union"] == 3092
-    assert counts["intersection"]["tavernaPcgen"] == 1868
-    assert counts["intersection"]["tavernaPb"] == 2749
+    assert counts["union"] == 3187
+    assert counts["intersection"]["tavernaPcgen"] == 1909
+    assert counts["intersection"]["tavernaPb"] == 2872
     assert counts["intersection"]["pcgenPb"] == 1900
-    assert counts["intersection"]["allThree"] == 1866
-    # copertura aggiunta: PB porta 139 spell nuove (fuori Taverna+PCGen),
-    # PCGen 99 (varianti e spell fuori catalogo Taverna)
-    assert counts["only"]["pb"] == 139
-    assert counts["only"]["pcgen"] == 99
-    assert counts["only"]["taverna"] == 69
+    assert counts["intersection"]["allThree"] == 1899
+    # Dopo l'import AoN #570: 164 voci solo Taverna, 91 solo PCGen, 49 solo PB.
+    assert counts["only"]["pb"] == 49
+    assert counts["only"]["pcgen"] == 91
+    assert counts["only"]["taverna"] == 164
     # duplicati interni PCGen: 22 nomi fusi a unione di classi, 0 conflitti
     dup = index["report"]["pcgenInternalDuplicates"]
     assert len(dup["mergedNames"]) == 22
@@ -475,6 +474,7 @@ def test_dati_reali_divergenze_esatte_classificate():
     index = bss.build(REAL_TAVERNA, REAL_PCGEN, REAL_PB)
     divs = {(d["spell"], d["class"]): d for d in index["report"]["divergences"]}
     assert set(divs) == {
+        ("alpha instinct", "mesmerist"),
         ("commune with nature", "druid"),
         ("geas (lesser)", "bard"),
         ("nondetection", "ranger"),
@@ -484,6 +484,22 @@ def test_dati_reali_divergenze_esatte_classificate():
         ("soul transfer", "sorcerer"),
         ("soul transfer", "wizard"),
         ("soul transfer", "witch"),
+        *(
+            ("minor reversion (mass)", cls)
+            for cls in (
+                "arcanist",
+                "cleric",
+                "oracle",
+                "psychic",
+                "sorcerer",
+                "warpriest",
+                "wizard",
+            )
+        ),
+        *(
+            ("violent misfire (greater)", cls)
+            for cls in ("arcanist", "sorcerer", "wizard")
+        ),
     }
     # le 4 tre-fonti: Taverna==PB, PCGen difforme (AoN: Taverna/PB RAW-corrette)
     for key in [
@@ -497,6 +513,29 @@ def test_dati_reali_divergenze_esatte_classificate():
     # Fool's Gold: omonimia RAW reale (spell diverse AA vs VC), non un errore
     for cls in ("sorcerer", "wizard"):
         assert divs[("fool's gold", cls)]["classification"] == "raw-homonym"
+    # Nuovi dati AoN #570: Taverna RAW-corretta; PCGen/PB difformi.
+    assert (
+        divs[("alpha instinct", "mesmerist")]["classification"]
+        == "taverna-pcgen-divergence"
+    )
+    for cls in (
+        "arcanist",
+        "cleric",
+        "oracle",
+        "psychic",
+        "sorcerer",
+        "warpriest",
+        "wizard",
+    ):
+        assert (
+            divs[("minor reversion (mass)", cls)]["classification"]
+            == "taverna-pb-divergence"
+        )
+    for cls in ("arcanist", "sorcerer", "wizard"):
+        assert (
+            divs[("violent misfire (greater)", cls)]["classification"]
+            == "taverna-pb-divergence"
+        )
     # ogni divergenza ha un verdetto dichiarato (mai risolta a tentativi)
     for d in divs.values():
         assert d["verdict"] is not None
