@@ -211,7 +211,9 @@ def confronta(payload):
         else:  # CA +-1, ma NON confrontabile se l'engine ha ignorato bonus
             motivi_ca = []
             if equip_non_modellato:
-                motivi_ca.append(f"equip non modellato: {'; '.join(equip_non_modellato)}")
+                motivi_ca.append(
+                    f"equip non modellato: {'; '.join(equip_non_modellato)}"
+                )
             if feature_ca_non_modellate:
                 motivi_ca.append(
                     "feature con bonus CA non modellato dall'engine: "
