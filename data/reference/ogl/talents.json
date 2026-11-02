@@ -22577,7 +22577,7 @@
       "reference_urls": [
         "https://aonprd.com/SlayerTalents.aspx"
       ],
-      "description": "This technique, a creation of a legendary Minkaian duelist, mimics the movement of a bird in flight to pierce an opponent’s defenses. As an attack action, the slayer can make a single melee attack against his studied target at his highest base attack bonus. When attempting a swallow reversal, the slayer rolls two attack rolls and uses the highest result. If the attack is a critical threat, the slayer attempts to confirm the critical hit as normal. The slayer can use swallow reversal at will, but it can only be used against a given target once per day.",
+      "description": "This technique, a creation of a legendary island-empire duelist, mimics the movement of a bird in flight to pierce an opponent’s defenses. As an attack action, the slayer can make a single melee attack against his studied target at his highest base attack bonus. When attempting a swallow reversal, the slayer rolls two attack rolls and uses the highest result. If the attack is a critical threat, the slayer attempts to confirm the critical hit as normal. The slayer can use swallow reversal at will, but it can only be used against a given target once per day.",
       "mechanics": {
         "class": "Slayer",
         "pool": "advanced slayer talent",

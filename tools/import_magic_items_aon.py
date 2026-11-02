@@ -36,32 +36,80 @@ ITEMS_PATH = OGL_DIR / "items.json"
 LOCAL_PATH = ROOT / "data" / "reference" / "pi_local_only" / "items_local.json"
 MANIFEST_PATH = ROOT / "data" / "reference" / "manifest.json"
 
-_WONDROUS_SLOTS = ["Belts", "Body", "Chest", "Eyes", "Feet", "Hands", "Head",
-                   "Headband", "Neck", "Shoulders", "Wrist", "Other", "Ioun"]
+_WONDROUS_SLOTS = [
+    "Belts",
+    "Body",
+    "Chest",
+    "Eyes",
+    "Feet",
+    "Hands",
+    "Head",
+    "Headband",
+    "Neck",
+    "Shoulders",
+    "Wrist",
+    "Other",
+    "Ioun",
+]
 # (indice, pagina di dettaglio, categoria). Stessi indici del censimento AoN
 # del 2026-11-01; un indice che non risponde si registra e si salta.
-INDEXES = (
-    [(f"{BASE}MagicWondrous.aspx?FinalSlot={s}", "MagicWondrousDisplay.aspx", "wondrous")
-     for s in _WONDROUS_SLOTS]
-    + [
-        (f"{BASE}MagicRings.aspx", "MagicRingsDisplay.aspx", "ring"),
-        (f"{BASE}MagicRods.aspx?Category=Metamagic", "MagicRodsDisplay.aspx", "rod"),
-        (f"{BASE}MagicRods.aspx?Category=Other", "MagicRodsDisplay.aspx", "rod"),
-        (f"{BASE}MagicStaves.aspx", "MagicStavesDisplay.aspx", "staff"),
-        (f"{BASE}MagicWeapons.aspx?Category=SpecificWeapon", "MagicWeaponsDisplay.aspx", "weapon"),
-        (f"{BASE}MagicWeapons.aspx?Category=MeleeWeaponQuality", "MagicWeaponsDisplay.aspx", "weapon quality"),
-        (f"{BASE}MagicWeapons.aspx?Category=RangedWeaponQuality", "MagicWeaponsDisplay.aspx", "weapon quality"),
-        (f"{BASE}MagicArmor.aspx?Category=SpecificArmor", "MagicArmorDisplay.aspx", "armor"),
-        (f"{BASE}MagicArmor.aspx?Category=SpecificShield", "MagicArmorDisplay.aspx", "shield"),
-        (f"{BASE}MagicArmor.aspx?Category=ArmorQuality", "MagicArmorDisplay.aspx", "armor quality"),
-        (f"{BASE}MagicArmor.aspx?Category=ShieldQuality", "MagicArmorDisplay.aspx", "shield quality"),
-        (f"{BASE}MagicCursed.aspx", "MagicCursedDisplay.aspx", "cursed"),
-        (f"{BASE}MagicIntelligent.aspx", "MagicIntelligentDisplay.aspx", "intelligent"),
-        (f"{BASE}MagicArtifacts.aspx?MinorMajor=Minor", "MagicArtifactsDisplay.aspx", "artifact"),
-        (f"{BASE}MagicArtifacts.aspx?MinorMajor=Major", "MagicArtifactsDisplay.aspx", "artifact"),
-        (f"{BASE}MagicPotions.aspx", "MagicPotionsDisplay.aspx", "potion"),
-    ]
-)
+INDEXES = [
+    (f"{BASE}MagicWondrous.aspx?FinalSlot={s}", "MagicWondrousDisplay.aspx", "wondrous")
+    for s in _WONDROUS_SLOTS
+] + [
+    (f"{BASE}MagicRings.aspx", "MagicRingsDisplay.aspx", "ring"),
+    (f"{BASE}MagicRods.aspx?Category=Metamagic", "MagicRodsDisplay.aspx", "rod"),
+    (f"{BASE}MagicRods.aspx?Category=Other", "MagicRodsDisplay.aspx", "rod"),
+    (f"{BASE}MagicStaves.aspx", "MagicStavesDisplay.aspx", "staff"),
+    (
+        f"{BASE}MagicWeapons.aspx?Category=SpecificWeapon",
+        "MagicWeaponsDisplay.aspx",
+        "weapon",
+    ),
+    (
+        f"{BASE}MagicWeapons.aspx?Category=MeleeWeaponQuality",
+        "MagicWeaponsDisplay.aspx",
+        "weapon quality",
+    ),
+    (
+        f"{BASE}MagicWeapons.aspx?Category=RangedWeaponQuality",
+        "MagicWeaponsDisplay.aspx",
+        "weapon quality",
+    ),
+    (
+        f"{BASE}MagicArmor.aspx?Category=SpecificArmor",
+        "MagicArmorDisplay.aspx",
+        "armor",
+    ),
+    (
+        f"{BASE}MagicArmor.aspx?Category=SpecificShield",
+        "MagicArmorDisplay.aspx",
+        "shield",
+    ),
+    (
+        f"{BASE}MagicArmor.aspx?Category=ArmorQuality",
+        "MagicArmorDisplay.aspx",
+        "armor quality",
+    ),
+    (
+        f"{BASE}MagicArmor.aspx?Category=ShieldQuality",
+        "MagicArmorDisplay.aspx",
+        "shield quality",
+    ),
+    (f"{BASE}MagicCursed.aspx", "MagicCursedDisplay.aspx", "cursed"),
+    (f"{BASE}MagicIntelligent.aspx", "MagicIntelligentDisplay.aspx", "intelligent"),
+    (
+        f"{BASE}MagicArtifacts.aspx?MinorMajor=Minor",
+        "MagicArtifactsDisplay.aspx",
+        "artifact",
+    ),
+    (
+        f"{BASE}MagicArtifacts.aspx?MinorMajor=Major",
+        "MagicArtifactsDisplay.aspx",
+        "artifact",
+    ),
+    (f"{BASE}MagicPotions.aspx", "MagicPotionsDisplay.aspx", "potion"),
+]
 
 _BOOK_RE = re.compile(r"\s*(?P<book>[^,]+?)\s+pg\.?\s*\d+")
 
@@ -130,6 +178,7 @@ def parse_item_page(html: str) -> dict:
         "cost": get.get("Cost", ""),
     }
 
+
 # "Cloak of Resistance (+1)" -> famiglia + variante fra parentesi finali.
 _VARIANT_RE = re.compile(r"^(?P<family>.+?)\s*\((?P<variant>[^()]+)\)\s*$")
 
@@ -151,7 +200,8 @@ def index_families(html: str, display_page: str) -> list[dict]:
         m = _VARIANT_RE.match(text)
         family, variant = (m.group("family"), m.group("variant")) if m else (text, None)
         fam = out.setdefault(
-            family, {"family": family, "final_name": final, "param": param, "variants": []}
+            family,
+            {"family": family, "final_name": final, "param": param, "variants": []},
         )
         if variant and variant not in fam["variants"]:
             fam["variants"].append(variant)
@@ -207,7 +257,9 @@ def item_entry(page: dict, category: str, url: str, variants: list[str]) -> dict
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--write", action="store_true")
-    ap.add_argument("--limit", type=int, default=0, help="solo le prime N famiglie mancanti")
+    ap.add_argument(
+        "--limit", type=int, default=0, help="solo le prime N famiglie mancanti"
+    )
     args = ap.parse_args(argv)
 
     catalog = _read(ITEMS_PATH)
@@ -226,11 +278,16 @@ def main(argv=None) -> int:
             if key not in seen_fam:
                 seen_fam.add(key)
                 todo.append((fam, display, category))
-    missing = {id(f) for f in missing_families([t[0] for t in todo], catalog["entries"] + local)}
+    missing = {
+        id(f)
+        for f in missing_families([t[0] for t in todo], catalog["entries"] + local)
+    }
     todo = [t for t in todo if id(t[0]) in missing]
     if args.limit:
         todo = todo[: args.limit]
-    print(f"famiglie AoN: {len(seen_fam)}; mancanti da importare: {len(todo)}", flush=True)
+    print(
+        f"famiglie AoN: {len(seen_fam)}; mancanti da importare: {len(todo)}", flush=True
+    )
 
     ogl, local_new = [], []
     taken = {e["source_id"] for e in catalog["entries"] + local if e.get("source_id")}
@@ -243,18 +300,24 @@ def main(argv=None) -> int:
             continue
         entry = item_entry(page, category, url, fam["variants"])
         if entry["source_id"] in taken:  # stesso nome da un altro manuale
-            entry["source_id"] = source_id("items", f"{entry['name']} {entry['source']}")
+            entry["source_id"] = source_id(
+                "items", f"{entry['name']} {entry['source']}"
+            )
             if entry["source_id"] in taken:
                 continue
         taken.add(entry["source_id"])
         (local_new if is_pi_entry(entry) else ogl).append(entry)
-    print(f"nuovi OGL: {len(ogl)}; PI->local: {len(local_new)}; falliti: {len(failures)}")
+    print(
+        f"nuovi OGL: {len(ogl)}; PI->local: {len(local_new)}; falliti: {len(failures)}"
+    )
     print("\n".join(failures[:40]))
     if not args.write:
         print("Dry-run: nessuna modifica (usa --write)")
         for e in ogl[:12]:
             m = e["mechanics"]
-            print(f"  + {e['name']} [{m['category']}; {m['slot']}; {m['price'][:30]}] {e['source']}")
+            print(
+                f"  + {e['name']} [{m['category']}; {m['slot']}; {m['price'][:30]}] {e['source']}"
+            )
         return 0
 
     catalog["entries"] += ogl

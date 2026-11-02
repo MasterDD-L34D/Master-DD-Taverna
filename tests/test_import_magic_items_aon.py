@@ -161,7 +161,12 @@ def test_main_write_una_voce_per_famiglia_e_manifest(tmp_path, monkeypatch):
     items.write_text(json.dumps({"entries": [{"name": "Catching Cape"}]}), "utf-8")
     manifest = tmp_path / "manifest.json"
     manifest.write_text(
-        json.dumps({"files": {"items": {"entries": 1}}, "catalogs": [{"kind": "items", "entries": 1}]}),
+        json.dumps(
+            {
+                "files": {"items": {"entries": 1}},
+                "catalogs": [{"kind": "items", "entries": 1}],
+            }
+        ),
         "utf-8",
     )
     monkeypatch.setattr(mod, "ITEMS_PATH", items)

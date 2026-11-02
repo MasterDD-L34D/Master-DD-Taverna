@@ -6080,7 +6080,7 @@
         "https://aonprd.com/EquipmentWeaponsDisplay.aspx?ItemName=Split-blade%20sword",
         "https://aonprd.com/Equipment.aspx"
       ],
-      "description": "Split-blade sword (weapon, exotic), costo 200 gp, danno 2d6, peso 8 lbs.\n\nPatterned after the fiery blades masterfully wielded by Sarenite angels, the split-blade sword is both a holy symbol and a difficult-yet-effective weapon. A split-blade sword resembles a large scimitar whose blade splits into two about two-thirds of the way toward the tip. If your Dexterity score is less than 15, you take a –2 penalty on attacks rolls with a split-blade sword, as you’re unable to maneuver its unusual blade.",
+      "description": "Split-blade sword (weapon, exotic), costo 200 gp, danno 2d6, peso 8 lbs.\n\nPatterned after the fiery blades masterfully wielded by sun-faith angels, the split-blade sword is both a holy symbol and a difficult-yet-effective weapon. A split-blade sword resembles a large scimitar whose blade splits into two about two-thirds of the way toward the tip. If your Dexterity score is less than 15, you take a –2 penalty on attacks rolls with a split-blade sword, as you’re unable to maneuver its unusual blade.",
       "mechanics": {
         "cost": "200 gp",
         "dmg_s": "1d10",
@@ -9164,35 +9164,6 @@
         "speed_30_ft": "20 ft.",
         "speed_20_ft": "15 ft.",
         "weight": "40 lbs."
-      }
-    },
-    {
-      "name": "Erutaki coat",
-      "source": "Adventurer's Armory 2",
-      "source_id": "adventurer_s_armory_2:erutaki_coat",
-      "prerequisites": [],
-      "tags": [
-        "equipment",
-        "armor",
-        "medium"
-      ],
-      "references": [
-        "AoN: Equipment (armor medium)"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/EquipmentArmorDisplay.aspx?ItemName=Erutaki%20coat",
-        "https://aonprd.com/Equipment.aspx"
-      ],
-      "description": "Erutaki coat (armor, medium), costo 80 gp, peso 24 lbs.\n\nUsed by the Erutaki human tribes and snowcaster elves native to the arctic tundra of the Crown of the World, this heavy parka is treated as an armored coat UE . It provides the benefits of a cold-weather outfit, and it can be donned or removed as a move action. In addition, the fluffy white fur of the parka blends into arctic landscapes, providing a +2 circumstance bonus on Stealth checks in snowy environments.",
-      "mechanics": {
-        "cost": "80 gp",
-        "armor_bonus": "+4",
-        "max_dex_bonus": "+3",
-        "armor_check_penalty": "-2",
-        "arcane_spell_failure_chance": "20%",
-        "speed_30_ft": "20 ft.",
-        "speed_20_ft": "15 ft.",
-        "weight": "24 lbs."
       }
     },
     {
@@ -18954,29 +18925,6 @@
       "mechanics": {
         "cost": "1 sp",
         "weight": "1 lb."
-      }
-    },
-    {
-      "name": "Tears of Razmir",
-      "source": "Inner Sea World Guide",
-      "source_id": "inner_sea_world_guide:tears_of_razmir",
-      "prerequisites": [],
-      "tags": [
-        "equipment",
-        "gear",
-        "adventuring"
-      ],
-      "references": [
-        "AoN: Equipment (gear adventuring)"
-      ],
-      "reference_urls": [
-        "https://aonprd.com/EquipmentMiscDisplay.aspx?ItemName=Tears%20of%20Razmir",
-        "https://aonprd.com/Equipment.aspx"
-      ],
-      "description": "Tears of Razmir (gear, adventuring), costo 25 gp.\n\nRazmir’s faithful utilize a number of tools to help them control the populace, but few are more insidious than the tears of Razmir. This alchemical concoction contains mild narcotics and hallucinogens that bolster the user’s energy and resistance to pain. It is also highly addictive. Although the clergy gives away tears of Razmir to non-users, it eventually demands payment—as much as 10 gp per dose from wealthy addicts. See pages 236–237 of the Pathfinder RPG GameMastery Guide for additional rules on drugs and addiction. Type ingested; Addiction major, Fortitude DC 18 Effects 1 hour; +1 alchemical bonus to Constitution, -2 penalty on Wisdom-based skill checks Damage 1d2 Con damage",
-      "mechanics": {
-        "cost": "25 gp",
-        "weight": null
       }
     },
     {

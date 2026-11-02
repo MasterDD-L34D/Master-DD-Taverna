@@ -236,9 +236,10 @@ class TestCataloghiLocali:
             )
         )
         # Policy 2026-07-19 (-4 ciascuno), poi scan PI 2026-11-02 (-7 tratti,
-        # -1 equipment: reports/pi_scan_apply.md).
+        # -1 equipment; secondo giro sugli oggetti magici -2 equipment:
+        # reports/pi_scan_apply.md).
         assert len(traits["entries"]) == 470 - 4 - 7
-        assert len(equip["entries"]) == 790 - 4 - 1
+        assert len(equip["entries"]) == 790 - 4 - 1 - 2
         nomi_t = {e["name"] for e in traits["entries"]}
         assert (
             not {

@@ -41,6 +41,19 @@ def test_gate_riconosce_la_twilight_academy():
     assert hits == ["Twilight Academy"]
 
 
+def test_gate_riconosce_i_termini_dello_scan_degli_oggetti_magici():
+    # Secondo giro dello scan (2026-11-02, items.json): gli artefatti portano
+    # nomi propri di Golarion che il primo giro non aveva visto.
+    hits = [h["term"] for h in _find_pi("forged by the runelord Karzoug")]
+    assert "Karzoug" in hits
+
+
+def test_gate_riconosce_graydirge():
+    # Sfuggito al modello, trovato rileggendo il campione degli oggetti.
+    hits = [h["term"] for h in _find_pi("the undead-ruled city of Graydirge")]
+    assert hits == ["Graydirge"]
+
+
 def test_i_titoli_dei_manuali_non_sono_violazioni():
     # Policy titoli libro separata (precedente: Sargava). Il termine nudo
     # nella prosa resta una violazione.
@@ -71,6 +84,13 @@ def test_la_sanitize_resta_leggibile_sulle_frasi_composte():
             "such as the Esoteric Order of the Palatine Eye.", description=True
         )
         == "such as a society of occultists."
+    )
+
+
+def test_la_sanitize_degli_aggettivi_di_luogo_resta_naturale():
+    # Forma reale (Veil of Attentiveness): "elven-capital diplomats" stonava.
+    assert sanitize_text("popular among Iadaran diplomats", description=True) == (
+        "popular among elven diplomats"
     )
 
 

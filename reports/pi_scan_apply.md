@@ -86,3 +86,69 @@ Sanitizzate (C): Papercraft Tools; The Whole Time; Harrowing Curse; Kalistocrat'
 Spostate (A/B): Witty Repartee; Soul-Searcher's Strength; Rivethun Adherent; Darklands Scholar; Darklands Trader; Jistkan Scholar; Savant
 
 Sanitizzate (C): Permanent Scars; Deep Faith; Imperfect Recall; Kalistocratic Prophecy; Light in the Darkness; Scourge of the Darkness; Self-Sustaining; Black Blood Heritage; Mechanical Aptitude; Secret Scrolls; Excellent Penmanship; Student of Philosophy
+
+## Secondo giro: oggetti magici (2026-11-02)
+
+Dopo l'import di `tools/import_magic_items_aon.py` (3861 voci OGL nuove) lo
+scan `gemma4:e4b` ha segnalato 661 candidati; la revisione ha aggiunto 69
+termini (soprattutto artefatti: runelord, signori dei demoni, citta'), piu'
+Graydirge trovato rileggendo il campione: 70 nel giro, 178 in tutto. Scartati: divinita' di mitologie
+reali (Horus, Anubis, Set, Apep...), folklore (Baba Yaga, Valhalla), nomi
+lovecraftiani (Hastur, Leng, Dreamlands); "Sargavan" fuori come "Sargava".
+
+Rischio residuo: nomi minori che ne' il modello ne' la rilettura hanno
+colto (es. "Nashina aj-Salihar" in Saliharion). La lista resta aperta.
+
+Esito: 72 voci spostate (A/B), 200 sanitizzate (C); legal_filter 0.
+
+| catalogo | A/B spostate | C sanitizzate |
+|---|---|---|
+| archetypes | 2 | 1 |
+| equipment | 2 | 1 |
+| feats | 2 | 1 |
+| items | 62 | 187 |
+| spells | 4 | 7 |
+| talents | 0 | 1 |
+| traits | 0 | 2 |
+
+### archetypes (secondo giro)
+
+Spostate (A/B): Dawnflower Dervish; Ustalavic Duelist
+
+Sanitizzate (C): Whirling Dervish
+
+### equipment (secondo giro)
+
+Spostate (A/B): Erutaki coat; Tears of Razmir
+
+Sanitizzate (C): Split-blade sword
+
+### feats (secondo giro)
+
+Spostate (A/B): Pure Legion Assault; Kraggodan's Stance
+
+Sanitizzate (C): Eye of the Arclord
+
+### items (secondo giro)
+
+Spostate (A/B): Belt of Impossible Action (Vudrani); Baldric of Magical Stability (Garundi); Darklands Goggles; Horseshoes of Desert Fury (Keleshite); Lepidstadt Investigator's Hat; Hand of Abendego; Pelt of the Ulfen Wolf; Cloak of Summer and Winter (Triaxian); Brastlewark Brew; Kitharodian Pen; Attentive Mirror; Ointment of Secret Seeing (Ulfen); Medium's Harrow Mat; Saga of the Linnorm Kings; Szuriel's Scabbard; Harrow Deck of Secret Schemes; Droskar's Guiding Ring; Sigil of Kraggodan; Nethysian Ring of Minor Spell Storing; Sihedron Ring; Scepter of the Arclords; Shory Acolyte's Staff; Channeler's Scarf; Shields' Bane (Ulfen); Rostland Edge; Red Crusader's Quill; Talmandor Blade; Crimson Bluff; Iadaran Dress Uniform; Dawnflower Chain Vest; Numerian Resistance Plate; Armor of the Pure Legion; Okeno Madu; Grasp of Droskar; Amatatsu Seal; Decemvirate Helm; Sihedron Tome (Envy); Suishen, Guardian of the Amatatsu; Terendelev's Scales; Throne of Ydersius Ascendant; Thrushmoor Star Stelae; Torc of Kostchtchie; Zellara's Harrow Deck; Alaznist's Hateful Ranseur; Bloodstones of Arazni; Chalice of Lissala; Harrow Deck of Many Things; Lung Bloodstone of Arazni; Mask of the Forgotten Pharaoh; Minderhal's Forge; Mirror of Sorshen; Relic of Kazavon, Armor of Skulls; Relic of Kazavon, Bound Blade; Relic of Kazavon, Crown of Fangs; Relic of Kazavon, Howling Horn; Relic of Kazavon, Shredskin; Relic of Kazavon, Staff of the Slain; Relic of Kazavon, Throne of Nalt; Scepter of Alaznist; Skull of Ydersius; Sorshen's Sinuous Guisarme; Spherical Boat of Zutha
+
+Sanitizzate (C): Belt of the Snake King; Feller's Belt; Ghoulbane Belt; Robe of the Master of Masters; Alabaster Trapping; Pathfinder Greatcoat; Anaphexis Robe; Silent Blade Vest; Summoner Slayer Eyes; Gloves of Personal Purity; Kalistocrat's Gloves; Gauntlets of the Unchained; Mantis Embrace; Veil of Attentiveness; Holy Mask of the Living God; Gray Gambler's Hat; Veil of Veils; Maiden's Helm; Mask of the Mantis; Goz Mask; Dervish Sikke; Helm of the Fanged Crown; Daylight Diadem; Yithian Thought Ring; Falcon Crown; Khepresh of Refuge; Magnate's Miter; Hurricane Crown; Maiden's Promise; Dust of Envy; Gossamer Amberstone; Spidersilk Medallion; Nightstone of Sorrow; Vurra of the Maker; Orb of the Waybringer; Choker of the Queen Bee; Doomsday Key; Slave Collar; Amulet of Radiation Absorption; Deathlurker's Cloak; Great Barghest Hero Cloak; Rimepelt; Golden Eagle Epaulets; Harborwing Cloak; Crow Brother's Cloak; Cloak of the Saga Keeper; Pelt of the Beast; Erinyes Company Cloak; Pelt of Primal Power; Spellsight Bracer; Hex Nail; Riffle Scroll; Caber Twig; Aspis Badge of Last Resort; Kalistocrat's Coin; Bounteous Bath Suffusion; Traveler's Grandiose Carrying Case; Wine of Concordance; Deathgag Elixir; Tablet of Languages Lost; Ki Crystal; Blight Siphoner; Home Stone; Crackling Tassel; Player's Prize; Saliharion; Discretion Charm; Golden Dragon Kite; Figurines of Wondrous Power; Papyrus of Eternal Rest; Chest of Preparedness; Metalseeker Swarm; Seishinru, Spirit Elixir; Gremlin-Skin Drum; Steelbone Frame; Scabbard of the Lost Kiss; Fate-Reader's Lenses; Warden's Cudgel; Jungle Seeker's Monocle; Cavern Compass; Caravan Guardian; Evergreen Seed Pouch; Idol of the Eye; Svingli's Eye; Kikuya's Sensu; Moribund Key; Scabbard of the Efreet; Tyrant's Mark; Relic of a Virtuous Emperor; Beacon of the North; Silent Aviary; Dark Life Ring; Ring of Culturemeld; Ring of Seven Virtues; Utilitarian Rod; Doomsday Staff; Grave Marker Arrow; Everbloom's Rose; Fate Blade; Fiend's Relief; Bloodlight; Perfectionist Shavtoosh; Midsummer Sickle; Buoyant Harpoon; Akitonian Blade; Silverfang; En-Nebi, Blade of the Leopard; Deck of Slivering Fate; Purging Falcata; Talon Sword; Crystalline Starknife; Sadist's Lash; Sword of Tempests; Risen Blade; Slaver's Cane; Daikyu of Commanding Presence; Shard of Winter; Rose Knight's Blade; The Thundering Blade of the House of Sugimatu; Crowcaller; Sword of Vengeance; Talonstrike Sword; Banshee's Howl; Enervating Pistol; Snakebite; Earth Breaker of Righted Injustice; Spiteful Scimitar; Drowscourge; Runeforged; Red Stalker Armor; Painspike Armor; Truefaith Vestments; Stone-eater Armor; Armor of Grim Triumph (Orc); Elven Vengeance; Hide of the Hagfish; Eagle Knight Dress Uniform; Armor of Fragmenting Stone; Suit of Inverted Jade; Panoply of the Fierani Knight (Elf); Tunnel Defender Stoneplate; Blackjacket; Maiden's Panoply; O-Yoroi of Imperial Rule; Maiden's Aegis; Unspeakable One's Vestments; Ring of the Weary Sky; Ukwar; Teralindar's Honor; Argental Font; Deck of Harrowed Tales; Eye of Abenatrex; Funerary Crown of the True King; Mantis Blade; Orrery of Distant Worlds; Pharaoh's Key; Raven's Head; Runeslave Cauldron; Runewell Amulet (Envy); Shinobi Fuhonsen; Soul Lens; The Enthroned King; Void Crystal; Wardstone Shard; Agrimmosh; Anathema Archive; Anima Focus; Blackaxe; Cicatrix; Crook and Flail of Kings; Crown of Fangs; Everdawn Pool; Greatcube of Jayalakshmi; Lamentation of the Faithless; Mog-Lathar, the Petrified Spider; Radiance; Robe of the Rifts; Runewell of Wrath; Sword of Gluttony, Ungarato; Sword of Greed, Chellan; Sword of Lust, Asheia; Sword of Pride, Baraket; Sword of Sloth, Shin-Tari; Sword of Wrath, Garvok; The Gasping Pearl; The Gluttonous Tome; Winter Collector
+
+### spells (secondo giro)
+
+Spostate (A/B): Shield Of The Dawnflower; Shield Of The Dawnflower, Greater; Alaznist's Jinx; Sign of the Dawnflower
+
+Sanitizzate (C): Covetous Aura; Curse Item; Emblem Of Greed; Tears To Wine; Protection From Spores; What Grows Within; Rune Of Rule
+
+### talents (secondo giro)
+
+Spostate (A/B): -
+
+Sanitizzate (C): Swallow Reversal
+
+### traits (secondo giro)
+
+Spostate (A/B): -
+
+Sanitizzate (C): Self-Sustaining; Strength of Submission
