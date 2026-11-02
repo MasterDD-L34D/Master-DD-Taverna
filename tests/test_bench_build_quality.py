@@ -117,6 +117,26 @@ def test_equip_non_modellato_rende_ca_non_verificabile():
     assert "Ring of Protected Life" in r["dettaglio"]["CA"]["motivo"]
 
 
+def test_motivo_ca_elenca_feature_attiva_ed_equip_non_modellati():
+    payload = _payload_pc(_draft_pc(equipment=["Handy Haversack"]), ca=15)
+    payload["character_v2"] = {
+        "features": [
+            {
+                "name": "Scarshield",
+                "active": True,
+                "effects": [
+                    {"type": "bonus", "bonus": {"target": "acNatural", "value": 4}}
+                ],
+            }
+        ]
+    }
+    ca = confronta(payload)["dettaglio"]["CA"]
+    assert ca["esito"] == "non_verificabile"
+    assert ca["ricalcolato"] == 11  # la diagnostica non altera il ricalcolo autonomo
+    assert "Scarshield" in ca["motivo"]
+    assert "Handy Haversack" in ca["motivo"]
+
+
 def test_rifiutate_ricomparsi_nel_report():
     # P2 Codex: le build rifiutate dall'engine sparivano dal report (nessun
     # level nei ritorni anticipati) — ora sono rendicontate col loro livello

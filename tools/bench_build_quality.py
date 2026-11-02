@@ -178,6 +178,19 @@ def confronta(payload):
         for f in feat_attive
     )
 
+    # Solo diagnosi del limite: gli effetti v2 non entrano nel ricalcolo,
+    # che resta autonomo dal motore che li ha normalizzati.
+    feature_ca_non_modellate = [
+        f.get("name") or f.get("id") or "feature senza nome"
+        for f in (payload.get("character_v2") or {}).get("features", [])
+        if f.get("active") is True
+        and any(
+            e.get("type") == "bonus"
+            and (e.get("bonus") or {}).get("target") == "acNatural"
+            for e in f.get("effects", [])
+        )
+    ]
+
     dich = payload.get("benchmark", {}).get("statistics") or {}
     dettaglio = {}
     for label, calc in (("PF", sheet.get("hp")), ("CA", sheet.get("ac"))):
@@ -196,24 +209,26 @@ def confronta(payload):
                 "ricalcolato": calc,
             }
         else:  # CA +-1, ma NON confrontabile se l'engine ha ignorato bonus
-            motivo_ca = (
-                f"equip non modellato: {'; '.join(equip_non_modellato)}"
-                if equip_non_modellato
-                else "bonus alla CA non modellato dall'engine"
-            )
-            non_verificabile_ca = (
-                bool(equip_non_modellato)
-                or ca_non_verificabile
-                or ca_classe_non_verificabile
-            )
+            motivi_ca = []
+            if equip_non_modellato:
+                motivi_ca.append(
+                    f"equip non modellato: {'; '.join(equip_non_modellato)}"
+                )
+            if feature_ca_non_modellate:
+                motivi_ca.append(
+                    "feature con bonus CA non modellato dall'engine: "
+                    + ", ".join(feature_ca_non_modellate)
+                )
+            if ca_non_verificabile or ca_classe_non_verificabile:
+                motivi_ca.append("bonus alla CA non modellato dall'engine")
             dettaglio[label] = (
                 {
                     "esito": "non_verificabile",
                     "dichiarato": val,
                     "ricalcolato": calc,
-                    "motivo": motivo_ca,
+                    "motivo": "; ".join(motivi_ca),
                 }
-                if non_verificabile_ca
+                if motivi_ca
                 else {
                     "esito": "concorda" if abs(calc - val) <= 1 else "diverge",
                     "dichiarato": val,
